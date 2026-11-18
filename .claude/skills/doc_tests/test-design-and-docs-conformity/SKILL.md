@@ -1,9 +1,9 @@
 ---
-name: apply-design-and-docs-check
+name: test-design-and-docs-conformity
 description: Run the method's design and docs check (workflow_docs/design_and_docs_check.md) on this app's design and documents, top to bottom then bottom up, and write its report to claude_skills_output/design_and_docs_check_output.md. Use when the user asks to check the design and docs, or before the code check. A doc test run by what-are-the-next-docs-prompts.
 ---
 
-# Apply the design and docs check
+# Test the design and docs conformity
 
 - Method: `workflow_docs/design_and_docs_check.md`. It says what to check, how, and the exact shape of the report.
 - Output: `./claude_skills_output/design_and_docs_check_output.md`. Create the folder if it is missing. Overwrite the file if it exists.
