@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fake scrolling — app</title>
+<style>
+:root{--bg:#ecebe7;--fg:#1c1c1c;--muted:#5e5e5b}
+@media (prefers-color-scheme:dark){:root{--bg:#1f1f1e;--fg:#ecebe7;--muted:#a3a29d}}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px system-ui,sans-serif}
+header{position:sticky;top:0;z-index:2;display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:var(--bg);border-bottom:1px solid #8884}
+header h1{font-size:16px;margin:0} header a{color:inherit}
+h2{font-size:15px;margin:24px 16px 8px}
+.frame{overflow:hidden;margin:16px}
+.board{position:relative;transform-origin:0 0}
+.board iframe{position:absolute;border:0;background:#fff;box-shadow:0 1px 4px #0003}
+.name{position:absolute;color:var(--muted);font-size:20px;text-decoration:none;white-space:nowrap}
+.note{position:absolute;font-size:72px;font-weight:700;line-height:1.1}
+</style></head><body>
+<header><a href="../index.html">← All designs</a><h1>Fake scrolling — app</h1>
+<label>Zoom <select id="zoom"><option value="fit">Fit width</option><option>0.25</option><option>0.5</option><option>0.75</option><option>1</option></select></label>
+<span style="color:var(--muted)">Each artboard is live: click, type, follow its links. A name opens it alone.</span></header>
+<div class="frame" data-w="3210" data-h="1144"><div class="board" style="width:3210px;height:1144px"><div class="note" style="left:940px;top:0px;max-width:2270px">Fake scrolling — l’app</div><div class="note" style="left:0px;top:0px;max-width:860px">Connexion</div><a class="name" href="project/Main.dc.html" target="_blank" style="left:940px;top:268px">Accueil (fil du jour) ↗</a><iframe src="project/Main.dc.html" title="Accueil (fil du jour)" loading="lazy" style="left:940px;top:300px;width:390px;height:844px;border-radius:28px"></iframe><a class="name" href="project/Chat.dc.html" target="_blank" style="left:1410px;top:268px">Messages ↗</a><iframe src="project/Chat.dc.html" title="Messages" loading="lazy" style="left:1410px;top:300px;width:390px;height:844px;border-radius:28px"></iframe><a class="name" href="project/Compose.dc.html" target="_blank" style="left:1880px;top:268px">Créer un post ↗</a><iframe src="project/Compose.dc.html" title="Créer un post" loading="lazy" style="left:1880px;top:300px;width:390px;height:844px;border-radius:28px"></iframe><a class="name" href="project/Search.dc.html" target="_blank" style="left:2350px;top:268px">Recherche ↗</a><iframe src="project/Search.dc.html" title="Recherche" loading="lazy" style="left:2350px;top:300px;width:390px;height:844px;border-radius:28px"></iframe><a class="name" href="project/Profile.dc.html" target="_blank" style="left:2820px;top:268px">Profil et réglages ↗</a><iframe src="project/Profile.dc.html" title="Profil et réglages" loading="lazy" style="left:2820px;top:300px;width:390px;height:844px;border-radius:28px"></iframe><a class="name" href="project/Login.dc.html" target="_blank" style="left:0px;top:268px">Connexion ↗</a><iframe src="project/Login.dc.html" title="Connexion" loading="lazy" style="left:0px;top:300px;width:390px;height:844px;border-radius:28px"></iframe><a class="name" href="project/Code.dc.html" target="_blank" style="left:470px;top:268px">Code reçu par e-mail ↗</a><iframe src="project/Code.dc.html" title="Code reçu par e-mail" loading="lazy" style="left:470px;top:300px;width:390px;height:844px;border-radius:28px"></iframe></div></div>
+<script>
+const zoom = document.getElementById("zoom");
+function apply() {
+  for (const f of document.querySelectorAll(".frame")) {
+    const w = +f.dataset.w, h = +f.dataset.h;
+    const s = zoom.value === "fit" ? Math.min(1, (innerWidth - 32) / w) : +zoom.value;
+    f.firstElementChild.style.transform = `scale(${s})`;
+    f.style.width = w * s + "px"; f.style.height = h * s + "px";
+  }
+}
+zoom.onchange = apply; addEventListener("resize", apply); apply();
+</script></body></html>

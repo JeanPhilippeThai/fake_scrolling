@@ -1,6 +1,7 @@
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 54, exported 2026-11-18 -->
 # Fake scrolling — inventaire des écrans
 
-2026-11-15 · @Jp
+Nov 15, 2026 · @Jp
 
 Le design compte 26 écrans, de P-01 à P-26. Ils suivent l'ordre du parcours : connexion, Accueil, Messages, Nouveau post, Recherche, Profil. Les panneaux de la création d'un post, ajoutés ensuite, sont à la fin (P-24 à P-26).
 
