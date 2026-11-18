@@ -1,7 +1,7 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-17 (revision 18).
-For now the Claude Doc is the source of truth and this file is a copy of it (see [DEC-3](decisions.md#dec-3)).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-17 (revision 25).
+For now the Claude Doc is the source of truth and this file is a copy of it.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the Claude Design screens down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
 
@@ -13,7 +13,7 @@ Read the method doc first, "Building apps with Claude: the method" ([method.md](
 | --- | --- |
 | Claude Design screens and the design export, one design per platform | Claude Design, `design/` |
 | Raw extractions (prompt 1), one per platform | Kept with the registry's history |
-| Registry: roles, pages, features, variants, entities, decisions. One per platform first (desktop, mobile, any other version), then the canonical registry that prompt 10 merges from them; the per-platform ones are archived beside it | `docs/registry.yaml` |
+| Registry: roles, pages, features, variants, entities, decisions. One per platform first (those the app targets among web, desktop and mobile), then the canonical registry that prompt 10 merges from them; the per-platform ones are archived beside it | `docs/registry.yaml` |
 | Flows, state models and TLA+ models, threat model | `docs/system-design/` |
 | Data model and data flows | `docs/system-design/data-model.yaml`, `data-flows.yaml` |
 | App-wide rules and NFRs | `docs/cross-cutting.md` |
@@ -54,7 +54,7 @@ flowchart TB
   L10 --> L11["L11 Feature specs"] --> L12["L12 Planning and agent documents"]
 ```
 
-Each layer is built from the one above it, so it is checked after it. Until the merge there is one column per app version (desktop and mobile here, more if the app has them); from L4 on there is one canonical chain. After L12, the bottom-up pass walks back up from B12 to B1, then the cross-layer checks run over every layer.
+Each layer is built from the one above it, so it is checked after it. Until the merge there is one column per app version (desktop and mobile here; web and mobile, or more, work the same way); from L4 on there is one canonical chain. After L12, the bottom-up pass walks back up from B12 to B1, then the cross-layer checks run over every layer.
 
 ## Checks per layer
 
@@ -72,7 +72,7 @@ Run the layers in this order. Each check has an ID; cite it in every finding. In
 
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
-| L1-01 | There is one design per target platform (desktop, iOS, Android), or a decision explains a shared one | Read | Blocking |
+| L1-01 | There is one design per platform the app targets (web, desktop, mobile); iOS and Android share the mobile design unless a decision gives each its own | Read | Blocking |
 | L1-02 | Every screen shows its empty, loading and error states, or a decision says it has none | Read | Major |
 | L1-03 | The export in `design/` matches the current design: same screens, same copy | Read | Major |
 | L1-04 | Every feature marked `design_a_mettre_a_jour: true` still differs from the design; if it now matches, the flag should be gone (prompt 9) | Read | Minor |
@@ -109,7 +109,7 @@ Run this layer on each per-platform registry, then once more on the canonical re
 
 ### L4 · Canonical registry: the platform merge (prompt 10)
 
-Only when the app has more than one version (desktop and mobile, or others). The canonical registry must hold everything every per-platform registry held, under one set of IDs, with nothing lost and nothing invented. In mode B, load the archived per-platform registries into the database if the script supports it; otherwise read them side by side with the canonical one.
+Only when the app has more than one version (web and mobile, desktop and mobile, or more). The canonical registry must hold everything every per-platform registry held, under one set of IDs, with nothing lost and nothing invented. In mode B, load the archived per-platform registries into the database if the script supports it; otherwise read them side by side with the canonical one.
 
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
@@ -173,7 +173,7 @@ Only when the app has more than one version (desktop and mobile, or others). The
 
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
-| L9-01 | One actor node per role, and one node per app (one per platform: desktop, iOS, Android), the server, each store and each third party | Query | Major |
+| L9-01 | One actor node per role, and one node per app (one per platform the app targets: web, desktop, iOS, Android), the server, each store and each third party | Query | Major |
 | L9-02 | Every flow goes one way and cites the entities it carries and the features that trigger it, or the flow (`FL`) of a background job | Query | Major |
 | L9-03 | A flow that leaves an actor cites only features that actor's role may use | Query | Blocking |
 | L9-04 | No actor talks to the server or a store directly; it goes through an app | Query | Major |
@@ -223,7 +223,7 @@ Only features at step 10 or beyond have a spec; a missing spec for a later featu
 | L12-02 | Status lives only in the backlog's `Status` column | Read | Minor |
 | L12-03 | Every open question sits in one place (the feature's `questions_ouvertes` or the register), and a settled one links to its decision | Query, then read | Major |
 | L12-04 | Every workaround says what it would take to remove it | Read | Minor |
-| L12-05 | The supported range of app versions, per platform, is a decision | Read | Major |
+| L12-05 | The supported range of app versions, per installed platform, is a decision, and so is how long the server keeps serving the previous web release | Read | Major |
 | L12-06 | The product brief contradicts neither the registry nor a decision | Read | Major |
 | L12-07 | `CLAUDE.md` points to the sources of truth instead of copying them, lists the file-name markers and the app command, and every path it gives exists | Read | Major |
 
@@ -408,7 +408,7 @@ Return one report in this exact shape. Findings are sorted by layer, then by sev
 
 Documents: commit <hash> · Mode: A | B (database built from <hash>)
 Method followed: version of <date of the method doc>
-Platforms: desktop, iOS, Android (per-platform registries: <names>)
+Platforms: <those the app targets, e.g. web, iOS, Android> (per-platform registries: <names>)
 
 ## Verdict
 Ready for the code check | Not ready: <n> blocking findings (#3, #7, …)

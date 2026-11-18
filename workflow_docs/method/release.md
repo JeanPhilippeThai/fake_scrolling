@@ -1,10 +1,10 @@
 # Release and watch
 
-Part of [the method](../method.md). Snapshot of the "Release" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 1, taken on 2026-11-17 (see [DEC-5](../decisions.md#dec-5)).
+Part of [the method](../method.md). Snapshot of the "Release" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 5, taken on 2026-11-17.
 
 Step 11: getting a merged feature to users, then learning from real use. Merging is not releasing. A feature is deployed with its flag off, released to a growing share of users while someone watches, and only then is it done. Read this part when preparing a release or investigating a problem in production. Checks that run before this point are in [Verification](verification.md).
 
-Two things make release matter more for this app than for a website. App store review means a fix cannot reach phones in minutes, so a feature flag is the only fast way back. And old app versions stay installed for months, so the server must keep serving them.
+Two things make release matter more for the installed apps (iOS, Android, desktop) than for a web version. App store review means a fix cannot reach phones in minutes, so a feature flag is the only fast way back. And old app versions stay installed for months, so the server must keep serving them. A web version updates on deploy, but a page left open runs its old code until it reloads, so the server keeps serving the previous web release too.
 
 ## Deploy: installed, not yet exposed
 
@@ -12,7 +12,7 @@ Two things make release matter more for this app than for a website. App store r
 | --- | --- | --- |
 | Integration tests | App and server | The app against a real server, in a staging environment |
 | Config tests | App and server | Build, signing and environment settings checked for each platform and each server environment |
-| Beta channels | Apps | TestFlight, Play internal testing and a desktop beta channel; every release candidate goes there first |
+| Beta channels | Apps | TestFlight, Play internal testing and a desktop beta channel, for the platforms the app targets, and staging for the web; every release candidate goes there first |
 | Shadowing | Server | The new server version receives a copy of real traffic; its answers are thrown away |
 | Tap compare | Server | The shadow's answers are compared with the current version's; any difference is explained before release |
 | Load and soak tests | Server | See [Verification](verification.md); they run against staging before each server release |
@@ -22,7 +22,7 @@ Two things make release matter more for this app than for a website. App store r
 | Practice | Applies to | What it means here |
 | --- | --- | --- |
 | Feature flags | App and server | One flag per registry feature, named after its ID (`F-012`). New features ship with their flag off and are turned on gradually |
-| Staged rollout | Apps | App Store phased release and Play staged rollout: a new version reaches a growing percentage of users, and can be paused |
+| Staged rollout | Apps | App Store phased release and Play staged rollout: a new version reaches a growing percentage of users, and can be paused. The web version reaches everyone on deploy, so there the flag's percentage is the rollout |
 | Canary | Server | A new server version runs on a small share of servers first, compared with the rest on errors and latency |
 | Traffic shaping | Server | A chosen share of users or regions is routed to the new version |
 | Exception tracking | App and server | Crashes and errors grouped by version and by feature |
