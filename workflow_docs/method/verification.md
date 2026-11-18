@@ -1,6 +1,6 @@
 # Verification
 
-Part of [the method](../method.md). Snapshot of the "Verification" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 5, taken on 2026-11-17 (see [DEC-5](../decisions.md#dec-5)).
+Part of [the method](../method.md). Snapshot of the "Verification" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 9, taken on 2026-11-17.
 
 How Claude checks its own work before anything reaches users. TLA+ models check the design (step 6), runtime proofs check the running app (step 10), and a set of automated checks guards the code in CI. What happens once code reaches users is in [Release and watch](release.md). Read this part when writing a state model or a feature's proof blocks, and before shipping a feature.
 
@@ -39,12 +39,12 @@ Rules:
 
 ## Runtime verification: the app
 
-Claude proves each feature on the real app before asking for your review: it reaches the feature the way a user would, acts on it, checks what the screen shows, and keeps the evidence. Tests check the code; this checks the app, on desktop, iOS and Android.
+Claude proves each feature on the real app before asking for your review: it reaches the feature the way a user would, acts on it, checks what the screen shows, and keeps the evidence. Tests check the code; this checks the app, on every platform the feature is on: web, desktop, iOS, Android.
 
 | Piece | What it is | Where it lives |
 | --- | --- | --- |
 | Feature map | For each feature: how a user reaches it and what proves it works. It is built from what already exists: features from the registry, paths from the flows, proofs from the acceptance criteria | Registry (`F`), flows (`FL`), and a proof block per criterion in the feature spec |
-| `app` command | A command line that drives the real app on each platform: click by accessible name, snapshot what is on screen, take a screenshot | `tools/app/`, its commands listed in `CLAUDE.md` |
+| `app` command | A command line that drives the real app on each platform (on the web, a real browser): click by accessible name, snapshot what is on screen, take a screenshot | `tools/app/`, its commands listed in `CLAUDE.md` |
 
 The commands, as in dune (the exact names are settled in step 8):
 
@@ -68,7 +68,7 @@ Rules:
 
 - Every criterion a user can see gets a proof block. Criteria with nothing on screen are covered by tests only.
 - Every button, field and link has an accessible name, fixed in its page contract (`nom_accessible`): that is how the `app` command finds it, and how screen readers do. This is an app-wide requirement (`NFR-X`), checked by lint where possible.
-- Proofs run on all three platforms. Screenshots are named `<criterion>.<platform>.png` and attached to the pull request.
+- Proofs run on every platform the feature is on. Screenshots are named `<criterion>.<platform>.png` and attached to the pull request.
 - A failing proof sends the work back to Build. Like a test, a proof block is never weakened to make it pass.
 - The proof is evidence for your review, not a replacement for it: you look at the screenshots in the pull request.
 
@@ -94,7 +94,7 @@ Each of these is set up once, mostly in steps 8 and 9, then runs on its own.
 | --- | --- | --- |
 | Testing only the cases you thought of | Rare orders of events (two devices, offline, expiry mid-action) slip through | A TLA+ model for every non-trivial state machine and for sync |
 | Formal proofs everywhere | A Lean version is a second codebase that drifts from the real one | Lean only for small, critical logic, and only by decision |
-| Trusting green tests alone | The code passes, but the screen is wrong, unreachable, or broken on one platform | Prove each visible criterion on the real app, on all three platforms |
+| Trusting green tests alone | The code passes, but the screen is wrong, unreachable, or broken on one platform | Prove each visible criterion on the real app, on every platform its feature is on |
 | Buttons and fields without accessible names | The app command cannot find them, and neither can screen readers | An accessible name on every interactive element, from the walking skeleton on |
 | Hollow tests | Claude's tests pass but would also pass on broken code | Mutation tests on every changed file |
 | Testing the server only against the latest app | Users who have not updated start seeing errors | Contract tests against every supported app version |

@@ -1,0 +1,7 @@
+# Skills copied from workflow_claude by its sync. Change them there, not here: the next sync replaces them.
+# To make one of them this project's own, delete its line: the sync then leaves that folder alone.
+compare-newest-current-claude-files
+doc_tests
+import-design-and-docs-artifact
+tackle-first-docs-prompt
+what-are-the-next-docs-prompts

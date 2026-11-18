@@ -1,6 +1,6 @@
 # Reference
 
-Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 10, taken on 2026-11-17 (see [DEC-5](../decisions.md#dec-5)).
+Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 10, taken on 2026-11-17.
 
 Where each fact lives, how it is named, and how any line of code traces back to it. Every other part relies on these rules: read this one once, then come back to look things up.
 

@@ -1,12 +1,12 @@
 # Describe the app
 
-Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 8, taken on 2026-11-17 (see [DEC-5](../decisions.md#dec-5)).
+Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 13, taken on 2026-11-17.
 
 Steps 1 to 8 of the pipeline, wide and shallow: from the Claude Design mock-up to a checked registry, flows, entity states and a system design. Read this part before starting an app, and whenever the registry, a flow or a design decision changes. How the code is laid out is in [Code structure](code-structure.md); how the design is checked is in [Verification](verification.md).
 
 ## The prompts
 
-These prompts take a Claude Design mock-up to a checked registry, then to flows and a system design. They are kept in French, word for word as used; prompt 2's format was aligned on 16 November 2026 with the multi-platform registry format (platforms, variant pages, entity fields), and roles and access were added on 17 November. Prompts 1 to 6 are the main line, and prompts 5 and 6 are reused for every flow and every question. Prompts 8 to 10, after them, cover cases met in practice, prompts 11 and 12 write the data model and the data-flow graph in step 8, and prompts 13 and 14 then write a contract for every page and check it against them. Prompt 7, for changes after code exists, is in [Build the app](build.md).
+These prompts take a Claude Design mock-up to a checked registry, then to flows and a system design. They are kept in French, word for word as used; prompt 2's format was aligned on 16 November 2026 with the multi-platform registry format (platforms, variant pages, entity fields), and roles and access were added on 17 November, along with web as a platform. Prompts 1 to 6 are the main line, and prompts 5 and 6 are reused for every flow and every question. Prompts 8 to 10, after them, cover cases met in practice, prompts 11 and 12 write the data model and the data-flow graph in step 8, and prompts 13 and 14 then write a contract for every page and check it against them. Prompt 7, for changes after code exists, is in [Build the app](build.md).
 
 **Prompt 1: raw extraction**
 
@@ -33,7 +33,7 @@ roles:
     portee:         # compte | projet | autre périmètre visible dans le design
 
 pages:
-  - id: P-01            # P-Dxx / P-Mxx une fois les plateformes fusionnées (prompt 10)
+  - id: P-01            # P-Wxx / P-Dxx / P-Mxx une fois les plateformes fusionnées (prompt 10)
     plateforme: mobile
     nom:
     features: [F-001, F-002.a]
@@ -70,7 +70,7 @@ Règles de regroupement :
 - Même intention mais comportement ou données différents = variante F-xxx.a, F-xxx.b.
 - Les liens vont dans les deux sens : une page liste ses features ET chaque feature liste ses pages.
 - Les IDs sont définitifs : ne jamais renuméroter.
-- `plateforme` et `plateformes` indiquent la plateforme de ce design (ex. mobile). Un design par plateforme = un registre par plateforme, fusionnés ensuite avec le prompt 10.
+- `plateforme` et `plateformes` indiquent la plateforme de ce design : web, desktop ou mobile (iOS et Android partagent le design mobile). Un design par plateforme = un registre par plateforme, fusionnés ensuite avec le prompt 10.
 
 Règles d'accès :
 - Liste dans `roles` chaque type d'utilisateur visible dans le design (droits, badges, écrans réservés).
@@ -160,7 +160,7 @@ roles:
     alias: {desktop: R-02, mobile: R-01}
 
 pages:
-  - id: P-D01          # P-Dxx desktop, P-Mxx mobile
+  - id: P-D01          # P-Wxx web, P-Dxx desktop, P-Mxx mobile
     plateforme: desktop
     nom:
     alias: P-01        # ancien ID
@@ -275,7 +275,7 @@ flux:
 ```
 
 Règles :
-- Un nœud acteur par rôle R-xx. Un nœud par élément d'infra : chaque app (desktop, iOS, Android), le serveur, chaque stockage, chaque service tiers.
+- Un nœud acteur par rôle R-xx. Un nœud par élément d'infra : chaque app, une par plateforme ciblée (web, desktop, iOS, Android), le serveur, chaque stockage, chaque service tiers.
 - Un flux = un transfert de données dans un seul sens. Un aller-retour = deux flux.
 - Chaque flux cite les entités transportées et les features qui le déclenchent ; un job de fond cite son flow FL-xx.
 - Un flux qui part d'un acteur ne cite que des features auxquelles son rôle a accès (`acces` du registre).

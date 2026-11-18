@@ -1,6 +1,6 @@
 # Build the app
 
-Part of [the method](../method.md). Snapshot of the "Build" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 8, taken on 2026-11-17 (see [DEC-5](../decisions.md#dec-5)).
+Part of [the method](../method.md). Snapshot of the "Build" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 11, taken on 2026-11-17.
 
 Steps 9 and 10, narrow and deep: how Claude works on the repo, the loop for one feature, and what happens when the description changes after code exists. Read this part at the start of every coding session. "The description" means everything decided in [Describe the app](describe.md) and [Code structure](code-structure.md): the registry, flows, state models and system design.
 
@@ -14,16 +14,16 @@ The loop for one feature (step 10):
 2. **Detail:** write the feature's spec for this feature only, starting from its components in the page contracts (rules, criteria with their proof blocks, data, API calls, events). A contract that still holds a MANQUANT stops the feature here, citing its `F`, `FL`, `E` and `D` IDs.
 3. **Tests first:** turn the feature's acceptance criteria into tests named after their IDs.
 4. **Build:** small steps, one idea at a time, inside the feature's folder. Each step is explained in the chat or the pull request, never in a code comment.
-5. **Prove it:** drive the real app with the `app` command on desktop, iOS and Android, follow each proof block, check the snapshot, save the screenshots (see [Verification](verification.md)). A failing proof goes back to step 4.
+5. **Prove it:** drive the real app with the `app` command on every platform the feature is on (web, desktop, iOS, Android), follow each proof block, check the snapshot, save the screenshots (see [Verification](verification.md)). A failing proof goes back to step 4.
 6. **Fix the docs:** if the code proved a doc wrong, update it in the same pull request. A change to the description follows "When the design changes" below: listed first, applied only after your OK, recorded as a decision.
-7. **Ship:** all checks green, import bans included, proofs passing on all three platforms, then a pull request with the screenshots attached. Merging deploys the feature with its flag off; releasing it is step 11, in [Release and watch](release.md). The merge also updates the task's status in the backlog.
+7. **Ship:** all checks green, import bans included, proofs passing on every platform the feature is on, then a pull request with the screenshots attached. Merging deploys the feature with its flag off; releasing it is step 11, in [Release and watch](release.md). The merge also updates the task's status in the backlog.
 
 Recommended defaults, to adapt per project and write into its `CLAUDE.md`:
 
 - No feature without a registry entry (`F`) and a backlog row.
 - Claude never changes the registry on its own: it lists the change, you approve, then it applies it and adds the decision.
 - IDs are never renumbered. Claude never releases a feature or turns a flag up on its own.
-- Never weaken a test or a proof block to make it pass. A feature is not done until its proofs pass on desktop, iOS and Android.
+- Never weaken a test or a proof block to make it pass. A feature is not done until its proofs pass on every platform it is on.
 - A question that blocks the work stops it. A question that does not block goes to the feature's `questions_ouvertes` (or the register, if app-wide), and the work goes on.
 - A shortcut taken on purpose is written in the workarounds log, with what it would take to remove it.
 - A task too big to review in one sitting is split into several pull requests, each one coherent and green.
