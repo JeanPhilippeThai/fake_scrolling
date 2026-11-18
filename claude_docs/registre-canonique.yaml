@@ -1426,3 +1426,38 @@ decisions:
     choix: 'Tous les états non dessinés des 18 features concernées sont dessinés dans le design mobile avant d''écrire les flows : chargement, erreur, vide, échec d''envoi ou de paiement, code faux ou expiré, galerie vide ou accès refusé. Ces features portent design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
     raison: L'étape 1 de la méthode demande les états vide, chargement et erreur ; les dessiner tous maintenant évite de les découvrir pendant les flows ou les specs.
     impacte: [F-001, F-003, F-007, F-009, F-015, F-017, F-022, F-030, F-037, F-038, F-041, F-044, F-051, F-052, F-056, F-058, F-062, F-063]
+  - id: D-026
+    sujet: Emplacement des états dans le design
+    choix: 'Chaque état est un artboard statique à part, sous les écrans du design mobile (titre « États vides, chargement et erreur »), nommé par page et feature (ex. « P-02 · F-007 · Code faux »). Les 7 écrans interactifs ne changent pas.'
+    raison: Voir tous les états côte à côte sans toucher aux écrans existants.
+    impacte: [F-001, F-003, F-007, F-009, F-015, F-017, F-022, F-030, F-037, F-038, F-041, F-044, F-051, F-052, F-056, F-058, F-062, F-063]
+  - id: D-027
+    sujet: Affichage des erreurs
+    choix: 'Erreur sur place avec « Réessayer » : message rouge sous le champ pour les formulaires (e-mail, code, profil) ; le contenu envoyé reste affiché, marqué « Non publié » ou « Non envoyé », avec « Réessayer » (commentaire, message, post) ; message sur place avec « Réessayer » pour le paiement et la suppression du compte. Rien de ce qui a été saisi n''est perdu.'
+    raison: Un toast disparaît en 2 s et n'offre pas de reprise ; une feuille plein écran est trop lourde pour un commentaire.
+    impacte: [F-001, F-003, F-007, F-009, F-015, F-030, F-041, F-051, F-056, F-058, F-063]
+  - id: D-028
+    sujet: Affichage du chargement
+    choix: 'Un anneau qui tourne : centré dans une liste qui charge, en bas du fil, et dans le bouton pressé (désactivé pendant ce temps).'
+    raison: Lisible tout de suite et dans le style sobre de l'app, sans nouveau motif par liste.
+    impacte: [F-001, F-003, F-009, F-017, F-038, F-051, F-052, F-056]
+  - id: D-029
+    sujet: États vides
+    choix: 'Un titre court, une phrase grise et un bouton quand une action existe (ex. « Aucun post pour l''instant » + « Créer un post » ; « Aucun résultat » sans bouton). Pas d''illustration.'
+    raison: Indiquer la suite sans ajouter d'icônes au design.
+    impacte: [F-017, F-022, F-037, F-038, F-044, F-052, F-062]
+  - id: D-030
+    sujet: Commentaire ou message non envoyé
+    choix: Un commentaire ou un message qui échoue propose seulement « Réessayer » ; pas d'action « Supprimer ».
+    raison: Même comportement pour les deux, sans nouvelle action à spécifier.
+    impacte: [F-030, F-041]
+  - id: D-031
+    sujet: Confirmation de publication
+    choix: 'Après « Partager dans le fil », l''Accueil affiche le toast « Post publié. » ; après « Partager en story », Messages affiche le toast « Story publiée. ».'
+    raison: Les deux destinations confirment de la même façon.
+    impacte: [F-051]
+  - id: D-032
+    sujet: Échec de chargement du fil
+    choix: 'Si les posts suivants ne se chargent pas, le bas du fil affiche « Les posts suivants n''ont pas pu être chargés. » avec « Réessayer ».'
+    raison: Les flows du fil en ont besoin ; même motif que les autres erreurs.
+    impacte: [F-009]
