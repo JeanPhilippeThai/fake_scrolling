@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-18 · commit 747d722 · fingerprint ec25cc8f8a89
+2026-11-18 · commit 747d722 · fingerprint 8da892d85db6
 
 Doc tests: all passed. The docs are at step 1, Design.
 
@@ -18,6 +18,5 @@ Doc test run: `test-design-and-docs-conformity`, output `claude_skills_output/de
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached; no stack decisions, code layout or threat model |
 
 ## Next prompts
-1. **Prompt 9: design changed after the extraction** (step 4). Give it: the updated design from item 1, `claude_docs/registre-canonique.yaml` and `claude_docs/inventaire-des-ecrans.md`. It produces: `design_a_mettre_a_jour` removed where the design now matches, the remaining differences, and proposed IDs for new elements (after F-068, P-26).
-2. **Prompt 8: sort the check's findings** (steps 2 to 4). Give it: findings 2 (L2-03), 3 (L3-05), 5 (B3-02) and 8 (T-01) of `claude_skills_output/design_and_docs_check_output.md`, with its questions 2 and 3, plus anything left open by item 2. It produces: F-055 naming the three Options lines and E-03 gaining a place field and an identified-people field (class A, applied directly), then decisions for the six "à confirmer" items and for the "refusé" status of E-09.
-3. **Prompt 5: flows** (step 5). Give it: `claude_docs/registre-canonique.yaml` as updated by items 2 and 3; flow FL-01 "Se connecter avec un compte tiers ou un code e-mail" (P-01, P-02, F-001, F-003, F-007, F-008). It produces: the FL-01 section of the flows doc, and the features or pages the registry lacks for it. FL-02 to FL-16 follow, one run each (list in section 3 of `claude_docs/prochains-prompts.md`).
+1. **Prompt 8: sort the check's findings** (steps 2 to 4). Give it: findings 2 (L2-03), 3 (L3-05), 5 (B3-02) and 8 (T-01) of `claude_skills_output/design_and_docs_check_output.md`, with its questions 2 and 3, plus anything left open by prompt 9. It produces: F-055 naming the three Options lines and E-03 gaining a place field and an identified-people field (class A, applied directly), then decisions for the six "à confirmer" items and for the "refusé" status of E-09.
+2. **Prompt 5: flows** (step 5). Give it: `claude_docs/registre-canonique.yaml` as updated by prompt 9 and item 1; flow FL-01 "Se connecter avec un compte tiers ou un code e-mail" (P-01, P-02, F-001, F-003, F-007, F-008). It produces: the FL-01 section of the flows doc, and the features or pages the registry lacks for it. FL-02 to FL-16 follow, one run each (list in section 3 of `claude_docs/prochains-prompts.md`).

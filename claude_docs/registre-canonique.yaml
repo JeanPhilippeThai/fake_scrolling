@@ -54,7 +54,7 @@ pages:
   - id: P-12
     nom: Nouveau post — choix des photos
     plateforme: mobile
-    features: [F-005.a, F-024, F-044, F-045, F-046]
+    features: [F-005.a, F-024, F-044, F-045, F-046, F-069]
   - id: P-13
     nom: Nouveau post — légende
     plateforme: mobile
@@ -127,11 +127,13 @@ features:
         difference: 'Apple au lieu de Google : bouton noir, compte Apple'
     entites: [E-02, E-01]
     operations: [lecture, écriture]
-    etats_ui: [normal]
-    design_a_mettre_a_jour: true
+    etats_ui:
+      - normal
+      - 'chargement : « Connexion avec Google… » dans le bouton'
+      - 'erreur : « La connexion avec Google n’a pas abouti. Réessaie, ou utilise ton adresse e-mail. » au-dessus des boutons'
+      - mêmes états pour Apple (F-001.a), par analogie (D-036)
     questions_ouvertes:
       - Écran d'autorisation du fournisseur non dessiné
-      - États chargement et erreur non dessinés
       - Logos officiels Google et Apple à intégrer
       - Le backend détecte si le compte existe ; l'écran d'inscription qui suit n'est pas dessiné
 
@@ -175,11 +177,12 @@ features:
       - champ rempli
       - bouton désactivé tant que l'adresse est invalide
       - bouton actif
-    design_a_mettre_a_jour: true
+      - 'adresse invalide : « Cette adresse e-mail n’est pas valide. » sous le champ, bouton désactivé'
+      - 'envoi : anneau et « Envoi du code… » dans le bouton'
+      - 'erreur : « Le code n’a pas pu être envoyé. Vérifie ta connexion et réessaie. » avec « Réessayer »'
     questions_ouvertes:
       - Envoi réel du mail à confirmer
-      - Message d'adresse invalide non dessiné
-      - États envoi et erreur non dessinés
+      - 'Moment où le message d''adresse invalide apparaît : en tapant, ou en quittant le champ ?'
 
   - id: F-004
     nom: Lire la mention sans mot de passe
@@ -246,10 +249,10 @@ features:
       - complet
       - bouton désactivé sous 6 chiffres
       - bouton actif
-    design_a_mettre_a_jour: true
+      - 'code faux : « Ce code n’est pas le bon. Vérifie-le et réessaie. », bouton « Se connecter » désactivé'
+      - 'code expiré : « Ce code a expiré. Demande-en un nouveau. », « Se connecter » remplacé par « Renvoyer un code » (F-008)'
     questions_ouvertes:
       - Vérification réelle du code (la maquette accepte tout code)
-      - États code faux et code expiré non dessinés
       - Remplissage automatique depuis l'e-mail selon le téléphone
       - Le backend détecte si le compte existe ; l'écran d'inscription qui suit n'est pas dessiné
 
@@ -265,6 +268,7 @@ features:
     etats_ui:
       - décompte 30 → 0
       - lien visible à 0 s
+      - 'code expiré : bouton « Renvoyer un code » à la place de « Se connecter », sans décompte'
     questions_ouvertes:
       - Nouvel envoi réel à confirmer
 
@@ -280,9 +284,9 @@ features:
     etats_ui:
       - en cours de glisser
       - retour en place si glisser trop court
-    design_a_mettre_a_jour: true
-    questions_ouvertes:
-      - Indicateur de chargement non dessiné
+      - 'chargement : anneau et « Chargement des posts suivants… » en bas du fil'
+      - 'erreur : « Les posts suivants n’ont pas pu être chargés. » avec « Réessayer » (D-032)'
+    questions_ouvertes: []
 
   - id: F-010
     nom: Voir un post en plein écran
@@ -367,10 +371,10 @@ features:
     etats_ui:
       - offre et bouton visibles à partir de 1 h
       - 'soutenu : « Merci pour ton soutien. »'
-    design_a_mettre_a_jour: true
+      - 'paiement échoué : « Le paiement n’a pas abouti. Tu n’as pas été débité. » avec « Réessayer » (P-03 et P-22)'
+      - 'paiement annulé : « Paiement annulé. Tu n’as pas été débité. » et de nouveau « Soutenir le projet » (P-22 ; même état sur F-015.a par analogie, D-036)'
     questions_ouvertes:
       - Paiement via l'App Store ou Google Play
-      - Échec et annulation de paiement non dessinés
       - 'Règle : offre visible à partir de 1 h d''utilisation ; masquée si le compte a déjà soutenu (E-16)'
 
   - id: F-016
@@ -403,10 +407,11 @@ features:
     variantes: []
     entites: [E-05, E-03]
     operations: [lecture]
-    etats_ui: [liste]
-    design_a_mettre_a_jour: true
+    etats_ui:
+      - liste
+      - 'chargement : anneau centré'
+      - 'vide : « Aucun commentaire » · « Écris le premier. »'
     questions_ouvertes:
-      - États vide et chargement non dessinés
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
 
   - id: F-018
@@ -497,9 +502,8 @@ features:
       - pastille avec nombre
       - sans pastille
       - section Invitations masquée si vide
-    design_a_mettre_a_jour: true
+      - 'vide : « Aucune notification » · « Les invitations et les likes reçus s’affichent ici. »'
     questions_ouvertes:
-      - État « aucune notification » non dessiné
       - Ouvrir le post liké depuis sa miniature
       - 'Accès supposé : seulement les invitations reçues et en attente (statut de la demande, E-09)'
 
@@ -532,7 +536,7 @@ features:
 
   - id: F-026
     nom: Ouvrir la création d'un post
-    description: Bouton + noir au centre du menu du bas.
+    description: Bouton + noir au centre du menu du bas. Aussi depuis « Créer un post » de l'état vide de P-17 (D-035).
     pages: [P-03, P-08, P-14, P-15, P-16, P-17]
     plateformes: [mobile]
     acces: [R-02]
@@ -596,9 +600,8 @@ features:
     etats_ui:
       - bouton gris si vide
       - texte tapé visible moins d'1 s puis charabia
-    design_a_mettre_a_jour: true
+      - 'échec : le commentaire reste affiché, marqué « Non publié. » avec « Réessayer » (D-030)'
     questions_ouvertes:
-      - Échec de publication non dessiné
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
 
   - id: F-031
@@ -634,7 +637,7 @@ features:
 
   - id: F-034
     nom: Ajouter un ami
-    description: 'Bouton + des Messages puis « Ajouter » sur un compte trouvé : la demande part.'
+    description: 'Bouton + des Messages puis « Ajouter » sur un compte trouvé : la demande part. Aussi depuis « Ajouter un ami » de l''état vide de P-08 (D-035).'
     pages: [P-08, P-11]
     plateformes: [mobile]
     acces: [R-02]
@@ -676,9 +679,8 @@ features:
     etats_ui:
       - 'non lu : gras et point bleu'
       - lu
-    design_a_mettre_a_jour: true
+      - 'vide : « Aucune discussion » · « Ajoute un ami pour commencer à discuter. » avec « Ajouter un ami » (F-034, D-035)'
     questions_ouvertes:
-      - État vide non dessiné
       - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09) ; peut-on écrire à un non-ami ?'
 
   - id: F-038
@@ -692,10 +694,10 @@ features:
     operations: [lecture]
     etats_ui:
       - contact en train d'écrire
-    design_a_mettre_a_jour: true
+      - 'chargement : anneau centré'
+      - 'vide : « Aucun message » · « Écris le premier message à Léa. »'
     questions_ouvertes:
       - Réponses automatiques de démo
-      - États vide et chargement non dessinés
       - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09)'
 
   - id: F-039
@@ -739,9 +741,8 @@ features:
     operations: [écriture]
     etats_ui:
       - texte tapé visible moins d'1 s puis charabia
-    design_a_mettre_a_jour: true
+      - 'échec : le message reste affiché, marqué « Non envoyé. » avec « Réessayer » (D-030)'
     questions_ouvertes:
-      - Échec d'envoi non dessiné
       - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09) ; peut-on écrire à un non-ami ?'
 
   - id: F-042
@@ -789,10 +790,10 @@ features:
       - photo affichée voilée
       - numéros 1 à 10 en multiple
       - position « 2/4 »
-    design_a_mettre_a_jour: true
+      - 'galerie vide : « Aucune photo » · « Ta galerie est vide. Prends une photo pour créer un post. » avec « Ouvrir l’appareil photo » (F-069, D-033)'
+      - 'accès refusé : « Accès aux photos refusé » avec « Ouvrir les réglages » du téléphone (D-034)'
     questions_ouvertes:
       - Vraie galerie et autorisation d'accès
-      - Galerie vide et accès refusé non dessinés
 
   - id: F-045
     nom: Choisir un album
@@ -897,10 +898,12 @@ features:
     operations: [écriture]
     etats_ui:
       - libellé selon la destination choisie
-    design_a_mettre_a_jour: true
+      - 'envoi : anneau et « Publication… » dans le bouton'
+      - 'erreur : « Le post n’a pas été publié. Tes photos et ta légende sont gardées. » avec « Réessayer »'
+      - 'succès fil : l''Accueil affiche le toast « Post publié. » (D-031)'
+      - 'succès story : Messages affiche le toast « Story publiée. » (D-031)'
     questions_ouvertes:
       - Envoi, flou et charabia côté amis
-      - États envoi, succès et erreur non dessinés
 
   - id: F-052
     nom: Rechercher des posts
@@ -914,9 +917,9 @@ features:
     etats_ui:
       - 'champ vide : suggestions'
       - 'champ rempli : résultats'
-    design_a_mettre_a_jour: true
+      - 'chargement : anneau centré (P-15)'
+      - 'aucun résultat : « Aucun résultat » · « Aucun post ne correspond à « … ». Essaie un autre mot. »'
     questions_ouvertes:
-      - Chargement et « aucun résultat » non dessinés
       - 'Accès supposé : les résultats incluent des posts de non-amis s''ils sont publics (audience du post, F-050)'
 
   - id: F-053
@@ -976,10 +979,10 @@ features:
       - prérempli
       - compteurs 0/16 et 0/80
       - texte tapé visible moins d'1 s puis charabia
-    design_a_mettre_a_jour: true
+      - 'enregistrement : anneau, champs gardés'
+      - 'erreur : « Tes modifications n’ont pas été enregistrées. Vérifie ta connexion et réessaie. » avec « Réessayer »'
     questions_ouvertes:
       - 'Pseudo vide : l''ancien est gardé'
-      - États envoi et erreur non dessinés
 
   - id: F-057
     nom: Voir son profil
@@ -1011,10 +1014,9 @@ features:
     etats_ui:
       - nette environ 1 s
       - floutée
-    design_a_mettre_a_jour: true
+      - 'erreur de fichier : « Cette image n’a pas pu être utilisée. Choisis-en une autre. » (P-18)'
     questions_ouvertes:
-      - Autorisation d'accès à la galerie
-      - Erreurs de fichier non dessinées
+      - Autorisation d'accès à la galerie ; si elle est refusée, même état que F-044 (D-034) ?
 
   - id: F-059
     nom: Suivre le minuteur de couleur
@@ -1070,9 +1072,8 @@ features:
     operations: [lecture]
     etats_ui:
       - non cliquables
-    design_a_mettre_a_jour: true
+      - 'vide : « Aucun post pour l’instant » · « Tes posts s’affichent ici, floutés, avec leurs jours restants. » avec « Créer un post » (F-026, D-035)'
     questions_ouvertes:
-      - État vide non dessiné
       - Ouvrir un de ses posts
 
   - id: F-063
@@ -1087,10 +1088,9 @@ features:
     etats_ui:
       - confirmation
       - compte supprimé
-    design_a_mettre_a_jour: true
+      - 'échec : « Ton compte n’a pas pu être supprimé. Rien n’a été effacé. » avec « Réessayer »'
     questions_ouvertes:
       - Effacement réel et déconnexion
-      - Échec non dessiné
 
   - id: F-065
     nom: Voir son temps passé
@@ -1149,6 +1149,22 @@ features:
       - Story présélectionnée depuis « Ta story »
     questions_ouvertes: []
 
+  - id: F-069
+    nom: Prendre une photo pour un post
+    description: '« Ouvrir l''appareil photo » depuis la galerie vide : la photo prise devient la photo du post.'
+    pages: [P-12]
+    plateformes: [mobile]
+    acces: [R-02]
+    variantes: []
+    entites: [E-04, E-03]
+    operations: [écriture]
+    etats_ui:
+      - 'galerie vide : bouton « Ouvrir l''appareil photo »'
+    questions_ouvertes:
+      - 'Écran de prise de vue non dessiné : appareil photo du téléphone ou caméra dans l''appli ?'
+      - Autorisation d'accès à l'appareil photo, et état si elle est refusée
+      - Bouton seulement dans la galerie vide, ou aussi au-dessus de la grille ?
+
 entites:
 
   - id: E-01
@@ -1186,7 +1202,7 @@ entites:
       - jours restants avant expiration
       - palette
       - lien
-    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-047, F-048, F-049, F-050, F-051, F-052, F-054, F-062, F-068]
+    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-047, F-048, F-049, F-050, F-051, F-052, F-054, F-062, F-068, F-069]
 
   - id: E-04
     nom: Média
@@ -1195,7 +1211,7 @@ entites:
       - durée de la vidéo
       - rang dans le carrousel
       - version floutée
-    utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058]
+    utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, F-069]
 
   - id: E-05
     nom: Commentaire
@@ -1461,3 +1477,23 @@ decisions:
     choix: 'Si les posts suivants ne se chargent pas, le bas du fil affiche « Les posts suivants n''ont pas pu être chargés. » avec « Réessayer ».'
     raison: Les flows du fil en ont besoin ; même motif que les autres erreurs.
     impacte: [F-009]
+  - id: D-033
+    sujet: Appareil photo depuis la galerie vide
+    choix: '« Ouvrir l''appareil photo », dans l''état galerie vide de P-12, devient la feature F-069 « Prendre une photo pour un post ». Le design reste tel quel.'
+    raison: Le bouton donne une issue à une galerie vide, et aucune feature existante ne prend de photo.
+    impacte: [F-044, F-069]
+  - id: D-034
+    sujet: Accès aux photos refusé
+    choix: '« Ouvrir les réglages » est un état de F-044 qui ouvre les réglages du téléphone, sans nouvel ID.'
+    raison: C'est la réponse au refus d'autorisation du système, pas une action propre à l'appli.
+    impacte: [F-044]
+  - id: D-035
+    sujet: Boutons des états vides
+    choix: '« Créer un post » (état vide de P-17) et « Ajouter un ami » (état vide de P-08) sont une seconde entrée vers F-026 et F-034, notée dans leur description ; pas de variante ni de nouvel ID.'
+    raison: Même action, même comportement ; seul l'endroit change.
+    impacte: [F-026, F-034, F-037, F-062]
+  - id: D-036
+    sujet: États dessinés pour un seul cas
+    choix: 'Le chargement et l''erreur de F-001, dessinés pour Google, valent aussi pour Apple (F-001.a). Le paiement annulé, dessiné sur P-22, vaut aussi pour le post Premium de P-03 (F-015.a). Pas de nouvel artboard.'
+    raison: Seul le fournisseur ou l'emplacement change ; le motif est le même (D-027).
+    impacte: [F-001, F-015]
