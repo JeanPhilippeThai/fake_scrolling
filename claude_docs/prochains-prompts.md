@@ -1,3 +1,4 @@
+<!-- Source: https://claude.ai/artifact/9joNr2k6zjAmWtiozZMhrn, tab "Fake scrolling", rev 2, exported 2026-11-18 -->
 # Prochains prompts – Fake scrolling
 
 Six séries de prompts sur « Fake scrolling — registre canonique » : les cinq des autres onglets, plus un passage par le design pour les états non dessinés. C'est le plus petit des trois registres, donc le bon candidat pour dérouler toute la suite en premier.

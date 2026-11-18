@@ -1,8 +1,3 @@
-# Fake scrolling — registre canonique
-# Source : https://claude.ai/artifact/W2ibtgK7oF536LDXh5AAAV (mis à jour le 2026-11-17, décision D-024)
-# IDs définitifs : un ID fusionné est retiré et jamais réutilisé.
-# Préfixes : R- rôle · P- page · F- feature (F-xxx.a = variante) · E- entité · D- décision
-
 roles:
   - id: R-01
     nom: Personne non connectée

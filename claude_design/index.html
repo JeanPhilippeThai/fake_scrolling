@@ -1,43 +1,9 @@
 <!doctype html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fake scrolling — app (design)</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Designs</title>
 <style>
-  :root { --bg: #EDEDEA; --ink: #1C1C1C; --muted: #5E5E5B; --line: #DEDEDA; }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  header { padding: 24px 32px 8px; }
-  h1 { margin: 0 0 4px; font-size: 28px; letter-spacing: -0.01em; }
-  header p { margin: 0; color: var(--muted); }
-  h2 { margin: 32px 32px 12px; font-size: 20px; }
-  .row { display: flex; gap: 80px; padding: 0 32px 24px; overflow-x: auto; align-items: flex-start; }
-  figure { margin: 0; flex: none; display: flex; flex-direction: column; gap: 8px; }
-  figcaption { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--muted); }
-  figcaption a { color: var(--ink); }
-  iframe { width: 390px; height: 844px; border: 0; border-radius: 28px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
-</style>
-</head>
-<body>
-<header>
-  <h1>Fake scrolling — l’app</h1>
-  <p>7 écrans mobiles interactifs (390 × 844). « Ouvrir seul » affiche un écran en pleine page ; les liens entre écrans fonctionnent.</p>
-</header>
-
-<h2>Connexion</h2>
-<div class="row">
-  <figure><iframe src="Login.dc.html" title="Connexion"></iframe><figcaption><span>Connexion</span><a href="Login.dc.html" target="_blank">Ouvrir seul</a></figcaption></figure>
-  <figure><iframe src="Code.dc.html" title="Code reçu par e-mail"></iframe><figcaption><span>Code reçu par e-mail</span><a href="Code.dc.html" target="_blank">Ouvrir seul</a></figcaption></figure>
-</div>
-
-<h2>L’app</h2>
-<div class="row">
-  <figure><iframe src="Main.dc.html" title="Accueil (fil du jour)"></iframe><figcaption><span>Accueil (fil du jour)</span><a href="Main.dc.html" target="_blank">Ouvrir seul</a></figcaption></figure>
-  <figure><iframe src="Chat.dc.html" title="Messages"></iframe><figcaption><span>Messages</span><a href="Chat.dc.html" target="_blank">Ouvrir seul</a></figcaption></figure>
-  <figure><iframe src="Compose.dc.html" title="Créer un post"></iframe><figcaption><span>Créer un post</span><a href="Compose.dc.html" target="_blank">Ouvrir seul</a></figcaption></figure>
-  <figure><iframe src="Search.dc.html" title="Recherche"></iframe><figcaption><span>Recherche</span><a href="Search.dc.html" target="_blank">Ouvrir seul</a></figcaption></figure>
-  <figure><iframe src="Profile.dc.html" title="Profil et réglages"></iframe><figcaption><span>Profil et réglages</span><a href="Profile.dc.html" target="_blank">Ouvrir seul</a></figcaption></figure>
-</div>
-</body>
-</html>
+:root{--bg:#fafaf8;--fg:#1c1c1c;--muted:#5e5e5b}
+@media (prefers-color-scheme:dark){:root{--bg:#1f1f1e;--fg:#ecebe7;--muted:#a3a29d}}
+body{margin:0;padding:24px 16px;background:var(--bg);color:var(--fg);font:16px system-ui,sans-serif}
+a{color:inherit} li{margin:8px 0} span{color:var(--muted);font-size:14px}
+</style></head><body><h1>Designs</h1><ul><li><a href="fake-scrolling-app/index.html">Fake scrolling — app</a> <span>7 artboards</span></li></ul></body></html>
