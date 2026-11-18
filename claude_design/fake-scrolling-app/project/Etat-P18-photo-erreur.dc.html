@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Photo de profil — erreur de fichier</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F6B4A}a:hover{color:#174F37}
+button:focus-visible,a:focus-visible{outline:2px solid #2F4F9E;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFFFF; color: #1C1C1C; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; overflow: hidden; position: relative">
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(28, 28, 28, 0.5)"></div>
+
+  <div role="dialog" aria-modal="true" aria-labelledby="av-title" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 10px 16px 28px; border-radius: 24px 24px 0 0; background: #FFFFFF">
+    <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #DEDEDA"></span>
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+      <h2 id="av-title" style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 22px">Photo de profil</h2>
+      <button type="button" aria-label="Fermer" style="width: 44px; height: 44px; margin-right: -8px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+    </div>
+    <p role="alert" style="margin: 0; display: flex; align-items: flex-start; gap: 6px; font-size: 14px; line-height: 1.4; color: #B42318">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5v5.5M12 16.5v.1"></path></svg>
+      Cette image n’a pas pu être utilisée. Choisis-en une autre.
+    </p>
+    <button type="button" style="display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; border: 0; border-radius: 999px; background: #1C1C1C; color: #FFFFFF; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg>
+      Choisir dans ta galerie
+    </button>
+    <span style="font-size: 13px; font-weight: 600; color: #5E5E5B">Ou une image de démo</span>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+      <span role="img" aria-label="Image de démo 1" style="aspect-ratio: 1; border-radius: 50%; border: 2px solid #1C1C1C; background: radial-gradient(circle at 30% 30%, #9EE493, #2EC4B6 55%, #118AB2)"></span>
+      <span role="img" aria-label="Image de démo 2" style="aspect-ratio: 1; border-radius: 50%; border: 2px solid #DEDEDA; background: radial-gradient(circle at 30% 30%, #FFBE0B, #FF7A59 60%, #EF476F)"></span>
+      <span role="img" aria-label="Image de démo 3" style="aspect-ratio: 1; border-radius: 50%; border: 2px solid #DEDEDA; background: radial-gradient(circle at 30% 30%, #E3ECFF, #3A86FF 60%, #24315E)"></span>
+      <span role="img" aria-label="Image de démo 4" style="aspect-ratio: 1; border-radius: 50%; border: 2px solid #DEDEDA; background: radial-gradient(circle at 30% 30%, #FFE5D9, #8338EC 60%, #24315E)"></span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

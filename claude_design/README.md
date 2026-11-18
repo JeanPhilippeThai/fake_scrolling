@@ -1,10 +1,10 @@
 # Designs — newest import
 
-Imported 2026-11-18 by the `import-design-and-docs-artifact` skill.
+Imported 2026-11-18 (after the states pass, version 63) by the `import-design-and-docs-artifact` skill.
 
 | Canvas | Folder | Source |
 | --- | --- | --- |
-| Fake scrolling — app (7 artboards) | `fake-scrolling-app/` | https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT |
+| Fake scrolling — app (40 artboards) | `fake-scrolling-app/` | https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT |
 
 ## Open
 
