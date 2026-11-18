@@ -128,6 +128,7 @@ features:
     entites: [E-02, E-01]
     operations: [lecture, écriture]
     etats_ui: [normal]
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Écran d'autorisation du fournisseur non dessiné
       - États chargement et erreur non dessinés
@@ -174,6 +175,7 @@ features:
       - champ rempli
       - bouton désactivé tant que l'adresse est invalide
       - bouton actif
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Envoi réel du mail à confirmer
       - Message d'adresse invalide non dessiné
@@ -244,6 +246,7 @@ features:
       - complet
       - bouton désactivé sous 6 chiffres
       - bouton actif
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Vérification réelle du code (la maquette accepte tout code)
       - États code faux et code expiré non dessinés
@@ -277,6 +280,7 @@ features:
     etats_ui:
       - en cours de glisser
       - retour en place si glisser trop court
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Indicateur de chargement non dessiné
 
@@ -363,6 +367,7 @@ features:
     etats_ui:
       - offre et bouton visibles à partir de 1 h
       - 'soutenu : « Merci pour ton soutien. »'
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Paiement via l'App Store ou Google Play
       - Échec et annulation de paiement non dessinés
@@ -399,6 +404,7 @@ features:
     entites: [E-05, E-03]
     operations: [lecture]
     etats_ui: [liste]
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - États vide et chargement non dessinés
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
@@ -491,6 +497,7 @@ features:
       - pastille avec nombre
       - sans pastille
       - section Invitations masquée si vide
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - État « aucune notification » non dessiné
       - Ouvrir le post liké depuis sa miniature
@@ -589,6 +596,7 @@ features:
     etats_ui:
       - bouton gris si vide
       - texte tapé visible moins d'1 s puis charabia
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Échec de publication non dessiné
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
@@ -668,6 +676,7 @@ features:
     etats_ui:
       - 'non lu : gras et point bleu'
       - lu
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - État vide non dessiné
       - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09) ; peut-on écrire à un non-ami ?'
@@ -683,6 +692,7 @@ features:
     operations: [lecture]
     etats_ui:
       - contact en train d'écrire
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Réponses automatiques de démo
       - États vide et chargement non dessinés
@@ -729,6 +739,7 @@ features:
     operations: [écriture]
     etats_ui:
       - texte tapé visible moins d'1 s puis charabia
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Échec d'envoi non dessiné
       - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09) ; peut-on écrire à un non-ami ?'
@@ -778,6 +789,7 @@ features:
       - photo affichée voilée
       - numéros 1 à 10 en multiple
       - position « 2/4 »
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Vraie galerie et autorisation d'accès
       - Galerie vide et accès refusé non dessinés
@@ -885,6 +897,7 @@ features:
     operations: [écriture]
     etats_ui:
       - libellé selon la destination choisie
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Envoi, flou et charabia côté amis
       - États envoi, succès et erreur non dessinés
@@ -901,6 +914,7 @@ features:
     etats_ui:
       - 'champ vide : suggestions'
       - 'champ rempli : résultats'
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Chargement et « aucun résultat » non dessinés
       - 'Accès supposé : les résultats incluent des posts de non-amis s''ils sont publics (audience du post, F-050)'
@@ -962,6 +976,7 @@ features:
       - prérempli
       - compteurs 0/16 et 0/80
       - texte tapé visible moins d'1 s puis charabia
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - 'Pseudo vide : l''ancien est gardé'
       - États envoi et erreur non dessinés
@@ -996,6 +1011,7 @@ features:
     etats_ui:
       - nette environ 1 s
       - floutée
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Autorisation d'accès à la galerie
       - Erreurs de fichier non dessinées
@@ -1054,6 +1070,7 @@ features:
     operations: [lecture]
     etats_ui:
       - non cliquables
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - État vide non dessiné
       - Ouvrir un de ses posts
@@ -1070,6 +1087,7 @@ features:
     etats_ui:
       - confirmation
       - compte supprimé
+    design_a_mettre_a_jour: true
     questions_ouvertes:
       - Effacement réel et déconnexion
       - Échec non dessiné
@@ -1403,3 +1421,8 @@ decisions:
     choix: 'Deux rôles : R-01 Personne non connectée (P-01, P-02) et R-02 Utilisateur connecté (P-03 à P-26). Le compte @fakescrolling est un contenu système, pas un rôle. Un lien de post ouvert sans connexion mène à P-01. Un seul rôle avant connexion : le backend détecte s''il faut passer à l''inscription. F-002 et F-005 sont à [R-01, R-02], leurs variantes à [R-02]. Les conditions plus fines (ami, audience, 1 h, soutien, compte ou appareil) restent des questions ouvertes.'
     raison: 'Le design ne montre que deux états d''accès, avant et après connexion : aucun badge, écran réservé ni profil d''un autre utilisateur.'
     impacte: [F-001, F-002, F-005, F-007, F-019]
+  - id: D-025
+    sujet: États vide, chargement et erreur non dessinés
+    choix: 'Tous les états non dessinés des 18 features concernées sont dessinés dans le design mobile avant d''écrire les flows : chargement, erreur, vide, échec d''envoi ou de paiement, code faux ou expiré, galerie vide ou accès refusé. Ces features portent design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
+    raison: L'étape 1 de la méthode demande les états vide, chargement et erreur ; les dessiner tous maintenant évite de les découvrir pendant les flows ou les specs.
+    impacte: [F-001, F-003, F-007, F-009, F-015, F-017, F-022, F-030, F-037, F-038, F-041, F-044, F-051, F-052, F-056, F-058, F-062, F-063]
