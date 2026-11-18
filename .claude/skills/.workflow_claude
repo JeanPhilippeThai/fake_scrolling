@@ -3,5 +3,6 @@
 compare-newest-current-claude-files
 doc_tests
 import-design-and-docs-artifact
+promote-newest-claude-files
 tackle-first-docs-prompt
 what-are-the-next-docs-prompts
