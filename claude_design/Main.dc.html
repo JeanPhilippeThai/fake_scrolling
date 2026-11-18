@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Fil — Fake scrolling</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F6B4A}a:hover{color:#174F37}
+button:focus-visible,a:focus-visible{outline:2px solid #2F4F9E;outline-offset:2px}
+.fs-noscroll{scrollbar-width:none}
+.fs-noscroll::-webkit-scrollbar{display:none}
+@keyframes fs-story-a{from{width:0}to{width:100%}}
+@keyframes fs-story-b{from{width:0}to{width:100%}}
+.fs-story-a{animation:fs-story-a 5s linear forwards}
+.fs-story-b{animation:fs-story-b 5s linear forwards}
+@keyframes fs-d0{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,-80px) scale(1.2)}}
+@keyframes fs-d1{from{transform:translate(0,0) scale(1)}to{transform:translate(-70px,50px) scale(0.85)}}
+@keyframes fs-d2{from{transform:translate(0,0) rotate(0deg)}to{transform:translate(40px,90px) rotate(30deg)}}
+@keyframes fs-d3{from{transform:translate(0,0) rotate(0deg)}to{transform:translate(-50px,-60px) rotate(-25deg) scale(1.1)}}
+@keyframes fs-progress{from{width:0}to{width:100%}}
+.fs-prog{animation-name:fs-progress;animation-timing-function:linear;animation-iteration-count:infinite;width:0}
+@keyframes fs-pop{0%{transform:scale(0.3);opacity:0}15%{transform:scale(1.15);opacity:1}30%{transform:scale(1)}75%{transform:scale(1);opacity:1}100%{transform:scale(1.1) translateY(-40px);opacity:0}}
+.fs-burst{animation:fs-pop 0.9s ease-out forwards}
+@keyframes fs-breathe{0%,100%{transform:scale(0.55)}50%{transform:scale(1)}}
+@keyframes fs-in{0%,46%{opacity:1}50%,96%{opacity:0}100%{opacity:1}}
+@keyframes fs-out{0%,46%{opacity:0}50%,96%{opacity:1}100%{opacity:0}}
+.fs-breath{animation:fs-breathe 8s ease-in-out infinite}
+.fs-in{animation:fs-in 8s linear infinite}
+.fs-out{animation:fs-out 8s linear infinite}
+@media (prefers-reduced-motion: reduce){.fs-prog{animation:none;width:40%}.fs-burst,.fs-breath,.fs-in{animation:none}.fs-out{animation:none;opacity:0}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #1C1C1C; color: #1C1C1C; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; position: relative; overflow: hidden; filter: grayscale({{grey}}%); transition: filter 1.2s ease">
+
+  <div style="flex: 1; min-height: 0; position: relative">
+    <div ref="{{scrollRef}}" onWheel="{{onWheel}}" onPointerDown="{{onDragStart}}" onPointerMove="{{onDragMove}}" onPointerUp="{{onDragEnd}}" onPointerCancel="{{onDragEnd}}" onKeyDown="{{onKey}}" tabIndex="0" aria-label="Fil, post {{pageNum}}" style="position: absolute; inset: 0; overflow: hidden; touch-action: none; container-type: size; outline: none">
+      <div ref="{{trackRef}}" style="height: 100%; transform: translateY(calc({{negIdx}} * 100cqh)); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)">
+      <sc-for list="{{items}}" as="it" hint-placeholder-count="2">
+        <sc-if value="{{it.isPost}}" hint-placeholder-val="{{ true }}">
+          <article aria-label="Post de {{it.author}}" style="position: relative; height: 100cqh; overflow: hidden">
+
+            <div onScroll="{{it.onSlide}}" class="fs-noscroll" style="position: absolute; inset: 0; display: flex; overflow-x: {{it.ox}}; overflow-y: hidden; scroll-snap-type: x mandatory; touch-action: pan-x">
+              <sc-for list="{{it.slides}}" as="sl" hint-placeholder-count="1">
+                <div role="img" aria-label="{{sl.alt}}" onClick="{{sl.onTap}}" style="flex: 0 0 100%; height: 100%; position: relative; overflow: hidden; scroll-snap-align: start; background: {{sl.bg}}; cursor: pointer">
+                  <sc-if value="{{sl.isShapes}}" hint-placeholder-val="{{ true }}">
+                    <div style="position: absolute; inset: 0; filter: blur({{sl.blur}}px)">
+                      <sc-for list="{{sl.shapes}}" as="s" hint-placeholder-count="4">
+                        <div style="position: absolute; left: {{s.x}}px; top: {{s.y}}px; width: {{s.w}}px; height: {{s.h}}px; background: {{s.c}}; border-radius: {{s.r}}; transform: rotate({{s.rot}}deg); animation: {{s.anim}} {{s.dur}}s ease-in-out {{s.delay}}s infinite alternate"></div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{sl.isText}}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; inset: 0; box-sizing: border-box; padding: 90px 32px 230px; display: flex; flex-direction: column; justify-content: center; gap: 16px">
+                      <p style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 44px; line-height: 1.05; letter-spacing: -0.02em; color: #1C1C1C">{{sl.text}}</p>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{sl.isPremium}}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; inset: 0; box-sizing: border-box; padding: 60px 32px 190px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #F7F6F3">
+                      <div aria-hidden="true" style="width: 60px; height: 60px; border-radius: 15px; background: {{sl.iconBg}}; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14)">
+                        <span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 38px; line-height: 1; color: #FFFFFF; margin-top: -2px">F</span>
+                      </div>
+                      <span style="margin-top: 18px; font: 500 12px 'IBM Plex Mono', monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #5E5E5B">Premium</span>
+                      <p style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 32px; line-height: 1.1; letter-spacing: -0.02em; color: #1C1C1C">Soutenir fake scrolling</p>
+                      <p style="margin: 18px 0 0; display: flex; flex-direction: column; align-items: center; font-size: 15px; line-height: 1.55; color: #45453F"><span style="white-space: nowrap">Plus d’une heure passée ici.</span><span style="white-space: nowrap">Soutiens un projet indépendant.</span></p>
+                      <span style="margin-top: 18px; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 38px; letter-spacing: -0.02em; color: #1C1C1C">1,99 €</span>
+                      <span style="font-size: 13px; color: #5E5E5B">un seul paiement</span>
+                      <sc-if value="{{sl.notSupported}}" hint-placeholder-val="{{ true }}">
+                        <button type="button" onClick="{{sl.support}}" style="width: 100%; max-width: 300px; min-height: 54px; margin-top: 20px; border: 0; border-radius: 999px; background: #1C1C1C; color: #FFFFFF; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">Soutenir le projet</button>
+                      </sc-if>
+                      <sc-if value="{{sl.supported}}" hint-placeholder-val="{{ false }}">
+                        <p role="status" style="margin: 20px 0 0; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; color: #1C1C1C">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+                          Merci pour ton soutien.
+                        </p>
+                      </sc-if>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{sl.isBreath}}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; inset: 0; box-sizing: border-box; padding-bottom: 170px; display: flex; align-items: center; justify-content: center">
+                      <div style="position: relative; width: 290px; height: 290px; display: flex; align-items: center; justify-content: center">
+                        <div class="fs-breath" style="position: absolute; inset: 0; border-radius: 50%; background: {{sl.c1}}"></div>
+                        <div class="fs-breath" style="position: absolute; inset: 56px; border-radius: 50%; background: #F5F5F4"></div>
+                        <span class="fs-in" style="position: absolute; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 28px; color: #1C1C1C">Inspire</span>
+                        <span class="fs-out" style="position: absolute; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 28px; color: #1C1C1C">Expire</span>
+                      </div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{it.showBurst}}" hint-placeholder-val="{{ false }}">
+              <div aria-hidden="true" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
+                <svg class="fs-burst" width="132" height="132" viewBox="0 0 24 24" fill="#FF5C7A" stroke="#FFFFFF" stroke-width="1.2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>
+              </div>
+            </sc-if>
+
+
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 14px; pointer-events: none">
+            <div style="align-self: flex-end; margin-right: 8px; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: auto">
+              <div aria-hidden="true" style="width: 46px; height: 46px; border-radius: 50%; border: 2px solid #FFFFFF; overflow: hidden; background: {{it.avatar}}">
+                <div style="width: 100%; height: 100%; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7), transparent 60%); filter: blur(2px)"></div>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+                <button type="button" onClick="{{it.toggleLike}}" aria-pressed="{{it.liked}}" aria-label="J’aime" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="{{it.heartFill}}" stroke="{{it.heartStroke}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>
+                </button>
+                <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{it.likes}}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+                <button type="button" onClick="{{it.openComments}}" aria-label="Commentaires" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.5 7.2L4 20l1-4.2A8 8 0 1 1 20 12z"></path></svg>
+                </button>
+                <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{it.comments}}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+                <button type="button" onClick="{{it.openSave}}" aria-pressed="{{it.isSaved}}" aria-label="Enregistrer dans une collection" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+                  <svg width="29" height="29" viewBox="0 0 24 24" fill="{{it.saveFill}}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v17l-6-4-6 4z"></path></svg>
+                </button>
+                <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{it.saves}}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+                <button type="button" onClick="{{it.openShare}}" aria-label="Partager" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+                  <svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"></path><path d="M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg>
+                </button>
+                <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{it.shares}}</span>
+              </div>
+            </div>
+
+            <sc-if value="{{it.isCarousel}}" hint-placeholder-val="{{ false }}">
+              <div role="img" aria-label="Photo {{it.slideNum}} sur {{it.slideCount}}" style="align-self: center; display: flex; align-items: center; gap: 5px; margin-bottom: -6px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55))">
+                <sc-for list="{{it.dots}}" as="d" hint-placeholder-count="3">
+                  <span style="width: 6px; height: 6px; border-radius: 50%; background: {{d.c}}"></span>
+                </sc-for>
+              </div>
+            </sc-if>
+            <div style="display: flex; flex-direction: column; gap: 4px; padding: 0 76px {{it.capPad}}px 16px; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">
+              <span style="font-weight: 600; font-size: 16px; line-height: 1.3">{{it.author}}</span>
+              <p style="margin: 0; font-size: 15px; line-height: 1.45">{{it.captionShown}}<sc-if value="{{it.canExpand}}" hint-placeholder-val="{{ false }}"> <button type="button" onClick="{{it.toggleMore}}" aria-expanded="{{it.expanded}}" style="pointer-events: auto; min-height: 24px; padding: 0; border: 0; background: transparent; color: #FFFFFF; font: 600 15px 'IBM Plex Sans', sans-serif; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75); cursor: pointer">{{it.moreLabel}}</button></sc-if></p>
+            </div>
+            <sc-if value="{{it.isVideo}}" hint-placeholder-val="{{ false }}">
+              <div aria-hidden="true" style="height: 3px; background: rgba(255, 255, 255, 0.35)">
+                <div class="fs-prog" style="height: 100%; background: #FFFFFF; display: flex; justify-content: flex-end; align-items: center; animation-duration: {{it.dur}}s">
+                  <span style="width: 9px; height: 9px; flex-shrink: 0; margin-right: -4px; border-radius: 50%; background: #FFFFFF"></span>
+                </div>
+              </div>
+            </sc-if>
+            </div>
+          </article>
+        </sc-if>
+      </sc-for>
+      </div>
+    </div>
+
+    <div style="position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 14px 12px; pointer-events: none">
+      <h1 style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0">Fil</h1>
+      <button type="button" onClick="{{toggleNotif}}" aria-label="Notifications{{badgeLabel}}" aria-expanded="{{notifOpen}}" style="position: relative; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6))"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg>
+        <sc-if value="{{hasBadge}}" hint-placeholder-val="{{ false }}">
+          <span aria-hidden="true" style="position: absolute; top: 5px; right: 4px; min-width: 18px; height: 18px; box-sizing: border-box; padding: 0 5px; border-radius: 999px; background: #E11D48; border: 2px solid #FFFFFF; color: #FFFFFF; font: 700 10px/14px 'IBM Plex Sans', sans-serif; text-align: center">{{badge}}</span>
+        </sc-if>
+      </button>
+    </div>
+
+    <sc-if value="{{notifOpen}}" hint-placeholder-val="{{ false }}">
+      <button type="button" onClick="{{closeNotif}}" aria-label="Fermer les notifications" style="position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: rgba(28, 28, 28, 0.2); cursor: default"></button>
+      <div role="dialog" aria-label="Notifications" class="fs-noscroll" style="position: absolute; top: 62px; left: 12px; right: 12px; max-height: 520px; box-sizing: border-box; overflow-y: auto; display: flex; flex-direction: column; background: #FFFFFF; border-radius: 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25)">
+        <sc-if value="{{hasRequests}}" hint-placeholder-val="{{ true }}">
+          <h2 style="margin: 0; padding: 14px 16px 6px; font-size: 14px; font-weight: 600; color: #5E5E5B">Invitations</h2>
+          <sc-for list="{{requests}}" as="r" hint-placeholder-count="2">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 16px">
+              <span aria-hidden="true" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: {{r.avatar}}; filter: blur(1.5px)"></span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                <span style="font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{r.name}}</span>
+                <span style="font: 400 12px 'IBM Plex Mono', monospace; color: #5E5E5B">{{r.handle}}</span>
+              </span>
+              <sc-if value="{{r.pending}}" hint-placeholder-val="{{ true }}">
+                <button type="button" onClick="{{r.accept}}" style="min-height: 36px; padding: 0 12px; border: 0; border-radius: 10px; background: #1F6B4A; color: #FFFFFF; font: 600 13px 'IBM Plex Sans', sans-serif; cursor: pointer">Accepter</button>
+                <button type="button" onClick="{{r.decline}}" style="min-height: 36px; padding: 0 12px; border: 1px solid #DEDEDA; border-radius: 10px; background: #FFFFFF; color: #1C1C1C; font: 600 13px 'IBM Plex Sans', sans-serif; cursor: pointer">Refuser</button>
+              </sc-if>
+              <sc-if value="{{r.accepted}}" hint-placeholder-val="{{ false }}">
+                <span style="font-size: 13px; color: #1F6B4A; font-weight: 600">Ami</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </sc-if>
+        <h2 style="margin: 0; padding: 14px 16px 6px; font-size: 14px; font-weight: 600; color: #5E5E5B; border-top: {{likesBorder}}">Likes</h2>
+        <sc-for list="{{likesList}}" as="l" hint-placeholder-count="4">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 16px">
+            <span aria-hidden="true" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: {{l.avatar}}; filter: blur(1.5px)"></span>
+            <p style="flex: 1; min-width: 0; margin: 0; font-size: 14px; line-height: 1.35"><strong style="font-weight: 600">{{l.name}}</strong> a aimé ton post <span style="color: #5E5E5B">· {{l.ago}}</span></p>
+            <span role="img" aria-label="Ton post" style="position: relative; width: 40px; height: 40px; flex-shrink: 0; border-radius: 6px; overflow: hidden; background: {{l.bg}}">
+              <span style="position: absolute; left: 6px; top: 8px; width: 22px; height: 22px; border-radius: 50%; background: {{l.c1}}"></span>
+              <span style="position: absolute; left: 18px; top: 18px; width: 20px; height: 16px; border-radius: 4px; background: {{l.c2}}"></span>
+            </span>
+          </div>
+        </sc-for>
+        <span style="height: 8px; flex-shrink: 0"></span>
+      </div>
+    </sc-if>
+  </div>
+
+  <nav aria-label="Navigation principale" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid #DEDEDA; background: #FFFFFF; padding: 6px 4px 14px">
+    <a href="Main.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #1F6B4A; font: 600 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"></path></svg>
+      Accueil
+    </a>
+    <a href="Chat.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-9l-5 4V6a1 1 0 0 1 1-1z"></path></svg>
+      Messages
+    </a>
+    <a href="Compose.dc.html" aria-label="Publier" style="display: flex; align-items: center; justify-content: center; min-height: 52px; text-decoration: none">
+      <span style="width: 54px; height: 40px; border-radius: 13px; background: #1C1C1C; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+      </span>
+    </a>
+    <a href="Search.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      Recherche
+    </a>
+    <a href="Profile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+      Profil
+    </a>
+  </nav>
+
+  <sc-if value="{{toastOn}}" hint-placeholder-val="{{ false }}">
+    <p role="status" style="position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%); margin: 0; width: max-content; max-width: 330px; padding: 10px 16px; border-radius: 999px; background: #1C1C1C; color: #FFFFFF; font-size: 14px; text-align: center; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25)">{{toast}}</p>
+  </sc-if>
+
+  <sc-if value="{{sheetOn}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0">
+      <button type="button" onClick="{{closeSheet}}" aria-label="Fermer" style="position: absolute; inset: 0; width: 100%; border: 0; padding: 0; background: rgba(28, 28, 28, 0.5); cursor: pointer"></button>
+      <div role="dialog" aria-modal="true" aria-labelledby="sheet-title" style="position: absolute; left: 0; right: 0; bottom: 0; max-height: 70%; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 10px 16px 28px; border-radius: 24px 24px 0 0; background: #FFFFFF">
+        <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #DEDEDA"></span>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+          <h2 id="sheet-title" style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 22px">{{sheetTitle}}</h2>
+          <button type="button" onClick="{{closeSheet}}" aria-label="Fermer" style="width: 44px; height: 44px; margin-right: -8px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </div>
+
+        <sc-if value="{{sheetSave}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <sc-for list="{{collections}}" as="c" hint-placeholder-count="3">
+              <button type="button" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid {{c.ring}}; background: {{c.bg}}; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+                <span aria-hidden="true" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: {{c.swatch}}; filter: blur(1px)"></span>
+                <span style="flex: 1">{{c.name}}</span>
+                <span style="font: 500 12px 'IBM Plex Mono', monospace; color: #1F6B4A">{{c.mark}}</span>
+              </button>
+            </sc-for>
+            <button type="button" onClick="{{newCollection}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px dashed #8A8A86; background: #FFFFFF; color: #1C1C1C; font: 600 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+              Nouvelle collection
+            </button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{sheetShare}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <span style="font-size: 13px; font-weight: 600; color: #5E5E5B">Envoyer à</span>
+              <div role="list" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none">
+                <sc-for list="{{shareFriends}}" as="sf" hint-placeholder-count="5">
+                  <button type="button" role="listitem" onClick="{{sf.send}}" aria-label="Envoyer à {{sf.first}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; width: 60px; flex-shrink: 0; padding: 0; border: 0; background: transparent; color: #1C1C1C; cursor: pointer">
+                    <span aria-hidden="true" style="width: 52px; height: 52px; border-radius: 50%; background: {{sf.avatar}}; filter: blur(1.5px)"></span>
+                    <span style="max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px">{{sf.first}}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <button type="button" onClick="{{copyLink}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid #DEDEDA; background: #FFFFFF; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>
+              Copier le lien
+            </button>
+            <button type="button" onClick="{{shareElsewhere}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid #DEDEDA; background: #FFFFFF; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"></path><path d="M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg>
+              Partager ailleurs
+            </button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{sheetComments}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px; overflow-y: auto; min-height: 0">
+            <sc-for list="{{commentList}}" as="c" hint-placeholder-count="4">
+              <div style="display: flex; gap: 10px">
+                <span aria-hidden="true" style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: {{c.avatar}}; filter: blur(1.5px)"></span>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                  <span style="font: 500 12px 'IBM Plex Mono', monospace; color: #5E5E5B">{{c.author}} · {{c.ago}}</span>
+                  <span style="font-size: 15px; line-height: 1.4">{{c.text}}</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; margin-right: -6px">
+                  <button type="button" onClick="{{c.toggle}}" aria-pressed="{{c.liked}}" aria-label="Aimer le commentaire de {{c.author}}" style="width: 36px; height: 32px; padding: 0; border: 0; background: transparent; color: {{c.stroke}}; display: flex; align-items: center; justify-content: center; cursor: pointer">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="{{c.fill}}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>
+                  </button>
+                  <span style="margin-top: -4px; font: 500 11px 'IBM Plex Mono', monospace; color: #5E5E5B">{{c.likes}}</span>
+                </div>
+              </div>
+            </sc-for>
+            <form onSubmit="{{postComment}}" style="position: sticky; bottom: 0; margin: 0; display: flex; align-items: center; gap: 8px; padding: 10px 0 2px; background: #FFFFFF; border-top: 1px solid #ECECEA">
+              <span aria-hidden="true" style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #9EE493, #2EC4B6 55%, #118AB2); filter: blur(1.5px)"></span>
+              <label for="comment-input" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Ajouter un commentaire</label>
+              <input id="comment-input" type="text" autocomplete="off" maxlength="150" value="{{commentDraft}}" onChange="{{onCommentDraft}}" placeholder="Ajouter un commentaire…" style="flex: 1; min-width: 0; height: 42px; box-sizing: border-box; border: 1px solid #DEDEDA; border-radius: 999px; padding: 0 14px; font: 400 15px 'IBM Plex Sans', sans-serif; color: #1C1C1C; background: #FFFFFF">
+              <button type="submit" disabled="{{commentEmpty}}" style="min-height: 42px; padding: 0 6px; border: 0; background: transparent; color: {{commentBtn}}; font: 600 15px 'IBM Plex Sans', sans-serif; cursor: pointer">Publier</button>
+            </form>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+
+  <sc-if value="{{storyOn}}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-modal="true" aria-label="Story de {{story.name}}" style="position: absolute; inset: 0; overflow: hidden; background: {{story.bg}}">
+      <div style="position: absolute; inset: 0; filter: blur(16px)">
+        <sc-for list="{{story.shapes}}" as="s" hint-placeholder-count="3">
+          <span style="position: absolute; left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; height: {{s.h}}%; background: {{s.c}}; border-radius: {{s.r}}"></span>
+        </sc-for>
+      </div>
+      <sc-if value="{{story.hasText}}" hint-placeholder-val="{{ false }}">
+        <p style="position: absolute; left: 24px; right: 24px; top: 44%; margin: 0; text-align: center; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 30px; line-height: 1.15; color: #FFFFFF; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5)">{{story.text}}</p>
+      </sc-if>
+      <button type="button" onClick="{{storyPrev}}" aria-label="Story précédente" style="position: absolute; left: 0; top: 0; bottom: 0; width: 33%; padding: 0; border: 0; background: transparent; cursor: pointer"></button>
+      <button type="button" onClick="{{storyNext}}" aria-label="Story suivante" style="position: absolute; right: 0; top: 0; bottom: 0; width: 67%; padding: 0; border: 0; background: transparent; cursor: pointer"></button>
+      <div style="position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 10px; padding: 12px 6px 24px 12px; background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0))">
+        <div style="display: flex; gap: 4px; padding-right: 6px">
+          <sc-for list="{{story.segs}}" as="g" hint-placeholder-count="3">
+            <span style="flex: 1; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.4); overflow: hidden">
+              <span class="{{g.cls}}" style="display: block; height: 100%; width: {{g.w}}; background: #FFFFFF"></span>
+            </span>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px">
+          <span aria-hidden="true" style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: {{story.avatar}}; filter: blur(1px)"></span>
+          <span style="font-weight: 600; font-size: 14px; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6)">{{story.name}}</span>
+          <span style="font-size: 13px; color: #FFFFFF; opacity: 0.85; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6)">{{story.ago}}</span>
+          <span style="flex: 1"></span>
+          <button type="button" onClick="{{closeStory}}" aria-label="Fermer la story" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6))">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"carouselShare":{"editor":"range","min":0,"max":100,"step":5,"unit":"%","default":35,"section":"Démo"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(...a) {
+    super(...a);
+    this.state = {
+      grey: 0, count: 8, dismissed: false,
+      page: 0, liked: {}, commentLikes: {}, myComments: {}, commentDraft: '', saved: {}, slides: {}, expanded: {}, burst: null, sheet: null, toast: '', story: null, storySeen: {}, storyFlip: false, notifOpen: false, notifSeen: false, requests: {}, searchOpen: false, query: '', viewIdx: null,
+      collections: ['Pour plus tard', 'Formes calmes', 'Couleurs à garder']
+    };
+    this.feed = 'pourtoi';
+    this.scrollEl = null;
+    this.lastTap = {};
+    this.timers = [];
+  }
+  componentDidMount() { this.startClock(); }
+  componentWillUnmount() { clearInterval(this.clockTimer); clearTimeout(this.storyTimer); this.timers.forEach(clearTimeout); }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  readClock() {
+    var d = { start: Date.now(), cycleMin: 2, speed: 1 };
+    try {
+      var raw = localStorage.getItem('fs-clock');
+      if (raw) { var v = JSON.parse(raw); if (v && v.start) return Object.assign(d, v); }
+      localStorage.setItem('fs-clock', JSON.stringify(d));
+      return d;
+    } catch (e) {
+      if (!this.memClock) this.memClock = d;
+      return this.memClock;
+    }
+  }
+  writeClock(v) {
+    this.memClock = v;
+    try { localStorage.setItem('fs-clock', JSON.stringify(v)); } catch (e) {}
+  }
+  cycleMs(c) { return c.cycleMin * 60000 / Math.max(1, c.speed || 1); }
+  cyclesDone(c) { return Math.max(0, Math.min(10, Math.floor((Date.now() - c.start) / this.cycleMs(c)))); }
+  trackUsage(c) {
+    var sp = Math.max(1, c.speed || 1);
+    try {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      var now = Date.now();
+      var u = JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0,"last":0}');
+      var dt = now - (u.last || 0);
+      if (dt < 900) return;
+      u.ms = (u.ms || 0) + Math.min(dt, 1500) * sp;
+      u.last = now;
+      localStorage.setItem('fs-usage', JSON.stringify(u));
+    } catch (e) { this.memUsage = (this.memUsage || 0) + 1000 * sp; }
+  }
+  readUsage() {
+    try { return JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0}').ms || 0; } catch (e) { return this.memUsage || 0; }
+  }
+  tickClock() {
+    var c = this.readClock();
+    this.trackUsage(c);
+    var g = this.cyclesDone(c) * 10;
+    var up = null;
+    if (g !== this.state.grey) { up = { grey: g }; if (g < 100) up.dismissed = false; }
+    if (this.wantsNow) { up = up || {}; up.now = Date.now(); }
+    if (up) this.setState(up);
+  }
+  startClock() {
+    clearInterval(this.clockTimer);
+    this.tickClock();
+    this.clockTimer = setInterval(() => this.tickClock(), 1000);
+  }
+  showToast(t) {
+    this.setState({ toast: t });
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => this.setState({ toast: '' }), 2200);
+    this.timers.push(this.toastTimer);
+  }
+  rng(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  gib(seed, words) {
+    var SYL = ['lo','vra','mi','té','ka','zu','ren','po','li','sha','dou','ne','vo','ri','ba','qui','fel','mo','na','sé','ar','lun','pé','sko'];
+    var r = this.rng(seed); var out = [];
+    for (var i = 0; i < words; i++) {
+      var n = 1 + Math.floor(r() * 3); var w = '';
+      for (var j = 0; j < n; j++) w += SYL[Math.floor(r() * SYL.length)];
+      out.push(i === 0 ? w.charAt(0).toUpperCase() + w.slice(1) : w);
+    }
+    return out.join(' ');
+  }
+  like(id) {
+    this.setState((s) => { var l = Object.assign({}, s.liked); l[id] = true; return { liked: l, burst: id }; });
+    clearTimeout(this.burstTimer);
+    this.burstTimer = setTimeout(() => this.setState({ burst: null }), 900);
+    this.timers.push(this.burstTimer);
+  }
+  go(step) {
+    var last = this.state.count - 1;
+    var p = Math.max(0, Math.min(last, this.state.page + step));
+    var tr = this.trackEl;
+    if (tr) {
+      tr.style.transition = 'transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)';
+      tr.style.transform = 'translateY(calc(' + (-p) + ' * 100cqh))';
+    }
+    var up = { page: p };
+    if (p >= this.state.count - 3 && this.state.count < 400) up.count = this.state.count + 8;
+    this.setState(up);
+  }
+  tap(id) {
+    if (this.justDragged) return;
+    var now = Date.now();
+    if (now - (this.lastTap[id] || 0) < 320) { this.lastTap[id] = 0; this.like(id); }
+    else this.lastTap[id] = now;
+  }
+  makePost(i, base, friends) {
+    var seed = base + i * 7919;
+    var r = this.rng(seed);
+    var PAL = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#FFBE0B','#2EC4B6','#F7AEF8','#9EE493','#FF8FA3'];
+    var BG = ['#FFE5D9','#E3ECFF','#DDF3E9','#FFF3C4','#F3E3FF','#FFE0EC','#E6F7F5'];
+    var EMO = ['🌿','✨','🫧','🌙','☁️','🍋','🐌','🌊','🍂','🪴'];
+    var RAD = ['18px','4px','50% 50% 12px 12px','40px'];
+    var id = (friends ? 'f' : 'p') + i;
+    var share = Math.max(0, Math.min(100, Number(this.props.carouselShare ?? 35))) / 100;
+    var isCarousel = r() < share;
+    var isVideo = !isCarousel && r() < 0.3;
+    var dur = 8 + Math.floor(r() * 13);
+    var n = isCarousel ? 3 + Math.floor(r() * 3) : 1;
+    var slides = [];
+    for (var k = 0; k < n; k++) {
+      var shapes = []; var m = 4 + Math.floor(r() * 4);
+      for (var j = 0; j < m; j++) {
+        var round = r() < 0.45;
+        var w = Math.round(friends ? 180 + r() * 220 : 80 + r() * 240);
+        var h = round ? w : Math.round(friends ? 180 + r() * 260 : 60 + r() * 300);
+        shapes.push({
+          x: Math.round(r() * (390 - w * 0.5) - w * 0.25),
+          y: Math.round(r() * (772 - h * 0.5) - h * 0.25),
+          w: w, h: h,
+          c: PAL[Math.floor(r() * PAL.length)],
+          r: round ? '50%' : RAD[Math.floor(r() * RAD.length)],
+          rot: isVideo ? 0 : Math.round(r() * 90 - 45),
+          anim: isVideo ? 'fs-d' + (j % 4) : 'none',
+          dur: (3 + r() * 4).toFixed(1),
+          delay: (-r() * 4).toFixed(1)
+        });
+      }
+      slides.push({
+        isShapes: true, isText: false, isBreath: false, isPremium: false,
+        bg: BG[Math.floor(r() * BG.length)],
+        shapes: shapes,
+        blur: friends ? 22 : 0,
+        alt: (isVideo ? 'Vidéo' : friends ? 'Photo d’un ami, floutée' : 'Formes colorées générées') + (isCarousel ? ', image ' + (k + 1) + ' sur ' + n : ''),
+        onTap: () => this.tap(id)
+      });
+    }
+    var emo = ''; var ne = Math.floor(r() * 3);
+    for (var e = 0; e < ne; e++) emo += EMO[Math.floor(r() * EMO.length)];
+    var s = this.state;
+    var liked = !!s.liked[id];
+    var isSaved = !!s.saved[id];
+    var idx = Math.min(n - 1, s.slides[id] || 0);
+    var dots = [];
+    for (var d = 0; d < n; d++) dots.push({ w: d === idx ? 16 : 6, c: d === idx ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)' });
+    var fullCaption = this.gib(seed + 3, 3 + Math.floor(r() * 26)) + (emo ? ' ' + emo : '');
+    return Object.assign({
+      isPost: true, isPrompt: false, id: id,
+      author: this.gib(seed + 1, 2),
+      handle: '@' + this.gib(seed + 2, 1).toLowerCase(),
+      ago: 1 + Math.floor(r() * 59),
+      avatar: PAL[Math.floor(r() * PAL.length)],
+      isVideo: isVideo,
+      dur: dur,
+      capPad: isVideo ? 10 : 16,
+      slides: slides,
+      isCarousel: isCarousel,
+      slideCount: n,
+      slideNum: idx + 1,
+      dots: dots,
+      ox: isCarousel ? 'auto' : 'hidden',
+      showBurst: s.burst === id,
+      likes: Math.floor(r() * 900) + (liked ? 1 : 0),
+      comments: Math.floor(r() * 40) + (this.state.myComments[id] || []).length,
+      saves: Math.floor(r() * 120) + (isSaved ? 1 : 0),
+      shares: Math.floor(r() * 60),
+      liked: liked,
+      heartFill: liked ? '#FF5C7A' : 'none',
+      heartStroke: liked ? '#FF5C7A' : '#FFFFFF',
+      isSaved: isSaved,
+      saveFill: isSaved ? '#FFFFFF' : 'none',
+      toggleLike: () => this.setState((st) => { var l = Object.assign({}, st.liked); l[id] = !l[id]; return { liked: l }; }),
+      openComments: () => this.setState({ sheet: { type: 'comments', id: id, seed: seed } }),
+      openSave: () => this.setState({ sheet: { type: 'save', id: id, seed: seed } }),
+      openShare: () => this.setState({ sheet: { type: 'share', id: id, seed: seed } }),
+      onSlide: (ev) => {
+        var el = ev.currentTarget;
+        var i2 = Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
+        if ((this.state.slides[id] || 0) !== i2) {
+          this.setState((st) => { var sl = Object.assign({}, st.slides); sl[id] = i2; return { slides: sl }; });
+        }
+      }
+    }, this.capFields(id, fullCaption));
+  }
+  norm(q) {
+    return q.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]/g, ' ').trim().replace(/\s+/g, ' ');
+  }
+  colourFor(q) {
+    var C = {
+      rouge: '#E63946', orange: '#FB8500', jaune: '#FFD60A', vert: '#2A9D4B', bleu: '#1D6FE0', violet: '#7B2CBF',
+      rose: '#FF6FAE', marron: '#7F4F24', brun: '#6F4518', noir: '#161616', blanc: '#F7F7F5', gris: '#8D8D8A',
+      turquoise: '#1ABC9C', beige: '#E3D5B8', dore: '#D4A017', or: '#D4A017', argent: '#B8BCC2', indigo: '#3A0CA3',
+      cyan: '#00B4D8', magenta: '#D0008F', kaki: '#8A8A4F', bordeaux: '#7A1E2C', corail: '#FF7F5C', lilas: '#C8A2C8',
+      lavande: '#A79BE0', menthe: '#7DDCB2', peche: '#FFB38A', saumon: '#FA8072', ocre: '#CC7722', olive: '#708238',
+      emeraude: '#1F9D6B', marine: '#14213D', ciel: '#87CEEB', fuchsia: '#E0218A', framboise: '#C72C48', ivoire: '#FFFDE8',
+      creme: '#FFF4D6', sable: '#D8C3A5', chocolat: '#4E2A1E', prune: '#5E2750', vermillon: '#E34234', azur: '#2D8CFF'
+    };
+    var ALIAS = { verte: 'vert', vertes: 'vert', verts: 'vert', bleue: 'bleu', bleues: 'bleu', bleus: 'bleu', violette: 'violet', violettes: 'violet', violets: 'violet',
+      grise: 'gris', grises: 'gris', blanche: 'blanc', blanches: 'blanc', blancs: 'blanc', noire: 'noir', noires: 'noir', noirs: 'noir',
+      brune: 'brun', brunes: 'brun', bruns: 'brun', doree: 'dore', dorees: 'dore', dores: 'dore', argente: 'argent', argentee: 'argent',
+      rouges: 'rouge', jaunes: 'jaune', roses: 'rose', oranges: 'orange', marrons: 'marron', beiges: 'beige', turquoises: 'turquoise',
+      'bleu marine': 'marine', 'bleu ciel': 'ciel', 'vert menthe': 'menthe', 'vert olive': 'olive', 'vert emeraude': 'emeraude', 'rose pale': 'rose', 'bleu azur': 'azur' };
+    var n = this.norm(q);
+    var key = ALIAS[n] || n;
+    return C[key] ? { key: key, hex: C[key] } : null;
+  }
+  mix(hex, to, amt) {
+    var a = parseInt(hex.slice(1), 16), b = parseInt(to.slice(1), 16);
+    var r = Math.round(((a >> 16) & 255) * (1 - amt) + ((b >> 16) & 255) * amt);
+    var g = Math.round(((a >> 8) & 255) * (1 - amt) + ((b >> 8) & 255) * amt);
+    var bl = Math.round((a & 255) * (1 - amt) + (b & 255) * amt);
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + bl).toString(16).slice(1);
+  }
+  colourPosts(col) {
+    var h = 0; for (var q = 0; q < col.key.length; q++) h = h * 31 + col.key.charCodeAt(q);
+    var r = this.rng(h + 4242);
+    var tones = [col.hex, this.mix(col.hex, '#FFFFFF', 0.35), this.mix(col.hex, '#FFFFFF', 0.65), this.mix(col.hex, '#000000', 0.3), this.mix(col.hex, '#000000', 0.55)];
+    var RAD = ['50%', '12%', '4%', '50% 50% 10% 10%'];
+    var EMO = ['', '✨', '🌿', '🫧', ''];
+    var out = [];
+    for (var i = 0; i < 18; i++) {
+      var shapes = []; var k = 3 + Math.floor(r() * 3);
+      for (var j = 0; j < k; j++) {
+        var w = Math.round(25 + r() * 55); var round = r() < 0.5;
+        var hh = round ? Math.round(w * 0.75) : Math.round(15 + r() * 50);
+        shapes.push({ x: Math.round(r() * (100 - w * 0.6) - w * 0.2), y: Math.round(r() * (100 - hh * 0.6) - hh * 0.2), w: w, h: hh, c: tones[Math.floor(r() * tones.length)], r: round ? '50%' : RAD[1 + Math.floor(r() * 3)] });
+      }
+      var em = EMO[Math.floor(r() * EMO.length)];
+      out.push({
+        bg: tones[1 + Math.floor(r() * 2)],
+        shapes: shapes,
+        author: this.gib(h + i * 13, 2),
+        caption: this.gib(h + i * 29, 3 + Math.floor(r() * 9)) + (em ? ' ' + em : ''),
+        likes: Math.floor(r() * 900),
+        label: 'Post ' + (i + 1)
+      });
+    }
+    return out;
+  }
+  storyFriends() {
+    var PAL = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#2EC4B6'];
+    var out = [];
+    [0, 1, 2, 3, 5, 6].forEach((i) => {
+      var seed = 5000 + i * 131;
+      var name = this.gib(seed, 2);
+      out.push({ id: out.length, seed: seed, name: name, first: name.split(' ')[0], avatar: PAL[i % PAL.length], ago: ['2 h', '5 h', '6 h', '7 h', '9 h', '11 h'][out.length] });
+    });
+    return out;
+  }
+  storyItems(c) {
+    var PAL = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#2EC4B6','#F7AEF8'];
+    var BG = ['#FFE5D9','#E3ECFF','#DDF3E9','#FFF3C4','#F3E3FF'];
+    var EMO = ['', '✨', '🌙', '🌿', ''];
+    var r = this.rng(c.seed + 555);
+    var n = 2 + Math.floor(r() * 2);
+    var items = [];
+    for (var i = 0; i < n; i++) {
+      var shapes = [];
+      for (var j = 0; j < 4; j++) {
+        var w = Math.round(35 + r() * 50);
+        shapes.push({ x: Math.round(r() * 80 - 15), y: Math.round(r() * 85 - 10), w: w, h: Math.round(w * 0.5), c: PAL[Math.floor(r() * PAL.length)], r: '50%' });
+      }
+      var withText = r() < 0.5;
+      var em = EMO[Math.floor(r() * EMO.length)];
+      items.push({ bg: BG[Math.floor(r() * BG.length)], shapes: shapes, hasText: withText, text: withText ? this.gib(c.seed + 600 + i, 1 + Math.floor(r() * 3)) + (em ? ' ' + em : '') : '' });
+    }
+    return items;
+  }
+  showStory(cid, idx) {
+    clearTimeout(this.storyTimer);
+    var c = this.storyFriends()[cid];
+    var items = this.storyItems(c);
+    if (idx >= items.length) { this.closeStory(); return; }
+    this.setState((st) => { var sn = Object.assign({}, st.storySeen); sn[cid] = true; return { story: { cid: cid, idx: Math.max(0, idx) }, storySeen: sn, storyFlip: !st.storyFlip }; });
+    this.storyTimer = setTimeout(() => this.showStory(cid, idx + 1), 5000);
+  }
+  closeStory() {
+    clearTimeout(this.storyTimer);
+    this.setState({ story: null });
+  }
+  hash(s) {
+    var h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0) % 100000;
+  }
+  capFields(id, full) {
+    var LIMIT = 80;
+    var canExpand = full.length > LIMIT;
+    var open = !!this.state.expanded[id];
+    var shown = full;
+    if (canExpand && !open) shown = full.slice(0, LIMIT - 8).replace(/\s+\S*$/, '') + '…';
+    return {
+      captionShown: shown,
+      canExpand: canExpand,
+      expanded: open,
+      moreLabel: open ? 'moins' : 'plus',
+      toggleMore: () => this.setState((st) => { var ex = Object.assign({}, st.expanded); ex[id] = !ex[id]; return { expanded: ex }; })
+    };
+  }
+  appPost(p, slides, caption) {
+    var n = slides.length;
+    var idx = Math.min(n - 1, this.state.slides[p.id] || 0);
+    var dots = [];
+    for (var d = 0; d < n; d++) dots.push({ w: d === idx ? 16 : 6, c: d === idx ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)' });
+    return Object.assign(p, {
+      author: 'fake scrolling',
+      handle: '@fakescrolling',
+      avatar: '#1F6B4A',
+      slides: slides,
+      isCarousel: n > 1,
+      slideCount: n,
+      slideNum: idx + 1,
+      dots: dots,
+      ox: n > 1 ? 'auto' : 'hidden',
+      isVideo: false,
+      capPad: 16
+    }, this.capFields(p.id, caption));
+  }
+  makePause(i, k, base, friends) {
+    var SETS = [
+      ['Pose ton téléphone.', 'Regarde autour de toi.', 'Respire.', 'Reviens quand tu veux.'],
+      ['Tu scrolles depuis un moment.', 'Lève les yeux.', 'Écoute ce qui t’entoure.', 'C’est tout.'],
+      ['Stop.', 'Relâche tes épaules.', 'Bois un verre d’eau.', 'Le fil peut attendre.'],
+      ['Où es-tu, là ?', 'Sens tes pieds au sol.', 'Trois respirations.', 'Voilà.'],
+      ['Ferme les yeux.', 'Compte jusqu’à dix.', 'Ouvre-les.', 'Tu es là.']
+    ];
+    var BGS = ['#DDF3E9', '#E3ECFF', '#FFF3C4', '#F3E3FF', '#FFE5D9'];
+    var p = this.makePost(i, base, friends);
+    var set = SETS[k % SETS.length];
+    var slides = set.map((t, j) => ({
+      isShapes: false, isText: true, isBreath: false, isPremium: false,
+      text: t, alt: t,
+      bg: BGS[(k + j) % BGS.length],
+      onTap: () => this.tap(p.id)
+    }));
+    return this.appPost(p, slides, 'Une pause, maintenant.');
+  }
+  makePremium(i, base, friends) {
+    var p = this.makePost(i, base, friends);
+    var BGS = { noir: '#111111', orange: 'linear-gradient(45deg, #FFC300 0%, #FF7A00 50%, #F2542D 100%)', rouge: '#E11D2E' };
+    var th = 'noir';
+    try { th = localStorage.getItem('fs-theme') || 'noir'; } catch (e) {}
+    var thanked = !!this.state.supportedNow;
+    var slides = [{
+      isShapes: false, isText: false, isBreath: false, isPremium: true,
+      bg: '#F7F6F3', alt: 'Soutenir fake scrolling, 1,99 euro',
+      iconBg: BGS[th] || BGS.noir,
+      supported: thanked, notSupported: !thanked,
+      support: (e) => {
+        if (e && e.stopPropagation) e.stopPropagation();
+        try { localStorage.setItem('fs-supported', '1'); } catch (x) {}
+        this.setState({ supportedNow: true });
+      },
+      onTap: () => this.tap(p.id)
+    }];
+    return this.appPost(p, slides, 'Un projet indépendant, sans pub.');
+  }
+  makeBreath(i, base, friends) {
+    var C = ['#2EC4B6', '#9EE493', '#8FB8FF', '#F7AEF8', '#FFD166'];
+    var BG = ['#E6F7F5', '#DDF3E9', '#E3ECFF', '#F3E3FF', '#FFF3C4'];
+    var p = this.makePost(i, base, friends);
+    var k = i % C.length;
+    var slides = [{
+      isShapes: false, isText: false, isBreath: true, isPremium: false,
+      c1: C[k], bg: BG[k],
+      alt: 'Cercle qui grandit et rétrécit : inspire, expire',
+      onTap: () => this.tap(p.id)
+    }];
+    return this.appPost(p, slides, 'Inspire. Expire. Rien d’autre.');
+  }
+  renderVals() {
+    var s = this.state;
+    var friends = this.feed === 'amis';
+    var d = new Date();
+    var base = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate() + (friends ? 1000003 : 0);
+    var items = [];
+    var rr = this.rng(base + 17);
+    var gap = 5 + Math.floor(rr() * 4);
+    var since = 0; var pauses = 0;
+    var supportedBefore = false;
+    try { supportedBefore = localStorage.getItem('fs-supported') === '1' && !s.supportedNow; } catch (e) {}
+    var showPremium = this.readUsage() >= 3600000 && !supportedBefore;
+    var showPauses = true;
+    try { showPauses = localStorage.getItem('fs-pauses') !== '0'; } catch (e) {}
+    for (var i = 0; i < s.count; i++) {
+      var roll = rr();
+      if (showPremium && i % 20 === 19) {
+        items.push(this.makePremium(i, base, friends));
+      } else if (since >= gap && showPauses) {
+        items.push(this.makePause(i, pauses, base, friends));
+        pauses++; since = 0; gap = 5 + Math.floor(rr() * 4);
+      } else {
+        since++;
+        items.push(i > 0 && roll < 0.12 ? this.makeBreath(i, base, friends) : this.makePost(i, base, friends));
+      }
+    }
+    var sheet = s.sheet;
+    var SW = ['#FFD166', '#06D6A0', '#3A86FF', '#EF476F', '#8338EC', '#FB5607'];
+    var collections = s.collections.map((name, k) => {
+      var picked = !!(sheet && s.saved[sheet.id] === name);
+      return {
+        name: name, on: picked,
+        mark: picked ? 'enregistré' : '',
+        ring: picked ? '#1F6B4A' : '#DEDEDA',
+        bg: picked ? '#DDF3E9' : '#FFFFFF',
+        swatch: SW[k % SW.length],
+        pick: () => {
+          var id = sheet.id;
+          var already = this.state.saved[id] === name;
+          this.setState((st) => { var sv = Object.assign({}, st.saved); if (already) delete sv[id]; else sv[id] = name; return { saved: sv, sheet: null }; });
+          this.showToast(already ? 'Retiré de « ' + name + ' »' : 'Enregistré dans « ' + name + ' »');
+        }
+      };
+    });
+    var commentList = [];
+    if (sheet && sheet.type === 'comments') {
+      (s.myComments[sheet.id] || []).forEach((mc) => {
+        var mk = 'me-' + mc.id;
+        var ml = !!s.commentLikes[mk];
+        var g = mc.words ? this.gib(mc.seed, mc.words) : '';
+        commentList.push({
+          liked: ml, likes: ml ? 1 : 0,
+          fill: ml ? '#E11D48' : 'none',
+          stroke: ml ? '#E11D48' : '#5E5E5B',
+          toggle: () => this.setState((st) => { var m = Object.assign({}, st.commentLikes); m[mk] = !m[mk]; return { commentLikes: m }; }),
+          author: 'moi.ici', ago: 'à l’instant',
+          avatar: '#2EC4B6',
+          text: mc.morphed ? (g + (mc.emoji ? (g ? ' ' : '') + mc.emoji : '')).trim() : mc.original
+        });
+      });
+      var PAL = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF'];
+      var EMO = ['😂','🌿','✨','🫶','🙃','', '', ''];
+      var r = this.rng(sheet.seed + 99);
+      for (var c = 0; c < 6; c++) {
+        var em = EMO[Math.floor(r() * EMO.length)];
+        var ckey = sheet.seed + '-' + c;
+        var cl = !!s.commentLikes[ckey];
+        commentList.push({
+          liked: cl,
+          likes: Math.floor(r() * 40) + (cl ? 1 : 0),
+          fill: cl ? '#E11D48' : 'none',
+          stroke: cl ? '#E11D48' : '#5E5E5B',
+          toggle: ((k) => () => this.setState((st) => { var m = Object.assign({}, st.commentLikes); m[k] = !m[k]; return { commentLikes: m }; }))(ckey),
+          author: this.gib(sheet.seed + 200 + c, 1).toLowerCase(),
+          ago: (1 + Math.floor(r() * 50)) + ' min',
+          avatar: PAL[Math.floor(r() * PAL.length)],
+          text: this.gib(sheet.seed + 300 + c, 1 + Math.floor(r() * 7)) + (em ? ' ' + em : '')
+        });
+      }
+    }
+    var col = s.searchOpen ? this.colourFor(s.query) : null;
+    var results = col ? this.colourPosts(col) : [];
+    var REQ = [{ h: 'hugo.p', seed: 811 }, { h: 'lina.r', seed: 1203 }, { h: 'zoe.k', seed: 1777 }];
+    var NPAL = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#2EC4B6'];
+    var NBG = ['#FFE5D9','#E3ECFF','#DDF3E9','#FFF3C4','#F3E3FF'];
+    var requests = REQ.filter((q) => s.requests[q.h] !== 'declined').map((q) => {
+      var st = s.requests[q.h] || 'pending';
+      var setReq = (v) => () => this.setState((x) => { var rr = Object.assign({}, x.requests); rr[q.h] = v; return { requests: rr }; });
+      return { handle: '@' + q.h, name: this.gib(q.seed, 2), avatar: NPAL[q.seed % NPAL.length], pending: st === 'pending', accepted: st === 'accepted', accept: setReq('accepted'), decline: setReq('declined') };
+    });
+    var AGO = ['2 min', '9 min', '24 min', '1 h', '3 h', 'hier', 'hier'];
+    var likesList = AGO.map((ago, k) => ({ name: this.gib(3000 + k * 37, 2), ago: ago, avatar: NPAL[(k * 3) % NPAL.length], bg: NBG[k % NBG.length], c1: NPAL[(k + 2) % NPAL.length], c2: NPAL[(k + 5) % NPAL.length] }));
+    var pendingCount = requests.filter((r) => r.pending).length;
+    var badge = s.notifSeen ? pendingCount : pendingCount + 3;
+    var storyView = null;
+    if (s.story) {
+      var sf = this.storyFriends()[s.story.cid];
+      var its = this.storyItems(sf);
+      var cur = its[Math.min(s.story.idx, its.length - 1)];
+      storyView = Object.assign({}, cur, {
+        name: sf.first, avatar: sf.avatar, ago: sf.ago,
+        segs: its.map((x, k) => ({ cls: k === s.story.idx ? (s.storyFlip ? 'fs-story-a' : 'fs-story-b') : '', w: k < s.story.idx ? '100%' : '0%' }))
+      });
+    }
+    var titles = { save: 'Enregistrer dans une collection', share: 'Partager', comments: 'Commentaires' };
+
+    return {
+      items: items,
+      grey: s.grey,
+      colourLeft: 100 - s.grey,
+      showOverlay: s.grey >= 100 && !s.dismissed,
+      keepGrey: () => this.setState({ dismissed: true }),
+      putDown: () => { this.setState({ dismissed: true }); this.showToast('À tout à l’heure.'); },
+      scrollRef: (el) => { this.scrollEl = el; },
+      trackRef: (el) => { this.trackEl = el; },
+      negIdx: -s.page,
+      pageNum: s.page + 1,
+      onWheel: (e) => {
+        if (this.wheelLock) return;
+        this.wheelAcc = (this.wheelAcc || 0) + e.deltaY;
+        clearTimeout(this.wheelReset);
+        this.wheelReset = setTimeout(() => { this.wheelAcc = 0; }, 200);
+        if (Math.abs(this.wheelAcc) < 40) return;
+        this.go(this.wheelAcc > 0 ? 1 : -1);
+        this.wheelAcc = 0;
+        this.wheelLock = true;
+        setTimeout(() => { this.wheelLock = false; this.wheelAcc = 0; }, 650);
+      },
+      onKey: (e) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); this.go(1); }
+        if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); this.go(-1); }
+      },
+      onDragStart: (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        this.drag = { x: e.clientX, y: e.clientY, t: Date.now(), moved: false, dir: null };
+        this.justDragged = false;
+      },
+      onDragMove: (e) => {
+        var d = this.drag; var tr = this.trackEl;
+        if (!d || !tr) return;
+        var dx = e.clientX - d.x; var dy = e.clientY - d.y;
+        if (!d.dir) {
+          if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+          d.dir = Math.abs(dy) >= Math.abs(dx) ? 'v' : 'h';
+          if (d.dir === 'v') { d.moved = true; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {} }
+        }
+        if (d.dir !== 'v') return;
+        var p = this.state.page;
+        var last = this.state.count - 1;
+        if ((p === 0 && dy > 0) || (p === last && dy < 0)) dy = dy / 3;
+        tr.style.transition = 'none';
+        tr.style.transform = 'translateY(calc(' + (-p) + ' * 100cqh + ' + Math.round(dy) + 'px))';
+      },
+      onDragEnd: (e) => {
+        var d = this.drag; this.drag = null;
+        if (!d || !d.moved) return;
+        this.justDragged = true;
+        setTimeout(() => { this.justDragged = false; }, 60);
+        var dy = (e.clientY || d.y) - d.y;
+        var fast = Math.abs(dy) / Math.max(1, Date.now() - d.t) > 0.5;
+        var h = this.scrollEl ? this.scrollEl.clientHeight : 770;
+        var step = (dy < -h * 0.18 || (fast && dy < -25)) ? 1 : (dy > h * 0.18 || (fast && dy > 25)) ? -1 : 0;
+        this.go(step);
+      },
+      toastOn: !!s.toast,
+      toast: s.toast,
+      sheetOn: !!sheet,
+      sheetTitle: sheet ? titles[sheet.type] : '',
+      sheetSave: !!(sheet && sheet.type === 'save'),
+      sheetShare: !!(sheet && sheet.type === 'share'),
+      sheetComments: !!(sheet && sheet.type === 'comments'),
+      closeSheet: () => this.setState({ sheet: null }),
+      collections: collections,
+      newCollection: () => {
+        var name = 'Collection ' + (this.state.collections.length + 1);
+        var id = sheet.id;
+        this.setState((st) => { var sv = Object.assign({}, st.saved); sv[id] = name; return { collections: st.collections.concat([name]), saved: sv, sheet: null }; });
+        this.showToast('Enregistré dans « ' + name + ' »');
+      },
+      shareFriends: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+        var PALS = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#2EC4B6'];
+        var first = this.gib(5000 + i * 131, 2).split(' ')[0];
+        return { first: first, avatar: PALS[i], send: () => { this.setState({ sheet: null }); this.showToast('Envoyé à ' + first + '.'); } };
+      }),
+      copyLink: () => { this.setState({ sheet: null }); this.showToast('Lien copié. Il mène à une version floutée.'); },
+      shareElsewhere: () => { this.setState({ sheet: null }); this.showToast('Partagé, flouté comme toujours.'); },
+      commentList: commentList,
+      commentDraft: s.commentDraft,
+      commentEmpty: !s.commentDraft.trim(),
+      commentBtn: s.commentDraft.trim() ? '#1F6B4A' : '#8A8A86',
+      onCommentDraft: (e) => this.setState({ commentDraft: e.target.value }),
+      postComment: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        var text = this.state.commentDraft.trim();
+        var sh = this.state.sheet;
+        if (!text || !sh) return;
+        var emojis = text.match(/\p{Extended_Pictographic}/gu) || [];
+        var words = text.replace(/\p{Extended_Pictographic}/gu, ' ').trim().split(/\s+/).filter(Boolean).length;
+        var cid = 'c' + Date.now();
+        var entry = { id: cid, original: text, seed: this.hash(text), words: words, emoji: emojis.join(''), morphed: false };
+        this.setState((st) => { var mc = Object.assign({}, st.myComments); mc[sh.id] = [entry].concat(mc[sh.id] || []); return { myComments: mc, commentDraft: '' }; });
+        this.later(() => this.setState((st) => {
+          var mc = Object.assign({}, st.myComments);
+          mc[sh.id] = (mc[sh.id] || []).map((x) => x.id === cid ? Object.assign({}, x, { morphed: true }) : x);
+          return { myComments: mc };
+        }), 900);
+      },
+      storyFriends: this.storyFriends().map((f) => Object.assign({}, f, { ring: s.storySeen[f.id] ? '#C9C9C6' : '#1F6B4A', open: () => this.showStory(f.id, 0) })),
+      storyOn: !!storyView,
+      story: storyView || { name: '', avatar: '#DEDEDA', ago: '', bg: '#1C1C1C', shapes: [], segs: [], hasText: false, text: '' },
+      storyNext: () => { if (s.story) this.showStory(s.story.cid, s.story.idx + 1); },
+      storyPrev: () => { if (s.story) this.showStory(s.story.cid, Math.max(0, s.story.idx - 1)); },
+      closeStory: () => this.closeStory(),
+      notifOpen: s.notifOpen,
+      toggleNotif: () => this.setState({ notifOpen: !s.notifOpen, notifSeen: true }),
+      closeNotif: () => this.setState({ notifOpen: false }),
+      hasBadge: badge > 0,
+      badge: badge,
+      badgeLabel: badge > 0 ? ', ' + badge + ' nouvelles' : '',
+      hasRequests: requests.length > 0,
+      requests: requests,
+      likesList: likesList,
+      likesBorder: requests.length > 0 ? '1px solid #ECECEA' : '0',
+      searchOn: s.searchOpen,
+      query: s.query,
+      openSearch: () => this.setState({ searchOpen: true, viewIdx: null }),
+      closeSearch: () => this.setState({ searchOpen: false, viewIdx: null }),
+      searchRef: (el) => { if (el && !this.searchFocused) { this.searchFocused = true; try { el.focus(); } catch (e) {} } if (!el) this.searchFocused = false; },
+      onQuery: (e) => this.setState({ query: e.target.value, viewIdx: null }),
+      onSearchSubmit: (e) => { if (e && e.preventDefault) e.preventDefault(); },
+      hasResults: results.length > 0,
+      results: results.map((p, k) => Object.assign({}, p, { open: () => this.setState({ viewIdx: k }) })),
+      viewing: s.viewIdx !== null && !!results[s.viewIdx],
+      view: (s.viewIdx !== null && results[s.viewIdx]) || { shapes: [], bg: '#FFFFFF', author: '', caption: '' },
+      closeView: () => this.setState({ viewIdx: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

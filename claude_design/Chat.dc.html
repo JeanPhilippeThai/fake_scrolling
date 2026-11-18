@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Messages — Fake scrolling</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F6B4A}a:hover{color:#174F37}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #2F4F9E;outline-offset:2px}
+@keyframes fs-story-a{from{width:0}to{width:100%}}
+@keyframes fs-story-b{from{width:0}to{width:100%}}
+.fs-story-a{animation:fs-story-a 5s linear forwards}
+.fs-story-b{animation:fs-story-b 5s linear forwards}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; color: #1C1C1C; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; overflow: hidden; position: relative; filter: grayscale({{grey}}%); transition: filter 1.2s ease">
+
+  <sc-if value="{{inList}}" hint-placeholder-val="{{ true }}">
+    <header style="display: flex; flex-direction: column; gap: 12px; padding: 18px 16px 10px">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <h1 style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.01em">Messages</h1>
+        <div style="display: flex; align-items: center; margin-right: -8px">
+          <button type="button" onClick="{{toggleConvSearch}}" aria-label="Rechercher une discussion" aria-pressed="{{convSearchOn}}" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          </button>
+          <button type="button" onClick="{{openAdd}}" aria-label="Ajouter un ami" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          </button>
+        </div>
+      </div>
+      <sc-if value="{{convSearchOn}}" hint-placeholder-val="{{ false }}">
+        <div style="position: relative">
+          <label for="conv-search" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Rechercher une discussion</label>
+          <input id="conv-search" ref="{{convSearchRef}}" type="search" autocomplete="off" value="{{convQuery}}" onChange="{{onConvQuery}}" placeholder="Rechercher" style="width: 100%; height: 40px; box-sizing: border-box; border: 0; border-radius: 10px; padding: 0 14px; background: #F1F1EF; font: 400 15px 'IBM Plex Sans', sans-serif; color: #1C1C1C">
+        </div>
+      </sc-if>
+    </header>
+          <div role="list" aria-label="Stories de tes amis" style="display: flex; gap: 10px; overflow-x: auto; padding: 4px 16px 12px; scrollbar-width: none">
+      <a href="Compose.dc.html" onClick="{{markStory}}" role="listitem" aria-label="Ajouter à ta story" style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 62px; flex-shrink: 0; text-decoration: none">
+        <span style="position: relative; width: 58px; height: 58px; box-sizing: border-box; padding: 4.5px; display: flex">
+          <span style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 30% 30%, #9EE493, #2EC4B6 55%, #118AB2); filter: blur(1.5px); display: block"></span>
+          <span aria-hidden="true" style="position: absolute; right: 1px; bottom: 1px; width: 20px; height: 20px; border-radius: 50%; background: #1F6B4A; border: 2px solid #FFFFFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+          </span>
+        </span>
+        <span style="font-size: 11px; font-weight: 500; color: #1C1C1C; white-space: nowrap">Ta story</span>
+      </a>
+      <sc-for list="{{storyRow}}" as="f" hint-placeholder-count="5">
+        <button type="button" role="listitem" onClick="{{f.open}}" aria-label="Voir la story de {{f.first}}" style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 62px; flex-shrink: 0; padding: 0; border: 0; background: transparent; cursor: pointer">
+          <span style="width: 58px; height: 58px; box-sizing: border-box; padding: 2px; border-radius: 50%; border: 2.5px solid {{f.ring}}; background: #FFFFFF; display: flex">
+            <span style="position: relative; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: {{f.avatar}}; display: block">
+              <span style="position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.65), transparent 60%); filter: blur(3px)"></span>
+            </span>
+          </span>
+          <span style="max-width: 62px; overflow: hidden; text-overflow: ellipsis; font-size: 11px; font-weight: 500; color: #1C1C1C; white-space: nowrap">{{f.first}}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="flex: 1; min-height: 0; overflow-y: auto">
+      <h2 style="margin: 0; padding: 8px 16px 6px; font-size: 16px; font-weight: 600">Discussions</h2>
+      <sc-for list="{{convosShown}}" as="c" hint-placeholder-count="6">
+        <div style="display: flex; align-items: center; gap: 10px; min-height: 72px; padding: 6px 16px">
+          <sc-if value="{{c.hasStory}}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{c.openStory}}" aria-label="Voir la story de {{c.first}}" style="width: 60px; height: 60px; flex-shrink: 0; box-sizing: border-box; padding: 2px; border-radius: 50%; border: 2.5px solid {{c.ring}}; background: #FFFFFF; display: flex; cursor: pointer">
+            <span style="position: relative; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: {{c.avatar}}; display: block">
+              <span style="position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.65), transparent 60%); filter: blur(3px)"></span>
+            </span>
+            </button>
+          </sc-if>
+          <sc-if value="{{c.noStory}}" hint-placeholder-val="{{ true }}">
+            <span style="width: 60px; height: 60px; flex-shrink: 0; box-sizing: border-box; padding: 4.5px; display: flex">
+            <span style="position: relative; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: {{c.avatar}}; display: block">
+              <span style="position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.65), transparent 60%); filter: blur(3px)"></span>
+            </span>
+            </span>
+          </sc-if>
+          <button type="button" onClick="{{c.open}}" style="flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0; border: 0; background: transparent; color: #1C1C1C; text-align: left; cursor: pointer">
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 16px; font-weight: {{c.weight}}">{{c.name}}</span>
+              <span style="font-size: 14px; color: {{c.previewColor}}; font-weight: {{c.weight}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{c.preview}} · {{c.time}}</span>
+            </span>
+            <sc-if value="{{c.unread}}" hint-placeholder-val="{{ false }}">
+              <span aria-label="Non lu" style="width: 10px; height: 10px; flex-shrink: 0; border-radius: 50%; background: #2F4F9E"></span>
+            </sc-if>
+          </button>
+        </div>
+      </sc-for>
+    </div>
+
+    <nav aria-label="Navigation principale" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid #DEDEDA; background: #FFFFFF; padding: 6px 4px 14px">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"></path></svg>
+      Accueil
+    </a>
+    <a href="Chat.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #1F6B4A; font: 600 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-9l-5 4V6a1 1 0 0 1 1-1z"></path></svg>
+      Messages
+    </a>
+    <a href="Compose.dc.html" aria-label="Publier" style="display: flex; align-items: center; justify-content: center; min-height: 52px; text-decoration: none">
+      <span style="width: 54px; height: 40px; border-radius: 13px; background: #1C1C1C; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+      </span>
+    </a>
+    <a href="Search.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      Recherche
+    </a>
+    <a href="Profile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+      Profil
+    </a>
+  </nav>
+  </sc-if>
+
+  <sc-if value="{{addOn}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: #FFFFFF; display: flex; flex-direction: column">
+      <header style="display: flex; align-items: center; gap: 4px; padding: 12px 8px 10px 4px; border-bottom: 1px solid #ECECEA">
+        <button type="button" onClick="{{closeAdd}}" aria-label="Retour" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+        </button>
+        <h2 style="margin: 0; font-size: 18px; font-weight: 600">Ajouter un ami</h2>
+      </header>
+      <div style="padding: 14px 16px 6px">
+        <div style="display: flex; align-items: center; height: 46px; box-sizing: border-box; border-radius: 12px; background: #F1F1EF; padding: 0 14px">
+          <span aria-hidden="true" style="font: 500 16px 'IBM Plex Mono', monospace; color: #5E5E5B">@</span>
+          <label for="add-handle" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Identifiant de ton ami</label>
+          <input id="add-handle" ref="{{addRef}}" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" value="{{addQuery}}" onChange="{{onAddQuery}}" placeholder="identifiant" style="flex: 1; min-width: 0; height: 44px; border: 0; padding: 0 0 0 2px; background: transparent; font: 500 16px 'IBM Plex Mono', monospace; color: #1C1C1C">
+        </div>
+      </div>
+      <div style="flex: 1; min-height: 0; overflow-y: auto">
+        <sc-for list="{{addResults}}" as="u" hint-placeholder-count="3">
+          <div style="display: flex; align-items: center; gap: 12px; min-height: 68px; padding: 8px 16px">
+            <span style="position: relative; width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; overflow: hidden; background: {{u.avatar}}; display: block">
+              <span style="position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.65), transparent 60%); filter: blur(3px)"></span>
+            </span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+              <span style="font: 600 15px 'IBM Plex Mono', monospace">{{u.handle}}</span>
+              <span style="font-size: 14px; color: #5E5E5B">{{u.name}}</span>
+            </span>
+            <button type="button" onClick="{{u.add}}" disabled="{{u.done}}" style="min-height: 36px; padding: 0 16px; border-radius: 10px; border: {{u.border}}; background: {{u.bg}}; color: {{u.fg}}; font: 600 14px 'IBM Plex Sans', sans-serif; cursor: pointer">{{u.label}}</button>
+          </div>
+        </sc-for>
+        <sc-if value="{{addNone}}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; padding: 24px 16px; text-align: center; font-size: 15px; color: #5E5E5B">Aucun compte trouvé.</p>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{inThread}}" hint-placeholder-val="{{ false }}">
+    <header style="display: flex; align-items: center; gap: 10px; padding: 12px 8px 10px 4px; border-bottom: 1px solid #ECECEA">
+      <button type="button" onClick="{{back}}" aria-label="Retour aux discussions" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+      </button>
+      <sc-if value="{{active.hasStory}}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{active.openStory}}" aria-label="Voir la story de {{active.first}}" style="width: 44px; height: 44px; flex-shrink: 0; box-sizing: border-box; padding: 2px; border-radius: 50%; border: 2.5px solid {{active.ring}}; background: #FFFFFF; display: flex; cursor: pointer">
+            <span style="position: relative; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: {{active.avatar}}; display: block">
+              <span style="position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.65), transparent 60%); filter: blur(3px)"></span>
+            </span>
+            </button>
+          </sc-if>
+          <sc-if value="{{active.noStory}}" hint-placeholder-val="{{ true }}">
+            <span style="width: 44px; height: 44px; flex-shrink: 0; box-sizing: border-box; padding: 4.5px; display: flex">
+            <span style="position: relative; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: {{active.avatar}}; display: block">
+              <span style="position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.65), transparent 60%); filter: blur(3px)"></span>
+            </span>
+            </span>
+          </sc-if>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+        <span style="font-weight: 600; font-size: 16px; line-height: 1.25">{{active.name}}</span>
+        <span style="font-size: 12px; color: #5E5E5B">{{active.handle}}</span>
+      </div>
+      <button type="button" aria-label="Appel" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"></path></svg>
+      </button>
+    </header>
+
+    <div ref="{{listRef}}" style="flex: 1; min-height: 0; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 6px; background: #FFFFFF">
+      <p style="margin: 0 0 8px; text-align: center; font-size: 12px; color: #5E5E5B">Aujourd’hui</p>
+      <sc-for list="{{msgs}}" as="m" hint-placeholder-count="5">
+        <div onPointerDown="{{m.down}}" onPointerMove="{{m.move}}" onPointerUp="{{m.up}}" onPointerCancel="{{m.up}}" style="position: relative; touch-action: pan-y; user-select: none">
+          <span aria-hidden="true" style="position: absolute; left: 2px; top: 50%; margin-top: -12px; opacity: {{m.hint}}; color: #5E5E5B">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"></path><path d="M4 9h10a6 6 0 0 1 6 6v4"></path></svg>
+          </span>
+          <div style="display: flex; flex-direction: column; align-items: {{m.align}}; gap: 3px; transform: translateX({{m.dx}}px); transition: {{m.transition}}">
+            <sc-if value="{{m.hasReply}}" hint-placeholder-val="{{ false }}">
+              <span style="max-width: 70%; padding: 5px 12px; border-radius: 14px; background: #F7F7F5; border: 1px solid #ECECEA; color: #5E5E5B; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{m.replyLabel}}</span>
+            </sc-if>
+            <sc-if value="{{m.isPhoto}}" hint-placeholder-val="{{ false }}">
+              <div role="img" aria-label="Photo" style="width: 180px; height: 225px; border-radius: 18px; overflow: hidden; position: relative; background: {{m.photoBg}}">
+                <div style="position: absolute; inset: 0; filter: blur(14px)">
+                  <div style="position: absolute; left: 20px; top: 30px; width: 110px; height: 110px; border-radius: 50%; background: {{m.c1}}"></div>
+                  <div style="position: absolute; left: 70px; top: 110px; width: 120px; height: 120px; border-radius: 30%; background: {{m.c2}}"></div>
+                  <div style="position: absolute; left: -20px; top: 150px; width: 90px; height: 90px; border-radius: 50%; background: #FFBE0B"></div>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{m.isText}}" hint-placeholder-val="{{ true }}">
+              <p style="margin: 0; max-width: 75%; padding: 9px 14px; border-radius: 20px; background: {{m.bg}}; color: {{m.fg}}; font-size: 16px; line-height: 1.4">{{m.text}}</p>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+      <sc-if value="{{typing}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex">
+          <p role="status" aria-label="{{active.first}} écrit" style="margin: 0; padding: 12px 16px; border-radius: 20px; background: #F1F1EF; display: flex; gap: 4px">
+            <span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: #8A8A86"></span>
+            <span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: #8A8A86"></span>
+            <span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: #8A8A86"></span>
+          </p>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="display: flex; flex-direction: column; background: #FFFFFF; border-top: 1px solid #ECECEA">
+      <sc-if value="{{replying}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 4px 0 16px">
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-size: 12px; color: #5E5E5B">Réponse à {{replyName}}</span>
+            <span style="font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{replyText}}</span>
+          </div>
+          <button type="button" onClick="{{cancelReply}}" aria-label="Annuler la réponse" style="width: 44px; height: 44px; flex-shrink: 0; padding: 0; border: 0; background: transparent; color: #5E5E5B; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </div>
+      </sc-if>
+      <form onSubmit="{{onSubmit}}" style="display: flex; padding: 8px 10px 26px; margin: 0">
+        <div style="flex: 1; min-width: 0; display: flex; align-items: center; min-height: 46px; box-sizing: border-box; border: 1px solid #DEDEDA; border-radius: 999px; padding: 0 2px 0 16px">
+          <label for="msg" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Message</label>
+          <input id="msg" ref="{{inputRef}}" type="text" autocomplete="off" value="{{draft}}" onChange="{{onDraft}}" placeholder="Message…" style="flex: 1; min-width: 0; height: 42px; border: 0; padding: 0; font: 400 16px 'IBM Plex Sans', sans-serif; color: #1C1C1C; background: transparent">
+          <sc-if value="{{draftEmpty}}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{sendPhoto}}" aria-label="Envoyer une photo" style="width: 42px; height: 42px; flex-shrink: 0; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="10" r="1.8"></circle><path d="M21 16l-5-5-8 8"></path></svg>
+            </button>
+          </sc-if>
+          <sc-if value="{{draftFilled}}" hint-placeholder-val="{{ false }}">
+            <button type="submit" style="min-height: 42px; flex-shrink: 0; padding: 0 12px; border: 0; background: transparent; color: #1F6B4A; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">Envoyer</button>
+          </sc-if>
+        </div>
+      </form>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{storyOn}}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-modal="true" aria-label="Story de {{story.name}}" style="position: absolute; inset: 0; overflow: hidden; background: {{story.bg}}">
+      <div style="position: absolute; inset: 0; filter: blur(16px)">
+        <sc-for list="{{story.shapes}}" as="s" hint-placeholder-count="3">
+          <span style="position: absolute; left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; height: {{s.h}}%; background: {{s.c}}; border-radius: {{s.r}}"></span>
+        </sc-for>
+      </div>
+      <sc-if value="{{story.hasText}}" hint-placeholder-val="{{ false }}">
+        <p style="position: absolute; left: 24px; right: 24px; top: 44%; margin: 0; text-align: center; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 30px; line-height: 1.15; color: #FFFFFF; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5)">{{story.text}}</p>
+      </sc-if>
+      <button type="button" onClick="{{storyPrev}}" aria-label="Story précédente" style="position: absolute; left: 0; top: 0; bottom: 0; width: 33%; padding: 0; border: 0; background: transparent; cursor: pointer"></button>
+      <button type="button" onClick="{{storyNext}}" aria-label="Story suivante" style="position: absolute; right: 0; top: 0; bottom: 0; width: 67%; padding: 0; border: 0; background: transparent; cursor: pointer"></button>
+      <div style="position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 10px; padding: 12px 6px 24px 12px; background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0))">
+        <div style="display: flex; gap: 4px; padding-right: 6px">
+          <sc-for list="{{story.segs}}" as="g" hint-placeholder-count="3">
+            <span style="flex: 1; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.4); overflow: hidden">
+              <span class="{{g.cls}}" style="display: block; height: 100%; width: {{g.w}}; background: #FFFFFF"></span>
+            </span>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px">
+          <span aria-hidden="true" style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: {{story.avatar}}; filter: blur(1px)"></span>
+          <span style="font-weight: 600; font-size: 14px; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6)">{{story.name}}</span>
+          <span style="font-size: 13px; color: #FFFFFF; opacity: 0.85; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6)">{{story.ago}}</span>
+          <span style="flex: 1"></span>
+          <button type="button" onClick="{{closeStory}}" aria-label="Fermer la story" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6))">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(...a) {
+    super(...a);
+    this.timers = [];
+    this.listEl = null;
+    this.state = { grey: 0, convSearch: false, convQuery: '', story: null, storySeen: {}, storyFlip: false, addOpen: false, addQuery: '', requested: {}, swipe: null, replyTo: null, open: null, draft: '', typing: false, threads: {}, read: {} };
+  }
+  componentDidUpdate() { if (this.listEl) this.listEl.scrollTop = this.listEl.scrollHeight; }
+  componentDidMount() { this.startClock(); }
+  componentWillUnmount() { clearInterval(this.clockTimer); clearTimeout(this.storyTimer); this.timers.forEach(clearTimeout); }
+  readClock() {
+    var d = { start: Date.now(), cycleMin: 2, speed: 1 };
+    try {
+      var raw = localStorage.getItem('fs-clock');
+      if (raw) { var v = JSON.parse(raw); if (v && v.start) return Object.assign(d, v); }
+      localStorage.setItem('fs-clock', JSON.stringify(d));
+      return d;
+    } catch (e) {
+      if (!this.memClock) this.memClock = d;
+      return this.memClock;
+    }
+  }
+  writeClock(v) {
+    this.memClock = v;
+    try { localStorage.setItem('fs-clock', JSON.stringify(v)); } catch (e) {}
+  }
+  cycleMs(c) { return c.cycleMin * 60000 / Math.max(1, c.speed || 1); }
+  cyclesDone(c) { return Math.max(0, Math.min(10, Math.floor((Date.now() - c.start) / this.cycleMs(c)))); }
+  trackUsage(c) {
+    var sp = Math.max(1, c.speed || 1);
+    try {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      var now = Date.now();
+      var u = JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0,"last":0}');
+      var dt = now - (u.last || 0);
+      if (dt < 900) return;
+      u.ms = (u.ms || 0) + Math.min(dt, 1500) * sp;
+      u.last = now;
+      localStorage.setItem('fs-usage', JSON.stringify(u));
+    } catch (e) { this.memUsage = (this.memUsage || 0) + 1000 * sp; }
+  }
+  readUsage() {
+    try { return JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0}').ms || 0; } catch (e) { return this.memUsage || 0; }
+  }
+  tickClock() {
+    var c = this.readClock();
+    this.trackUsage(c);
+    var g = this.cyclesDone(c) * 10;
+    var up = null;
+    if (g !== this.state.grey) { up = { grey: g }; if (g < 100) up.dismissed = false; }
+    if (this.wantsNow) { up = up || {}; up.now = Date.now(); }
+    if (up) this.setState(up);
+  }
+  startClock() {
+    clearInterval(this.clockTimer);
+    this.tickClock();
+    this.clockTimer = setInterval(() => this.tickClock(), 1000);
+  }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  rng(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  gib(seed, words) {
+    var SYL = ['lo','vra','mi','té','ka','zu','ren','po','li','sha','dou','ne','vo','ri','ba','qui','fel','mo','na','sé','ar','lun','pé','sko'];
+    var r = this.rng(seed); var out = [];
+    for (var i = 0; i < words; i++) {
+      var n = 1 + Math.floor(r() * 3); var w = '';
+      for (var j = 0; j < n; j++) w += SYL[Math.floor(r() * SYL.length)];
+      out.push(i === 0 ? w.charAt(0).toUpperCase() + w.slice(1) : w);
+    }
+    return out.join(' ');
+  }
+  hash(s) {
+    var h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0) % 100000;
+  }
+  textOf(m) {
+    if (!m.morphed) return m.original;
+    var g = m.words ? this.gib(m.seed, m.words) : '';
+    return (g + (m.emoji ? (g ? ' ' : '') + m.emoji : '')).trim();
+  }
+  convos() {
+    var PAL = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#2EC4B6'];
+    var HANDLES = ['@lea.k', '@tom_b', '@ines.m', '@sacha', '@nour.a', '@max.l', '@jade.r', '@yanis'];
+    var TIMES = ['2 min', '18 min', '1 h', '3 h', 'hier', 'hier', 'lun.', 'sam.'];
+    var EMO = ['👋', '😂', '', '🌙', '✨', '', '🫶', '🙃'];
+    var out = [];
+    for (var i = 0; i < 8; i++) {
+      var seed = 5000 + i * 131;
+      var name = this.gib(seed, 2);
+      out.push({ id: i, seed: seed, name: name, first: name.split(' ')[0], handle: HANDLES[i], avatar: PAL[i % PAL.length], time: TIMES[i], emoji: EMO[i], unread: i < 3, story: [0, 1, 2, 3, 5, 6].indexOf(i) !== -1 });
+    }
+    return out;
+  }
+  thread(c) {
+    var t = this.state.threads[c.id];
+    if (t) return t;
+    var r = this.rng(c.seed + 7);
+    var EMO = ['😂', '🌿', '✨', '🫶', '🙃', '', '', ''];
+    var msgs = []; var n = 6 + Math.floor(r() * 4);
+    for (var i = 0; i < n; i++) {
+      if (i === 2 && c.id % 2 === 0) { msgs.push({ id: 'p' + i, me: false, photo: true }); continue; }
+      msgs.push({ id: 'm' + i, me: r() < 0.45, seed: c.seed + i * 17, words: 1 + Math.floor(r() * 7), emoji: EMO[Math.floor(r() * EMO.length)], morphed: true });
+    }
+    msgs.push({ id: 'last', me: false, seed: c.seed + 999, words: 3, emoji: c.emoji, morphed: true });
+    return msgs;
+  }
+  updateThread(id, fn) {
+    this.setState((s) => {
+      var c = this.convos()[id];
+      var th = Object.assign({}, s.threads);
+      th[id] = fn(s.threads[id] || this.thread(c));
+      return { threads: th };
+    });
+  }
+  send() {
+    var text = this.state.draft.trim();
+    var cid = this.state.open;
+    if (!text || cid === null) return;
+    var emojis = text.match(/\p{Extended_Pictographic}/gu) || [];
+    var words = text.replace(/\p{Extended_Pictographic}/gu, ' ').trim().split(/\s+/).filter(Boolean).length;
+    var id = 'x' + Date.now();
+    var replyTo = this.state.replyTo;
+    this.setState({ draft: '', replyTo: null });
+    this.updateThread(cid, (t) => t.concat([{ id: id, replyTo: replyTo, me: true, original: text, seed: this.hash(text), words: words, emoji: emojis.join(''), morphed: false }]));
+    this.later(() => this.updateThread(cid, (t) => t.map((m) => m.id === id ? Object.assign({}, m, { morphed: true }) : m)), 900);
+    this.later(() => { if (this.state.open === cid) this.setState({ typing: true }); }, 1500);
+    this.later(() => {
+      var r = Math.random();
+      var EMO = ['😂', '🌿', '✨', '🫶', '🙃', ''];
+      this.setState({ typing: false });
+      this.updateThread(cid, (t) => t.concat([{ id: id + 'r', me: false, seed: Math.floor(r * 99999), words: 1 + Math.floor(r * 7), emoji: EMO[Math.floor(r * EMO.length)], morphed: true }]));
+    }, 3200);
+  }
+  sendPhoto() {
+    var cid = this.state.open;
+    if (cid === null) return;
+    var id = 'ph' + Date.now();
+    var replyTo = this.state.replyTo;
+    this.setState({ replyTo: null });
+    this.updateThread(cid, (t) => t.concat([{ id: id, me: true, photo: true, replyTo: replyTo }]));
+  }
+  snippet(m) {
+    if (!m) return '';
+    var s = m.photo ? 'Photo' : this.textOf(m);
+    return s.length > 40 ? s.slice(0, 38) + '…' : s;
+  }
+  storyItems(c) {
+    var PAL = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#2EC4B6','#F7AEF8'];
+    var BG = ['#FFE5D9','#E3ECFF','#DDF3E9','#FFF3C4','#F3E3FF'];
+    var EMO = ['', '✨', '🌙', '🌿', ''];
+    var r = this.rng(c.seed + 555);
+    var n = 2 + Math.floor(r() * 2);
+    var items = [];
+    for (var i = 0; i < n; i++) {
+      var shapes = [];
+      for (var j = 0; j < 4; j++) {
+        var w = Math.round(35 + r() * 50);
+        shapes.push({ x: Math.round(r() * 80 - 15), y: Math.round(r() * 85 - 10), w: w, h: Math.round(w * 0.5), c: PAL[Math.floor(r() * PAL.length)], r: '50%' });
+      }
+      var withText = r() < 0.5;
+      var em = EMO[Math.floor(r() * EMO.length)];
+      items.push({ bg: BG[Math.floor(r() * BG.length)], shapes: shapes, hasText: withText, text: withText ? this.gib(c.seed + 600 + i, 1 + Math.floor(r() * 3)) + (em ? ' ' + em : '') : '' });
+    }
+    return items;
+  }
+  showStory(cid, idx) {
+    clearTimeout(this.storyTimer);
+    var c = this.convos()[cid];
+    var items = this.storyItems(c);
+    if (idx >= items.length) { this.closeStory(); return; }
+    this.setState((st) => { var sn = Object.assign({}, st.storySeen); sn[cid] = true; return { story: { cid: cid, idx: Math.max(0, idx) }, storySeen: sn, storyFlip: !st.storyFlip }; });
+    this.storyTimer = setTimeout(() => this.showStory(cid, idx + 1), 5000);
+  }
+  closeStory() {
+    clearTimeout(this.storyTimer);
+    this.setState({ story: null });
+  }
+  renderVals() {
+    var s = this.state;
+    var list = this.convos();
+    var convos = list.map((c) => {
+      var t = this.thread(c);
+      var last = t[t.length - 1];
+      var unread = c.unread && !s.read[c.id];
+      return Object.assign({}, c, {
+        preview: (last.me ? 'Toi : ' : '') + (last.photo ? 'Photo' : this.textOf(last)),
+        unread: unread,
+        weight: unread ? 600 : 400,
+        previewColor: unread ? '#1C1C1C' : '#5E5E5B',
+        hasStory: c.story, noStory: !c.story,
+        ring: s.storySeen[c.id] ? '#C9C9C6' : '#1F6B4A',
+        openStory: () => this.showStory(c.id, 0),
+        open: () => this.setState((st) => { var rd = Object.assign({}, st.read); rd[c.id] = true; return { open: c.id, read: rd, typing: false }; })
+      });
+    });
+    var active = s.open === null ? convos[0] : convos[s.open];
+    var storyView = null;
+    if (s.story) {
+      var sc = list[s.story.cid];
+      var its = this.storyItems(sc);
+      var cur = its[Math.min(s.story.idx, its.length - 1)];
+      storyView = Object.assign({}, cur, {
+        name: sc.first, avatar: sc.avatar, ago: ({0: '2 h', 1: '5 h', 2: '6 h', 3: '7 h', 5: '9 h', 6: '11 h'})[sc.id] || '3 h',
+        segs: its.map((x, k) => ({ cls: k === s.story.idx ? (s.storyFlip ? 'fs-story-a' : 'fs-story-b') : '', w: k < s.story.idx ? '100%' : '0%' }))
+      });
+    }
+    var thread = s.open === null ? [] : this.thread(active);
+    var byId = {}; thread.forEach((m) => { byId[m.id] = m; });
+    var msgs = thread.map((m) => {
+      var id = m.id;
+      var dx = s.swipe && s.swipe.id === id ? s.swipe.dx : 0;
+      var q = m.replyTo ? byId[m.replyTo] : null;
+      return {
+        isPhoto: !!m.photo, isText: !m.photo,
+        align: m.me ? 'flex-end' : 'flex-start',
+        text: m.photo ? '' : this.textOf(m),
+        bg: m.me ? '#1F6B4A' : '#F1F1EF',
+        fg: m.me ? '#FFFFFF' : '#1C1C1C',
+        photoBg: m.me ? '#E3ECFF' : '#FFE5D9',
+        c1: m.me ? '#8338EC' : '#06D6A0',
+        c2: m.me ? '#EF476F' : '#3A86FF',
+        hasReply: !!q,
+        replyLabel: q ? (q.me ? 'Toi' : active.first) + ' : ' + this.snippet(q) : '',
+        dx: dx,
+        hint: Math.min(1, dx / 60).toFixed(2),
+        transition: dx ? 'none' : 'transform 0.2s ease',
+        down: (e) => { this.sw = { id: id, x: e.clientX, y: e.clientY, active: false }; },
+        move: (e) => {
+          var sw = this.sw;
+          if (!sw || sw.id !== id) return;
+          var ddx = e.clientX - sw.x; var ddy = e.clientY - sw.y;
+          if (!sw.active) {
+            if (Math.abs(ddx) > 8 && Math.abs(ddx) > Math.abs(ddy)) { sw.active = true; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {} }
+            else return;
+          }
+          this.setState({ swipe: { id: id, dx: Math.max(0, Math.min(90, ddx)) } });
+        },
+        up: () => {
+          var sw = this.sw; this.sw = null;
+          if (!sw || !sw.active) return;
+          var far = (this.state.swipe && this.state.swipe.dx || 0) >= 60;
+          this.setState({ swipe: null, replyTo: far ? id : this.state.replyTo });
+          if (far && this.inputEl) { try { this.inputEl.focus(); } catch (x) {} }
+        }
+      };
+    });
+    var rq = s.replyTo ? byId[s.replyTo] : null;
+    var DIR = ['camille.d', 'cam_ille', 'hugo.p', 'hugo_m', 'lina.r', 'lina', 'theo.v', 'manon.b', 'manon.l', 'zoe.k', 'adam.s', 'chloe.t', 'louis.g', 'emma.r', 'emma_w', 'nathan', 'sarah.c', 'enzo.f', 'lucie.m', 'paul.n'];
+    var PALA = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#2EC4B6'];
+    var known = {}; list.forEach((c) => { known[c.handle.slice(1)] = true; });
+    var q = s.addQuery;
+    var addResults = !q ? [] : DIR.concat(Object.keys(known)).filter((h, i, arr) => arr.indexOf(h) === i && h.indexOf(q) === 0).slice(0, 8).map((h) => {
+      var friend = !!known[h];
+      var asked = !!s.requested[h];
+      var seed = this.hash(h);
+      return {
+        handle: '@' + h,
+        name: this.gib(seed, 2),
+        avatar: PALA[seed % PALA.length],
+        done: friend || asked,
+        label: friend ? 'Ami' : asked ? 'Demandé' : 'Ajouter',
+        bg: friend || asked ? '#FFFFFF' : '#1F6B4A',
+        fg: friend || asked ? '#5E5E5B' : '#FFFFFF',
+        border: friend || asked ? '1px solid #DEDEDA' : '0',
+        add: () => this.setState((st) => { var r = Object.assign({}, st.requested); r[h] = true; return { requested: r }; })
+      };
+    });
+    return {
+      grey: s.grey,
+      addOn: s.addOpen,
+      openAdd: () => { this.addFocused = false; this.setState({ addOpen: true, addQuery: '' }); },
+      closeAdd: () => this.setState({ addOpen: false }),
+      addRef: (el) => { if (el && !this.addFocused) { this.addFocused = true; try { el.focus(); } catch (x) {} } },
+      addQuery: s.addQuery,
+      onAddQuery: (e) => this.setState({ addQuery: e.target.value.replace(/^@+/, '').replace(/\s/g, '').toLowerCase() }),
+      addResults: addResults,
+      addNone: !!s.addQuery && addResults.length === 0,
+      inList: s.open === null,
+      inThread: s.open !== null,
+      convos: convos,
+      active: active,
+      msgs: msgs,
+      storyOn: !!storyView,
+      story: storyView || { name: '', avatar: '#DEDEDA', ago: '', bg: '#1C1C1C', shapes: [], segs: [], hasText: false, text: '' },
+      storyNext: () => { if (s.story) this.showStory(s.story.cid, s.story.idx + 1); },
+      storyPrev: () => { if (s.story) this.showStory(s.story.cid, Math.max(0, s.story.idx - 1)); },
+      closeStory: () => this.closeStory(),
+      convSearchOn: s.convSearch,
+      convQuery: s.convQuery,
+      toggleConvSearch: () => { this.convFocused = false; this.setState({ convSearch: !s.convSearch, convQuery: '' }); },
+      convSearchRef: (el) => { if (el && !this.convFocused) { this.convFocused = true; try { el.focus(); } catch (x) {} } },
+      onConvQuery: (e) => this.setState({ convQuery: e.target.value }),
+      convosShown: convos.filter((x) => { var q = s.convQuery.trim().toLowerCase(); return !q || x.name.toLowerCase().indexOf(q) !== -1 || x.handle.indexOf(q.replace(/^@/, '')) !== -1; }),
+      markStory: () => { try { localStorage.setItem('fs-compose-dest', 'story'); } catch (e) {} },
+      storyRow: convos.filter((x) => x.hasStory).map((x) => Object.assign({}, x, { open: x.openStory })),
+      typing: s.typing,
+      replying: !!rq,
+      replyName: rq ? (rq.me ? 'toi' : active.first) : '',
+      replyText: this.snippet(rq),
+      cancelReply: () => this.setState({ replyTo: null }),
+      inputRef: (el) => { this.inputEl = el; },
+      draftEmpty: !s.draft.trim(),
+      draftFilled: !!s.draft.trim(),
+      sendPhoto: () => this.sendPhoto(),
+      draft: s.draft,
+      sendColor: s.draft.trim() ? '#1F6B4A' : '#8A8A86',
+      back: () => this.setState({ open: null, typing: false, replyTo: null }),
+      listRef: (el) => { this.listEl = el; if (el) el.scrollTop = el.scrollHeight; },
+      onDraft: (e) => this.setState({ draft: e.target.value }),
+      onSubmit: (e) => { if (e && e.preventDefault) e.preventDefault(); this.send(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

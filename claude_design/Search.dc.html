@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Recherche — Fake scrolling</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F6B4A}a:hover{color:#174F37}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #2F4F9E;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; color: #1C1C1C; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; overflow: hidden; filter: grayscale({{grey}}%); transition: filter 1.2s ease">
+  <div style="flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column">
+    <form onSubmit="{{onSearchSubmit}}" role="search" style="padding: 16px 16px 10px; margin: 0">
+      <div style="position: relative">
+        <label for="search-page" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Rechercher</label>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E5E5B" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="position: absolute; left: 14px; top: 13px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <input id="search-page" type="search" autocomplete="off" value="{{query}}" onChange="{{onQuery}}" placeholder="Rechercher" style="width: 100%; height: 44px; box-sizing: border-box; border: 0; border-radius: 12px; padding: 0 14px 0 40px; background: #F1F1EF; font: 400 16px 'IBM Plex Sans', sans-serif; color: #1C1C1C">
+      </div>
+    </form>
+        <div style="flex: 1; min-height: 0; overflow-y: auto">
+          <sc-if value="{{showIntro}}" hint-placeholder-val="{{ true }}">
+            <section style="display: flex; flex-direction: column; padding: 2px 0 12px">
+              <h2 style="margin: 0; padding: 6px 16px 4px; font-size: 16px; font-weight: 600">Suggestions</h2>
+              <sc-for list="{{suggestions}}" as="g" hint-placeholder-count="8">
+                <button type="button" onClick="{{g.pick}}" style="display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 0 16px; border: 0; background: transparent; color: #1C1C1C; font: 400 14px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5E5E5B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+                  <span style="flex: 1">{{g.label}}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A8A86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"></path></svg>
+                </button>
+              </sc-for>
+            </section>
+            <section style="display: flex; flex-direction: column; padding: 6px 0 18px; border-top: 1px solid #ECECEA">
+              <h2 style="margin: 0; padding: 12px 16px 6px; font-size: 16px; font-weight: 600">Tendances</h2>
+              <sc-for list="{{trends}}" as="tr" hint-placeholder-count="6">
+                <button type="button" onClick="{{tr.pick}}" style="display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 6px 16px; border: 0; background: transparent; color: #1C1C1C; text-align: left; cursor: pointer">
+                  <span style="width: 18px; font: 600 15px 'IBM Plex Mono', monospace; color: #5E5E5B">{{tr.rank}}</span>
+                  <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+                    <span style="font-size: 16px; font-weight: 600">{{tr.label}}</span>
+                    <span style="font-size: 13px; color: #5E5E5B">{{tr.count}} posts</span>
+                  </span>
+                  <span aria-hidden="true" style="display: flex">
+                    <span style="width: 22px; height: 40px; border-radius: 6px 0 0 6px; background: {{tr.c0}}"></span>
+                    <span style="width: 22px; height: 40px; background: {{tr.c1}}"></span>
+                    <span style="width: 22px; height: 40px; border-radius: 0 6px 6px 0; background: {{tr.c2}}"></span>
+                  </span>
+                </button>
+              </sc-for>
+            </section>
+          </sc-if>
+          <sc-if value="{{hasResults}}" hint-placeholder-val="{{ false }}">
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px">
+              <sc-for list="{{results}}" as="t" hint-placeholder-count="9">
+                <button type="button" onClick="{{t.open}}" aria-label="{{t.label}}" style="position: relative; aspect-ratio: 3 / 4; padding: 0; border: 0; overflow: hidden; background: {{t.bg}}; cursor: pointer">
+                  <sc-for list="{{t.shapes}}" as="s" hint-placeholder-count="3">
+                    <span style="position: absolute; left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; height: {{s.h}}%; background: {{s.c}}; border-radius: {{s.r}}"></span>
+                  </sc-for>
+                  <span style="position: absolute; left: 6px; bottom: 5px; display: flex; align-items: center; gap: 3px; color: #FFFFFF; font: 600 12px 'IBM Plex Sans', sans-serif; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>
+                    {{t.likes}}
+                  </span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{viewing}}" hint-placeholder-val="{{ false }}">
+          <div role="dialog" aria-modal="true" aria-label="Post de {{view.author}}" style="position: absolute; inset: 0; overflow: hidden; background: {{view.bg}}">
+            <sc-for list="{{view.shapes}}" as="s" hint-placeholder-count="3">
+              <span style="position: absolute; left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; height: {{s.h}}%; background: {{s.c}}; border-radius: {{s.r}}"></span>
+            </sc-for>
+            <button type="button" onClick="{{closeView}}" aria-label="Retour aux résultats" style="position: absolute; top: 12px; left: 4px; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6))">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+            </button>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 4px; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">
+              <span style="font-weight: 600; font-size: 16px">{{view.author}}</span>
+              <p style="margin: 0; font-size: 15px; line-height: 1.45">{{view.caption}}</p>
+            </div>
+          </div>
+        </sc-if>
+  </div>
+
+  <nav aria-label="Navigation principale" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid #DEDEDA; background: #FFFFFF; padding: 6px 4px 14px">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"></path></svg>
+      Accueil
+    </a>
+    <a href="Chat.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-9l-5 4V6a1 1 0 0 1 1-1z"></path></svg>
+      Messages
+    </a>
+    <a href="Compose.dc.html" aria-label="Publier" style="display: flex; align-items: center; justify-content: center; min-height: 52px; text-decoration: none">
+      <span style="width: 54px; height: 40px; border-radius: 13px; background: #1C1C1C; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+      </span>
+    </a>
+    <a href="Search.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #1F6B4A; font: 600 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      Recherche
+    </a>
+    <a href="Profile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; text-decoration: none; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+      Profil
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(...a) {
+    super(...a);
+    this.state = { grey: 0, query: '', viewIdx: null };
+  }
+  componentDidMount() { this.startClock(); }
+  componentWillUnmount() { clearInterval(this.clockTimer); }
+  rng(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  gib(seed, words) {
+    var SYL = ['lo','vra','mi','té','ka','zu','ren','po','li','sha','dou','ne','vo','ri','ba','qui','fel','mo','na','sé','ar','lun','pé','sko'];
+    var r = this.rng(seed); var out = [];
+    for (var i = 0; i < words; i++) {
+      var n = 1 + Math.floor(r() * 3); var w = '';
+      for (var j = 0; j < n; j++) w += SYL[Math.floor(r() * SYL.length)];
+      out.push(i === 0 ? w.charAt(0).toUpperCase() + w.slice(1) : w);
+    }
+    return out.join(' ');
+  }
+  norm(q) {
+    return q.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]/g, ' ').trim().replace(/\s+/g, ' ');
+  }
+  colourFor(q) {
+    var C = {
+      rouge: '#E63946', orange: '#FB8500', jaune: '#FFD60A', vert: '#2A9D4B', bleu: '#1D6FE0', violet: '#7B2CBF',
+      rose: '#FF6FAE', marron: '#7F4F24', brun: '#6F4518', noir: '#161616', blanc: '#F7F7F5', gris: '#8D8D8A',
+      turquoise: '#1ABC9C', beige: '#E3D5B8', dore: '#D4A017', or: '#D4A017', argent: '#B8BCC2', indigo: '#3A0CA3',
+      cyan: '#00B4D8', magenta: '#D0008F', kaki: '#8A8A4F', bordeaux: '#7A1E2C', corail: '#FF7F5C', lilas: '#C8A2C8',
+      lavande: '#A79BE0', menthe: '#7DDCB2', peche: '#FFB38A', saumon: '#FA8072', ocre: '#CC7722', olive: '#708238',
+      emeraude: '#1F9D6B', marine: '#14213D', ciel: '#87CEEB', fuchsia: '#E0218A', framboise: '#C72C48', ivoire: '#FFFDE8',
+      creme: '#FFF4D6', sable: '#D8C3A5', chocolat: '#4E2A1E', prune: '#5E2750', vermillon: '#E34234', azur: '#2D8CFF'
+    };
+    var ALIAS = { verte: 'vert', vertes: 'vert', verts: 'vert', bleue: 'bleu', bleues: 'bleu', bleus: 'bleu', violette: 'violet', violettes: 'violet', violets: 'violet',
+      grise: 'gris', grises: 'gris', blanche: 'blanc', blanches: 'blanc', blancs: 'blanc', noire: 'noir', noires: 'noir', noirs: 'noir',
+      brune: 'brun', brunes: 'brun', bruns: 'brun', doree: 'dore', dorees: 'dore', dores: 'dore', argente: 'argent', argentee: 'argent',
+      rouges: 'rouge', jaunes: 'jaune', roses: 'rose', oranges: 'orange', marrons: 'marron', beiges: 'beige', turquoises: 'turquoise',
+      'bleu marine': 'marine', 'bleu ciel': 'ciel', 'vert menthe': 'menthe', 'vert olive': 'olive', 'vert emeraude': 'emeraude', 'rose pale': 'rose', 'bleu azur': 'azur' };
+    var w = this.norm(q).split(' ').filter(Boolean);
+    var hit = (k) => { var key = ALIAS[k] || k; return C[key] ? { key: key, hex: C[key] } : null; };
+    for (var i = 0; i + 1 < w.length; i++) { var two = hit(w[i] + ' ' + w[i + 1]); if (two) return two; }
+    for (var j = 0; j < w.length; j++) { var one = hit(w[j]); if (one) return one; }
+    return null;
+  }
+  mix(hex, to, amt) {
+    var a = parseInt(hex.slice(1), 16), b = parseInt(to.slice(1), 16);
+    var r = Math.round(((a >> 16) & 255) * (1 - amt) + ((b >> 16) & 255) * amt);
+    var g = Math.round(((a >> 8) & 255) * (1 - amt) + ((b >> 8) & 255) * amt);
+    var bl = Math.round((a & 255) * (1 - amt) + (b & 255) * amt);
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + bl).toString(16).slice(1);
+  }
+  palettes() {
+    return [
+      ['#EF476F', '#FB5607', '#FFBE0B', '#FFB4A2', '#FFE5D9'],
+      ['#118AB2', '#3A86FF', '#2EC4B6', '#8FB8FF', '#E3ECFF'],
+      ['#2A9D4B', '#06D6A0', '#9EE493', '#708238', '#DDF3E9'],
+      ['#8338EC', '#A79BE0', '#F7AEF8', '#C8A2C8', '#F3E3FF'],
+      ['#7F4F24', '#CC7722', '#FFD166', '#D8C3A5', '#FFF3C4']
+    ];
+  }
+  paletteIndex(q) {
+    var sum = 0;
+    for (var i = 0; i < q.length; i++) sum += q.charCodeAt(i);
+    return sum % 5;
+  }
+  palettePosts(k) {
+    var pal = this.palettes()[k];
+    var r = this.rng(9000 + k * 101);
+    var RAD = ['50%', '12%', '4%', '50% 50% 10% 10%'];
+    var EMO = ['', '✨', '🌿', '🫧', ''];
+    var out = [];
+    for (var i = 0; i < 18; i++) {
+      var shapes = []; var n = 3 + Math.floor(r() * 3);
+      for (var j = 0; j < n; j++) {
+        var w = Math.round(25 + r() * 55); var round = r() < 0.5;
+        var hh = round ? Math.round(w * 0.75) : Math.round(15 + r() * 50);
+        shapes.push({ x: Math.round(r() * (100 - w * 0.6) - w * 0.2), y: Math.round(r() * (100 - hh * 0.6) - hh * 0.2), w: w, h: hh, c: pal[Math.floor(r() * 4)], r: round ? '50%' : RAD[1 + Math.floor(r() * 3)] });
+      }
+      var em = EMO[Math.floor(r() * EMO.length)];
+      out.push({
+        bg: r() < 0.6 ? pal[4] : pal[3],
+        shapes: shapes,
+        author: this.gib(k * 977 + i * 13, 2),
+        caption: this.gib(k * 977 + i * 29, 3 + Math.floor(r() * 9)) + (em ? ' ' + em : ''),
+        likes: Math.floor(r() * 900),
+        label: 'Post ' + (i + 1)
+      });
+    }
+    return out;
+  }
+  colourPosts(col) {
+    var h = 0; for (var q = 0; q < col.key.length; q++) h = h * 31 + col.key.charCodeAt(q);
+    var r = this.rng(h + 4242);
+    var tones = [col.hex, this.mix(col.hex, '#FFFFFF', 0.35), this.mix(col.hex, '#FFFFFF', 0.65), this.mix(col.hex, '#000000', 0.3), this.mix(col.hex, '#000000', 0.55)];
+    var RAD = ['50%', '12%', '4%', '50% 50% 10% 10%'];
+    var EMO = ['', '✨', '🌿', '🫧', ''];
+    var out = [];
+    for (var i = 0; i < 18; i++) {
+      var shapes = []; var k = 3 + Math.floor(r() * 3);
+      for (var j = 0; j < k; j++) {
+        var w = Math.round(25 + r() * 55); var round = r() < 0.5;
+        var hh = round ? Math.round(w * 0.75) : Math.round(15 + r() * 50);
+        shapes.push({ x: Math.round(r() * (100 - w * 0.6) - w * 0.2), y: Math.round(r() * (100 - hh * 0.6) - hh * 0.2), w: w, h: hh, c: tones[Math.floor(r() * tones.length)], r: round ? '50%' : RAD[1 + Math.floor(r() * 3)] });
+      }
+      var em = EMO[Math.floor(r() * EMO.length)];
+      out.push({
+        bg: tones[1 + Math.floor(r() * 2)],
+        shapes: shapes,
+        author: this.gib(h + i * 13, 2),
+        caption: this.gib(h + i * 29, 3 + Math.floor(r() * 9)) + (em ? ' ' + em : ''),
+        likes: Math.floor(r() * 900),
+        label: 'Post ' + (i + 1)
+      });
+    }
+    return out;
+  }
+  readClock() {
+    var d = { start: Date.now(), cycleMin: 2, speed: 1 };
+    try {
+      var raw = localStorage.getItem('fs-clock');
+      if (raw) { var v = JSON.parse(raw); if (v && v.start) return Object.assign(d, v); }
+      localStorage.setItem('fs-clock', JSON.stringify(d));
+      return d;
+    } catch (e) {
+      if (!this.memClock) this.memClock = d;
+      return this.memClock;
+    }
+  }
+  writeClock(v) {
+    this.memClock = v;
+    try { localStorage.setItem('fs-clock', JSON.stringify(v)); } catch (e) {}
+  }
+  cycleMs(c) { return c.cycleMin * 60000 / Math.max(1, c.speed || 1); }
+  cyclesDone(c) { return Math.max(0, Math.min(10, Math.floor((Date.now() - c.start) / this.cycleMs(c)))); }
+  trackUsage(c) {
+    var sp = Math.max(1, c.speed || 1);
+    try {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      var now = Date.now();
+      var u = JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0,"last":0}');
+      var dt = now - (u.last || 0);
+      if (dt < 900) return;
+      u.ms = (u.ms || 0) + Math.min(dt, 1500) * sp;
+      u.last = now;
+      localStorage.setItem('fs-usage', JSON.stringify(u));
+    } catch (e) { this.memUsage = (this.memUsage || 0) + 1000 * sp; }
+  }
+  cyclesDone(c) { return Math.max(0, Math.min(10, Math.floor((Date.now() - c.start) / this.cycleMs(c)))); }
+  trackUsage(c) {
+    var sp = Math.max(1, c.speed || 1);
+    try {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      var now = Date.now();
+      var u = JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0,"last":0}');
+      var dt = now - (u.last || 0);
+      if (dt < 900) return;
+      u.ms = (u.ms || 0) + Math.min(dt, 1500) * sp;
+      u.last = now;
+      localStorage.setItem('fs-usage', JSON.stringify(u));
+    } catch (e) { this.memUsage = (this.memUsage || 0) + 1000 * sp; }
+  }
+  trackUsage(c) {
+    var sp = Math.max(1, c.speed || 1);
+    try {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      var now = Date.now();
+      var u = JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0,"last":0}');
+      var dt = now - (u.last || 0);
+      if (dt < 900) return;
+      u.ms = (u.ms || 0) + Math.min(dt, 1500) * sp;
+      u.last = now;
+      localStorage.setItem('fs-usage', JSON.stringify(u));
+    } catch (e) { this.memUsage = (this.memUsage || 0) + 1000 * sp; }
+  }
+  readUsage() {
+    try { return JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0}').ms || 0; } catch (e) { return this.memUsage || 0; }
+  }
+  tickClock() {
+    var c = this.readClock();
+    this.trackUsage(c);
+    var g = this.cyclesDone(c) * 10;
+    var up = null;
+    if (g !== this.state.grey) { up = { grey: g }; if (g < 100) up.dismissed = false; }
+    if (this.wantsNow) { up = up || {}; up.now = Date.now(); }
+    if (up) this.setState(up);
+  }
+  startClock() {
+    clearInterval(this.clockTimer);
+    this.tickClock();
+    this.clockTimer = setInterval(() => this.tickClock(), 1000);
+  }
+  renderVals() {
+    var s = this.state;
+    var q = s.query.trim();
+    var results = q ? this.palettePosts(this.paletteIndex(q)) : [];
+    var setQ = (q) => () => this.setState({ query: q, viewIdx: null });
+    var SUG = ['vralo mizé', 'lunka ré', 'koré shavo', 'pévo tiz', 'zubé arnol', 'mikla sé', 'dourin pa', 'skolé vu'];
+    var TR = [['skolun bari', '24,1 k'], ['tévo lirka', '18,7 k'], ['arpé noushi', '15,2 k'], ['lomi zavé', '11,9 k'], ['kasé tumbo', '9,4 k'], ['renvo kilé', '6,8 k']];
+    var suggestions = SUG.map((l) => ({ label: l, hex: this.palettes()[this.paletteIndex(l)][0], pick: setQ(l) }));
+    var trends = TR.map((x, k) => {
+      var pp = this.palettes()[this.paletteIndex(x[0])];
+      var c = { hex: pp[1] };
+      return { rank: k + 1, label: x[0], count: x[1], c0: pp[0], c1: pp[1], c2: pp[2], pick: setQ(x[0]) };
+    });
+    return {
+      showIntro: !s.query.trim(),
+      suggestions: suggestions,
+      trends: trends,
+      grey: s.grey,
+      query: s.query,
+      onQuery: (e) => this.setState({ query: e.target.value, viewIdx: null }),
+      onSearchSubmit: (e) => { if (e && e.preventDefault) e.preventDefault(); },
+      hasResults: results.length > 0,
+      results: results.map((p, k) => Object.assign({}, p, { open: () => this.setState({ viewIdx: k }) })),
+      viewing: s.viewIdx !== null && !!results[s.viewIdx],
+      view: (s.viewIdx !== null && results[s.viewIdx]) || { shapes: [], bg: '#FFFFFF', author: '', caption: '' },
+      closeView: () => this.setState({ viewIdx: null })
+    };
+  }
+}
+</script>
+</body>
+</html>
