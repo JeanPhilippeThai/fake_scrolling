@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Nouveau post — Fake scrolling</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F6B4A}a:hover{color:#174F37}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid #2F4F9E;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; color: #1C1C1C; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; overflow: hidden; position: relative; filter: grayscale({{grey}}%); transition: filter 1.2s ease">
+
+  <sc-if value="{{stepSelect}}" hint-placeholder-val="{{ true }}">
+    <header style="display: flex; align-items: center; gap: 4px; padding: 12px 8px 8px 4px">
+      <a href="Main.dc.html" aria-label="Fermer" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #1C1C1C">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </a>
+      <h1 style="margin: 0; flex: 1; font-size: 18px; font-weight: 600">Nouveau post</h1>
+      <button type="button" onClick="{{goCaption}}" style="min-height: 44px; padding: 0 12px; border: 0; background: transparent; color: #1F6B4A; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">Suivant</button>
+    </header>
+
+    <div role="img" aria-label="Aperçu : {{current.label}}" style="position: relative; width: 390px; height: 390px; flex-shrink: 0; overflow: hidden; background: {{current.bg}}">
+      <sc-for list="{{current.shapes}}" as="s" hint-placeholder-count="3">
+        <div style="position: absolute; left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; height: {{s.h}}%; background: {{s.c}}; border-radius: {{s.r}}"></div>
+      </sc-for>
+      <sc-if value="{{multi}}" hint-placeholder-val="{{ false }}">
+        <span style="position: absolute; top: 12px; right: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(28, 28, 28, 0.7); color: #FFFFFF; font: 500 12px 'IBM Plex Mono', monospace">{{currentPos}}/{{selCount}}</span>
+      </sc-if>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 6px; padding: 6px 10px 6px 14px">
+      <button type="button" style="display: flex; align-items: center; gap: 4px; min-height: 44px; padding: 0; border: 0; background: transparent; color: #1C1C1C; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">
+        Récents
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+      </button>
+      <span style="flex: 1"></span>
+      <button type="button" onClick="{{toggleMulti}}" aria-pressed="{{multi}}" aria-label="Sélectionner plusieurs photos" style="width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background: {{multiBg}}; color: {{multiFg}}; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3" width="13" height="13" rx="2"></rect><path d="M16 19v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h1"></path></svg>
+      </button>
+      <button type="button" aria-label="Appareil photo" style="width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background: #F1F1EF; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+      </button>
+    </div>
+
+    <div style="flex: 1; min-height: 0; overflow-y: auto">
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px">
+        <sc-for list="{{gallery}}" as="g" hint-placeholder-count="12">
+          <button type="button" onClick="{{g.pick}}" aria-pressed="{{g.selected}}" aria-label="{{g.label}}" style="position: relative; aspect-ratio: 1; padding: 0; border: 0; overflow: hidden; background: {{g.bg}}; cursor: pointer">
+            <sc-for list="{{g.shapes}}" as="s" hint-placeholder-count="3">
+              <span style="position: absolute; left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; height: {{s.h}}%; background: {{s.c}}; border-radius: {{s.r}}"></span>
+            </sc-for>
+            <sc-if value="{{g.isCurrent}}" hint-placeholder-val="{{ false }}">
+              <span style="position: absolute; inset: 0; background: rgba(255, 255, 255, 0.45)"></span>
+            </sc-if>
+            <sc-if value="{{g.showBadge}}" hint-placeholder-val="{{ false }}">
+              <span style="position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #FFFFFF; background: {{g.badgeBg}}; color: #FFFFFF; font: 600 12px 'IBM Plex Sans', sans-serif; display: flex; align-items: center; justify-content: center">{{g.num}}</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{stepCaption}}" hint-placeholder-val="{{ false }}">
+    <header style="display: flex; align-items: center; gap: 4px; padding: 12px 8px 8px 4px; border-bottom: 1px solid #ECECEA">
+      <button type="button" onClick="{{goSelect}}" aria-label="Retour" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+      </button>
+      <h1 style="margin: 0; flex: 1; font-size: 18px; font-weight: 600">Nouveau post</h1>
+    </header>
+
+    <div style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
+      <div style="display: flex; gap: 12px; padding: 16px">
+        <div role="img" aria-label="{{first.label}}" style="position: relative; width: 72px; height: 72px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: {{first.bg}}">
+          <sc-for list="{{first.shapes}}" as="s" hint-placeholder-count="3">
+            <span style="position: absolute; left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; height: {{s.h}}%; background: {{s.c}}; border-radius: {{s.r}}"></span>
+          </sc-for>
+          <sc-if value="{{isCarousel}}" hint-placeholder-val="{{ false }}">
+            <span style="position: absolute; right: 4px; bottom: 4px; padding: 1px 6px; border-radius: 999px; background: rgba(28, 28, 28, 0.75); color: #FFFFFF; font: 500 11px 'IBM Plex Mono', monospace">{{selCount}}</span>
+          </sc-if>
+        </div>
+        <label for="caption" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Légende</label>
+        <textarea id="caption" rows="4" value="{{caption}}" onChange="{{onCaption}}" placeholder="Écris une légende…" style="flex: 1; min-width: 0; resize: none; border: 0; padding: 4px 0; font: 400 16px/1.45 'IBM Plex Sans', sans-serif; color: #1C1C1C; background: transparent"></textarea>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; padding: 4px 16px 16px">
+        <span id="dest-label" style="font-size: 13px; font-weight: 600; color: #5E5E5B">Publier dans</span>
+        <div role="radiogroup" aria-labelledby="dest-label" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 12px; background: #F1F1EF">
+          <sc-for list="{{dests}}" as="d" hint-placeholder-count="2">
+            <button type="button" role="radio" aria-checked="{{d.on}}" onClick="{{d.pick}}" style="display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; border: 0; border-radius: 9px; background: {{d.bg}}; color: {{d.fg}}; font: 600 15px 'IBM Plex Sans', sans-serif; cursor: pointer; box-shadow: {{d.shadow}}">{{d.label}}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; border-top: 1px solid #ECECEA">
+        <button type="button" onClick="{{openTag}}" style="display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 0 16px; border: 0; border-bottom: 1px solid #ECECEA; background: transparent; color: #1C1C1C; font: 400 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+          <span style="flex: 1">Identifier des personnes</span>
+          <span style="max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #5E5E5B">{{tagSummary}}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A8A86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+        </button>
+        <button type="button" onClick="{{openPlace}}" style="display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 0 16px; border: 0; border-bottom: 1px solid #ECECEA; background: transparent; color: #1C1C1C; font: 400 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"></path><circle cx="12" cy="10" r="2.2"></circle></svg>
+          <span style="flex: 1">Ajouter un lieu</span>
+          <span style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #5E5E5B">{{placeName}}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A8A86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+        </button>
+        <button type="button" onClick="{{openAudience}}" style="display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 0 16px; border: 0; border-bottom: 1px solid #ECECEA; background: transparent; color: #1C1C1C; font: 400 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9z"></path></svg>
+          <span style="flex: 1">Audience</span>
+          <span style="color: #5E5E5B">{{audience}}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A8A86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div style="padding: 12px 16px 28px; border-top: 1px solid #ECECEA">
+      <a href="{{shareHref}}" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 12px; background: #1F6B4A; color: #FFFFFF; text-decoration: none; font: 600 16px 'IBM Plex Sans', sans-serif">{{shareLabel}}</a>
+    </div>
+
+    <sc-if value="{{sheetOn}}" hint-placeholder-val="{{ false }}">
+      <button type="button" onClick="{{closeSheet}}" aria-label="Fermer" style="position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: rgba(28, 28, 28, 0.45); cursor: pointer"></button>
+    </sc-if>
+
+    <sc-if value="{{sheetTag}}" hint-placeholder-val="{{ false }}">
+      <div role="dialog" aria-modal="true" aria-labelledby="tag-title" style="position: absolute; left: 0; right: 0; bottom: 0; max-height: 78%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 10px 16px 24px; border-radius: 24px 24px 0 0; background: #FFFFFF">
+      <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #DEDEDA"></span>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+        <h2 id="tag-title" style="margin: 0; font-size: 18px; font-weight: 600">Identifier des personnes</h2>
+        <button type="button" onClick="{{closeSheet}}" style="min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: #1F6B4A; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">OK</button>
+      </div>
+      <div style="position: relative">
+        <label for="tag-search" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Rechercher une personne</label>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E5E5B" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="position: absolute; left: 14px; top: 13px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <input id="tag-search" type="search" autocomplete="off" value="{{sheetQuery}}" onChange="{{onSheetQuery}}" placeholder="Rechercher" style="width: 100%; height: 44px; box-sizing: border-box; border: 0; border-radius: 12px; padding: 0 14px 0 40px; background: #F1F1EF; font: 400 16px 'IBM Plex Sans', sans-serif; color: #1C1C1C">
+      </div>
+      <div style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
+        <sc-for list="{{people}}" as="u" hint-placeholder-count="6">
+          <button type="button" role="checkbox" aria-checked="{{u.on}}" onClick="{{u.toggle}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 2px; border: 0; background: transparent; color: #1C1C1C; text-align: left; cursor: pointer">
+            <span aria-hidden="true" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: {{u.avatar}}; filter: blur(1.5px)"></span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+              <span style="font-weight: 600; font-size: 15px">{{u.name}}</span>
+              <span style="font: 400 13px 'IBM Plex Mono', monospace; color: #5E5E5B">{{u.handle}}</span>
+            </span>
+            <span aria-hidden="true" style="width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 2px solid {{u.ring}}; background: {{u.fill}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>
+          </button>
+        </sc-for>
+        <sc-if value="{{peopleNone}}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; padding: 20px 0; text-align: center; font-size: 15px; color: #5E5E5B">Aucun ami trouvé.</p>
+        </sc-if>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{sheetPlace}}" hint-placeholder-val="{{ false }}">
+      <div role="dialog" aria-modal="true" aria-labelledby="place-title" style="position: absolute; left: 0; right: 0; bottom: 0; max-height: 78%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 10px 16px 24px; border-radius: 24px 24px 0 0; background: #FFFFFF">
+      <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #DEDEDA"></span>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+        <h2 id="place-title" style="margin: 0; font-size: 18px; font-weight: 600">Ajouter un lieu</h2>
+        <button type="button" onClick="{{closeSheet}}" style="min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: #1F6B4A; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">OK</button>
+      </div>
+      <div style="position: relative">
+        <label for="place-search" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Rechercher un lieu</label>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E5E5B" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="position: absolute; left: 14px; top: 13px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <input id="place-search" type="search" autocomplete="off" value="{{sheetQuery}}" onChange="{{onSheetQuery}}" placeholder="Rechercher" style="width: 100%; height: 44px; box-sizing: border-box; border: 0; border-radius: 12px; padding: 0 14px 0 40px; background: #F1F1EF; font: 400 16px 'IBM Plex Sans', sans-serif; color: #1C1C1C">
+      </div>
+      <div style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
+        <sc-if value="{{hasPlace}}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{clearPlace}}" style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 2px; border: 0; border-bottom: 1px solid #ECECEA; background: transparent; color: #B42318; font: 600 15px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">Retirer le lieu</button>
+        </sc-if>
+        <sc-for list="{{places}}" as="pl" hint-placeholder-count="6">
+          <button type="button" role="radio" aria-checked="{{pl.on}}" onClick="{{pl.pick}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 2px; border: 0; background: transparent; color: #1C1C1C; text-align: left; cursor: pointer">
+            <span aria-hidden="true" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: #F1F1EF; color: #1C1C1C; display: flex; align-items: center; justify-content: center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"></path><circle cx="12" cy="10" r="2.2"></circle></svg>
+            </span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+              <span style="font-weight: 600; font-size: 15px">{{pl.name}}</span>
+              <span style="font-size: 13px; color: #5E5E5B">{{pl.area}}</span>
+            </span>
+            <span aria-hidden="true" style="width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 2px solid {{pl.ring}}; background: {{pl.fill}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>
+          </button>
+        </sc-for>
+        <sc-if value="{{placesNone}}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; padding: 20px 0; text-align: center; font-size: 15px; color: #5E5E5B">Aucun lieu trouvé.</p>
+        </sc-if>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{sheetAudience}}" hint-placeholder-val="{{ false }}">
+      <div role="dialog" aria-modal="true" aria-labelledby="aud-title" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 10px 16px 28px; border-radius: 24px 24px 0 0; background: #FFFFFF">
+      <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #DEDEDA"></span>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+        <h2 id="aud-title" style="margin: 0; font-size: 18px; font-weight: 600">Qui peut voir ce post ?</h2>
+        <button type="button" onClick="{{closeSheet}}" style="min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: #1F6B4A; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">OK</button>
+      </div>
+      <div role="radiogroup" aria-labelledby="aud-title" style="display: flex; flex-direction: column">
+        <sc-for list="{{audiences}}" as="a" hint-placeholder-count="3">
+          <button type="button" role="radio" aria-checked="{{a.on}}" onClick="{{a.pick}}" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 6px 2px; border: 0; border-bottom: 1px solid #ECECEA; background: transparent; color: #1C1C1C; text-align: left; cursor: pointer">
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-weight: 600; font-size: 16px">{{a.label}}</span>
+              <span style="font-size: 13px; color: #5E5E5B">{{a.hint}}</span>
+            </span>
+            <span aria-hidden="true" style="width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 2px solid {{a.ring}}; background: {{a.fill}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(...a) {
+    super(...a);
+    var startDest = 'feed';
+    try { if (localStorage.getItem('fs-compose-dest') === 'story') startDest = 'story'; localStorage.removeItem('fs-compose-dest'); } catch (e) {}
+    this.state = { grey: 0, sheet: null, sheetQuery: '', tagged: [], place: null, dest: startDest, step: 'select', selected: [0], current: 0, multi: false, caption: '', audience: 0 };
+    this.gallery = this.makeGallery();
+  }
+  componentDidMount() { this.startClock(); }
+  componentWillUnmount() { clearInterval(this.clockTimer); }
+  readClock() {
+    var d = { start: Date.now(), cycleMin: 2, speed: 1 };
+    try {
+      var raw = localStorage.getItem('fs-clock');
+      if (raw) { var v = JSON.parse(raw); if (v && v.start) return Object.assign(d, v); }
+      localStorage.setItem('fs-clock', JSON.stringify(d));
+      return d;
+    } catch (e) {
+      if (!this.memClock) this.memClock = d;
+      return this.memClock;
+    }
+  }
+  writeClock(v) {
+    this.memClock = v;
+    try { localStorage.setItem('fs-clock', JSON.stringify(v)); } catch (e) {}
+  }
+  cycleMs(c) { return c.cycleMin * 60000 / Math.max(1, c.speed || 1); }
+  cyclesDone(c) { return Math.max(0, Math.min(10, Math.floor((Date.now() - c.start) / this.cycleMs(c)))); }
+  trackUsage(c) {
+    var sp = Math.max(1, c.speed || 1);
+    try {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      var now = Date.now();
+      var u = JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0,"last":0}');
+      var dt = now - (u.last || 0);
+      if (dt < 900) return;
+      u.ms = (u.ms || 0) + Math.min(dt, 1500) * sp;
+      u.last = now;
+      localStorage.setItem('fs-usage', JSON.stringify(u));
+    } catch (e) { this.memUsage = (this.memUsage || 0) + 1000 * sp; }
+  }
+  readUsage() {
+    try { return JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0}').ms || 0; } catch (e) { return this.memUsage || 0; }
+  }
+  tickClock() {
+    var c = this.readClock();
+    this.trackUsage(c);
+    var g = this.cyclesDone(c) * 10;
+    var up = null;
+    if (g !== this.state.grey) { up = { grey: g }; if (g < 100) up.dismissed = false; }
+    if (this.wantsNow) { up = up || {}; up.now = Date.now(); }
+    if (up) this.setState(up);
+  }
+  startClock() {
+    clearInterval(this.clockTimer);
+    this.tickClock();
+    this.clockTimer = setInterval(() => this.tickClock(), 1000);
+  }
+  rng(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  makeGallery() {
+    var PAL = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#FFBE0B','#2EC4B6','#F7AEF8','#9EE493','#6B4226'];
+    var BG = ['#FFE5D9','#E3ECFF','#DDF3E9','#FFF3C4','#F3E3FF','#FFE0EC','#E6F7F5','#F1EDE6','#FFD6A5'];
+    var RAD = ['50%', '12%', '4%', '50% 50% 10% 10%'];
+    var r = this.rng(20261114);
+    var out = [];
+    for (var i = 0; i < 24; i++) {
+      var shapes = []; var k = 2 + Math.floor(r() * 3);
+      for (var j = 0; j < k; j++) {
+        var w = Math.round(25 + r() * 55);
+        var round = r() < 0.5;
+        var h = round ? w : Math.round(20 + r() * 60);
+        shapes.push({ x: Math.round(r() * (100 - w * 0.6) - w * 0.2), y: Math.round(r() * (100 - h * 0.6) - h * 0.2), w: w, h: h, c: PAL[Math.floor(r() * PAL.length)], r: round ? '50%' : RAD[1 + Math.floor(r() * 3)] });
+      }
+      out.push({ bg: BG[Math.floor(r() * BG.length)], shapes: shapes, label: 'Photo ' + (i + 1) });
+    }
+    return out;
+  }
+  pick(i) {
+    var s = this.state;
+    if (!s.multi) { this.setState({ selected: [i], current: i }); return; }
+    var idx = s.selected.indexOf(i);
+    if (idx === -1) {
+      if (s.selected.length >= 10) return;
+      this.setState({ selected: s.selected.concat([i]), current: i });
+    } else if (s.current !== i) {
+      this.setState({ current: i });
+    } else if (s.selected.length > 1) {
+      var next = s.selected.filter((x) => x !== i);
+      this.setState({ selected: next, current: next[next.length - 1] });
+    }
+  }
+  renderVals() {
+    var s = this.state;
+    var AUD = ['Tout le monde', 'Amis', 'Amis proches'];
+    var AUD_HINT = ['Tous les comptes peuvent voir ce post.', 'Seuls tes amis peuvent le voir.', 'Seulement ta liste d’amis proches.'];
+    var q = s.sheetQuery.trim().toLowerCase();
+    var FRIENDS = [['Lovra Mizéka', '@lea.k', '#EF476F'], ['Tévo Lirka', '@tom_b', '#FFD166'], ['Arpé Noushi', '@ines.m', '#06D6A0'], ['Kasé Tumbo', '@sacha', '#118AB2'], ['Renvo Kilé', '@nour.a', '#8338EC'], ['Skolun Bari', '@max.l', '#3A86FF'], ['Lomi Zavé', '@jade.r', '#FB5607'], ['Zubé Arnol', '@yanis', '#2EC4B6']];
+    var people = FRIENDS.filter((f) => !q || f[0].toLowerCase().indexOf(q) !== -1 || f[1].indexOf(q.replace(/^@/, '')) !== -1).map((f) => {
+      var on = s.tagged.indexOf(f[1]) !== -1;
+      return { name: f[0], handle: f[1], avatar: f[2], on: on, ring: on ? '#1F6B4A' : '#C9C9C6', fill: on ? '#1F6B4A' : '#FFFFFF',
+        toggle: () => this.setState((st) => ({ tagged: st.tagged.indexOf(f[1]) !== -1 ? st.tagged.filter((x) => x !== f[1]) : st.tagged.concat([f[1]]) })) };
+    });
+    var PLACES = [['Canal Saint-Martin', 'Paris 10e'], ['Parc des Buttes-Chaumont', 'Paris 19e'], ['Jardin du Luxembourg', 'Paris 6e'], ['Vieux-Port', 'Marseille'], ['Parc de la Tête d’Or', 'Lyon'], ['Miroir d’eau', 'Bordeaux'], ['Place Stanislas', 'Nancy'], ['Plage du Prado', 'Marseille']];
+    var places = PLACES.filter((pl) => !q || (pl[0] + ' ' + pl[1]).toLowerCase().indexOf(q) !== -1).map((pl) => {
+      var on = s.place === pl[0];
+      return { name: pl[0], area: pl[1], on: on, ring: on ? '#1F6B4A' : '#C9C9C6', fill: on ? '#1F6B4A' : '#FFFFFF', pick: () => this.setState({ place: pl[0], sheet: null }) };
+    });
+    var gallery = this.gallery.map((g, i) => {
+      var pos = s.selected.indexOf(i);
+      return Object.assign({}, g, {
+        selected: pos !== -1,
+        isCurrent: s.current === i,
+        showBadge: s.multi,
+        num: pos === -1 ? '' : pos + 1,
+        badgeBg: pos === -1 ? 'rgba(28, 28, 28, 0.25)' : '#1F6B4A',
+        pick: () => this.pick(i)
+      });
+    });
+    return {
+      grey: s.grey,
+      dests: [{ key: 'feed', label: 'Fil d’actualité' }, { key: 'story', label: 'Story' }].map((d) => ({
+        label: d.label,
+        on: s.dest === d.key,
+        bg: s.dest === d.key ? '#FFFFFF' : 'transparent',
+        fg: s.dest === d.key ? '#1C1C1C' : '#5E5E5B',
+        shadow: s.dest === d.key ? '0 1px 3px rgba(0, 0, 0, 0.12)' : 'none',
+        pick: () => this.setState({ dest: d.key })
+      })),
+      shareLabel: s.dest === 'story' ? 'Partager en story' : 'Partager dans le fil',
+      shareHref: s.dest === 'story' ? 'Chat.dc.html' : 'Main.dc.html',
+      stepSelect: s.step === 'select',
+      stepCaption: s.step === 'caption',
+      gallery: gallery,
+      current: this.gallery[s.current],
+      first: this.gallery[s.selected[0]],
+      currentPos: s.selected.indexOf(s.current) + 1,
+      selCount: s.selected.length,
+      isCarousel: s.selected.length > 1,
+      multi: s.multi,
+      multiBg: s.multi ? '#1C1C1C' : '#F1F1EF',
+      multiFg: s.multi ? '#FFFFFF' : '#1C1C1C',
+      toggleMulti: () => this.setState({ multi: !s.multi, selected: [s.current] }),
+      goCaption: () => this.setState({ step: 'caption' }),
+      goSelect: () => this.setState({ step: 'select' }),
+      caption: s.caption,
+      onCaption: (e) => this.setState({ caption: e.target.value }),
+      audience: AUD[s.audience],
+      cycleAudience: () => this.setState({ audience: (s.audience + 1) % AUD.length }),
+      sheetOn: !!s.sheet,
+      sheetTag: s.sheet === 'tag',
+      sheetPlace: s.sheet === 'place',
+      sheetAudience: s.sheet === 'audience',
+      openTag: () => this.setState({ sheet: 'tag', sheetQuery: '' }),
+      openPlace: () => this.setState({ sheet: 'place', sheetQuery: '' }),
+      openAudience: () => this.setState({ sheet: 'audience' }),
+      closeSheet: () => this.setState({ sheet: null }),
+      sheetQuery: s.sheetQuery,
+      onSheetQuery: (e) => this.setState({ sheetQuery: e.target.value }),
+      people: people,
+      peopleNone: people.length === 0,
+      tagSummary: s.tagged.length === 0 ? '' : s.tagged.length === 1 ? s.tagged[0] : s.tagged.length + ' personnes',
+      places: places,
+      placesNone: places.length === 0,
+      hasPlace: !!s.place,
+      placeName: s.place || '',
+      clearPlace: () => this.setState({ place: null, sheet: null }),
+      audiences: AUD.map((label, k) => ({
+        label: label, hint: AUD_HINT[k], on: s.audience === k,
+        ring: s.audience === k ? '#1F6B4A' : '#C9C9C6', fill: s.audience === k ? '#1F6B4A' : '#FFFFFF',
+        pick: () => this.setState({ audience: k, sheet: null })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
