@@ -39,7 +39,7 @@ If it reports a change, someone drew on claude.ai since the last import, and pub
 
 ## 4. Record it
 
-1. `claude_sync.py stamp claude_design/<canvas>`: the stamp now says that claude.ai holds the repo's version.
+1. `claude_sync.py stamp claude_design/<canvas> --published`: the stamp now says that claude.ai holds the repo's version, and records which files the repo drew, so that the next comparison can tell the owner when claude.ai removes or changes one of them (`claude_sync.py undone`). Never stamp after a publish without `--published`.
 2. Check it: read the published paths again into `$TMPDIR/after/<canvas>` as in step 2, and `claude_sync.py check-remote claude_design/<canvas> $TMPDIR/after/<canvas>` must report no change.
 3. Commit the `.claude-ai.json` files with the design change.
 

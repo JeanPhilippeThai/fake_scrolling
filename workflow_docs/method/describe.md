@@ -1,6 +1,6 @@
 # Describe the app
 
-Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 20, taken on 2026-11-19.
+Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 21, taken on 2026-11-19.
 
 Steps 1 to 8 of the pipeline, wide and shallow: from the Claude Design mock-up to a checked registry, flows, entity states and a system design. Read this part before starting an app, and whenever the registry, a flow or a design decision changes. How the code is laid out is in [Code structure](code-structure.md); how the design is checked is in [Verification](verification.md).
 
@@ -15,6 +15,8 @@ The repo holds the official design, the one the method has checked. Claude Desig
 5. **Publish** the repo's design back to claude.ai (`publish-claude-design`) before drawing there again.
 
 Each import records what claude.ai held, file by file. Promotion refuses to replace a repo change that was never published, and publishing refuses to overwrite what was drawn on claude.ai since the last import: when both sides changed, they are merged by hand. Docs are not part of this cycle: a doc is always edited in its Claude Doc first, then imported.
+
+The owner may remove or change on claude.ai what the repo drew in the last round, or remove an ID from a doc. The comparison lists each of these, and the owner says whether it was on purpose. On purpose: a decision in the registry says what is not wanted and why (and ids_retires lists a removed ID with it), so that the doc tests stop asking for it at every round. By mistake: it is restored on claude.ai before promoting. An ID removed without being retired fails check G-03.
 
 ## The prompts
 

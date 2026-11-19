@@ -31,9 +31,16 @@ Then get the same change as IDs and links, from the registry database built on e
 
 `python3 .claude/skills/registry-db/registry_db.py diff claude_docs newest_claude_docs > "$TMPDIR/registry_diff.txt"`
 
-It lists the IDs added, removed or changed (with the fields that changed) and the links added or removed. Use it as the checklist of the Docs section: every ID in it gets a bullet, and the text diff tells you what the change means. If it fails (no registry on either side, or PyYAML missing), go on with the text diff alone.
+It lists the IDs added, removed or changed (with the fields that changed) and the links added or removed. Use it as the checklist of the Docs section: every ID in it gets a bullet, and the text diff tells you what the change means. It ends with G-03: the IDs removed without being listed in the registry's `ids_retires`. Exit 1 means G-03 found some, and the output is complete. Exit 2, or a crash (no registry on either side, PyYAML missing): go on with the text diff alone.
 
-## 2. Write the report
+## 2. Find what undoes the last round
+
+The owner may remove or change on claude.ai what Claude drew in the repo in the last round, or a doc's ID. Done on purpose, it needs a decision, or the doc tests will ask for it again at every round; done by mistake, it must come back. Each one is a question for the owner, never something to guess.
+
+1. `python3 .claude/skills/publish-claude-design/claude_sync.py undone`: the design files the repo drew and published in the last round (recorded by `publish-claude-design`) that the import removed, changed or brought back. For a file it reports as changed, read its diff and say whether what the repo drew is still there; if it is, leave it out.
+2. The G-03 rows of the registry diff above: IDs gone without being retired.
+
+## 3. Write the report
 
 Write for the owner of the app, who wants to know what to change in the code. Explain what changed in meaning, not in markup. Quote the exact new copy, value or rule when it matters.
 
@@ -41,6 +48,10 @@ Write for the owner of the app, who wants to know what to change in the code. Ex
 # Design and docs: newest vs current
 
 Compared on <YYYY-MM-DD>. <One or two sentences: the most important changes.>
+
+## Needs your answer
+
+- **<what was undone> (`<file>` or `<ID>`)**: <what the repo drew, or what the ID was, and why: the doc-test finding it answered>. On purpose, or by mistake?
 
 ## Design
 
@@ -61,7 +72,13 @@ Compared on <YYYY-MM-DD>. <One or two sentences: the most important changes.>
 - One bullet per real change. Group a change repeated on many screens into one bullet that lists them.
 - A file whose diff is only reformatting or ids: one line saying so, nothing more.
 - Leave out empty sections. Don't add a summary at the end.
+- "Needs your answer" holds every item of step 2, one bullet each. Find why the repo drew a file in the git log of `claude_design/` (the commit that published it).
 
-## 3. Report
+## 4. Ask, then report
 
-Answer in two or three lines: where the file is, the most important change, and that `promote-newest-claude-files` makes the newest import the current version once the user accepts it.
+If "Needs your answer" has items, ask the owner about each with AskUserQuestion: "On purpose" or "By mistake". An item that a decision of the newest registry already covers (it names that screen or state, added since the current registry) was answered at an earlier pass: mark it "on purpose, <decision ID>" without asking again.
+
+- **On purpose**: the owner gives the reason. Write it in the registry's Claude Doc as a decision that says what is not wanted and why; for a removed ID, also list it in `ids_retires` with that decision. Then import again.
+- **By mistake**: the owner restores it on claude.ai (the repo's version is in `claude_design/` and in git), then imports again.
+
+Write each answer under its bullet in the report. Then answer in two or three lines: where the file is, the most important change, what is still waiting for the owner, and that `promote-newest-claude-files` makes the newest import the current version once every item is answered and the user accepts it.

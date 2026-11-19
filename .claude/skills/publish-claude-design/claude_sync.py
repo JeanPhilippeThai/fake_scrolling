@@ -9,9 +9,11 @@ hash of every file as claude.ai held it.
   hashes of its project/ files.
 - A docs folder has <folder>/.claude-ai.json: the hashes of its files.
 
-    claude_sync.py stamp <folder> [--url <canvas>=<URL> ...]   after an import, or a publish
+    claude_sync.py stamp <folder> [--url <canvas>=<URL> ...]   after an import
+    claude_sync.py stamp <canvas dir> --published               after a publish: also records what the repo drew
     claude_sync.py status [<folder> ...]                        repo changes not on claude.ai
     claude_sync.py check-promote                                would promoting lose them?
+    claude_sync.py undone                                       what claude.ai undid of the repo's last drawing
     claude_sync.py check-remote <canvas dir> <remote dir>       did claude.ai change since?
     claude_sync.py plan <canvas dir> --stage <dir>              stage the files a publish must send
 
@@ -87,12 +89,26 @@ def read_stamp(unit):
     return stamp if stamp.get("format") == FORMAT else None
 
 
-def write_stamp(unit, url=None):
+def write_stamp(unit, url=None, published=False):
     old = read_stamp(unit) or {}
     synced = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
     stamp = {"format": FORMAT, "synced": synced, "files": tracked(unit)}
     if is_canvas(unit):
         stamp = {"url": url or old.get("url"), **stamp}
+        if published and old:
+            # What the repo drew this round, kept until the next promotion replaces the stamp:
+            # `undone` reports what claude.ai then removed or changed of it.
+            drawn = dict(old.get("round", {}))
+            changed, added, removed = changes(old["files"], stamp["files"])
+            for p in changed:
+                drawn.setdefault(p, "changed")
+            for p in added:
+                drawn[p] = "changed" if drawn.get(p) == "removed" else drawn.get(p, "added")
+            for p in removed:
+                if drawn.pop(p, None) != "added":
+                    drawn[p] = "removed"
+            if drawn:
+                stamp["round"] = dict(sorted(drawn.items()))
     (unit / STAMP).write_text(json.dumps(stamp, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return stamp
 
@@ -114,7 +130,7 @@ def show(label, ch):
 def cmd_stamp(args):
     urls = dict(u.split("=", 1) for u in args.url)
     for unit in units(Path(args.folder)):
-        stamp = write_stamp(unit, urls.get(unit.name))
+        stamp = write_stamp(unit, urls.get(unit.name), args.published)
         where = f" ({stamp['url']})" if stamp.get("url") else ""
         print(f"stamped {unit}{where}: {len(stamp['files'])} files")
         if is_canvas(unit) and not stamp.get("url"):
@@ -183,6 +199,43 @@ def cmd_check_promote(args):
     return lost
 
 
+def cmd_undone(args):
+    """What the repo drew in the last round that the newest import removed, changed or brought back."""
+    cur, new = Path(PAIRS[0][0]), Path(PAIRS[0][1])
+    if not new.is_dir():
+        print(f"No {new}: nothing imported to compare with.")
+        return 0
+    found = 0
+    for unit in units(cur):
+        stamp = read_stamp(unit) if is_canvas(unit) else None
+        if not stamp or not stamp.get("round"):
+            continue
+        twin = new / unit.name
+        incoming = tracked(twin) if twin.is_dir() else {}
+        lines = []
+        for p, did in stamp["round"].items():
+            if did == "removed":
+                if p in incoming:
+                    lines.append(f"  back     {unit}/{p}: the repo removed it, claude.ai has it again")
+            elif p not in incoming:
+                lines.append(f"  removed  {unit}/{p}: the repo {did} it, claude.ai removed it")
+            elif incoming[p] != stamp["files"].get(p):
+                lines.append(f"  changed  {unit}/{p}: the repo {did} it, claude.ai changed it since:"
+                             " read its diff to see whether what the repo drew is still there")
+        if lines:
+            print(f"{unit}: claude.ai undid {len(lines)} of the things the repo drew in the last round"
+                  f" (published {stamp['synced']}):")
+            print("\n".join(lines))
+            found = 1
+    if found:
+        print("\nAsk the owner about each one. On purpose: record a decision in the registry's Claude Doc that says"
+              " it is not wanted and why, so the doc tests stop asking for it. By mistake: restore it on claude.ai"
+              " and import again.")
+    else:
+        print("Nothing the repo drew in the last round was undone on claude.ai.")
+    return found
+
+
 def cmd_check_remote(args):
     unit, remote = Path(args.canvas), Path(args.remote)
     stamp = read_stamp(unit)
@@ -225,6 +278,8 @@ def main():
     s = sub.add_parser("stamp")
     s.add_argument("folder")
     s.add_argument("--url", action="append", default=[], help="<canvas folder name>=<canvas URL>")
+    s.add_argument("--published", action="store_true", help="after a publish: also record what the repo drew, for undone")
+    sub.add_parser("undone")
     st = sub.add_parser("status")
     st.add_argument("folders", nargs="*", default=["claude_design", "claude_docs"])
     cp = sub.add_parser("check-promote")
@@ -237,7 +292,7 @@ def main():
     pl.add_argument("--stage", required=True, help="folder to write the files to publish, in claude.ai's form")
     args = ap.parse_args()
     return {"stamp": cmd_stamp, "status": cmd_status, "check-promote": cmd_check_promote,
-            "check-remote": cmd_check_remote, "plan": cmd_plan}[args.cmd](args)
+            "check-remote": cmd_check_remote, "plan": cmd_plan, "undone": cmd_undone}[args.cmd](args)
 
 
 if __name__ == "__main__":

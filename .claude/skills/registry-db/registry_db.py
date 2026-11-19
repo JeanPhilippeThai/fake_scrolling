@@ -6,11 +6,13 @@ the file, and the next command rebuilds it.
 
     registry_db.py build             rebuild .registry/registry.db from the docs
     registry_db.py check [CHECK...]  run the shipped checks (all, or those named, e.g. L3-02)
+        --since REV                  also compare with the docs at git revision REV (G-03)
     registry_db.py impact ID...      everything a change to these IDs can reach, nearest first
     registry_db.py where ID...       where each ID is defined and every line that cites it
     registry_db.py query SQL         run one read-only SQL query
     registry_db.py schema            list the tables and views with their columns
-    registry_db.py diff BASE HEAD    IDs and links added, removed or changed between two docs folders
+    registry_db.py diff BASE HEAD    IDs and links added, removed or changed between two docs folders,
+                                     then G-03: exits 1 when an ID is gone without being retired
 
 Every command except build and diff first rebuilds the database when a doc changed since it was built.
 Docs are read from docs/ and claude_docs/ at the repo root: *.yaml files, and the ```yaml blocks of
@@ -19,12 +21,14 @@ Docs are read from docs/ and claude_docs/ at the repo root: *.yaml files, and th
 import argparse
 import datetime
 import hashlib
+import io
 import json
 import os
 import re
 import sqlite3
 import subprocess
 import sys
+import tarfile
 import tempfile
 from pathlib import Path
 
@@ -628,11 +632,33 @@ def open_db(args, rebuild_if_stale=True):
             fresh = False
     if not fresh and rebuild_if_stale:
         Builder(args.root, args.docs, db_path).build()
-    con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    return prepare(sqlite3.connect(f"file:{db_path}?mode=ro", uri=True))
+
+
+def prepare(con):
     con.row_factory = sqlite3.Row
     # ORDER BY id COLLATE idnum sorts IDs by number (D-200 before D-1000).
     con.create_collation("idnum", lambda a, b: (id_key(a) > id_key(b)) - (id_key(a) < id_key(b)))
+    # idnum(id) is the ID as a number, as defs.number holds it: idnum('D-001') = 'D-1'.
+    con.create_function("idnum", 1, lambda s: id_number(s) if s else None, deterministic=True)
     return con
+
+
+def build_previous(root, docs, rev, tmp):
+    """Build the docs as they were at git revision `rev` into tmp/previous.db, for the checks that need: previous."""
+    snap = Path(tmp) / "previous"
+    snap.mkdir(parents=True)
+    git = ["git", "-C", str(root)]
+    if subprocess.run([*git, "rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}"], capture_output=True).returncode:
+        raise ValueError(f"{rev} is not a commit of this repo")
+    present = [d for d in docs if subprocess.run([*git, "cat-file", "-e", f"{rev}:{d}"], capture_output=True).returncode == 0]
+    if present:
+        tar = subprocess.run([*git, "archive", "--format=tar", rev, *present], capture_output=True, check=True).stdout
+        with tarfile.open(fileobj=io.BytesIO(tar)) as t:
+            t.extractall(snap, filter="data")
+    db_path = Path(tmp) / "previous.db"
+    Builder(snap, docs, db_path).build()
+    return db_path
 
 
 def md_table(rows, cols=None, limit=None):
@@ -696,6 +722,8 @@ def contents(con):
 
 def run_checks(con, wanted=None):
     have = contents(con)
+    if any(r[1] == "prev" for r in con.execute("PRAGMA database_list")):
+        have.add("previous")
     multi = con.execute("SELECT value FROM meta WHERE key='multi_platform'").fetchone()[0] == "1"
     results = []
     for c in load_checks():
@@ -706,7 +734,9 @@ def run_checks(con, wanted=None):
         for n in needs:
             if n == "multi_platform" and not multi:
                 reason = "the app has one platform"
-            elif n != "multi_platform" and n not in have:
+            elif n == "previous" and n not in have:
+                reason = "no previous version to compare with: pass --since <git revision>"
+            elif n not in ("multi_platform", "previous") and n not in have:
                 reason = f"no {n.replace('_', ' ')} in the docs yet"
         if reason:
             results.append((c, "not reached", reason, []))
@@ -731,10 +761,21 @@ def gates_not(row):
 def cmd_check(args):
     con = open_db(args)
     meta = dict(con.execute("SELECT key, value FROM meta").fetchall())
-    results = run_checks(con, set(args.checks) or None)
+    with tempfile.TemporaryDirectory() as tmp:
+        if args.since:
+            try:
+                prev = build_previous(args.root, args.docs, args.since, tmp)
+            except (ValueError, subprocess.CalledProcessError) as e:
+                print(f"--since {args.since}: {e}", file=sys.stderr)
+                return 2
+            con.execute("ATTACH DATABASE ? AS prev", (f"file:{prev}?mode=ro",))
+        results = run_checks(con, set(args.checks) or None)
+        con.close()
     failed = False
     print(f"# Registry checks\n\nDatabase built from the docs at commit {meta.get('commit') or '-'}, "
           f"fingerprint {meta.get('fingerprint')}: it matches the docs as they are now (L0-03 passed).\n")
+    if args.since:
+        print(f"Compared with the docs at {args.since} for the checks that need the previous version.\n")
     print("| Check | How | Severity | Result |\n| --- | --- | --- | --- |")
     for c, status, reason, rows in results:
         res = {"passed": "passed", "not reached": f"not reached: {reason}", "error": f"error: {reason}"}.get(status, f"{len(rows)} rows")
@@ -836,6 +877,11 @@ def cmd_diff(args):
             refs = set(con.execute("SELECT scope, source, rel, target FROM refs"))
             out[side] = (defs, refs)
             con.close()
+        # G-03 on the head, with the base as its previous version: IDs gone without being retired.
+        con = prepare(sqlite3.connect(Path(tmp) / "head" / "registry.db"))
+        con.execute("ATTACH DATABASE ? AS prev", (str(Path(tmp) / "base" / "registry.db"),))
+        (g03, status, reason, gone), = run_checks(con, {"G-03"})
+        con.close()
     (bd, br), (hd, hr) = out["base"], out["head"]
     print(f"# Registry diff: {args.base} → {args.head}\n")
     added = sorted(set(hd) - set(bd), key=lambda k: (k[0], id_key(k[1])))
@@ -854,6 +900,15 @@ def cmd_diff(args):
     la, lr = sorted(hr - br), sorted(br - hr)
     print(f"## Added links ({len(la)})\n" + "\n".join(f"- {s} {src} —{rel}→ {t}" for s, src, rel, t in la) + "\n")
     print(f"## Removed links ({len(lr)})\n" + "\n".join(f"- {s} {src} —{rel}→ {t}" for s, src, rel, t in lr) + "\n")
+    if status == "error":
+        print(f"G-03 could not run: {reason}", file=sys.stderr)
+        return 2
+    print(f"## {g03['id']}: removed without being retired ({len(gone)})\n")
+    if gone:
+        print("An ID is never reused: each one must be listed in the registry's ids_retires with the decision"
+              " that retired it, or come back. Ask the owner which.\n")
+        print(md_table(gone))
+        return 1
     return 0
 
 
@@ -868,6 +923,7 @@ def main():
     c.add_argument("--limit", type=int, default=50, help="rows shown per check (default 50)")
     c.add_argument("--all", action="store_true", help="show every row")
     c.add_argument("--no-fail", action="store_true", help="exit 0 even when a check finds rows")
+    c.add_argument("--since", metavar="REV", help="git revision of the previous version of the docs, for G-03 (IDs gone without being retired)")
     i = sub.add_parser("impact")
     i.add_argument("ids", nargs="+")
     i.add_argument("--depth", type=int, default=None)

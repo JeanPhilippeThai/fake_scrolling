@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 42).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 43).
 For now the Claude Doc is the source of truth and this file is a copy of it.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the Claude Design screens down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -359,7 +359,7 @@ Layer checks look at one document at a time. These follow a chain from end to en
 | --- | --- | --- | --- |
 | G-01 | Every ID is unique across all documents, and its prefix belongs to one kind of item only | Query | Major |
 | G-02 | Every ID cited anywhere exists, or is listed in ids_retires; an ID followed by … is a format example, not a citation; a range (R-01 à R-07) cites every ID in it; archived registries are not checked | Query | Major |
-| G-03 | No ID was renumbered or reused: compare with the last check report or the documents' git history; an ID that disappeared is explained by a decision | Read | Major |
+| G-03 | No ID was renumbered or reused: every ID that disappeared since the previous version of the documents (the base of the pull request, or the current documents before a promotion) is listed in ids_retires with the decision that retired it, or lives on as an alias. An ID is compared as a number | Query | Major |
 | G-04 | One source of truth: a fact found in two places with different values is a finding, and the precedence order says which is probably wrong | Read | Major |
 | G-05 | Mode B: every query in the method's "Checks that run on every pull request" returns no rows, except those that read the code scan | Query | Major |
 

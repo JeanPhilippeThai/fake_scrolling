@@ -3,7 +3,9 @@ name: Registry database checks
 # Copied from JeanPhilippeThai/workflow_claude by its sync: change it there, not here.
 # 1. Builds the registry database from docs/ and claude_docs/ with the shared skill registry-db and
 #    runs its checks: a doc that does not parse, or a "Query" check that finds a row in the
-#    canonical docs, fails the run. The rows are in the run's summary.
+#    canonical docs, fails the run. The rows are in the run's summary. G-03 compares the docs with
+#    the base of the pull request, or the commit before the push: an ID that disappeared must be in
+#    the registry's ids_retires with its decision.
 # 2. Checks that CLAUDE.md includes the shared rules (.claude/workflow-claude-rules.md).
 on:
   pull_request:
@@ -19,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0   # G-03 reads the docs at the previous commit
 
       - uses: actions/setup-python@v5
         with:
@@ -30,12 +34,19 @@ jobs:
       - name: Build the database and run its checks
         # shell: bash adds pipefail, so a failing check fails the step despite the tee.
         shell: bash
+        env:
+          PREVIOUS: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
           if [ ! -f .claude/skills/registry-db/registry_db.py ]; then
             echo "No .claude/skills/registry-db in this repo: nothing to check."
             exit 0
           fi
-          python3 .claude/skills/registry-db/registry_db.py check --all | tee -a "$GITHUB_STEP_SUMMARY"
+          since=()
+          # No previous commit on a new branch (all zeros), a manual run or after a force push: G-03 is "not reached".
+          if [ -n "$PREVIOUS" ] && git cat-file -e "$PREVIOUS^{commit}" 2>/dev/null; then
+            since=(--since "$PREVIOUS")
+          fi
+          python3 .claude/skills/registry-db/registry_db.py check --all "${since[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: CLAUDE.md includes the shared rules
         if: always()

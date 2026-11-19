@@ -20,7 +20,7 @@ Copied from workflow_claude by its sync: change it there, never here. The app's 
 The repo's `claude_design/` is the official design; claude.ai is where the next version is drawn. One round of the design cycle (`workflow_docs/method/describe.md`, "The design cycle"):
 
 1. The owner draws on claude.ai.
-2. `import-design-and-docs-artifact`, `compare-newest-current-claude-files`, then `promote-newest-claude-files`.
+2. `import-design-and-docs-artifact`, `compare-newest-current-claude-files`, then `promote-newest-claude-files`. When the owner removed or changed on claude.ai what the repo drew, or removed an ID, the comparison asks them whether it was on purpose: never guess, and never promote before they answer.
 3. The doc tests (`what-are-the-next-docs-prompts`) list what is missing.
 4. Claude draws what is missing in `claude_design/`.
 5. `publish-claude-design` sends it back to claude.ai. Never skip it: the next import would undo the drawing, and promotion refuses it.
