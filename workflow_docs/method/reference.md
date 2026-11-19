@@ -1,6 +1,6 @@
 # Reference
 
-Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 13, taken on 2026-11-19.
+Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 14, taken on 2026-11-19.
 
 Where each fact lives, how it is named, and how any line of code traces back to it. Every other part relies on these rules: read this one once, then come back to look things up.
 
@@ -52,6 +52,7 @@ Every item someone may need to point at gets a short, stable ID. An ID is never 
 | What | Format | Example | Defined in |
 | --- | --- | --- | --- |
 | Page | `P-NN` | `P-04` | Registry |
+| Page state | `P-NN.x` | `P-21.b`, a state of `P-21` | Registry, an entry of `pages` right after its page |
 | Feature (verb + object) | `F-NNN` | `F-012` "Apply a coupon" | Registry |
 | Variant of a feature | `F-NNN.x` | `F-012.a` | Registry, under its feature |
 | Entity | `E-NN` | `E-03` | Registry |
@@ -74,6 +75,8 @@ Every item someone may need to point at gets a short, stable ID. An ID is never 
 | Event or log name | `F-NNN.<event>` | `F-012.coupon_applied` | Feature spec |
 
 Every ID is a prefix, a dash and a number; a variant adds a letter (`F-012.a`). Each prefix belongs to one kind of item only, so two kinds can never look alike. IDs are final: never renumbered, even when the registry is rebuilt. Tasks are numbered across the whole backlog, so moving a task to another feature does not change its ID.
+
+A page state is a screen drawn as its own artboard that belongs to one page: an overlay, a sheet, a step, a result, or an empty, loading or error view. Its ID is its page's ID plus a letter (`P-21.b`, a state of `P-21`; `P-D21.b` after a platform merge). It is an entry of `pages`, on the same platform as its page, and it lists its own features: a feature it lists does not have to be listed by its page, and the other way round. Its page must exist. A state's letter is never reused, even after the state is removed. In a platform merge (prompt 10), a state follows its page and keeps its letter.
 
 ## Traceability
 

@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 29).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 31).
 For now the Claude Doc is the source of truth and this file is a copy of it.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the Claude Design screens down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -94,8 +94,8 @@ Run this layer on each per-platform registry, then once more on the canonical re
 
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
-| L3-01 | Every ID has its kind's format (`P-D04`, `F-012`, `F-012.a`, `E-03`, `R-01`, `D-07`) and is unique | Query | Major |
-| L3-02 | Pages list their features and features list their pages, both ways | Query | Major |
+| L3-01 | Every ID has its kind's format (`P-D04`, `P-04.a`, `F-012`, `F-012.a`, `E-03`, `R-01`, `D-07`) and is unique; every page state's page exists and is on the same platform | Query | Major |
+| L3-02 | Pages list their features and features list their pages, both ways; a page state counts as a page of its own, not as its page | Query | Major |
 | L3-03 | No feature without a page or a role; no entity, role or variant without its feature; every role cited exists | Query | Major |
 | L3-04 | Features and entities list each other both ways (`entites`, `utilisee_par`) | Query | Major |
 | L3-05 | Every element of every raw extraction ended up in a feature or a variant, or a merge note says why it did not | Read | Major |
