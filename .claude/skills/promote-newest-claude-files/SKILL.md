@@ -8,7 +8,7 @@ description: Make the newest import the current version - replace ./claude_desig
 - Newest: `./newest_claude_design/` and `./newest_claude_docs/`, written by the `import-design-and-docs-artifact` skill.
 - Current: `./claude_design/` and `./claude_docs/`, what the app is built from and what the doc tests read.
 
-The current folders have exactly the layout of the newest ones, described in the import skill: a current folder is only ever a copy of an import, made by this skill. Never fill or edit one by hand: `compare-newest-current-claude-files` matches files by path, so another layout makes it report every file as removed and added again.
+The current folders have exactly the layout of the newest ones, described in the import skill: `compare-newest-current-claude-files` matches files by path, so another layout makes it report every file as removed and added again. Only this skill replaces a current folder. Between two promotions, Claude may draw in `claude_design/` (step 4 of the method's design cycle), and `publish-claude-design` sends those changes to claude.ai before the next import. `claude_docs/` is never edited here: a doc is edited in its Claude Doc, then imported.
 
 Run this only when the user asks for it: it replaces what the app is built from.
 
@@ -16,7 +16,12 @@ Run this only when the user asks for it: it replaces what the app is built from.
 
 1. A newest folder that is missing or empty is left out: its current folder stays as it is. If both are, say that the import has not run, and stop.
 2. `git status --porcelain -- claude_design claude_docs`. If it lists changes that are not committed, they would be lost: show them and ask the user before going on.
-3. `python3 .claude/skills/compare-newest-current-claude-files/diff_report.py | grep -E '^(# |ADDED|REMOVED|CHANGED|UNCHANGED)'` and show the user the result in a few lines: what is about to change.
+3. `python3 .claude/skills/publish-claude-design/claude_sync.py check-promote`. It compares each current folder with what claude.ai held at the last exchange (its `.claude-ai.json`), and refuses when the promotion would undo a repo change that never reached claude.ai. If it refuses, stop and show its list:
+   - a design change: publish it first with `publish-claude-design`, then import again;
+   - a doc change: make it in the Claude Doc, then import again;
+   - if claude.ai changed too, both sides have to be merged by hand with the user.
+   A current folder with no stamp yet (before its first stamped import) is refused when it differs from the import. Read the comparison: if none of the differences was made in the repo, run it again with `--first-sync`.
+4. `python3 .claude/skills/compare-newest-current-claude-files/diff_report.py | grep -E '^(# |ADDED|REMOVED|MOVED|CHANGED|UNCHANGED)'` and show the user the result in a few lines: what is about to change.
    If a current folder exists in another layout (most files REMOVED and ADDED under other paths), say so: the replacement fixes it.
 
 ## 2. Replace

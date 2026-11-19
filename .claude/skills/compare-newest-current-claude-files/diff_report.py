@@ -26,7 +26,7 @@ SOURCE = re.compile(r"^<!-- Source: (.*?), rev (\S+), exported \S+ -->\n?")
 def skipped(rel):
     parts = rel.parts
     return (
-        rel.name in {"support.js", "README.md", "INDEX.md"}
+        rel.name in {"support.js", "README.md", "INDEX.md", ".claude-ai.json"}
         or "artifact-type" in parts
         or (rel.name == "index.html" and len(parts) <= 2)
         or "__pycache__" in parts

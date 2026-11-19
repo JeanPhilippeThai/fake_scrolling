@@ -5,6 +5,7 @@ doc_tests
 import-design-and-docs-artifact
 preview-live-designs
 promote-newest-claude-files
+publish-claude-design
 registry-db
 tackle-first-docs-prompt
 what-are-the-next-docs-prompts

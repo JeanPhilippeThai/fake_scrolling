@@ -67,7 +67,10 @@ For each matched Design artifact, `<canvas>` = a short kebab-case name from its 
    For each id, `Artifact(action: "read", url: <the canvas that uses it>, path: "<id>", out_dir: "<repo>/newest_claude_design/_blob")`.
 4. Build: `python3 .claude/skills/import-design-and-docs-artifact/build_viewer.py newest_claude_design`
    It copies the runtime next to every artboard as `support.js`, points `/_blob/` links at the saved files, and writes `newest_claude_design/index.html` and `newest_claude_design/<canvas>/index.html` (the artboards laid out as on the canvas, each one live).
-5. Write `newest_claude_design/README.md`: the source URL of each canvas, today's date, and how to open it, worded so that it stays true once `promote-newest-claude-files` copies it into `claude_design/`:
+5. Stamp what claude.ai holds, so that promotion and publishing never lose work (the method's design cycle):
+   `python3 .claude/skills/publish-claude-design/claude_sync.py stamp newest_claude_design --url <canvas>=<canvas URL> …`, one `--url` per canvas.
+   It writes `newest_claude_design/<canvas>/.claude-ai.json`: the canvas URL and the hash of every `project/` file.
+6. Write `newest_claude_design/README.md`: the source URL of each canvas, today's date, and how to open it, worded so that it stays true once `promote-newest-claude-files` copies it into `claude_design/`:
    "From this folder, run `python3 -m http.server 8000`, then open http://localhost:8000." Never name the folder in the command.
    A server is required: the artboards fetch their own source, so `file://` shows nothing.
 
@@ -107,6 +110,8 @@ A page that is only an app or a tool, with no text about the app worth reading, 
 ## 6. The index
 
 Write `newest_claude_docs/INDEX.md`: one line per file, with its title, its path and its source URL, so an LLM reads the index first and opens only what it needs. A page's entry is named after the artifact's title.
+
+Then stamp the docs as claude.ai holds them: `python3 .claude/skills/publish-claude-design/claude_sync.py stamp newest_claude_docs`. Promotion uses it to refuse undoing a doc that was edited in the repo instead of in its Claude Doc.
 
 ## 7. Report
 
