@@ -1,0 +1,2 @@
+# Artifacts the import skill leaves out: one URL per line, a # starts a comment saying why.
+https://claude.ai/artifact/W2ibtgK7oF536LDXh5AAAV  # [Archivé] Fake scrolling — registre canonique: old HTML registry page, replaced by the Claude Doc "Registre canonique – Fake scrolling" (D-038)
