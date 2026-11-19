@@ -13,7 +13,10 @@ hash of every file as claude.ai held it.
     claude_sync.py status [<folder> ...]                        repo changes not on claude.ai
     claude_sync.py check-promote                                would promoting lose them?
     claude_sync.py check-remote <canvas dir> <remote dir>       did claude.ai change since?
-    claude_sync.py plan <canvas dir>                            the files a publish must send
+    claude_sync.py plan <canvas dir> --stage <dir>              stage the files a publish must send
+
+Files are compared and published in claude.ai's form: without support.js (the viewer runtime the
+import copies) and with /_blob/<id> links as claude.ai writes them, not as the viewer rewires them.
 
 Each check exits 1 when it finds something, 0 when it is safe.
 """
@@ -21,16 +24,27 @@ import argparse
 import datetime
 import hashlib
 import json
+import re
+import shutil
 import sys
 from pathlib import Path
 
 STAMP = ".claude-ai.json"
+FORMAT = 2  # a stamp of another format is read as no stamp: import again
 PAIRS = [("claude_design", "newest_claude_design"), ("claude_docs", "newest_claude_docs")]
 GENERATED = {"support.js", "README.md", "INDEX.md", STAMP}
+# The import's build_viewer.py points /_blob/<id> at the saved file (/_blob/<id>.svg) for the local
+# viewer. claude.ai holds /_blob/<id>: files are compared, and published, in claude.ai's form.
+WIRED_BLOB = re.compile(rb"(/_blob/[0-9a-f]{32})\.[A-Za-z0-9]+")
+
+
+def claude_ai_form(path):
+    """A file's bytes as claude.ai holds them."""
+    return WIRED_BLOB.sub(rb"\1", path.read_bytes())
 
 
 def digest(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(claude_ai_form(path)).hexdigest()
 
 
 def is_canvas(path):
@@ -45,11 +59,18 @@ def units(folder):
     return canvases or [folder]
 
 
+def project_files(root):
+    """project/<path> -> hash, leaving out support.js, the runtime the import copies for the viewer."""
+    if not root.is_dir():
+        return {}
+    return {f"project/{p.relative_to(root)}": digest(p) for p in sorted(root.rglob("*"))
+            if p.is_file() and p.name not in GENERATED}
+
+
 def tracked(unit):
     """Path -> hash of the files claude.ai holds for this unit."""
     if is_canvas(unit):
-        root = unit / "project"
-        return {f"project/{p.relative_to(root)}": digest(p) for p in sorted(root.rglob("*")) if p.is_file()}
+        return project_files(unit / "project")
     out = {}
     for p in sorted(unit.rglob("*")):
         rel = p.relative_to(unit)
@@ -62,13 +83,14 @@ def read_stamp(unit):
     path = unit / STAMP
     if not path.is_file():
         return None
-    return json.loads(path.read_text(encoding="utf-8"))
+    stamp = json.loads(path.read_text(encoding="utf-8"))
+    return stamp if stamp.get("format") == FORMAT else None
 
 
 def write_stamp(unit, url=None):
     old = read_stamp(unit) or {}
     synced = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
-    stamp = {"synced": synced, "files": tracked(unit)}
+    stamp = {"format": FORMAT, "synced": synced, "files": tracked(unit)}
     if is_canvas(unit):
         stamp = {"url": url or old.get("url"), **stamp}
     (unit / STAMP).write_text(json.dumps(stamp, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -167,9 +189,7 @@ def cmd_check_remote(args):
     if stamp is None:
         print(f"{unit}: no stamp. Import and promote first, so that the repo knows what claude.ai holds.")
         return 1
-    root = remote / "project"
-    there = {f"project/{p.relative_to(root)}": digest(p) for p in sorted(root.rglob("*")) if p.is_file()} if root.is_dir() else {}
-    ch = changes(stamp["files"], there)
+    ch = changes(stamp["files"], project_files(remote / "project"))
     if any(ch):
         print(f"{unit}: claude.ai changed since the last exchange ({stamp['synced']}). Publishing would overwrite it:")
         show("claude.ai", ch)
@@ -186,9 +206,16 @@ def cmd_plan(args):
         print(f"{unit}: no stamp", file=sys.stderr)
         return 1
     changed, added, removed = changes(stamp["files"], tracked(unit))
+    # Publish from a staging copy in claude.ai's form, never from the repo's viewer-wired files.
+    stage = Path(args.stage)
+    if stage.exists():
+        shutil.rmtree(stage)
+    for p in changed + added:
+        (stage / p).parent.mkdir(parents=True, exist_ok=True)
+        (stage / p).write_bytes(claude_ai_form(unit / p))
     files = {p: p for p in changed + added}
     files.update({p: None for p in removed})
-    print(json.dumps({"url": stamp.get("url"), "root": str(unit), "files": files}, indent=1, ensure_ascii=False))
+    print(json.dumps({"url": stamp.get("url"), "root": str(stage), "files": files}, indent=1, ensure_ascii=False))
     return 0
 
 
@@ -207,6 +234,7 @@ def main():
     cr.add_argument("remote")
     pl = sub.add_parser("plan")
     pl.add_argument("canvas")
+    pl.add_argument("--stage", required=True, help="folder to write the files to publish, in claude.ai's form")
     args = ap.parse_args()
     return {"stamp": cmd_stamp, "status": cmd_status, "check-promote": cmd_check_promote,
             "check-remote": cmd_check_remote, "plan": cmd_plan}[args.cmd](args)

@@ -33,7 +33,7 @@ If it reports a change, someone drew on claude.ai since the last import, and pub
 
 ## 3. Publish
 
-1. `claude_sync.py plan claude_design/<canvas>` prints the `url`, the `root` and the `files` map: each changed or added file mapped to itself, each removed file to `null`.
+1. `claude_sync.py plan claude_design/<canvas> --stage <scratchpad>/stage/<canvas>`, `<scratchpad>` being the session's scratchpad directory (the Artifact tool publishes only from it or from the working directory). It copies the changed and added files into the stage in claude.ai's form: without the viewer's `support.js`, and with each `/_blob/<id>.<ext>` link back to `/_blob/<id>`, as claude.ai writes it. It prints the `url`, the `root` (the stage) and the `files` map: each changed or added file mapped to itself, each removed file to `null`. Never publish from `claude_design/` itself: its files are wired for the local viewer.
 2. A file that points to a new uploaded image (`/_blob/<id>` that claude.ai does not hold) needs that image uploaded first: `Artifact(action: "publish", url, asset: true, file_path: "claude_design/_blob/<id>")`, then the file's reference replaced by the URL it returns. If unsure, ask.
 3. `Artifact(action: "publish", url: "<url>", root: "<root>", files: <files>)`. If it is refused because claude.ai changed, go back to step 2. Never pass `force`.
 
