@@ -1,6 +1,6 @@
 # Reference
 
-Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 16, taken on 2026-11-19.
+Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 18, taken on 2026-11-19.
 
 Where each fact lives, how it is named, and how any line of code traces back to it. Every other part relies on these rules: read this one once, then come back to look things up.
 
@@ -31,6 +31,8 @@ Each kind of fact has one home. Any other place that mentions it links there ins
 | Which features are on, and for whom | The feature flag service, one flag per feature | the flag service |
 | How the app behaves for real users | Production logs, events, traces and crash reports | the monitoring tools |
 | Every ID and link, to query and check | The registry database, generated from the files above; never edited | `.registry/registry.db` |
+
+When the registry lives in a Claude Doc, its import has the same name in every app: `claude_docs/registry.md` (or `registry.yaml`), and each archived per-platform registry is `claude_docs/registry-<platform>-archive.md`.
 
 **When two sources disagree, this order wins:**
 
@@ -74,7 +76,7 @@ Every item someone may need to point at gets a short, stable ID. An ID is never 
 | Feature flag | The feature's own ID | `F-012` | Flag service |
 | Event or log name | `F-NNN.<event>` | `F-012.coupon_applied` | Feature spec |
 
-Every ID is a prefix, a dash and a number; a variant adds a letter (`F-012.a`). Each prefix belongs to one kind of item only, so two kinds can never look alike. IDs are final: never renumbered, even when the registry is rebuilt. Tasks are numbered across the whole backlog, so moving a task to another feature does not change its ID.
+Every ID is a prefix, a dash and a number; a variant adds a letter (`F-012.a`). Each prefix belongs to one kind of item only, so two kinds can never look alike. IDs are final: never renumbered, even when the registry is rebuilt. The number in a format (NN, NNN) is a minimum, not a limit: an ID takes as many digits as it needs (D-999, then D-1000) and is never padded again later. An ID is compared as a number: D-01 and D-001 are the same ID, so a project never has both, and IDs sort by number (D-200 before D-1000). Tasks are numbered across the whole backlog, so moving a task to another feature does not change its ID.
 
 A page state is a screen drawn as its own artboard that belongs to one page: an overlay, a sheet, a step, a result, or an empty, loading or error view. Its ID is its page's ID plus a letter (`P-21.b`, a state of `P-21`; `P-D21.b` after a platform merge). It is an entry of `pages`, on the same platform as its page, and it lists its own features: a feature it lists does not have to be listed by its page, and the other way round. Its page must exist. A state's letter is never reused, even after the state is removed. In a platform merge (prompt 10), a state follows its page and keeps its letter. An element number in a raw extraction or a screen inventory (P-D02.01, element 1 of page P-D02) is a label, not an ID: it has digits after the dot where a state has a letter, it cites its page, and nothing else refers to it.
 

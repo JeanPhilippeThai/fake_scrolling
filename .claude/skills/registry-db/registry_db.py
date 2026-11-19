@@ -103,7 +103,7 @@ SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);
 CREATE TABLE sources(path TEXT, part TEXT, content TEXT, scope TEXT, note TEXT);
 CREATE TABLE docs(path TEXT PRIMARY KEY, scope TEXT, archived INT);
-CREATE TABLE defs(scope TEXT, id TEXT, kind TEXT, expected_kind TEXT, path TEXT, line INT, name TEXT, data TEXT);
+CREATE TABLE defs(scope TEXT, id TEXT, kind TEXT, expected_kind TEXT, path TEXT, line INT, name TEXT, data TEXT, number TEXT);
 CREATE TABLE refs(scope TEXT, source TEXT, rel TEXT, target TEXT, path TEXT);
 CREATE TABLE aliases(kind TEXT, id TEXT, platform TEXT, alias TEXT, path TEXT, partial INT DEFAULT 0, retired INT DEFAULT 0);
 CREATE TABLE alias_decisions(scope TEXT, id TEXT, decision TEXT, path TEXT);
@@ -141,6 +141,16 @@ CREATE INDEX refs_target ON refs(scope, target);
 CREATE INDEX defs_id ON defs(scope, id);
 CREATE INDEX mentions_id ON mentions(id);
 """
+
+
+def id_number(id_):
+    """An ID compared as a number: D-01 and D-001 are both D-1, the same ID."""
+    return re.sub(r"\d+", lambda m: str(int(m.group())), id_)
+
+
+def id_key(id_):
+    """Sorts IDs by number: D-200 before D-1000."""
+    return [(0, int(part), "") if part.isdigit() else (1, 0, part) for part in re.split(r"(\d+)", id_ or "")]
 
 
 def kind_of(id_):
@@ -286,8 +296,8 @@ class Builder:
         id_ = id_.strip()
         line = self.id_lines.get(path, {}).get(id_)
         self.db.execute(
-            "INSERT INTO defs VALUES (?,?,?,?,?,?,?,?)",
-            (scope, id_, kind_of(id_) or "unknown", expected, path, line, text(name), text(data)),
+            "INSERT INTO defs VALUES (?,?,?,?,?,?,?,?,?)",
+            (scope, id_, kind_of(id_) or "unknown", expected, path, line, text(name), text(data), id_number(id_)),
         )
         return id_
 
@@ -620,6 +630,8 @@ def open_db(args, rebuild_if_stale=True):
         Builder(args.root, args.docs, db_path).build()
     con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     con.row_factory = sqlite3.Row
+    # ORDER BY id COLLATE idnum sorts IDs by number (D-200 before D-1000).
+    con.create_collation("idnum", lambda a, b: (id_key(a) > id_key(b)) - (id_key(a) < id_key(b)))
     return con
 
 
@@ -762,7 +774,7 @@ def cmd_impact(args):
                 nxt.append(t)
         frontier = nxt
     rows = []
-    for id_, d in sorted(seen.items(), key=lambda x: (x[1], kind_of(x[0]) or "", x[0])):
+    for id_, d in sorted(seen.items(), key=lambda x: (x[1], kind_of(x[0]) or "", id_key(x[0]))):
         r = con.execute("SELECT kind, path, line, name FROM ids WHERE scope='canonical' AND id=?", (id_,)).fetchone()
         rows.append({"depth": d, "id": id_, "kind": r["kind"] if r else kind_of(id_), "name": r["name"] if r else "(not defined)",
                      "where": f"{r['path']}:{r['line'] or ''}" if r else ""})
@@ -826,8 +838,8 @@ def cmd_diff(args):
             con.close()
     (bd, br), (hd, hr) = out["base"], out["head"]
     print(f"# Registry diff: {args.base} → {args.head}\n")
-    added = sorted(set(hd) - set(bd))
-    removed = sorted(set(bd) - set(hd))
+    added = sorted(set(hd) - set(bd), key=lambda k: (k[0], id_key(k[1])))
+    removed = sorted(set(bd) - set(hd), key=lambda k: (k[0], id_key(k[1])))
     changed = []
     for k in sorted(set(bd) & set(hd)):
         b, h = bd[k][2], hd[k][2]

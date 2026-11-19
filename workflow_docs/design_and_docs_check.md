@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 38).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 41).
 For now the Claude Doc is the source of truth and this file is a copy of it.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the Claude Design screens down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -68,6 +68,7 @@ Run the layers in this order. Each check has an ID; cite it in every finding. In
 | L0-02 | Every document follows the method's current format, for example the multi-platform registry with platforms, variant pages, entity fields, roles and access | Read | Major |
 | L0-03 | Mode B: the database was built from the same commit as the documents | Query | Blocking |
 | L0-04 | Mode B: every document the database reads parses, and every item in it has an ID | Query | Blocking |
+| L0-05 | The registry is at its fixed path: docs/registry.yaml, or claude_docs/registry.md (or .yaml) when it lives in a Claude Doc; each archived per-platform registry is claude_docs/registry-<platform>-archive.md | Query | Major |
 
 ### L1 · Claude Design
 
@@ -94,7 +95,7 @@ Run this layer on each per-platform registry, then once more on the canonical re
 
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
-| L3-01 | Every ID has its kind's format (`P-D04`, `P-04.a`, `F-012`, `F-012.a`, `E-03`, `R-01`, `D-07`) and is unique; every page state's page exists and is on the same platform; no ID listed in ids_retires is defined again | Query | Major |
+| L3-01 | Every ID has its kind's format (`P-D04`, `P-04.a`, `F-012`, `F-012.a`, `E-03`, `R-01`, `D-07`) and is unique; every page state's page exists and is on the same platform; no ID listed in ids_retires is defined again; no two IDs share a number (D-01 and D-001) | Query | Major |
 | L3-02 | Pages list their features and features list their pages, both ways; a page state counts as a page of its own, not as its page | Query | Major |
 | L3-03 | No feature without a page or a role; no entity, role or variant without its feature; every role cited exists | Query | Major |
 | L3-04 | Features and entities list each other both ways (`entites`, `utilisee_par`) | Query | Major |
@@ -357,7 +358,7 @@ Layer checks look at one document at a time. These follow a chain from end to en
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
 | G-01 | Every ID is unique across all documents, and its prefix belongs to one kind of item only | Query | Major |
-| G-02 | Every ID cited anywhere exists, or is listed in ids_retires; an ID followed by … is a format example, not a citation; a range (R-01 à R-07) cites every ID in it; archived registries are not checked | Query, then read | Major |
+| G-02 | Every ID cited anywhere exists, or is listed in ids_retires; an ID followed by … is a format example, not a citation; a range (R-01 à R-07) cites every ID in it; archived registries are not checked | Query | Major |
 | G-03 | No ID was renumbered or reused: compare with the last check report or the documents' git history; an ID that disappeared is explained by a decision | Read | Major |
 | G-04 | One source of truth: a fact found in two places with different values is a finding, and the precedence order says which is probably wrong | Read | Major |
 | G-05 | Mode B: every query in the method's "Checks that run on every pull request" returns no rows, except those that read the code scan | Query | Major |
