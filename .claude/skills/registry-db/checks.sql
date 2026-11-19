@@ -13,8 +13,24 @@
 -- needs:
 SELECT path, line, message FROM problems ORDER BY path, line;
 
+-- check: L0-05
+-- title: The registry is at its fixed path: docs/registry.yaml, or claude_docs/registry.md (or .yaml); each archived per-platform registry is claude_docs/registry-<platform>-archive.md
+-- how: Query
+-- severity: Major
+-- needs: registry
+-- The column is `registry`, not `scope`: an archive's file name is set by the import, so it fails the build too.
+SELECT DISTINCT path, scope AS registry,
+  CASE scope WHEN 'canonical' THEN 'the registry must be docs/registry.yaml, claude_docs/registry.md or claude_docs/registry.yaml'
+       ELSE 'an archived ' || scope || ' registry must be claude_docs/registry-' || scope || '-archive.md (or .yaml)' END AS problem
+FROM sources
+WHERE content = 'registry'
+  AND ((scope = 'canonical' AND path NOT IN ('docs/registry.yaml', 'claude_docs/registry.md', 'claude_docs/registry.yaml'))
+    OR (scope != 'canonical' AND path NOT IN ('claude_docs/registry-' || scope || '-archive.md',
+                                              'claude_docs/registry-' || scope || '-archive.yaml')))
+ORDER BY 1;
+
 -- check: L3-01
--- title: Every ID has its kind's format and is unique; every page state's page exists and is on the same platform; no ID in ids_retires is defined again
+-- title: Every ID has its kind's format and is unique; every page state's page exists and is on the same platform; no ID in ids_retires is defined again; no two IDs share a number (D-01 and D-001)
 -- how: Query
 -- severity: Major
 -- needs: registry
@@ -40,6 +56,10 @@ UNION ALL
 SELECT scope, id, 'defined ' || COUNT(*) || ' times', GROUP_CONCAT(DISTINCT path), MIN(line)
 FROM defs WHERE expected_kind IN ('role','page','feature','variant','entity','decision')
 GROUP BY scope, id HAVING COUNT(*) > 1
+UNION ALL
+SELECT scope, GROUP_CONCAT(DISTINCT id), 'the same ID written with different digits: an ID is a number', GROUP_CONCAT(DISTINCT path), MIN(line)
+FROM defs WHERE expected_kind IN ('role','page','feature','variant','entity','decision')
+GROUP BY scope, number HAVING COUNT(DISTINCT id) > 1
 ORDER BY 1, 2;
 
 -- check: L3-02
@@ -530,11 +550,15 @@ UNION ALL
 SELECT scope, id, 'defined ' || COUNT(*) || ' times', GROUP_CONCAT(DISTINCT path), MIN(line)
 FROM defs WHERE expected_kind NOT IN ('role','page','feature','variant','entity','decision')
 GROUP BY scope, id HAVING COUNT(*) > 1
+UNION ALL
+SELECT scope, GROUP_CONCAT(DISTINCT id), 'the same ID written with different digits: an ID is a number', GROUP_CONCAT(DISTINCT path), MIN(line)
+FROM defs WHERE expected_kind NOT IN ('role','page','feature','variant','entity','decision')
+GROUP BY scope, number HAVING COUNT(DISTINCT id) > 1
 ORDER BY 1, 2;
 
 -- check: G-02
 -- title: Every ID cited anywhere exists or is in ids_retires (for the kinds the database reads: P, F, E, R, D, TB, N, DF, C); an ID followed by … is an example; a range cites every ID in it; archives are not checked
--- how: Query, then read
+-- how: Query
 -- severity: Major
 -- needs:
 SELECT m.scope, m.id, m.path, GROUP_CONCAT(m.line) AS lines, 'cited, but not defined' AS problem

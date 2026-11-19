@@ -33,7 +33,7 @@ Every command except `build` and `diff` first rebuilds the database if a doc cha
 | `schema` | The tables and views, with their columns and row counts |
 | `diff BASE HEAD` | IDs added, removed or changed, and links added or removed, between two docs folders, e.g. `claude_docs newest_claude_docs` |
 
-Start with `schema` before writing a query. The main tables:
+Start with `schema` before writing a query. An ID is a number: `D-01` and `D-001` are the same ID (`defs.number` holds `D-1`), and `ORDER BY id COLLATE idnum` sorts IDs by number (`D-200` before `D-1000`). The main tables:
 
 - `defs(scope, id, kind, expected_kind, path, line, name, data)`: one row per definition. `data` is the item's YAML as JSON, for `json_extract`.
 - `refs(scope, source, rel, target, path)`: every link as the doc writes it, for example `feature_page`, `page_feature`, `feature_role`, `table_entity`, `data_flow_feature` or `component_table`.
