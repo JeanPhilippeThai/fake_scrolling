@@ -1,3 +1,13 @@
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 13, exported 2026-11-19 -->
+# Registre canonique – Fake scrolling
+
+Nov 19, 2026 · @Jp
+
+## YAML
+
+Le registre en vigueur, en blocs YAML lus dans l'ordre comme un seul fichier (importé en claude\_docs/registry.md). Les tableaux qui suivent en sont une vue de lecture.
+
+```yaml
 roles:
   - id: R-01
     nom: Personne non connectée
@@ -111,7 +121,9 @@ pages:
     nom: Nouveau post — panneau Audience
     plateforme: mobile
     features: [F-024, F-027, F-050]
+```
 
+```yaml
 features:
 
   - id: F-001
@@ -376,7 +388,9 @@ features:
     questions_ouvertes:
       - Paiement via l'App Store ou Google Play
       - 'Règle : offre visible à partir de 1 h d''utilisation ; masquée si le compte a déjà soutenu (E-16)'
+```
 
+```yaml
   - id: F-016
     nom: Liker un contenu
     description: Cœur qui ajoute ou retire un like et met à jour le compteur.
@@ -666,7 +680,9 @@ features:
     questions_ouvertes:
       - Le statut « vue » n'est pas partagé entre écrans dans la maquette
       - 'Accès supposé : stories des amis seulement (ami ou non, E-09)'
+```
 
+```yaml
   - id: F-037
     nom: Consulter ses discussions
     description: Liste des discussions avec dernier message et heure ; tap pour ouvrir.
@@ -921,7 +937,9 @@ features:
       - 'aucun résultat : « Aucun résultat » · « Aucun post ne correspond à « … ». Essaie un autre mot. »'
     questions_ouvertes:
       - 'Accès supposé : les résultats incluent des posts de non-amis s''ils sont publics (audience du post, F-050)'
+```
 
+```yaml
   - id: F-053
     nom: Lancer une recherche proposée
     description: Tap sur une suggestion qui remplit le champ et affiche les résultats.
@@ -1164,7 +1182,9 @@ features:
       - 'Écran de prise de vue non dessiné : appareil photo du téléphone ou caméra dans l''appli ?'
       - Autorisation d'accès à l'appareil photo, et état si elle est refusée
       - Bouton seulement dans la galerie vide, ou aussi au-dessus de la grille ?
+```
 
+```yaml
 entites:
 
   - id: E-01
@@ -1315,7 +1335,9 @@ entites:
       - thème d'icône (Noir, Orange, Rouge)
       - carrousels de pause (oui/non)
     utilisee_par: [F-002, F-012, F-066, F-067]
+```
 
+```yaml
 decisions:
   - id: D-001
     sujet: Doublon F-026 / F-035
@@ -1502,6 +1524,11 @@ decisions:
     choix: 'Le registre importé s''appelle claude_docs/registry.yaml, nom fixé par la méthode quel que soit le titre de la page. Chaque ID retiré figure dans ids_retires avec la décision qui l''a retiré. Un ID garde son nombre de chiffres : il n''est jamais complété ni renuméroté.'
     raison: 'La méthode fixe le nom du registre (L0-05), et G-02 bloque désormais le build quand un ID cité n''est ni défini ni listé dans ids_retires.'
     impacte: []
+  - id: D-038
+    sujet: Registre dans une Claude Doc
+    choix: 'Le registre en vigueur est la Claude Doc « Registre canonique – Fake scrolling » (https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV), importée en claude_docs/registry.md. L''ancienne page HTML (https://claude.ai/artifact/W2ibtgK7oF536LDXh5AAAV) est archivée et exclue de l''import.'
+    raison: 'La méthode veut le registre dans une Claude Doc, jamais une page (L0-05) : une Claude Doc se modifie sur place, alors que les tableaux d''une page sont à régénérer à la main à chaque changement.'
+    impacte: []
 
 ids_retires:
   - {id: F-013, decision: D-002}
@@ -1512,3 +1539,228 @@ ids_retires:
   - {id: F-058.a, decision: D-020}
   - {id: F-064, decision: D-020}
   - {id: F-067.a, decision: D-021}
+```
+
+## Rôles
+
+| ID | Rôle | Portée | Features |
+| --- | --- | --- | --- |
+| R-01 | Personne non connectée | aucun compte : session non authentifiée sur l'appareil ; le backend détecte ensuite s'il faut passer à l'inscription | 8 |
+| R-02 | Utilisateur connecté | son propre compte | 57 |
+
+Les conditions plus fines qu'un rôle (ami ou non, audience d'un post, seuil d'une heure, compte déjà soutenu, réglage par compte ou par appareil) sont dans les questions ouvertes des features. Le compte @fakescrolling est un contenu système, pas un rôle.
+
+## Pages
+
+| ID | Page | Features |
+| --- | --- | --- |
+| P-01 | Connexion | F-001, F-001.a, F-002, F-003, F-004 |
+| P-02 | Code reçu par e-mail | F-005, F-006, F-007, F-008 |
+| P-03 | Accueil — fil | F-009, F-010, F-011, F-012, F-012.a, F-014, F-015.a, F-016, F-016.a, F-017, F-018, F-019, F-020, F-021, F-022, F-024, F-025, F-026 |
+| P-04 | Accueil — panneau Notifications | F-022, F-024, F-027.a, F-028, F-028.a |
+| P-05 | Accueil — panneau Commentaires | F-016.b, F-017, F-024, F-027, F-030 |
+| P-06 | Accueil — panneau Enregistrer dans une collection | F-018, F-024, F-027, F-031 |
+| P-07 | Accueil — panneau Partager | F-019.a, F-019.b, F-019.c, F-024, F-027 |
+| P-08 | Messages — liste des discussions | F-024, F-025, F-026, F-026.a, F-033, F-034, F-036, F-037 |
+| P-09 | Messages — conversation | F-005, F-024, F-036, F-038, F-039, F-040, F-041, F-042 |
+| P-10 | Messages — lecteur de story | F-024, F-036 |
+| P-11 | Messages — Ajouter un ami | F-005, F-024, F-034, F-043 |
+| P-12 | Nouveau post — choix des photos | F-005.a, F-024, F-044, F-045, F-046, F-069 |
+| P-13 | Nouveau post — légende | F-005, F-024, F-047, F-048, F-049, F-050, F-051, F-068 |
+| P-14 | Recherche — suggestions et tendances | F-024, F-025, F-026, F-052, F-053, F-053.a |
+| P-15 | Recherche — résultats | F-024, F-025, F-026, F-052, F-054 |
+| P-16 | Recherche — post ouvert | F-005, F-010.a, F-020.a, F-024, F-025, F-026 |
+| P-17 | Profil | F-024, F-025, F-026, F-055, F-056, F-057, F-058, F-059, F-060, F-061, F-062 |
+| P-18 | Profil — panneau Photo de profil | F-024, F-027, F-058 |
+| P-19 | Modifier le profil | F-005.b, F-024, F-056 |
+| P-20 | Panneau Options | F-024, F-027.b, F-055 |
+| P-21 | Mon compte | F-005, F-024, F-057.a, F-063 |
+| P-22 | Premium | F-002.a, F-005, F-015, F-024, F-065 |
+| P-23 | Interface de l'appli | F-002.b, F-005, F-024, F-066, F-067 |
+| P-24 | Nouveau post — panneau Identifier des personnes | F-024, F-027, F-048 |
+| P-25 | Nouveau post — panneau Ajouter un lieu | F-024, F-027, F-049 |
+| P-26 | Nouveau post — panneau Audience | F-024, F-027, F-050 |
+
+## Features
+
+Les états UI et les questions ouvertes de chaque feature sont dans le YAML.
+
+| ID | Feature | Description | Pages | Accès | Variantes |
+| --- | --- | --- | --- | --- | --- |
+| F-001 | Se connecter avec un compte tiers | Bouton qui connecte via un fournisseur externe puis ouvre l'Accueil. | P-01 | R-01 | F-001.a (P-01) : Apple au lieu de Google : bouton noir, compte Apple |
+| F-002 | Afficher l'icône de l'appli | Carré arrondi avec un F blanc dont la couleur suit le thème choisi. | P-01, P-22, P-23 | R-01, R-02 | F-002.a (P-22) : Petite icône en tête de la page Premium, sans le nom de l'appli; F-002.b (P-23) : Grand aperçu « nouvelle icône » avec le nom de l'appli dessous |
+| F-003 | Demander un code par e-mail | Saisie de l'adresse e-mail puis envoi d'un code à 6 chiffres. | P-01 | R-01 | — |
+| F-004 | Lire la mention sans mot de passe | Phrase qui explique qu'un code remplace le mot de passe. | P-01 | R-01 | — |
+| F-005 | Revenir à l'écran précédent | Flèche retour en haut à gauche. | P-02, P-09, P-11, P-12, P-13, P-16, P-19, P-21, P-22, P-23 | R-01, R-02 | F-005.a (P-12) : Croix « Fermer » qui abandonne la création du post et revient à l'Accueil; F-005.b (P-19) : Lien « Annuler » qui abandonne les saisies du profil |
+| F-006 | Lire la consigne du code | Titre « Entre le code » et rappel du code à 6 chiffres envoyé par e-mail. | P-02 | R-01 | — |
+| F-007 | Se connecter avec le code | Saisie du code en 6 cases puis bouton « Se connecter ». | P-02 | R-01 | — |
+| F-008 | Renvoyer le code | Compte à rebours de 30 s puis lien pour renvoyer un code. | P-02 | R-01 | — |
+| F-009 | Faire défiler le fil | Un post plein écran à la fois, par glisser, molette ou clavier ; 8 posts chargés près de la fin. | P-03 | R-02 | — |
+| F-010 | Voir un post en plein écran | Image du post sur tout l'écran. | P-03, P-16 | R-02 | F-010.a (P-16) : Résultat de recherche : aucune action (like, commentaire, enregistrement, partage) |
+| F-011 | Regarder une vidéo | Post vidéo en boucle avec une fine ligne de progression collée au menu. | P-03 | R-02 | — |
+| F-012 | Faire défiler un carrousel | Glisser entre 3 à 5 photos, points de position au-dessus du pseudo. | P-03 | R-02 | F-012.a (P-03) : Carrousel de pause de @fakescrolling tous les 5 à 8 posts : 4 phrases courtes, une par image, fond pastel par phrase ; masqué si l'interrupteur de P-23 est désactivé |
+| F-014 | Suivre un post Inspire / Expire | Cercle qui grandit puis rétrécit avec « Inspire » et « Expire », environ 1 post sur 8, toujours présent. | P-03 | R-02 | — |
+| F-015 | Soutenir le projet | Offre à 1,99 € en un seul paiement, proposée à partir de 1 h d'utilisation. | P-03, P-22 | R-02 | F-015.a (P-03) : Post du fil, 1 sur 20 après 1 h, retiré une fois le soutien donné |
+| F-016 | Liker un contenu | Cœur qui ajoute ou retire un like et met à jour le compteur. | P-03, P-05 | R-02 | F-016.a (P-03) : Double tap sur l'image : grand cœur animé, ne retire jamais le like; F-016.b (P-05) : Like d'un commentaire : petit cœur rouge et compteur sous le cœur |
+| F-017 | Consulter les commentaires | Bulle du post puis panneau listant les commentaires. | P-03, P-05 | R-02 | — |
+| F-018 | Enregistrer un post dans une collection | Signet du post puis choix d'une collection ; second tap retire. | P-03, P-06 | R-02 | — |
+| F-019 | Partager un post | Flèche du post puis panneau de partage. | P-03, P-07 | R-02 | F-019.a (P-07) : Envoyer à un ami : rangée d'amis en tête du panneau, un tap envoie le post à cet ami; F-019.b (P-07) : Copier le lien du post; F-019.c (P-07) : Ouvrir les autres apps de partage du téléphone |
+| F-020 | Lire l'auteur et la légende d'un post | Photo, pseudo et légende en blanc en bas du post. | P-03, P-16 | R-02 | F-020.a (P-16) : Sans photo du publieur, légende jamais tronquée |
+| F-021 | Déplier la légende | Lien « plus » ou « moins » au-delà d'environ 80 caractères. | P-03 | R-02 | — |
+| F-022 | Consulter ses notifications | Cloche avec pastille puis panneau des invitations et des likes reçus. | P-03, P-04 | R-02 | — |
+| F-024 | Voir l'app se griser | Toute l'interface perd 10 % de couleur par cycle, noir et blanc après 10 cycles, sans message. | P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26 | R-02 | — |
+| F-025 | Naviguer entre les sections | Menu du bas : Accueil, Messages, Recherche, Profil. | P-03, P-08, P-14, P-15, P-16, P-17 | R-02 | — |
+| F-026 | Ouvrir la création d'un post | Bouton + noir au centre du menu du bas. Aussi depuis « Créer un post » de l'état vide de P-17 (D-035). | P-03, P-08, P-14, P-15, P-16, P-17 | R-02 | F-026.a (P-08) : Depuis le rond « Ta story » : la création s'ouvre avec Story présélectionnée |
+| F-027 | Fermer un panneau | Croix, « OK » ou tap sur le fond assombri autour du panneau. | P-04, P-05, P-06, P-07, P-18, P-20, P-24, P-25, P-26 | R-02 | F-027.a (P-04) : Tap autour seulement, pas de croix; F-027.b (P-20) : Tap autour seulement, sortie en glissant vers la gauche |
+| F-028 | Répondre à une invitation d'ami | Boutons « Accepter » et « Refuser » sur une invitation du panneau Notifications. | P-04 | R-02 | F-028.a (P-04) : Refuser : la demande est supprimée et la ligne disparaît |
+| F-030 | Publier un commentaire | Champ « Ajouter un commentaire… » et bouton « Publier ». | P-05 | R-02 | — |
+| F-031 | Créer une collection | Ligne « Nouvelle collection » qui crée et enregistre aussitôt. | P-06 | R-02 | — |
+| F-033 | Rechercher une discussion | Loupe qui ouvre un champ et filtre les discussions par prénom ou @. | P-08 | R-02 | — |
+| F-034 | Ajouter un ami | Bouton + des Messages puis « Ajouter » sur un compte trouvé : la demande part. Aussi depuis « Ajouter un ami » de l'état vide de P-08 (D-035). | P-08, P-11 | R-02 | — |
+| F-036 | Voir une story | Story plein écran, 2 ou 3 images de 5 s, tap à droite ou à gauche, croix pour fermer. | P-08, P-09, P-10 | R-02 | — |
+| F-037 | Consulter ses discussions | Liste des discussions avec dernier message et heure ; tap pour ouvrir. | P-08 | R-02 | — |
+| F-038 | Lire une conversation | Bulles vertes à droite, grises à gauche, photos et saisie du contact. | P-09 | R-02 | — |
+| F-039 | Appeler un contact | Icône téléphone en haut à droite. | P-09 | R-02 | — |
+| F-040 | Répondre à un message | Glisser un message vers la droite pour le citer. | P-09 | R-02 | — |
+| F-041 | Envoyer un message | Champ « Message… » et « Envoyer » dans la bulle. | P-09 | R-02 | — |
+| F-042 | Envoyer une photo dans une conversation | Icône image à droite dans la bulle de saisie. | P-09 | R-02 | — |
+| F-043 | Rechercher un compte par identifiant | Champ précédé d'un @, jusqu'à 8 comptes dont le @ commence par la saisie. | P-11 | R-02 | — |
+| F-044 | Choisir les photos d'un post | Aperçu carré, grille de photos, sélection multiple jusqu'à 10, « Suivant ». | P-12 | R-02 | — |
+| F-045 | Choisir un album | Bouton « Récents » avec chevron. | P-12 | R-02 | — |
+| F-046 | Prendre une photo | Bouton appareil photo. | P-12 | R-02 | — |
+| F-047 | Rédiger la légende | Champ « Écris une légende… » à côté de la miniature du post. | P-13 | R-02 | — |
+| F-048 | Identifier des personnes | Ligne de la légende qui ouvre un panneau : recherche et amis à cocher. | P-13, P-24 | R-02 | — |
+| F-049 | Ajouter un lieu | Ligne de la légende qui ouvre un panneau : recherche et choix d'un seul lieu. | P-13, P-25 | R-02 | — |
+| F-050 | Choisir l'audience | Ligne « Audience » qui ouvre un panneau : Tout le monde, Amis ou Amis proches, avec une phrase par choix. | P-13, P-26 | R-02 | — |
+| F-051 | Publier le post | Bouton vert « Partager dans le fil » (ouvre l'Accueil) ou « Partager en story » (ouvre Messages). | P-13 | R-02 | — |
+| F-052 | Rechercher des posts | Toute saisie donne 18 posts dans l'une des 5 palettes (somme des codes modulo 5). | P-14, P-15 | R-02 | — |
+| F-053 | Lancer une recherche proposée | Tap sur une suggestion qui remplit le champ et affiche les résultats. | P-14 | R-02 | F-053.a (P-14) : Tendance : rang, nombre de posts et 3 bandes de la palette d'arrivée |
+| F-054 | Ouvrir un résultat de recherche | Tap sur une tuile de la grille. | P-15 | R-02 | — |
+| F-055 | Ouvrir les options | Engrenage du Profil puis panneau sur la moitié gauche de l'écran. | P-17, P-20 | R-02 | — |
+| F-056 | Modifier son profil | Lien « Modifier » puis page avec pseudo (16 max) et description (80 max). | P-17, P-19 | R-02 | — |
+| F-057 | Voir son profil | Pseudo, @, compteurs posts, amis, likes et description. | P-17, P-21 | R-02 | F-057.a (P-21) : Identifiant @ seul, sous le libellé « Compte » |
+| F-058 | Changer sa photo de profil | Photo ronde avec badge puis panneau de choix ; la photo se floute. | P-17, P-18 | R-02 | — |
+| F-059 | Suivre le minuteur de couleur | Cycle en cours sur 10, % de gris, temps restant et 10 segments. | P-17 | R-02 | — |
+| F-060 | Régler la durée du cycle | Petites flèches haut et bas : 1, 2, 3, 5, 10, 15, 20 ou 30 min. | P-17 | R-02 | — |
+| F-061 | Réinitialiser les cycles | Bouton « Réinitialiser » qui rend les couleurs partout. | P-17 | R-02 | — |
+| F-062 | Voir ses posts | Grille de 9 posts floutés avec jours restants. | P-17 | R-02 | — |
+| F-063 | Supprimer son compte | Bouton rouge puis confirmation « Supprimer définitivement » ou « Annuler ». | P-21 | R-02 | — |
+| F-065 | Voir son temps passé | Anneau avec le temps passé et les minutes restantes avant 1 h. | P-22 | R-02 | — |
+| F-066 | Choisir le thème de l'icône | Trois cases Noir, Orange, Rouge. | P-23 | R-02 | — |
+| F-067 | Activer ou désactiver les carrousels de pause | Interrupteur « Carrousels de pause » : désactivé, les carrousels de pause (F-012.a) disparaissent du fil. | P-23 | R-02 | — |
+| F-068 | Choisir où publier | Choix « Publier dans » : Fil d'actualité ou Story, sous la légende. | P-13 | R-02 | — |
+| F-069 | Prendre une photo pour un post | « Ouvrir l'appareil photo » depuis la galerie vide : la photo prise devient la photo du post. | P-12 | R-02 | — |
+
+## Entités
+
+| ID | Entité | Champs visibles | Utilisée par |
+| --- | --- | --- | --- |
+| E-01 | Compte utilisateur | pseudo; identifiant (@); description; photo de profil; nombre de posts; nombre d'amis; nombre de likes reçus | F-001, F-007, F-043, F-056, F-057, F-058, F-063 |
+| E-02 | Connexion | fournisseur (Google, Apple, e-mail); adresse e-mail; code à 6 chiffres; délai avant renvoi (30 s) | F-001, F-003, F-006, F-007, F-008 |
+| E-03 | Post | auteur (pseudo, photo); type (photo, vidéo, carrousel, pause, inspire-expire, premium); légende; nombre de likes; nombre de commentaires; nombre d'enregistrements; nombre de partages; audience; jours restants avant expiration; palette; lien | F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-047, F-048, F-049, F-050, F-051, F-052, F-054, F-062, F-068, F-069 |
+| E-04 | Média | image; durée de la vidéo; rang dans le carrousel; version floutée | F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, F-069 |
+| E-05 | Commentaire | auteur; texte; ancienneté; nombre de likes | F-016, F-017, F-030 |
+| E-06 | Like | cible (post ou commentaire); auteur; date | F-016, F-022 |
+| E-07 | Collection | nom; posts enregistrés | F-018, F-031 |
+| E-08 | Notification | type (like, invitation); auteur; ancienneté; post concerné (miniature) | F-022 |
+| E-09 | Relation d'amitié | compte (pseudo, identifiant, photo); statut (en attente, demandé, ami, refusé) | F-022, F-028, F-034, F-043, F-048 |
+| E-10 | Conversation | contact (pseudo, identifiant, photo); dernier message; heure; lu / non lu | F-019, F-033, F-037, F-038, F-039 |
+| E-11 | Message | expéditeur; texte; photo; message cité; date | F-019, F-038, F-040, F-041, F-042 |
+| E-12 | Story | auteur; images; texte; ancienneté; vue / non vue | F-036, F-051, F-068 |
+| E-13 | Recherche | texte saisi; palette obtenue; suggestions; tendances (rang, nombre de posts) | F-052, F-053 |
+| E-14 | Minuteur de couleur | durée du cycle; début du cycle; cycles écoulés; pourcentage de gris; temps restant | F-024, F-059, F-060, F-061 |
+| E-15 | Temps d'utilisation | durée cumulée | F-015, F-065 |
+| E-16 | Soutien | prix (1,99 €); statut (non soutenu, soutenu) | F-015 |
+| E-17 | Préférences d'interface | thème d'icône (Noir, Orange, Rouge); carrousels de pause (oui/non) | F-002, F-012, F-066, F-067 |
+
+## Décisions
+
+| ID | Sujet | Choix | Raison | Impacte |
+| --- | --- | --- | --- | --- |
+| D-001 | Doublon F-026 / F-035 | F-035 « Ajouter à sa story » fusionnée dans F-026.a ; « Ta story » présélectionne Story. L'ID F-035 est retiré et ne sera pas réutilisé. | Le même écran de création était ouvert par deux entrées : doublon de comportement. | F-026, F-068 |
+| D-002 | Doublon F-012 / F-013 | F-013 « Lire un carrousel de pause » fusionnée dans F-012.a (même geste de carrousel). L'ID F-013 est retiré et ne sera pas réutilisé. | Le carrousel de pause se fait défiler avec le même geste que les autres carrousels. | F-012, F-067 |
+| D-003 | Doublon F-019.a / F-025 | « Envoyer à un ami » envoie le post depuis le panneau (rangée d'amis) au lieu d'ouvrir Messages. | L'option faisait la même chose que l'icône Messages du menu. | F-019 |
+| D-004 | Doublon F-002.b / F-066 | Le changement en direct de l'icône appartient à F-066 ; F-002.b ne décrit que l'aperçu. | Le même changement en direct était décrit dans deux features. | F-002, F-066 |
+| D-005 | Doublon F-015 / F-065 | Le temps restant avant 1 h appartient à F-065 ; F-015 ne couvre que l'offre et l'achat. | Le même affichage avant 1 h était décrit dans deux features. | F-015, F-065 |
+| D-006 | Doublon F-034 / F-043 | F-043 affiche les comptes et leur statut ; F-034 ne couvre que l'envoi de la demande. | La liste des comptes appartient à la recherche ; l'ajout ne couvre que l'envoi. | F-034, F-043 |
+| D-007 | Doublon F-019.b, F-019.c / F-023 | Les messages de confirmation appartiennent à F-023 ; les variantes de partage ne les décrivent plus. Remplacée par D-017. | Les confirmations étaient décrites deux fois. | F-019 |
+| D-008 | Page de F-023 | F-023 est rattachée à P-03 seulement, où le message s'affiche. Remplacée par D-017. | Le message s'affiche sur P-03, pas sur P-06. | — |
+| D-009 | Pages de F-024 | Le grisage couvre toutes les pages sauf la connexion (P-01, P-02). | Le design grise tous les écrans après la connexion. | F-024 |
+| D-010 | Menu sur P-16 | F-025 et F-026 incluent P-16, où le menu est visible. | Le menu du bas est visible sur P-16. | F-025, F-026 |
+| D-011 | Vocabulaire | « Légende » désigne le texte d'un post ; « description » est réservé au profil. | Deux mots désignaient le texte d'un post. | F-020, F-021, F-047, F-056, F-057 |
+| D-012 | Création d'un post | Ajout des écrans P-24, P-25, P-26 (panneaux) et de la feature F-068 « Choisir où publier ». | Demandes faites en commentaire sur l'écran de création. | F-048, F-049, F-050, F-051, F-068 |
+| D-013 | Cas 1 : liker un commentaire | Le like de commentaire reste une variante (F-016.b) de « Liker un contenu ». | Même intention ; seule la donnée change (commentaire au lieu de post). | F-016 |
+| D-014 | Cas 2 : les trois recherches | Les recherches de posts, de discussions et de comptes restent trois features séparées. | Données, écrans et résultats différents. | F-033, F-043, F-052 |
+| D-015 | Cas 3 : répondre à une invitation | F-029 « Refuser une invitation » fusionnée dans F-028.a ; F-028 devient « Répondre à une invitation d'ami ». L'ID F-029 est retiré et ne sera pas réutilisé. | Même invitation, même panneau, deux réponses possibles. | F-028 |
+| D-016 | Cas 4 : navigation et fermeture | Revenir en arrière, le menu du bas et la fermeture des panneaux restent des features. | Ce sont des actions faites par l'utilisateur, visibles page par page. | F-005, F-025, F-027 |
+| D-017 | Cas 5 : messages de confirmation | F-023 retirée : les messages deviennent des états de F-018, F-019 et F-031. L'ID F-023 ne sera pas réutilisé. | Le message n'existe que comme retour d'une autre action. | F-018, F-019, F-031 |
+| D-018 | Cas 6 : explications sur le flou | Les deux textes sont supprimés du design (panneaux Partager et Photo de profil). F-032 retirée, ID non réutilisé. | L'app n'explique nulle part ailleurs le flou ni le charabia. | F-019, F-058 |
+| D-019 | Cas 7 : grisage de la connexion | Les écrans de connexion (P-01, P-02) ne sont pas grisés. | Avant la connexion, aucun minuteur n'est lié à un compte. | F-024 |
+| D-020 | Cas 8 : éléments de maquette | « Recommencer la démo » (F-064) et les images de démo de la photo de profil (F-058.a) sont exclus du registre ; ils restent dans le design pour les tests. IDs non réutilisés. | Ces éléments n'existent que pour la démo. | F-058, F-063 |
+| D-021 | Cas 9 : interrupteurs d'interface | Les posts Inspire / Expire sont toujours présents : leur interrupteur (F-067.a) est supprimé. L'interrupteur des carrousels de pause masque F-012.a quand il est désactivé. | Les posts Inspire / Expire font partie du principe de l'app ; les pauses restent un choix. | F-067, F-012, F-014 |
+| D-022 | Cas 10 : posts spéciaux | Les posts Inspire / Expire (F-014) et Premium (F-015.a) restent à part. | Contenu et comportement propres (animation, achat). | F-014, F-015 |
+| D-023 | Cas 11 : retour depuis les options | Depuis Mon compte, Premium et Interface de l'appli, la flèche retour rouvre le panneau Options. | On revient là d'où l'on vient. | F-005, F-055 |
+| D-024 | Rôles et accès | Deux rôles : R-01 Personne non connectée (P-01, P-02) et R-02 Utilisateur connecté (P-03 à P-26). Le compte @fakescrolling est un contenu système, pas un rôle. Un lien de post ouvert sans connexion mène à P-01. Un seul rôle avant connexion : le backend détecte s'il faut passer à l'inscription. F-002 et F-005 sont à \[R-01, R-02\], leurs variantes à \[R-02\]. Les conditions plus fines (ami, audience, 1 h, soutien, compte ou appareil) restent des questions ouvertes. | Le design ne montre que deux états d'accès, avant et après connexion : aucun badge, écran réservé ni profil d'un autre utilisateur. | F-001, F-002, F-005, F-007, F-019 |
+| D-025 | États vide, chargement et erreur non dessinés | Tous les états non dessinés des 18 features concernées sont dessinés dans le design mobile avant d'écrire les flows : chargement, erreur, vide, échec d'envoi ou de paiement, code faux ou expiré, galerie vide ou accès refusé. Ces features portent design\_a\_mettre\_a\_jour: true jusqu'à ce que le prompt 9 constate que le design correspond. | L'étape 1 de la méthode demande les états vide, chargement et erreur ; les dessiner tous maintenant évite de les découvrir pendant les flows ou les specs. | F-001, F-003, F-007, F-009, F-015, F-017, F-022, F-030, F-037, F-038, F-041, F-044, F-051, F-052, F-056, F-058, F-062, F-063 |
+| D-026 | Emplacement des états dans le design | Chaque état est un artboard statique à part, sous les écrans du design mobile (titre « États vides, chargement et erreur »), nommé par page et feature (ex. « P-02 · F-007 · Code faux »). Les 7 écrans interactifs ne changent pas. | Voir tous les états côte à côte sans toucher aux écrans existants. | F-001, F-003, F-007, F-009, F-015, F-017, F-022, F-030, F-037, F-038, F-041, F-044, F-051, F-052, F-056, F-058, F-062, F-063 |
+| D-027 | Affichage des erreurs | Erreur sur place avec « Réessayer » : message rouge sous le champ pour les formulaires (e-mail, code, profil) ; le contenu envoyé reste affiché, marqué « Non publié » ou « Non envoyé », avec « Réessayer » (commentaire, message, post) ; message sur place avec « Réessayer » pour le paiement et la suppression du compte. Rien de ce qui a été saisi n'est perdu. | Un toast disparaît en 2 s et n'offre pas de reprise ; une feuille plein écran est trop lourde pour un commentaire. | F-001, F-003, F-007, F-009, F-015, F-030, F-041, F-051, F-056, F-058, F-063 |
+| D-028 | Affichage du chargement | Un anneau qui tourne : centré dans une liste qui charge, en bas du fil, et dans le bouton pressé (désactivé pendant ce temps). | Lisible tout de suite et dans le style sobre de l'app, sans nouveau motif par liste. | F-001, F-003, F-009, F-017, F-038, F-051, F-052, F-056 |
+| D-029 | États vides | Un titre court, une phrase grise et un bouton quand une action existe (ex. « Aucun post pour l'instant » + « Créer un post » ; « Aucun résultat » sans bouton). Pas d'illustration. | Indiquer la suite sans ajouter d'icônes au design. | F-017, F-022, F-037, F-038, F-044, F-052, F-062 |
+| D-030 | Commentaire ou message non envoyé | Un commentaire ou un message qui échoue propose seulement « Réessayer » ; pas d'action « Supprimer ». | Même comportement pour les deux, sans nouvelle action à spécifier. | F-030, F-041 |
+| D-031 | Confirmation de publication | Après « Partager dans le fil », l'Accueil affiche le toast « Post publié. » ; après « Partager en story », Messages affiche le toast « Story publiée. ». | Les deux destinations confirment de la même façon. | F-051 |
+| D-032 | Échec de chargement du fil | Si les posts suivants ne se chargent pas, le bas du fil affiche « Les posts suivants n'ont pas pu être chargés. » avec « Réessayer ». | Les flows du fil en ont besoin ; même motif que les autres erreurs. | F-009 |
+| D-033 | Appareil photo depuis la galerie vide | « Ouvrir l'appareil photo », dans l'état galerie vide de P-12, devient la feature F-069 « Prendre une photo pour un post ». Le design reste tel quel. | Le bouton donne une issue à une galerie vide, et aucune feature existante ne prend de photo. | F-044, F-069 |
+| D-034 | Accès aux photos refusé | « Ouvrir les réglages » est un état de F-044 qui ouvre les réglages du téléphone, sans nouvel ID. | C'est la réponse au refus d'autorisation du système, pas une action propre à l'appli. | F-044 |
+| D-035 | Boutons des états vides | « Créer un post » (état vide de P-17) et « Ajouter un ami » (état vide de P-08) sont une seconde entrée vers F-026 et F-034, notée dans leur description ; pas de variante ni de nouvel ID. | Même action, même comportement ; seul l'endroit change. | F-026, F-034, F-037, F-062 |
+| D-036 | États dessinés pour un seul cas | Le chargement et l'erreur de F-001, dessinés pour Google, valent aussi pour Apple (F-001.a). Le paiement annulé, dessiné sur P-22, vaut aussi pour le post Premium de P-03 (F-015.a). Pas de nouvel artboard. | Seul le fournisseur ou l'emplacement change ; le motif est le même (D-027). | F-001, F-015 |
+| D-037 | Conventions de workflow\_claude 1374eff | Le registre importé s'appelle claude\_docs/registry.yaml, nom fixé par la méthode quel que soit le titre de la page. Chaque ID retiré figure dans ids\_retires avec la décision qui l'a retiré. Un ID garde son nombre de chiffres : il n'est jamais complété ni renuméroté. | La méthode fixe le nom du registre (L0-05), et G-02 bloque désormais le build quand un ID cité n'est ni défini ni listé dans ids\_retires. | — |
+| D-038 | Registre dans une Claude Doc | Le registre en vigueur est la Claude Doc « Registre canonique – Fake scrolling » (https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV), importée en claude\_docs/registry.md. L'ancienne page HTML (https://claude.ai/artifact/W2ibtgK7oF536LDXh5AAAV) est archivée et exclue de l'import. | La méthode veut le registre dans une Claude Doc, jamais une page (L0-05) : une Claude Doc se modifie sur place, alors que les tableaux d'une page sont à régénérer à la main à chaque changement. | — |
+
+## IDs retirés
+
+Un ID retiré n'est jamais réutilisé.
+
+| ID | Retiré par |
+| --- | --- |
+| F-013 | D-002 |
+| F-023 | D-017 |
+| F-029 | D-015 |
+| F-032 | D-018 |
+| F-035 | D-001 |
+| F-058.a | D-020 |
+| F-064 | D-020 |
+| F-067.a | D-021 |
+
+## Regroupements effectués
+
+| Feature | Justification |
+| --- | --- |
+| F-002 | Icône de l'appli sur P-01, P-22, P-23 : même donnée (thème), simple affichage ; taille et contexte en variantes. Le changement en direct relève de F-066. |
+| F-005 | Flèches retour sur 8 pages : même geste sans donnée ; « Fermer » (P-12) et « Annuler » (P-19) en variantes car ils abandonnent une saisie. |
+| F-010 | Voir un post sur P-03 et P-16 : même image ; P-16 sans actions en variante. |
+| F-012 | Carrousel de photos et carrousel de pause : même geste de défilement ; la pause (ex-F-013) en variante F-012.a (décision D-002). |
+| F-015 | Post Premium (P-03) et page Premium (P-22) : même achat à 1,99 €, statut partagé ; l'apparition 1 post sur 20 en variante. Le temps restant relève de F-065. |
+| F-016 | Bouton cœur, double tap et like de commentaire : même intention ; double tap (ne retire pas) et commentaire (autre donnée) en variantes. |
+| F-017 | Bulle de P-03 et liste de P-05 : un seul parcours. |
+| F-018 | Signet de P-03 et choix ou retrait sur P-06 : une seule bascule. |
+| F-019 | Flèche de P-03 en base ; les 3 options de P-07 en variantes (envoi à un ami depuis le panneau, copie du lien, autres apps). Les messages de confirmation sont des états (décision D-017). |
+| F-020 | Photo, pseudo et légende : un seul bloc d'auteur ; P-16 (sans photo, sans troncature) en variante. |
+| F-022 | Cloche et pastille (P-03) avec le panneau P-04 (défilement, likes, miniature). |
+| F-024 | Grisage identique sur toutes les pages sauf la connexion (P-01, P-02). |
+| F-025 | Les 4 icônes du menu sur 6 pages ; le bouton + reste à part dans F-026 car il ouvre un parcours de création. |
+| F-026 | Bouton + du menu et rond « Ta story » : même écran de création ; « Ta story » (ex-F-035) en variante F-026.a car elle présélectionne Story (décision D-001). |
+| F-027 | Croix, OK ou tap sur le fond sur 9 panneaux ; P-04 (pas de croix) et P-20 (animation) en variantes. |
+| F-028 | Accepter et Refuser une invitation : même invitation, même panneau ; Refuser (ex-F-029) en variante F-028.a (décision D-015). |
+| F-034 | Bouton + de P-08 et « Ajouter » sur P-11 ; l'affichage des statuts relève de F-043. |
+| F-036 | 3 entrées (rangée P-08, photo de la liste P-08, photo P-09) et le lecteur P-10. |
+| F-048 à F-050 | Chaque ligne de la légende (P-13) et son panneau (P-24, P-25, P-26) forment une seule feature. |
+| F-052 | Saisir sur P-14, puis modifier, parcourir et revenir sur P-15. |
+| F-055 | Engrenage de P-17 et panneau P-20 avec ses 3 entrées. |
+| F-056 | Lien de P-17 et formulaire de P-19. |
+| F-057 | Identité sur P-17 ; l'identifiant affiché sur P-21 en variante. |
+| F-058 | Photo de P-17 et galerie de P-18 (les images de démo sont hors registre, décision D-020). |
+| Même page | Champ + bouton : F-003, F-007, F-030, F-041, F-047. Attente + renvoi : F-008. Vidéo + progression : F-011. Carrousel + points : F-012. Glisser + citation + annuler : F-040. Saisie + résultats + aucun résultat : F-043. Aperçu + position + multiple + Suivant : F-044. Suggestion + tendance : F-053. État + segments : F-059. Allonger + raccourcir : F-060. Supprimer + confirmer + annuler : F-063. Temps passé + restant : F-065. |
+
+## Cas ambigus
+
+Aucun cas en attente : les 11 cas ont été tranchés le 15 novembre 2026 (décisions D-013 à D-023).
