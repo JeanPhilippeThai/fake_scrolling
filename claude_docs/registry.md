@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 16, exported 2026-11-19 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 54, exported 2026-11-19 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -21,22 +21,82 @@ pages:
     nom: Connexion
     plateforme: mobile
     features: [F-001, F-001.a, F-002, F-003, F-004]
+  - id: P-01.a
+    nom: 'Compte tiers : chargement'
+    plateforme: mobile
+    features: [F-001]
+  - id: P-01.b
+    nom: 'Compte tiers : erreur'
+    plateforme: mobile
+    features: [F-001]
+  - id: P-01.c
+    nom: Adresse invalide
+    plateforme: mobile
+    features: [F-003]
+  - id: P-01.d
+    nom: Envoi du code
+    plateforme: mobile
+    features: [F-003]
+  - id: P-01.e
+    nom: 'Envoi du code : erreur'
+    plateforme: mobile
+    features: [F-003]
   - id: P-02
     nom: Code reçu par e-mail
     plateforme: mobile
     features: [F-005, F-006, F-007, F-008]
+  - id: P-02.a
+    nom: Code faux
+    plateforme: mobile
+    features: [F-007]
+  - id: P-02.b
+    nom: Code expiré
+    plateforme: mobile
+    features: [F-007]
   - id: P-03
     nom: Accueil — fil
     plateforme: mobile
     features: [F-009, F-010, F-011, F-012, F-012.a, F-014, F-015.a, F-016, F-016.a, F-017, F-018, F-019, F-020, F-021, F-022, F-024, F-025, F-026]
+  - id: P-03.a
+    nom: 'Fil : chargement'
+    plateforme: mobile
+    features: [F-009]
+  - id: P-03.b
+    nom: 'Fil : erreur de chargement'
+    plateforme: mobile
+    features: [F-009]
+  - id: P-03.c
+    nom: Paiement échoué
+    plateforme: mobile
+    features: [F-015.a]
+  - id: P-03.d
+    nom: Post publié
+    plateforme: mobile
+    features: [F-051]
   - id: P-04
     nom: Accueil — panneau Notifications
     plateforme: mobile
     features: [F-022, F-024, F-027.a, F-028, F-028.a]
+  - id: P-04.a
+    nom: Aucune notification
+    plateforme: mobile
+    features: [F-022]
   - id: P-05
     nom: Accueil — panneau Commentaires
     plateforme: mobile
     features: [F-016.b, F-017, F-024, F-027, F-030]
+  - id: P-05.a
+    nom: 'Commentaires : chargement'
+    plateforme: mobile
+    features: [F-017]
+  - id: P-05.b
+    nom: Aucun commentaire
+    plateforme: mobile
+    features: [F-017]
+  - id: P-05.c
+    nom: Commentaire non publié
+    plateforme: mobile
+    features: [F-030]
   - id: P-06
     nom: Accueil — panneau Enregistrer dans une collection
     plateforme: mobile
@@ -49,10 +109,30 @@ pages:
     nom: Messages — liste des discussions
     plateforme: mobile
     features: [F-024, F-025, F-026, F-026.a, F-033, F-034, F-036, F-037]
+  - id: P-08.a
+    nom: Aucune discussion
+    plateforme: mobile
+    features: [F-037, F-034]
+  - id: P-08.b
+    nom: Story publiée
+    plateforme: mobile
+    features: [F-051]
   - id: P-09
     nom: Messages — conversation
     plateforme: mobile
     features: [F-005, F-024, F-036, F-038, F-039, F-040, F-041, F-042]
+  - id: P-09.a
+    nom: 'Conversation : chargement'
+    plateforme: mobile
+    features: [F-038]
+  - id: P-09.b
+    nom: Aucun message
+    plateforme: mobile
+    features: [F-038]
+  - id: P-09.c
+    nom: Message non envoyé
+    plateforme: mobile
+    features: [F-041]
   - id: P-10
     nom: Messages — lecteur de story
     plateforme: mobile
@@ -65,10 +145,26 @@ pages:
     nom: Nouveau post — choix des photos
     plateforme: mobile
     features: [F-005.a, F-024, F-044, F-045, F-046, F-069]
+  - id: P-12.a
+    nom: Galerie vide
+    plateforme: mobile
+    features: [F-044, F-069]
+  - id: P-12.b
+    nom: Accès aux photos refusé
+    plateforme: mobile
+    features: [F-044]
   - id: P-13
     nom: Nouveau post — légende
     plateforme: mobile
     features: [F-005, F-024, F-047, F-048, F-049, F-050, F-051, F-068]
+  - id: P-13.a
+    nom: Publication en cours
+    plateforme: mobile
+    features: [F-051]
+  - id: P-13.b
+    nom: 'Publication : erreur'
+    plateforme: mobile
+    features: [F-051]
   - id: P-14
     nom: Recherche — suggestions et tendances
     plateforme: mobile
@@ -77,6 +173,14 @@ pages:
     nom: Recherche — résultats
     plateforme: mobile
     features: [F-024, F-025, F-026, F-052, F-054]
+  - id: P-15.a
+    nom: 'Recherche : chargement'
+    plateforme: mobile
+    features: [F-052]
+  - id: P-15.b
+    nom: Aucun résultat
+    plateforme: mobile
+    features: [F-052]
   - id: P-16
     nom: Recherche — post ouvert
     plateforme: mobile
@@ -85,14 +189,30 @@ pages:
     nom: Profil
     plateforme: mobile
     features: [F-024, F-025, F-026, F-055, F-056, F-057, F-058, F-059, F-060, F-061, F-062]
+  - id: P-17.a
+    nom: Aucun post
+    plateforme: mobile
+    features: [F-062, F-026]
   - id: P-18
     nom: Profil — panneau Photo de profil
     plateforme: mobile
     features: [F-024, F-027, F-058]
+  - id: P-18.a
+    nom: 'Photo : erreur de fichier'
+    plateforme: mobile
+    features: [F-058]
   - id: P-19
     nom: Modifier le profil
     plateforme: mobile
     features: [F-005.b, F-024, F-056]
+  - id: P-19.a
+    nom: 'Profil : enregistrement'
+    plateforme: mobile
+    features: [F-056]
+  - id: P-19.b
+    nom: 'Profil : erreur'
+    plateforme: mobile
+    features: [F-056]
   - id: P-20
     nom: Panneau Options
     plateforme: mobile
@@ -101,10 +221,22 @@ pages:
     nom: Mon compte
     plateforme: mobile
     features: [F-005, F-024, F-057.a, F-063]
+  - id: P-21.a
+    nom: Suppression échouée
+    plateforme: mobile
+    features: [F-063]
   - id: P-22
     nom: Premium
     plateforme: mobile
     features: [F-002.a, F-005, F-015, F-024, F-065]
+  - id: P-22.a
+    nom: Paiement échoué
+    plateforme: mobile
+    features: [F-015]
+  - id: P-22.b
+    nom: Paiement annulé
+    plateforme: mobile
+    features: [F-015]
   - id: P-23
     nom: Interface de l'appli
     plateforme: mobile
@@ -129,7 +261,7 @@ features:
   - id: F-001
     nom: Se connecter avec un compte tiers
     description: Bouton qui connecte via un fournisseur externe puis ouvre l'Accueil.
-    pages: [P-01]
+    pages: [P-01, P-01.a, P-01.b]
     plateformes: [mobile]
     acces: [R-01]
     variantes:
@@ -178,7 +310,7 @@ features:
   - id: F-003
     nom: Demander un code par e-mail
     description: Saisie de l'adresse e-mail puis envoi d'un code à 6 chiffres.
-    pages: [P-01]
+    pages: [P-01, P-01.c, P-01.d, P-01.e]
     plateformes: [mobile]
     acces: [R-01]
     variantes: []
@@ -248,7 +380,7 @@ features:
   - id: F-007
     nom: Se connecter avec le code
     description: Saisie du code en 6 cases puis bouton « Se connecter ».
-    pages: [P-02]
+    pages: [P-02, P-02.a, P-02.b]
     plateformes: [mobile]
     acces: [R-01]
     variantes: []
@@ -287,7 +419,7 @@ features:
   - id: F-009
     nom: Faire défiler le fil
     description: Un post plein écran à la fois, par glisser, molette ou clavier ; 8 posts chargés près de la fin.
-    pages: [P-03]
+    pages: [P-03, P-03.a, P-03.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -370,12 +502,12 @@ features:
   - id: F-015
     nom: Soutenir le projet
     description: Offre à 1,99 € en un seul paiement, proposée à partir de 1 h d'utilisation.
-    pages: [P-03, P-22]
+    pages: [P-03, P-22, P-22.a, P-22.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
       - id: F-015.a
-        pages: [P-03]
+        pages: [P-03, P-03.c]
         plateforme: mobile
         difference: Post du fil, 1 sur 20 après 1 h, retiré une fois le soutien donné
     entites: [E-16, E-15]
@@ -415,7 +547,7 @@ features:
   - id: F-017
     nom: Consulter les commentaires
     description: Bulle du post puis panneau listant les commentaires.
-    pages: [P-03, P-05]
+    pages: [P-03, P-05, P-05.a, P-05.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -506,7 +638,7 @@ features:
   - id: F-022
     nom: Consulter ses notifications
     description: Cloche avec pastille puis panneau des invitations et des likes reçus.
-    pages: [P-03, P-04]
+    pages: [P-03, P-04, P-04.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -551,7 +683,7 @@ features:
   - id: F-026
     nom: Ouvrir la création d'un post
     description: Bouton + noir au centre du menu du bas. Aussi depuis « Créer un post » de l'état vide de P-17 (D-035).
-    pages: [P-03, P-08, P-14, P-15, P-16, P-17]
+    pages: [P-03, P-08, P-14, P-15, P-16, P-17, P-17.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -605,7 +737,7 @@ features:
   - id: F-030
     nom: Publier un commentaire
     description: Champ « Ajouter un commentaire… » et bouton « Publier ».
-    pages: [P-05]
+    pages: [P-05, P-05.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -652,7 +784,7 @@ features:
   - id: F-034
     nom: Ajouter un ami
     description: 'Bouton + des Messages puis « Ajouter » sur un compte trouvé : la demande part. Aussi depuis « Ajouter un ami » de l''état vide de P-08 (D-035).'
-    pages: [P-08, P-11]
+    pages: [P-08, P-11, P-08.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -686,7 +818,7 @@ features:
   - id: F-037
     nom: Consulter ses discussions
     description: Liste des discussions avec dernier message et heure ; tap pour ouvrir.
-    pages: [P-08]
+    pages: [P-08, P-08.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -702,7 +834,7 @@ features:
   - id: F-038
     nom: Lire une conversation
     description: Bulles vertes à droite, grises à gauche, photos et saisie du contact.
-    pages: [P-09]
+    pages: [P-09, P-09.a, P-09.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -749,7 +881,7 @@ features:
   - id: F-041
     nom: Envoyer un message
     description: Champ « Message… » et « Envoyer » dans la bulle.
-    pages: [P-09]
+    pages: [P-09, P-09.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -796,7 +928,7 @@ features:
   - id: F-044
     nom: Choisir les photos d'un post
     description: Aperçu carré, grille de photos, sélection multiple jusqu'à 10, « Suivant ».
-    pages: [P-12]
+    pages: [P-12, P-12.a, P-12.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -906,7 +1038,7 @@ features:
   - id: F-051
     nom: Publier le post
     description: Bouton vert « Partager dans le fil » (ouvre l'Accueil) ou « Partager en story » (ouvre Messages).
-    pages: [P-13]
+    pages: [P-13, P-03.d, P-08.b, P-13.a, P-13.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -924,7 +1056,7 @@ features:
   - id: F-052
     nom: Rechercher des posts
     description: Toute saisie donne 18 posts dans l'une des 5 palettes (somme des codes modulo 5).
-    pages: [P-14, P-15]
+    pages: [P-14, P-15, P-15.a, P-15.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -987,7 +1119,7 @@ features:
   - id: F-056
     nom: Modifier son profil
     description: Lien « Modifier » puis page avec pseudo (16 max) et description (80 max).
-    pages: [P-17, P-19]
+    pages: [P-17, P-19, P-19.a, P-19.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1023,7 +1155,7 @@ features:
   - id: F-058
     nom: Changer sa photo de profil
     description: Photo ronde avec badge puis panneau de choix ; la photo se floute.
-    pages: [P-17, P-18]
+    pages: [P-17, P-18, P-18.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1082,7 +1214,7 @@ features:
   - id: F-062
     nom: Voir ses posts
     description: Grille de 9 posts floutés avec jours restants.
-    pages: [P-17]
+    pages: [P-17, P-17.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1097,7 +1229,7 @@ features:
   - id: F-063
     nom: Supprimer son compte
     description: Bouton rouge puis confirmation « Supprimer définitivement » ou « Annuler ».
-    pages: [P-21]
+    pages: [P-21, P-21.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1170,7 +1302,7 @@ features:
   - id: F-069
     nom: Prendre une photo pour un post
     description: '« Ouvrir l''appareil photo » depuis la galerie vide : la photo prise devient la photo du post.'
-    pages: [P-12]
+    pages: [P-12, P-12.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1534,6 +1666,11 @@ decisions:
     choix: 'La Claude Doc du registre ne garde que ses blocs YAML et ses notes (regroupements effectués, cas ambigus). Les tableaux des rôles, pages, features, entités, décisions et IDs retirés sont supprimés ; pour lire le registre en tableau, interroger la base du registre (registry-db).'
     raison: 'Un tableau qui répète le YAML diverge dès le premier changement ; la méthode (workflow_claude 4a29adc) n''en veut aucun dans la doc du registre.'
     impacte: []
+  - id: D-040
+    sujet: États de page dessinés à part
+    choix: 'Chacun des 33 artboards d''état du design (D-025, D-026) est un état de page, P-xx.a, P-xx.b…, lettré dans l''ordre du canvas, juste après sa page dans pages. Un état liste seulement la feature dont il montre l''état, plus celle que lance un bouton propre à l''état (P-08.a : F-034 ; P-12.a : F-069 ; P-17.a : F-026) ; le menu du bas et le reste de l''écran restent sur la page. Les toasts de succès appartiennent à la page qui les affiche (D-031) : P-03.d et P-08.b. Le design n''est pas modifié : l''inventaire des écrans donne l''artboard de chaque état.'
+    raison: 'La méthode (synchro du 2026-11-19) donne un ID à chaque écran dessiné à part (L2-01). Lister le menu sur chaque état le répéterait sur 15 états à tenir à jour ; l''inventaire relie déjà chaque écran à son ID.'
+    impacte: [P-01, P-02, P-03, P-04, P-05, P-08, P-09, P-12, P-13, P-15, P-17, P-18, P-19, P-21, P-22]
 
 ids_retires:
   - {id: F-013, decision: D-002}
