@@ -1,6 +1,6 @@
 # Describe the app
 
-Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 13, taken on 2026-11-17.
+Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 15, taken on 2026-11-19.
 
 Steps 1 to 8 of the pipeline, wide and shallow: from the Claude Design mock-up to a checked registry, flows, entity states and a system design. Read this part before starting an app, and whenever the registry, a flow or a design decision changes. How the code is laid out is in [Code structure](code-structure.md); how the design is checked is in [Verification](verification.md).
 
@@ -352,7 +352,7 @@ How gaps stay visible from then on:
 
 - Prompts 13 and 14 run once every page has been extracted, before step 9. Their findings go through prompt 8, like the registry check.
 - Prompt 14 runs again after each change to the registry, the data model, the data flows or a state model: run it after any of prompts 4, 7, 9, 10, 11 or 12 has changed something.
-- From step 9, the mechanical half of prompts 3 and 14 runs as queries on the registry database, on every pull request (see [Reference](reference.md)). A gap then fails the build the moment it appears. Claude keeps running both prompts for the checks that need judgment.
+- From step 3, as soon as the registry exists, the mechanical half of prompt 3, and of prompt 14 once the contracts exist, runs as queries on the registry database, on every pull request (see [Reference](reference.md)). A gap then fails the build the moment it appears. Claude keeps running both prompts for the checks that need judgment.
 - A page whose contract still holds a MANQUANT blocks step 10 for every feature on it.
 
 ## Pitfalls
@@ -362,4 +362,4 @@ How gaps stay visible from then on:
 | Starting only from pages | Background jobs, expiry and cross-page flows get missed | Run prompt 5 on every flow and job, then map entity states |
 | Merging elements too early | Two things that look alike get fused before their differences show | Extract page by page first (prompt 1); merge only in the registry, one reason per merge |
 | Vague requirements ("fast", "secure") | No one can tell when they are met | A number or a test: "under 300 ms at p95" |
-| Finding a missing column, flow or condition while coding | The gap surfaces late, mid-feature, and the fix ripples back through the design | A contract for every page in step 8 (prompts 13 and 14), checked in CI from step 9 |
+| Finding a missing column, flow or condition while coding | The gap surfaces late, mid-feature, and the fix ripples back through the design | A contract for every page in step 8 (prompts 13 and 14), checked in CI as soon as they exist |

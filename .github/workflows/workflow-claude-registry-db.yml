@@ -1,0 +1,35 @@
+name: Registry database checks
+
+# Copied from JeanPhilippeThai/workflow_claude by its sync: change it there, not here.
+# Builds the registry database from docs/ and claude_docs/ with the shared skill registry-db and runs
+# its checks. A doc that does not parse, or a "Query" check that finds a row in the canonical docs,
+# fails the run. The rows are in the run's summary.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Build the database and run its checks
+        run: |
+          if [ ! -f .claude/skills/registry-db/registry_db.py ]; then
+            echo "No .claude/skills/registry-db in this repo: nothing to check."
+            exit 0
+          fi
+          python3 .claude/skills/registry-db/registry_db.py check --all | tee -a "$GITHUB_STEP_SUMMARY"

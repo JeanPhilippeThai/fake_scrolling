@@ -1,6 +1,6 @@
 # Reference
 
-Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 10, taken on 2026-11-17.
+Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 13, taken on 2026-11-19.
 
 Where each fact lives, how it is named, and how any line of code traces back to it. Every other part relies on these rules: read this one once, then come back to look things up.
 
@@ -94,7 +94,7 @@ Where the IDs go:
 
 - **Registry:** pages and features list each other, features list their entities, and entities list the features that use them. Features also list the roles that may use them. Prompt 3 checks these links both ways.
 - **Data model and data flows:** each table names the entity it stores and the node it lives on; each data flow names the entities it carries and the features that trigger it.
-- **Page contract:** each component names its feature, the columns (`TB`) it reads and writes, the flows (`DF`) that carry them, and the roles, states and flags it depends on. Prompt 14, and the CI check from step 9, verify every one of those links.
+- **Page contract:** each component names its feature, the columns (`TB`) it reads and writes, the flows (`DF`) that carry them, and the roles, states and flags it depends on. Prompt 14, and the CI check, verify every one of those links.
 - **Backlog row:** the task ID, its feature, plus the rules, criteria and decisions it serves (a `Serves` column).
 - **Model rule:** a rule checked in a TLA+ model is named after its business rule, e.g. `BR_007_2` for `BR-007-2`.
 - **Test name:** the criterion or rule it checks, e.g. `it("BR-012-3: refuses an expired coupon")`.
@@ -108,7 +108,7 @@ Two checks follow from this. A rule with no test is not done yet, and neither is
 
 ## Registry database
 
-Every ID above is a primary key and every link is a foreign key. From step 9, a script turns the files into a SQLite database, so links are checked by queries on every pull request and the impact of a change is a query, not a reading exercise. The files stay the source of truth: the database is an index built from them, never a second copy.
+Every ID above is a primary key and every link is a foreign key. From step 3, as soon as the registry exists, a script turns the files into a SQLite database, so links are checked by queries on every pull request and the impact of a change is a query, not a reading exercise. The files stay the source of truth: the database is an index built from them, never a second copy.
 
 | Source | What becomes rows |
 | --- | --- |
@@ -124,8 +124,8 @@ Every ID above is a primary key and every link is a foreign key. From step 9, a 
 Rules:
 
 - Generated, never edited: a change made in the database is lost at the next build. Change the file instead.
-- Rebuilt on every commit, locally and in CI. A file that does not parse, or an ID that breaks its format, fails the build.
-- It lives in `.registry/registry.db`, outside git; the script lives in `tools/registry-db/`.
+- Rebuilt whenever a doc changes: before every query, locally, and in CI on every push. A file that does not parse, or an ID that breaks its format, fails the build.
+- It lives in `.registry/registry.db`, outside git: each app repo builds its own from its own docs. The script is the shared skill `registry-db`, copied into every app with the method at `.claude/skills/registry-db/` and never edited there. It reads the YAML in `docs/` and in the Claude Docs as imported to `claude_docs/`, and its `checks.sql` holds one query per check of the design and docs check, under that check's ID.
 - It holds IDs, links and file paths. The prose (reasons, rule wording), the TLA+ models and the code stay in their files.
 - Claude queries the database to find what is linked to what, then reads the files for what they say.
 - Every link also lands in one view, `links(source, target)`: a change to `source` can affect `target`. Impact is a walk through that view.

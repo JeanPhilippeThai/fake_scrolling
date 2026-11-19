@@ -27,6 +27,12 @@ A current folder in another layout (for example flat `claude_design/*.dc.html`) 
 
 If the diff is too long to read at once, read it by section, one file at a time.
 
+Then get the same change as IDs and links, from the registry database built on each side:
+
+`python3 .claude/skills/registry-db/registry_db.py diff claude_docs newest_claude_docs > "$TMPDIR/registry_diff.txt"`
+
+It lists the IDs added, removed or changed (with the fields that changed) and the links added or removed. Use it as the checklist of the Docs section: every ID in it gets a bullet, and the text diff tells you what the change means. If it fails (no registry on either side, or PyYAML missing), go on with the text diff alone.
+
 ## 2. Write the report
 
 Write for the owner of the app, who wants to know what to change in the code. Explain what changed in meaning, not in markup. Quote the exact new copy, value or rule when it matters.
@@ -45,7 +51,7 @@ Compared on <YYYY-MM-DD>. <One or two sentences: the most important changes.>
 ## Docs
 
 ### <doc title> (`<file>`, rev <old> -> <new>)
-- <rule, screen, field or decision added, removed or changed>
+- <rule, screen, field or decision added, removed or changed, with its ID>
 
 ## Unchanged
 
