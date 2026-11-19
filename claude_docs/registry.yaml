@@ -1497,3 +1497,18 @@ decisions:
     choix: 'Le chargement et l''erreur de F-001, dessinés pour Google, valent aussi pour Apple (F-001.a). Le paiement annulé, dessiné sur P-22, vaut aussi pour le post Premium de P-03 (F-015.a). Pas de nouvel artboard.'
     raison: Seul le fournisseur ou l'emplacement change ; le motif est le même (D-027).
     impacte: [F-001, F-015]
+  - id: D-037
+    sujet: Conventions de workflow_claude 1374eff
+    choix: 'Le registre importé s''appelle claude_docs/registry.yaml, nom fixé par la méthode quel que soit le titre de la page. Chaque ID retiré figure dans ids_retires avec la décision qui l''a retiré. Un ID garde son nombre de chiffres : il n''est jamais complété ni renuméroté.'
+    raison: 'La méthode fixe le nom du registre (L0-05), et G-02 bloque désormais le build quand un ID cité n''est ni défini ni listé dans ids_retires.'
+    impacte: []
+
+ids_retires:
+  - {id: F-013, decision: D-002}
+  - {id: F-023, decision: D-017}
+  - {id: F-029, decision: D-015}
+  - {id: F-032, decision: D-018}
+  - {id: F-035, decision: D-001}
+  - {id: F-058.a, decision: D-020}
+  - {id: F-064, decision: D-020}
+  - {id: F-067.a, decision: D-021}

@@ -19,7 +19,7 @@ Doc test run: `test-design-and-docs-conformity`, output `claude_skills_output/de
 
 ## Next prompts
 1. **Prompt 8: sort the check's findings** (steps 2 to 4). Give it: findings 2 (L2-03), 3 (L3-05), 5 (B3-02) and 8 (T-01) of `claude_skills_output/design_and_docs_check_output.md`, with its questions 2 and 3, plus anything left open by prompt 9. It produces: F-055 naming the three Options lines and E-03 gaining a place field and an identified-people field (class A, applied directly), then decisions for the six "à confirmer" items and for the "refusé" status of E-09.
-2. **Prompt 5: flows** (step 5). Give it: `claude_docs/registre-canonique.yaml` as updated by prompt 9 and item 1; flow FL-01 "Se connecter avec un compte tiers ou un code e-mail" (P-01, P-02, F-001, F-003, F-007, F-008). It produces: the FL-01 section of the flows doc, and the features or pages the registry lacks for it. FL-02 to FL-16 follow, one run each (a proposal; for a background job, ask for its trigger instead of the sequence):
+2. **Prompt 5: flows** (step 5). Give it: `claude_docs/registry.yaml` as updated by prompt 9 and item 1; flow FL-01 "Se connecter avec un compte tiers ou un code e-mail" (P-01, P-02, F-001, F-003, F-007, F-008). It produces: the FL-01 section of the flows doc, and the features or pages the registry lacks for it. FL-02 to FL-16 follow, one run each (a proposal; for a background job, ask for its trigger instead of the sequence):
    - FL-02 Publier un post dans le fil ou en story (P-12, P-13, P-24 à P-26, F-044 à F-051, F-068)
    - FL-03 Réagir à un post : liker, commenter, enregistrer, partager (P-03, P-05 à P-07, F-016 à F-019, F-030, F-031)
    - FL-04 Ajouter un ami, puis accepter ou refuser l'invitation (P-08, P-11, P-04, F-034, F-043, F-028)
