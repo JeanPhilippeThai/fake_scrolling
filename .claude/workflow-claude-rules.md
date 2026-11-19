@@ -5,12 +5,12 @@ Copied from workflow_claude by its sync: change it there, never here. The app's 
 ## Start of a session
 
 1. In the main checkout, run `git pull --ff-only origin main` first (name the branch: a plain `git pull` fails when `main` has no single upstream). Claude Code loads the skills from the checkout a session starts in, so a checkout behind `main` runs old skills.
-2. Then work in your own worktree, never in the main checkout: `git fetch && git worktree add .claude/worktrees/<branch> -b <branch> origin/main`, and work only inside it. Worktree commands may need to run outside the sandbox.
+2. Then work in your own worktree, never in the main checkout: `git fetch && git worktree add .claude/worktrees/<branch> -b <branch> origin/main`, and work only inside it. Worktree commands may need to run outside the sandbox. The app's `.gitignore` lists `.claude/worktrees/`.
 3. `workflow_docs/` and the skills listed in `.claude/skills/.workflow_claude` come from workflow_claude: never edit them here. The method starts at `workflow_docs/method.md`; read only the part the task needs.
 
 ## How to work
 
-- Product choices are the owner's: propose, with your recommendation first, and ask. Everything else: decide, act, and say what you did.
+- Product choices are the owner's: anything that changes what the app is or does (the registry, a decision, the design, a rule of a feature). Propose it with your recommendation first, and ask. Everything else (tooling, file layout, wording of a report, the order of the work): decide, act, and say what you did. This rule wins over any older rule or memory that says to apply your own recommendation without asking.
 - One fact in one place, with its ID; link to it instead of copying it.
 - IDs are never renumbered. An ID is a number: `D-01` and `D-001` are the same ID.
 - Repo, code, commits and pull requests are in English. The docs and the app's copy are in the app's language.
