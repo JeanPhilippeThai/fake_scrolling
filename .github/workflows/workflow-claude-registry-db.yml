@@ -1,9 +1,10 @@
 name: Registry database checks
 
 # Copied from JeanPhilippeThai/workflow_claude by its sync: change it there, not here.
-# Builds the registry database from docs/ and claude_docs/ with the shared skill registry-db and runs
-# its checks. A doc that does not parse, or a "Query" check that finds a row in the canonical docs,
-# fails the run. The rows are in the run's summary.
+# 1. Builds the registry database from docs/ and claude_docs/ with the shared skill registry-db and
+#    runs its checks: a doc that does not parse, or a "Query" check that finds a row in the
+#    canonical docs, fails the run. The rows are in the run's summary.
+# 2. Checks that CLAUDE.md includes the shared rules (.claude/workflow-claude-rules.md).
 on:
   pull_request:
   push:
@@ -35,3 +36,11 @@ jobs:
             exit 0
           fi
           python3 .claude/skills/registry-db/registry_db.py check --all | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: CLAUDE.md includes the shared rules
+        if: always()
+        run: |
+          if ! grep -qx '@.claude/workflow-claude-rules.md' CLAUDE.md; then
+            echo "CLAUDE.md must include the shared rules with this line on its own: @.claude/workflow-claude-rules.md" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
