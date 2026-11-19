@@ -27,6 +27,8 @@ jobs:
         run: pip install pyyaml
 
       - name: Build the database and run its checks
+        # shell: bash adds pipefail, so a failing check fails the step despite the tee.
+        shell: bash
         run: |
           if [ ! -f .claude/skills/registry-db/registry_db.py ]; then
             echo "No .claude/skills/registry-db in this repo: nothing to check."
