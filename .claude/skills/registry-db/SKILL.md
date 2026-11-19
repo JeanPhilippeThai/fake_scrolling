@@ -26,12 +26,12 @@ Every command except `build` and `diff` first rebuilds the database if a doc cha
 | Command | Gives |
 | --- | --- |
 | `build` | Rebuilds, then prints what was read, the IDs per kind, and any problem: a YAML that does not parse, an item without an ID. Exit 1 on a problem |
-| `check [L3-02 …]` | Runs every check of `checks.sql`, or only those named. Prints one line per check (passed, rows, not reached) and then the rows. Exit 1 if a `Query` check finds a row in the canonical docs. Options: `--all` shows every row, `--no-fail` always exits 0 |
+| `check [L3-02 …]` | Runs every check of `checks.sql`, or only those named. Prints one line per check (passed, rows, not reached) and then the rows. Exit 1 if a `Query` check finds a row in the canonical docs. Options: `--all` shows every row, `--no-fail` always exits 0, `--since <git revision>` also compares with the docs at that revision for G-03 |
 | `where ID …` | Where each ID is defined (file and line), what it links to and what links to it, and every line that cites it |
 | `impact ID …` | Everything a change to those IDs can reach through the `links` view, nearest first, with the file and line of each, then the files that cite them |
 | `query "SQL"` | One read-only SQL query, printed as a table |
 | `schema` | The tables and views, with their columns and row counts |
-| `diff BASE HEAD` | IDs added, removed or changed, and links added or removed, between two docs folders, e.g. `claude_docs newest_claude_docs` |
+| `diff BASE HEAD` | IDs added, removed or changed, and links added or removed, between two docs folders, e.g. `claude_docs newest_claude_docs`. Then G-03 with BASE as the previous version: exit 1 when an ID is gone without being retired, 2 on an error |
 
 Start with `schema` before writing a query. An ID is a number: `D-01` and `D-001` are the same ID (`defs.number` holds `D-1`), and `ORDER BY id COLLATE idnum` sorts IDs by number (`D-200` before `D-1000`). The main tables:
 
@@ -49,6 +49,7 @@ Start with `schema` before writing a query. An ID is a number: `D-01` and `D-001
 - A `Query` row is a finding.
 - A `Query, then read` row is a lead to read before it becomes a finding or not.
 - "not reached" means the docs do not hold that layer yet.
+- G-03 compares two versions of the docs: an ID that disappeared must be in `ids_retires` with the decision that retired it, or live on as an alias, since an ID is never reused. It runs with `check --since <git revision>` (the CI passes the base of the pull request, or the commit before the push) and in `diff`; without a previous version it is "not reached". An ID is compared as a number, so `D-1` retires `D-01`.
 - Rows from an archived per-platform registry are shown, but never fail the build: archives are frozen. L3 rows from an archive are not shown at all, because an archive passed L3 before the merge (L4-01).
 
 The checks the How column marks `Read` need judgment and have no query here.

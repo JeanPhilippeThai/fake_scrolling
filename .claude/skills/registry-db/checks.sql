@@ -575,3 +575,20 @@ WHERE m.scope = 'canonical'
            AND EXISTS (SELECT 1 FROM aliases a WHERE a.alias = m.id))
 GROUP BY m.scope, m.id, m.path
 ORDER BY 1, 2, 3;
+
+-- check: G-03
+-- title: No ID disappeared since the previous version of the docs unless ids_retires lists it with the decision that retired it, or it lives on as an alias: an ID is never renumbered or reused
+-- how: Query
+-- severity: Major
+-- needs: previous
+-- `prev` is the previous version (check --since REV, or the base of diff). Compared as numbers: D-01 and D-001 are one ID.
+SELECT p.id, p.kind, p.path AS was_in, p.name,
+  'gone since the previous version: list it in the registry''s ids_retires with the decision that retired it, or bring it back' AS problem
+FROM prev.defs p
+WHERE p.number IS NOT NULL
+  AND p.number NOT IN (SELECT number FROM main.defs WHERE number IS NOT NULL)
+  AND p.number NOT IN (SELECT idnum(id) FROM main.retired
+                       WHERE id IS NOT NULL AND COALESCE(decision, '') != '')
+  AND p.number NOT IN (SELECT idnum(alias) FROM main.aliases WHERE alias IS NOT NULL)
+GROUP BY p.number
+ORDER BY p.id COLLATE idnum;
