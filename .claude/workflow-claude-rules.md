@@ -4,7 +4,7 @@ Copied from workflow_claude by its sync: change it there, never here. The app's 
 
 ## Start of a session
 
-1. In the main checkout, run `git pull --ff-only origin main` first (name the branch: a plain `git pull` fails when `main` has no single upstream). Claude Code loads the skills from the checkout a session starts in, so a checkout behind `main` runs old skills.
+1. In the main checkout, run `git fetch origin main && git merge --ff-only origin/main` first. Not `git pull`: it merges what the last fetch left in `FETCH_HEAD`, which an editor's background fetch can change at the same moment ("Cannot fast-forward to multiple branches"). Claude Code loads the skills from the checkout a session starts in, so a checkout behind `main` runs old skills.
 2. Then work in your own worktree, never in the main checkout: `git fetch && git worktree add .claude/worktrees/<branch> -b <branch> origin/main`, and work only inside it. Worktree commands may need to run outside the sandbox. The app's `.gitignore` lists `.claude/worktrees/`.
 3. `workflow_docs/` and the skills listed in `.claude/skills/.workflow_claude` come from workflow_claude: never edit them here. The method starts at `workflow_docs/method.md`; read only the part the task needs.
 
@@ -31,7 +31,7 @@ The docs are edited in their Claude Doc first (one edit call takes at most 64 op
 
 1. One branch per task. When it is done, without asking: commit the files by name (never `git add -A`), push, `gh pr create`, then `gh pr checks --watch` and `gh pr view --comments`.
 2. Green: `gh pr merge --squash --delete-branch`. Red, or a comment to address: fix it on the branch and check again.
-3. After merging: remove your worktree, delete the merged local branches, and `git pull --ff-only origin main` in the main checkout. Then say it in capitals: `PR #12 MERGED INTO MAIN.`
+3. After merging: remove your worktree, delete the merged local branches, and `git fetch origin main && git merge --ff-only origin/main` in the main checkout. Then say it in capitals: `PR #12 MERGED INTO MAIN.`
 
 ## Messages
 
