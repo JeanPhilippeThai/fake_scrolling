@@ -50,6 +50,7 @@ KINDS = [
     ("data_flow", r"DF-\d{2,}"),
     ("flow", r"FL-\d{2,}"),
     ("component", r"C-[WDM]?\d{2,}-\d{2,}"),
+    ("page_state", r"P-[WDM]?\d{2,}\.[a-z]{1,2}"),
     ("page", r"P-[WDM]?\d{2,}"),
     ("variant", r"F-\d{3,}\.[a-z]{1,2}"),
     ("feature", r"F-\d{3,}"),
@@ -64,7 +65,7 @@ KINDS = [
 KIND_RES = [(k, re.compile(p)) for k, p in KINDS]
 MENTION_RE = re.compile(
     r"(?<![\w-])(?:SM-E-\d{2,}|(?:NFR|BR|AC)-(?:\d{3}|X)-\d+|TB-\d{2,}|DF-\d{2,}|FL-\d{2,}"
-    r"|C-[WDM]?\d{2,}-\d{2,}|P-[WDM]?\d{2,}|F-\d{3,}(?:\.[a-z]{1,2}(?![\w]))?|E-\d{2,}|R-\d{2,}"
+    r"|C-[WDM]?\d{2,}-\d{2,}|P-[WDM]?\d{2,}(?:\.[a-z]{1,2}(?![\w]))?|F-\d{3,}(?:\.[a-z]{1,2}(?![\w]))?|E-\d{2,}|R-\d{2,}"
     r"|D-\d{2,}|N-\d{2,}|Q-\d{2,}|W-\d{2,}|T-\d{3,})(?![\w-])"
 )
 # A format template copied from a prompt is not data. It is a YAML block where a placeholder ID is a
@@ -89,7 +90,7 @@ ARCHIVE_RE = re.compile(r"archiv", re.I)
 # Direction of each link for the impact walk: 1 when a change to `source` can affect `target`,
 # 0 when it is the other way round. Links not listed here (aliases) stay out of the `links` view.
 REL_DIRECTION = {
-    "page_feature": 0, "feature_page": 1, "feature_role": 0, "feature_entity": 0,
+    "page_state": 1, "page_feature": 0, "feature_page": 1, "feature_role": 0, "feature_entity": 0,
     "entity_feature": 1, "variant_feature": 0, "variant_page": 1, "variant_role": 0,
     "decision_cites": 1, "table_entity": 0, "table_store": 0, "column_reference": 0,
     "node_role": 0, "data_flow_source": 0, "data_flow_target": 0, "data_flow_entity": 0,
@@ -439,6 +440,9 @@ class Builder:
                 self.db.execute("INSERT INTO pages VALUES (?,?,?,?,?)", (scope, pid, text(pg.get("nom")), text(pg.get("plateforme")), path))
                 self.ref(scope, pid, "page_feature", pg.get("features"), path)
                 self.alias("page", pid, pg.get("alias"), path)
+                if kind_of(pid) == "page_state":
+                    # A state belongs to its page: a change to the page can reach it.
+                    self.db.execute("INSERT INTO refs VALUES (?,?,?,?,?)", (scope, pid.split(".")[0], "page_state", pid, path))
         for f in self.items(doc, "features", path):
             fid = self.define(scope, f.get("id"), "feature", path, f.get("nom"), {k: v for k, v in f.items() if k != "variantes"})
             if not fid:

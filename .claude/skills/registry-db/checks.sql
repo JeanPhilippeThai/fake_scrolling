@@ -13,12 +13,25 @@
 SELECT path, line, message FROM problems ORDER BY path, line;
 
 -- check: L3-01
--- title: Every ID has its kind's format and is unique
+-- title: Every ID has its kind's format and is unique; every page state's page exists and is on the same platform
 -- how: Query
 -- severity: Major
 -- needs: registry
-SELECT scope, id, 'a ' || expected_kind || ' whose ID reads as a ' || kind AS problem, path, line
-FROM defs WHERE kind != expected_kind AND expected_kind IN ('role','page','feature','variant','entity','decision')
+SELECT scope, id,
+  'a ' || expected_kind || ' whose ID ' || CASE kind WHEN 'unknown' THEN 'has no known format' ELSE 'reads as a ' || kind END AS problem,
+  path, line
+FROM defs
+WHERE kind != expected_kind AND NOT (expected_kind = 'page' AND kind = 'page_state')
+  AND expected_kind IN ('role','page','feature','variant','entity','decision')
+UNION ALL
+SELECT s.scope, s.id,
+  CASE WHEN p.id IS NULL THEN 'a page state whose page ' || substr(s.id, 1, instr(s.id, '.') - 1) || ' is not defined'
+       ELSE 'a page state on ' || COALESCE(s.platform, '(none)') || ' whose page is on ' || COALESCE(p.platform, '(none)') END,
+  s.path, NULL
+FROM pages s
+LEFT JOIN pages p ON p.scope = s.scope AND p.id = substr(s.id, 1, instr(s.id, '.') - 1)
+WHERE instr(s.id, '.') > 0
+  AND (p.id IS NULL OR s.platform IS NOT p.platform)
 UNION ALL
 SELECT scope, id, 'defined ' || COUNT(*) || ' times', GROUP_CONCAT(DISTINCT path), MIN(line)
 FROM defs WHERE expected_kind IN ('role','page','feature','variant','entity','decision')
@@ -26,7 +39,7 @@ GROUP BY scope, id HAVING COUNT(*) > 1
 ORDER BY 1, 2;
 
 -- check: L3-02
--- title: Pages list their features and features list their pages, both ways (a variant counts for its feature)
+-- title: Pages list their features and features list their pages, both ways (a variant counts for its feature; a page state counts as a page of its own)
 -- how: Query
 -- severity: Major
 -- needs: registry
@@ -216,7 +229,7 @@ SELECT m.path, m.line, m.id, 'per-platform ID, not defined in the canonical regi
 FROM mentions m
 WHERE m.scope = 'canonical'
   AND m.path NOT IN (SELECT path FROM sources WHERE content = 'registry')
-  AND m.kind IN ('role','page','feature','variant','entity','decision')
+  AND m.kind IN ('role','page','page_state','feature','variant','entity','decision')
   AND NOT EXISTS (SELECT 1 FROM defs d WHERE d.scope = 'canonical' AND d.id = m.id)
   AND EXISTS (SELECT 1 FROM defs d WHERE d.scope != 'canonical' AND d.id = m.id)
 ORDER BY 1, 2;
@@ -467,7 +480,9 @@ ORDER BY 1;
 -- how: Query
 -- severity: Major
 -- needs:
-SELECT scope, id, 'a ' || expected_kind || ' whose ID reads as a ' || kind AS problem, path, line
+SELECT scope, id,
+  'a ' || expected_kind || ' whose ID ' || CASE kind WHEN 'unknown' THEN 'has no known format' ELSE 'reads as a ' || kind END AS problem,
+  path, line
 FROM defs WHERE kind != expected_kind AND expected_kind NOT IN ('role','page','feature','variant','entity','decision')
 UNION ALL
 SELECT scope, id, 'defined ' || COUNT(*) || ' times', GROUP_CONCAT(DISTINCT path), MIN(line)
@@ -482,8 +497,9 @@ ORDER BY 1, 2;
 -- needs:
 SELECT m.scope, m.id, m.path, GROUP_CONCAT(m.line) AS lines, 'cited, but not defined' AS problem
 FROM mentions m
-WHERE m.kind IN ('role','page','feature','variant','entity','decision','table','node','data_flow','component')
-  AND EXISTS (SELECT 1 FROM defs k WHERE k.scope = m.scope AND k.expected_kind = m.kind)
+WHERE m.kind IN ('role','page','page_state','feature','variant','entity','decision','table','node','data_flow','component')
+  AND EXISTS (SELECT 1 FROM defs k WHERE k.scope = m.scope
+              AND k.expected_kind = CASE m.kind WHEN 'page_state' THEN 'page' ELSE m.kind END)
   AND NOT EXISTS (SELECT 1 FROM defs d WHERE d.scope = m.scope AND d.id = m.id)
   AND NOT (m.path IN (SELECT path FROM sources WHERE content = 'registry')
            AND EXISTS (SELECT 1 FROM aliases a WHERE a.alias = m.id))
