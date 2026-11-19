@@ -14,17 +14,17 @@
 SELECT path, line, message FROM problems ORDER BY path, line;
 
 -- check: L0-05
--- title: The registry is at its fixed path: docs/registry.yaml, or claude_docs/registry.md (or .yaml); each archived per-platform registry is claude_docs/registry-<platform>-archive.md
+-- title: The registry is at its fixed path: docs/registry.yaml, or claude_docs/registry.md, the import of its Claude Doc (never a plain page); each archived per-platform registry is claude_docs/registry-<platform>-archive.md (or .yaml)
 -- how: Query
 -- severity: Major
 -- needs: registry
 -- The column is `registry`, not `scope`: an archive's file name is set by the import, so it fails the build too.
 SELECT DISTINCT path, scope AS registry,
-  CASE scope WHEN 'canonical' THEN 'the registry must be docs/registry.yaml, claude_docs/registry.md or claude_docs/registry.yaml'
+  CASE scope WHEN 'canonical' THEN 'the registry must be docs/registry.yaml, or claude_docs/registry.md imported from a Claude Doc'
        ELSE 'an archived ' || scope || ' registry must be claude_docs/registry-' || scope || '-archive.md (or .yaml)' END AS problem
 FROM sources
 WHERE content = 'registry'
-  AND ((scope = 'canonical' AND path NOT IN ('docs/registry.yaml', 'claude_docs/registry.md', 'claude_docs/registry.yaml'))
+  AND ((scope = 'canonical' AND path NOT IN ('docs/registry.yaml', 'claude_docs/registry.md'))
     OR (scope != 'canonical' AND path NOT IN ('claude_docs/registry-' || scope || '-archive.md',
                                               'claude_docs/registry-' || scope || '-archive.yaml')))
 ORDER BY 1;

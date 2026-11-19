@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 41).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 42).
 For now the Claude Doc is the source of truth and this file is a copy of it.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the Claude Design screens down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -68,7 +68,7 @@ Run the layers in this order. Each check has an ID; cite it in every finding. In
 | L0-02 | Every document follows the method's current format, for example the multi-platform registry with platforms, variant pages, entity fields, roles and access | Read | Major |
 | L0-03 | Mode B: the database was built from the same commit as the documents | Query | Blocking |
 | L0-04 | Mode B: every document the database reads parses, and every item in it has an ID | Query | Blocking |
-| L0-05 | The registry is at its fixed path: docs/registry.yaml, or claude_docs/registry.md (or .yaml) when it lives in a Claude Doc; each archived per-platform registry is claude_docs/registry-<platform>-archive.md | Query | Major |
+| L0-05 | The registry is at its fixed path: docs/registry.yaml in the repo, or claude_docs/registry.md, the import of its Claude Doc (never a plain page); each archived per-platform registry is claude_docs/registry-<platform>-archive.md (or .yaml) | Query | Major |
 
 ### L1 · Claude Design
 
