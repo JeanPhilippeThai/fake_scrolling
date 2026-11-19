@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-17 (revision 25).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 29).
 For now the Claude Doc is the source of truth and this file is a copy of it.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the Claude Design screens down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -27,7 +27,7 @@ Read the method doc first, "Building apps with Claude: the method" ([method.md](
 
 **Mode A, documents only.** Before any check, build your own index: every ID in every document, with its kind and the file it is defined in. Then run the checks by reading.
 
-**Mode B, documents and the registry database.** First make sure the database matches the documents: it must have been built from the same commit. If you cannot tell, rebuild it with `tools/registry-db/`, or fall back to mode A and say so in the report. Then list its tables and views before writing any query: the queries in this doc are sketches, and the real names come from the project's script. Run every check marked DB as a query first; each row returned is a finding. Read the files only for the checks that need judgment, and to quote evidence. If the database and a file disagree, the database is stale: report it.
+**Mode B, documents and the registry database.** The default whenever the app has the shared skill `registry-db`. Run `python3 .claude/skills/registry-db/registry_db.py check --all --no-fail`: it rebuilds the database when a document changed, so it always matches the documents, then runs every check that has a query in its `checks.sql`, under the check's ID. A row of a Query check is a finding; a row of a "Query, then read" check is a lead to read first. Use `where`, `impact` and `query` from the same script to find what to read for the other checks, and `schema` before writing a query of your own: the queries in this doc are sketches. If the script is missing or fails, fall back to mode A and say so in the report. Read the files only for the checks that need judgment, and to quote evidence. If the database and a file disagree, the script misread the file: report it.
 
 ### Rules for the checker
 
@@ -67,6 +67,7 @@ Run the layers in this order. Each check has an ID; cite it in every finding. In
 | L0-01 | Every input the project's current step requires exists | Read | Blocking |
 | L0-02 | Every document follows the method's current format, for example the multi-platform registry with platforms, variant pages, entity fields, roles and access | Read | Major |
 | L0-03 | Mode B: the database was built from the same commit as the documents | Query | Blocking |
+| L0-04 | Mode B: every document the database reads parses, and every item in it has an ID | Query | Blocking |
 
 ### L1 · Claude Design
 
@@ -109,7 +110,7 @@ Run this layer on each per-platform registry, then once more on the canonical re
 
 ### L4 · Canonical registry: the platform merge (prompt 10)
 
-Only when the app has more than one version (web and mobile, desktop and mobile, or more). The canonical registry must hold everything every per-platform registry held, under one set of IDs, with nothing lost and nothing invented. In mode B, load the archived per-platform registries into the database if the script supports it; otherwise read them side by side with the canonical one.
+Only when the app has more than one version (web and mobile, desktop and mobile, or more). The canonical registry must hold everything every per-platform registry held, under one set of IDs, with nothing lost and nothing invented. In mode B, the script loads every archived per-platform registry (named with "archive" and its platform) next to the canonical one, so the alias checks are queries; otherwise read them side by side with the canonical one.
 
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
@@ -321,7 +322,7 @@ Only when the app has more than one version.
 
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
-| B4-01 | Every canonical page, feature, variant, entity, role and decision has an alias in at least one per-platform registry, or a decision created it after the merge | Query | Blocking |
+| B4-01 | Every canonical page, feature, variant, entity, role and decision has an alias in at least one per-platform registry, or a decision created it after the merge | Query, then read | Blocking |
 | B4-02 | Every platform a feature lists is backed by a page of that platform in its per-platform registry | Query | Major |
 | B4-03 | Every variant states a real difference between platforms or pages in `difference` | Read | Minor |
 
@@ -356,7 +357,7 @@ Layer checks look at one document at a time. These follow a chain from end to en
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
 | G-01 | Every ID is unique across all documents, and its prefix belongs to one kind of item only | Query | Major |
-| G-02 | Every ID cited anywhere exists | Query | Major |
+| G-02 | Every ID cited anywhere exists | Query, then read | Major |
 | G-03 | No ID was renumbered or reused: compare with the last check report or the documents' git history; an ID that disappeared is explained by a decision | Read | Major |
 | G-04 | One source of truth: a fact found in two places with different values is a finding, and the precedence order says which is probably wrong | Read | Major |
 | G-05 | Mode B: every query in the method's "Checks that run on every pull request" returns no rows, except those that read the code scan | Query | Major |

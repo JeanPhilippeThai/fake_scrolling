@@ -1,6 +1,6 @@
 # Code structure
 
-Part of [the method](../method.md). Snapshot of the "Code structure" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 13, taken on 2026-11-17.
+Part of [the method](../method.md). Snapshot of the "Code structure" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 15, taken on 2026-11-19.
 
 How the code is laid out (decided in step 8) and the rules every agent follows when it writes code. Read this part before touching code.
 
@@ -33,7 +33,7 @@ flowchart TB
 | `shared/` | Types that cross a boundary, including the API contracts between client and server, and nothing else | Nothing |
 | `tools/app/` | The app command that drives the real app for runtime verification. Never shipped | `shared/`. Nothing in `src/` imports it |
 | `verify/lean/` | Lean reference versions and their proofs, only where a decision asks for one. Never shipped | Nothing. Nothing in `src/` imports it |
-| `tools/registry-db/` | The script that builds the registry database from the docs and runs its checks. Never shipped | Nothing. Nothing in src/ imports it |
+| `.claude/skills/registry-db/` | The shared skill that builds the registry database from the docs and runs its checks, copied into every app with the method and never edited there. Never shipped | Nothing. Nothing in src/ imports it |
 
 A feature's spec lives in `docs/features/F-012-apply-coupon.md`, where both its UI folder and its server folder can point to it.
 
