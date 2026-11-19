@@ -1,6 +1,7 @@
 {
  "url": "https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT",
- "synced": "2026-11-19T14:25:45+00:00",
+ "format": 2,
+ "synced": "2026-11-19T14:50:23+00:00",
  "files": {
   "project/Chat.dc.html": "ae709f0b59aa3c99621e73f1884a31a8ea671b2bff9118ac7448bfeb7a2e3267",
   "project/Code.dc.html": "9f1091e023fa3fb8c422281ee39421bafb5547210bbb29c640514489cd1ec0a5",
@@ -42,7 +43,6 @@
   "project/Main.dc.html": "72909e957e981102dad7babecb4f83705b29a198acff4b24ed5cd96bab2ed3f7",
   "project/Profile.dc.html": "301314cd8944646b3d275536a719c2c287ad5959100e2e022aa56de7c45f525f",
   "project/Search.dc.html": "a3ea52b6d9f7cb46a71ae6f2db1ad771c9fcfe029c32a3acebadc2beae3c6dc8",
-  "project/canvas.json": "5fc339eac7a78f87cd7d6a289803c302eb46e3a4793749ebd8b6837738a58205",
-  "project/support.js": "c4929939a4fa0ff409afd395a75cd87a7a7412d26bf4cf34d7292a94c05ea482"
+  "project/canvas.json": "5fc339eac7a78f87cd7d6a289803c302eb46e3a4793749ebd8b6837738a58205"
  }
 }
