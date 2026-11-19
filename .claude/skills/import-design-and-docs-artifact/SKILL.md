@@ -51,6 +51,8 @@ An artifact belongs to the app when its title contains the app name, ignoring ca
 A doc that names several apps belongs to each of them.
 A match in the third list that is in neither of the first two is a page: a plain HTML artifact, imported in step 5.
 Leave out every artifact listed in `./.claude/import-exclude.txt`, if that file exists: one artifact URL per line, a `#` starts a comment that says why. It lives outside `claude_docs/` so that a promotion never removes it, and it is the app's own file: the sync never touches it. To stop importing a doc for good, add its URL there.
+
+A left-out artifact whose copy is already in `./claude_docs/` (find it by its URL in `claude_docs/INDEX.md` or in a file's source line) keeps that copy: copy its file or folder unchanged into `./newest_claude_docs/` at the same path, and keep its line in the new `INDEX.md`, so that the promotion keeps it frozen. A frozen archive the owner renamed on claude.ai stays in the repo this way. Only a line written `drop <URL>` leaves the copy out too, so that the next promotion removes it from the repo.
 Show the user the three lists you matched, and the artifacts left out by the exclusion list, in one short block, and go on.
 Ask only if nothing matches, or if the name matches artifacts that look like other apps.
 
@@ -115,5 +117,5 @@ Then stamp the docs as claude.ai holds them: `python3 .claude/skills/publish-cla
 
 ## 7. Report
 
-End with: the canvases, docs and pages imported (one line each), the artifacts left out by `.claude/import-exclude.txt`, the tabs skipped, the command to open the design, and anything that failed (a tab that would not export, an asset that would not download).
+End with: the canvases, docs and pages imported (one line each), the artifacts left out by `.claude/import-exclude.txt` (and which of their copies were kept as they were), the tabs skipped, the command to open the design, and anything that failed (a tab that would not export, an asset that would not download).
 Do not commit: the user decides whether these folders are tracked.
