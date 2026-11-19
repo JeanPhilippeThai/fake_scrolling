@@ -104,7 +104,9 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);
 CREATE TABLE sources(path TEXT, part TEXT, content TEXT, scope TEXT, note TEXT);
 CREATE TABLE defs(scope TEXT, id TEXT, kind TEXT, expected_kind TEXT, path TEXT, line INT, name TEXT, data TEXT);
 CREATE TABLE refs(scope TEXT, source TEXT, rel TEXT, target TEXT, path TEXT);
-CREATE TABLE aliases(kind TEXT, id TEXT, platform TEXT, alias TEXT, path TEXT);
+CREATE TABLE aliases(kind TEXT, id TEXT, platform TEXT, alias TEXT, path TEXT, partial INT DEFAULT 0, retired INT DEFAULT 0);
+CREATE TABLE alias_decisions(scope TEXT, id TEXT, decision TEXT, path TEXT);
+CREATE TABLE retired(scope TEXT, id TEXT, decision TEXT, path TEXT);
 CREATE TABLE roles(scope TEXT, id TEXT, name TEXT, reach TEXT, path TEXT);
 CREATE TABLE pages(scope TEXT, id TEXT, name TEXT, platform TEXT, path TEXT);
 CREATE TABLE features(scope TEXT, id TEXT, name TEXT, operations TEXT, path TEXT);
@@ -123,7 +125,7 @@ CREATE TABLE components(id TEXT, page TEXT, accessible_name TEXT, type TEXT, fea
 CREATE TABLE component_columns(component TEXT, column_ref TEXT, mode TEXT);
 CREATE TABLE component_conditions(component TEXT, mode TEXT, condition TEXT);
 CREATE TABLE missing(path TEXT, line INT, text TEXT);
-CREATE TABLE mentions(scope TEXT, id TEXT, kind TEXT, path TEXT, line INT);
+CREATE TABLE mentions(scope TEXT, id TEXT, kind TEXT, path TEXT, line INT, written TEXT);
 CREATE TABLE problems(path TEXT, line INT, message TEXT);
 CREATE TABLE rel_direction(rel TEXT PRIMARY KEY, forward INT);
 CREATE VIEW ids AS SELECT scope, id, kind, MIN(path) AS path, MIN(line) AS line, MIN(name) AS name
@@ -163,6 +165,17 @@ def text(v):
     return str(v)
 
 
+def cited_ids(line):
+    """The IDs a text cites. An ID followed by "…" or "..." is a format example (D-01…), not a citation."""
+    out = []
+    for m in MENTION_RE.finditer(line):
+        rest = line[m.end():m.end() + 3]
+        if rest.startswith("…") or rest.startswith("..."):
+            continue
+        out.append(m.group(0))
+    return out
+
+
 def ids_in(v):
     """Every ID cited in a value, however nested: a list, a dict or free text."""
     out = []
@@ -173,7 +186,7 @@ def ids_in(v):
         for x in v:
             out += ids_in(x)
     elif v is not None:
-        out += MENTION_RE.findall(str(v))
+        out += cited_ids(str(v))
     return out
 
 
@@ -274,17 +287,23 @@ class Builder:
             for tid in ([str(t).strip()] if single else ids_in(t)):
                 self.db.execute("INSERT INTO refs VALUES (?,?,?,?,?)", (scope, source, rel, tid, path))
 
-    def alias(self, kind, id_, value, path):
-        if value is None or value == {} or value == "":
-            return
-        if isinstance(value, dict):
-            for platform, old in value.items():
-                for o in as_list(old):
-                    self.db.execute("INSERT INTO aliases VALUES (?,?,?,?,?)", (kind, id_, str(platform), str(o), path))
-        else:
-            platform = None
-            for o in as_list(value):
-                self.db.execute("INSERT INTO aliases VALUES (?,?,?,?,?)", (kind, id_, platform, str(o), path))
+    def alias(self, kind, id_, item, scope, path, retired=0):
+        """An item's old IDs: `alias`, `alias_partiel` (a split, prompt 10) and `alias_decision` (a merge)."""
+        def pairs(value):
+            if value is None or value == {} or value == "":
+                return []
+            if isinstance(value, dict):
+                return [(str(pl), str(o)) for pl, old in value.items() for o in as_list(old)]
+            return [(None, str(o)) for o in as_list(value)]
+        for platform, old in pairs(item.get("alias")):
+            self.db.execute("INSERT INTO aliases VALUES (?,?,?,?,?,0,?)", (kind, id_, platform, old, path, retired))
+        for platform, old in pairs(item.get("alias_partiel")):
+            hit = self.db.execute("UPDATE aliases SET partial = 1 WHERE id = ? AND alias = ? AND platform IS ?",
+                                  (id_, old, platform)).rowcount
+            if not hit:
+                self.db.execute("INSERT INTO aliases VALUES (?,?,?,?,?,1,?)", (kind, id_, platform, old, path, retired))
+        for dec in as_list(item.get("alias_decision")):
+            self.db.execute("INSERT INTO alias_decisions VALUES (?,?,?,?)", (scope, id_, text(dec), path))
 
     # -- reading the docs ---------------------------------------------------------------------
     def build(self):
@@ -352,11 +371,27 @@ class Builder:
                     canonical_registries.append(path)
             elif doc is not None:
                 self.problem(path, "the YAML is not a mapping of sections (roles, pages, features, …)")
+        # Every ID cited, once every alias is known. A live doc named after one platform (a screen
+        # inventory) numbers pages per platform: its P-17 is read through that platform's page aliases.
+        page_alias = {}
+        for cid, platform, old in self.db.execute(
+                "SELECT a.id, COALESCE(a.platform, p.platform), a.alias FROM aliases a "
+                "LEFT JOIN pages p ON p.scope = 'canonical' AND p.id = a.id WHERE a.kind = 'page' AND a.retired = 0").fetchall():
+            page_alias.setdefault((platform, old), cid)
+        for p, path, raw, lines, doc, skip in parsed:
+            scope = self.file_scope[path]
+            words = platform_words(Path(path).name)
+            platform = words[0] if multi and scope == CANONICAL and len(words) == 1 else None
             for n, line in enumerate(lines, 1):
                 if n in skip:
                     continue
-                for m in MENTION_RE.findall(line):
-                    self.db.execute("INSERT INTO mentions VALUES (?,?,?,?,?)", (scope, m, kind_of(m), path, n))
+                for m in cited_ids(line):
+                    mid = m
+                    if platform and kind_of(m) in ("page", "page_state"):
+                        base, _, letter = m.partition(".")
+                        if (platform, base) in page_alias:
+                            mid = page_alias[(platform, base)] + ("." + letter if letter else "")
+                    self.db.execute("INSERT INTO mentions VALUES (?,?,?,?,?,?)", (scope, mid, kind_of(mid), path, n, m))
         if len(canonical_registries) > 1:
             self.problem(", ".join(canonical_registries),
                          "more than one canonical registry: archive the per-platform ones (name them with 'archive' and their platform)")
@@ -396,13 +431,11 @@ class Builder:
                 return str(plats.pop())
             self.problem(path, "archived registry whose platform is unclear: put web, desktop or mobile in its file name")
             return "unknown"
-        if multi and len(words) == 1:
-            return words[0]
         return CANONICAL
 
     def load(self, doc, path, scope):
         sections = []
-        if any(k in doc for k in ("roles", "pages", "features", "entites", "decisions")):
+        if any(k in doc for k in ("roles", "pages", "features", "entites", "decisions", "ids_retires")):
             self.load_registry(doc, path, scope)
             sections.append("registry")
         if "tables" in doc:
@@ -433,13 +466,13 @@ class Builder:
             rid = self.define(scope, r.get("id"), "role", path, r.get("nom"), r)
             if rid:
                 self.db.execute("INSERT INTO roles VALUES (?,?,?,?,?)", (scope, rid, text(r.get("nom")), text(r.get("portee")), path))
-                self.alias("role", rid, r.get("alias"), path)
+                self.alias("role", rid, r, scope, path)
         for pg in self.items(doc, "pages", path):
             pid = self.define(scope, pg.get("id"), "page", path, pg.get("nom"), pg)
             if pid:
                 self.db.execute("INSERT INTO pages VALUES (?,?,?,?,?)", (scope, pid, text(pg.get("nom")), text(pg.get("plateforme")), path))
                 self.ref(scope, pid, "page_feature", pg.get("features"), path)
-                self.alias("page", pid, pg.get("alias"), path)
+                self.alias("page", pid, pg, scope, path)
                 if kind_of(pid) == "page_state":
                     # A state belongs to its page: a change to the page can reach it.
                     self.db.execute("INSERT INTO refs VALUES (?,?,?,?,?)", (scope, pid.split(".")[0], "page_state", pid, path))
@@ -453,7 +486,7 @@ class Builder:
             self.ref(scope, fid, "feature_page", f.get("pages"), path)
             self.ref(scope, fid, "feature_role", f.get("acces"), path)
             self.ref(scope, fid, "feature_entity", f.get("entites"), path)
-            self.alias("feature", fid, f.get("alias"), path)
+            self.alias("feature", fid, f, scope, path)
             for v in as_list(f.get("variantes")):
                 if not isinstance(v, dict):
                     self.problem(path, f"a variant of {fid} is not a mapping: {text(v)[:120]}")
@@ -468,7 +501,7 @@ class Builder:
                 self.db.execute("INSERT INTO refs VALUES (?,?,?,?,?)", (scope, vid, "variant_feature", fid, path))
                 self.ref(scope, vid, "variant_page", v.get("pages"), path)
                 self.ref(scope, vid, "variant_role", v.get("acces"), path)
-                self.alias("variant", vid, v.get("alias"), path)
+                self.alias("variant", vid, v, scope, path)
         for e in self.items(doc, "entites", path):
             eid = self.define(scope, e.get("id"), "entity", path, e.get("nom"), e)
             if not eid:
@@ -477,16 +510,23 @@ class Builder:
             for fld in as_list(e.get("champs", e.get("champs_visibles"))):
                 self.db.execute("INSERT INTO entity_fields VALUES (?,?,?)", (scope, eid, text(fld)))
             self.ref(scope, eid, "entity_feature", e.get("utilisee_par"), path)
-            self.alias("entity", eid, e.get("alias"), path)
+            self.alias("entity", eid, e, scope, path)
         for d in self.items(doc, "decisions", path):
             did = self.define(scope, d.get("id"), "decision", path, d.get("sujet"), d)
             if not did:
                 continue
             self.db.execute("INSERT INTO decisions VALUES (?,?,?,?,?,?)",
                             (scope, did, text(d.get("sujet")), text(d.get("choix")), text(d.get("raison")), path))
-            for key in ("impacte", "impacts", "features"):
-                self.ref(scope, did, "decision_cites", d.get(key), path)
-            self.alias("decision", did, d.get("alias"), path)
+            cited = ids_in({k: v for k, v in d.items() if k not in ("id", "alias", "alias_partiel")})
+            self.ref(scope, did, "decision_cites", sorted(set(cited) - {did}), path)
+            self.alias("decision", did, d, scope, path)
+        for r in self.items(doc, "ids_retires", path):
+            rid = text(r.get("id"))
+            if not rid:
+                self.problem(path, f"an entry of ids_retires has no id: {text(r)[:120]}")
+                continue
+            self.db.execute("INSERT INTO retired VALUES (?,?,?,?)", (scope, rid, text(r.get("decision")), path))
+            self.alias(kind_of(rid) or "unknown", rid, r, scope, path, retired=1)
 
     def load_data_model(self, doc, path):
         s = CANONICAL
@@ -660,6 +700,9 @@ def run_checks(con, wanted=None):
         except sqlite3.Error as e:
             results.append((c, "error", str(e), []))
             continue
+        if c["id"].startswith("L3-"):
+            # An archived registry passed L3 before the merge, by the rules then (L4-01): L3 is canonical only.
+            rows = [r for r in rows if not gates_not(r)]
         results.append((c, "findings" if rows else "passed", None, rows))
     return results
 

@@ -1,6 +1,6 @@
 # Describe the app
 
-Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 15, taken on 2026-11-19.
+Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 18, taken on 2026-11-19.
 
 Steps 1 to 8 of the pipeline, wide and shallow: from the Claude Design mock-up to a checked registry, flows, entity states and a system design. Read this part before starting an app, and whenever the registry, a flow or a design decision changes. How the code is laid out is in [Code structure](code-structure.md); how the design is checked is in [Verification](verification.md).
 
@@ -69,7 +69,7 @@ Règles de regroupement :
 - Même intention + mêmes données + même comportement = une seule feature F-xxx.
 - Même intention mais comportement ou données différents = variante F-xxx.a, F-xxx.b.
 - Les liens vont dans les deux sens : une page liste ses features ET chaque feature liste ses pages.
-- Les IDs sont définitifs : ne jamais renuméroter.
+- Les IDs sont définitifs : ne jamais renuméroter. Un ID retiré va dans une section `ids_retires` à la fin du YAML, avec la décision qui le retire (`- {id: F-009.a, decision: D-07}`) : il n'est jamais réutilisé.
 - `plateforme` et `plateformes` indiquent la plateforme de ce design : web, desktop ou mobile (iOS et Android partagent le design mobile). Un design par plateforme = un registre par plateforme, fusionnés ensuite avec le prompt 10.
 
 Règles d'accès :
@@ -101,7 +101,7 @@ Liste les incohérences trouvées. Je te dirai lesquelles corriger.
 ```text
 Voici mes décisions sur les cas ambigus : [tes choix].
 Applique-les au registre, puis renvoie le YAML complet mis à jour.
-Ajoute chaque décision dans la section `decisions` avec : id (D-01…), sujet, choix, raison.
+Ajoute chaque décision dans la section `decisions` avec : id (D-xx), sujet, choix, raison.
 ```
 
 **Prompt 5: flows** (reuse for each flow)
@@ -205,6 +205,10 @@ Règles :
 - Un seul modèle d'entités. Si les champs diffèrent entre les deux registres, prends l'union et signale l'écart.
 - Un seul jeu de rôles : le même rôle sous deux noms garde un seul ID, avec ses alias. Si l'accès à une feature diffère d'une plateforme à l'autre, signale-le dans les contradictions.
 - Reprends toutes les décisions déjà prises des deux côtés, avec leur alias.
+- Quand un registre découpe en plusieurs features ce que l'autre décrit en une, garde le découpage le plus fin. L'ancien ID figure dans `alias` de chaque morceau, et aussi dans `alias_partiel` de chaque morceau qui n'en reprend qu'une partie : `alias_partiel: {desktop: [F-020]}`. Le morceau qui garde l'essentiel de l'ancien ID peut l'avoir en `alias` seul.
+- Quand une décision réunit plusieurs anciens ID d'une même plateforme en un seul élément, cite-la : `alias_decision: D-055`.
+- Une variante absorbée par sa feature garde son ancien ID dans l'`alias` de cette feature.
+- Un ancien ID retiré pendant la fusion va dans `ids_retires`, avec son alias et la décision : `- {id: F-004.a, alias: {desktop: F-003.a}, decision: D-066}`.
 - Fusionne les questions ouvertes qui portent sur le même sujet.
 
 Après le YAML, ajoute :

@@ -1,6 +1,6 @@
 # Reference
 
-Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 14, taken on 2026-11-19.
+Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 15, taken on 2026-11-19.
 
 Where each fact lives, how it is named, and how any line of code traces back to it. Every other part relies on these rules: read this one once, then come back to look things up.
 
@@ -47,7 +47,7 @@ Progress is the one fact that is never copied. It lives only in the backlog `Sta
 
 ## IDs
 
-Every item someone may need to point at gets a short, stable ID. An ID is never reused or renumbered, even when its item is deleted: old links must not point at something else.
+Every item someone may need to point at gets a short, stable ID. An ID is never reused or renumbered, even when its item is deleted: old links must not point at something else. A deleted item's ID goes in the registry's ids_retires section, with the decision that retired it.
 
 | What | Format | Example | Defined in |
 | --- | --- | --- | --- |
