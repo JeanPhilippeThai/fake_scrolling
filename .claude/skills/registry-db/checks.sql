@@ -266,6 +266,7 @@ SELECT m.path, m.line, m.id, 'per-platform ID, not defined in the canonical regi
 FROM mentions m
 WHERE m.scope = 'canonical'
   AND m.path NOT IN (SELECT path FROM sources WHERE content = 'registry')
+  AND m.path NOT IN (SELECT path FROM docs WHERE archived = 1)
   AND m.kind IN ('role','page','page_state','feature','variant','entity','decision')
   AND NOT EXISTS (SELECT 1 FROM defs d WHERE d.scope = 'canonical' AND d.id = m.id)
   AND EXISTS (SELECT 1 FROM defs d WHERE d.scope != 'canonical' AND d.id = m.id)
@@ -532,17 +533,20 @@ GROUP BY scope, id HAVING COUNT(*) > 1
 ORDER BY 1, 2;
 
 -- check: G-02
--- title: Every ID cited anywhere exists or is in ids_retires (for the kinds the database reads: P, F, E, R, D, TB, N, DF, C); an ID followed by … is an example
+-- title: Every ID cited anywhere exists or is in ids_retires (for the kinds the database reads: P, F, E, R, D, TB, N, DF, C); an ID followed by … is an example; a range cites every ID in it; archives are not checked
 -- how: Query, then read
 -- severity: Major
 -- needs:
 SELECT m.scope, m.id, m.path, GROUP_CONCAT(m.line) AS lines, 'cited, but not defined' AS problem
 FROM mentions m
-WHERE m.kind IN ('role','page','page_state','feature','variant','entity','decision','table','node','data_flow','component')
+WHERE m.scope = 'canonical'
+  AND m.path NOT IN (SELECT path FROM docs WHERE archived = 1)
+  AND m.kind IN ('role','page','page_state','feature','variant','entity','decision','table','node','data_flow','component')
   AND EXISTS (SELECT 1 FROM defs k WHERE k.scope = m.scope
               AND k.expected_kind = CASE m.kind WHEN 'page_state' THEN 'page' ELSE m.kind END)
   AND NOT EXISTS (SELECT 1 FROM defs d WHERE d.scope = m.scope AND d.id = m.id)
   AND NOT EXISTS (SELECT 1 FROM retired r WHERE r.scope = m.scope AND r.id = m.id)
+  AND NOT EXISTS (SELECT 1 FROM aliases a WHERE a.retired = 1 AND a.id IS NULL AND a.alias = m.id)
   AND NOT (m.path IN (SELECT path FROM sources WHERE content = 'registry')
            AND EXISTS (SELECT 1 FROM aliases a WHERE a.alias = m.id))
 GROUP BY m.scope, m.id, m.path
