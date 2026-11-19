@@ -73,7 +73,7 @@ For each matched Design artifact, `<canvas>` = a short kebab-case name from its 
 For each matched doc, `<doc>` = a short kebab-case name from its title.
 
 1. `mcp__claude_ai_Claude_Docs__read(ref: {"object": "project", "id": "<id from the URL>"})` lists its tabs (`files[]`: `id`, `name`).
-2. A doc shared by several apps often has one tab per app. Skip every tab whose name matches another app named in the doc's title, by the rule of step 2, and does not match this app. Keep this app's tab and the tabs that name no app. Say in the report which tabs were skipped.
+2. A doc shared by several apps often has one tab per app. When one tab's name matches this app, by the rule of step 2, the doc is split by app: keep that tab and the tabs that name no app, and skip every other tab whose name is another app's name, even when the doc's title does not name that app. Another app's name is one that appears in the titles of the user's artifacts (the third list of step 2). Ask when a tab's name is neither this app's, another app's, nor a plain topic. Say in the report which tabs were skipped.
 3. For each tab kept, `mcp__claude_ai_Claude_Docs__export(container: {"kind": "project", "id": "<doc id>"}, file: "<tab id>", format: "markdown")`. The result holds `data.bytes` and the file in base64 in `data.bytes_b64`.
 4. Write the decoded bytes, never a retyped or summarized version:
    - result saved to a file by the client: `jq -r '.data.bytes_b64' <that file> | base64 -d > <out>`

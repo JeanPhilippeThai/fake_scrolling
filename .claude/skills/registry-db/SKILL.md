@@ -13,7 +13,7 @@ Script: `python3 .claude/skills/registry-db/registry_db.py <command>`, run from 
 
 - `docs/` (the method's paths) and `claude_docs/` (the Claude Docs as imported): every `*.yaml` file, and the ```` ```yaml ```` blocks of every `*.md` file, joined in order, because an exported doc often splits one YAML over several blocks.
 - By its sections, each YAML is a registry (`roles`, `pages`, `features`, `entites`, `decisions`), a data model (`tables`), data flows (`noeuds`, `flux`) or a page contract (`page`, `composants`).
-- An archived per-platform registry is one with "archive" in its file name or title. It is loaded in its own scope (`web`, `desktop` or `mobile`), next to the `canonical` registry, so that aliases can be checked. Its platform comes from its file name, its title or its pages.
+- An archived per-platform registry is one with "archive" in its file name or title. It is loaded in its own scope (`web`, `desktop` or `mobile`), next to the `canonical` registry, so that aliases can be checked. Its platform comes from its file name, its title or its pages. Every other doc is canonical, even one named after a platform.
 - A format template copied from a prompt (`stockage: N-xx`, or every `nom:` empty) is skipped, never read as data.
 - Every ID cited anywhere, even in prose, is recorded in `mentions` with its file and line.
 
@@ -38,8 +38,9 @@ Start with `schema` before writing a query. The main tables:
 - `defs(scope, id, kind, expected_kind, path, line, name, data)`: one row per definition. `data` is the item's YAML as JSON, for `json_extract`.
 - `refs(scope, source, rel, target, path)`: every link as the doc writes it, for example `feature_page`, `page_feature`, `feature_role`, `table_entity`, `data_flow_feature` or `component_table`.
 - `links(source, target, rel)`: the canonical links, oriented so that a change to `source` can affect `target`.
-- `mentions(scope, id, kind, path, line)`: every ID cited in any doc.
-- Typed tables: `pages`, `features`, `variants`, `roles`, `entities`, `entity_fields`, `decisions`, `aliases`, `data_tables`, `table_columns`, `nodes`, `data_flows`, `page_contracts`, `components`, `component_columns`, `component_conditions`, `missing` (every MANQUANT).
+- `mentions(scope, id, kind, path, line, written)`: every ID cited in any doc. An ID followed by "…" is a format example and is left out. In a live doc named after one platform (a screen inventory), a page ID is read through that platform's page aliases: `written` keeps it as the doc writes it.
+- `aliases(kind, id, platform, alias, path, partial, retired)`: every old ID of a canonical item. `partial` marks a split declared in `alias_partiel`; `retired` marks an old ID whose item is in `ids_retires`. `alias_decisions` and `retired` hold `alias_decision` and `ids_retires`.
+- Typed tables: `pages` (page states included), `features`, `variants`, `roles`, `entities`, `entity_fields`, `decisions`, `data_tables`, `table_columns`, `nodes`, `data_flows`, `page_contracts`, `components`, `component_columns`, `component_conditions`, `missing` (every MANQUANT).
 
 ## The checks
 
@@ -48,7 +49,7 @@ Start with `schema` before writing a query. The main tables:
 - A `Query` row is a finding.
 - A `Query, then read` row is a lead to read before it becomes a finding or not.
 - "not reached" means the docs do not hold that layer yet.
-- Rows from an archived per-platform registry are shown, but never fail the build: archives are frozen.
+- Rows from an archived per-platform registry are shown, but never fail the build: archives are frozen. L3 rows from an archive are not shown at all, because an archive passed L3 before the merge (L4-01).
 
 The checks the How column marks `Read` need judgment and have no query here.
 

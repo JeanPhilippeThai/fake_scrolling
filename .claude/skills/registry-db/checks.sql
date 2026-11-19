@@ -4,6 +4,7 @@
 -- needs: the docs content the check reads; without it the check is "not reached".
 -- Scopes: 'canonical' is the registry in force; 'web', 'desktop', 'mobile' are archived per-platform registries.
 -- A row whose `scope` column is not 'canonical' comes from a frozen archive: it is shown, and never fails the build.
+-- L3 rows from an archive are not shown at all: an archive passed L3 before the merge (L4-01).
 
 -- check: L0-04
 -- title: Every doc the database reads parses, and every item in it has an ID
@@ -13,7 +14,7 @@
 SELECT path, line, message FROM problems ORDER BY path, line;
 
 -- check: L3-01
--- title: Every ID has its kind's format and is unique; every page state's page exists and is on the same platform
+-- title: Every ID has its kind's format and is unique; every page state's page exists and is on the same platform; no ID in ids_retires is defined again
 -- how: Query
 -- severity: Major
 -- needs: registry
@@ -32,6 +33,9 @@ FROM pages s
 LEFT JOIN pages p ON p.scope = s.scope AND p.id = substr(s.id, 1, instr(s.id, '.') - 1)
 WHERE instr(s.id, '.') > 0
   AND (p.id IS NULL OR s.platform IS NOT p.platform)
+UNION ALL
+SELECT d.scope, d.id, 'listed in ids_retires (' || COALESCE(r.decision, 'no decision') || ') and defined again', d.path, d.line
+FROM defs d JOIN retired r ON r.scope = d.scope AND r.id = d.id
 UNION ALL
 SELECT scope, id, 'defined ' || COUNT(*) || ' times', GROUP_CONCAT(DISTINCT path), MIN(line)
 FROM defs WHERE expected_kind IN ('role','page','feature','variant','entity','decision')
@@ -150,7 +154,7 @@ WHERE COALESCE(subject, '') = '' OR COALESCE(choice, '') = '' OR COALESCE(reason
 ORDER BY 1, 2;
 
 -- check: L4-02
--- title: Every item of every per-platform registry appears in the canonical registry through its alias
+-- title: Every item of every per-platform registry appears in the canonical registry through its alias, or in ids_retires
 -- how: Query, then read
 -- severity: Blocking
 -- needs: registry, multi_platform
@@ -166,19 +170,42 @@ WHERE d.scope NOT IN ('canonical', 'unknown')
 ORDER BY 1, 3, 2;
 
 -- check: L4-03
--- title: No per-platform ID is the alias of two canonical IDs, and no canonical ID has two aliases from the same platform
+-- title: No per-platform ID is the alias of two canonical IDs, and no canonical ID has two aliases from the same platform, unless the split (alias_partiel) or the merge (alias_decision) is declared; an old variant counts with its own feature
 -- how: Query
 -- severity: Major
 -- needs: registry, multi_platform
 WITH a AS (
-  SELECT al.kind, al.id, al.alias, COALESCE(al.platform, p.platform) AS platform
+  SELECT al.kind, al.id, al.alias, al.partial, COALESCE(al.platform, p.platform) AS platform
   FROM aliases al LEFT JOIN pages p ON p.scope = 'canonical' AND p.id = al.id
+  WHERE al.retired = 0
+), split AS (
+  SELECT platform, alias, kind, COUNT(DISTINCT id) AS n,
+    COUNT(DISTINCT CASE WHEN partial = 0 THEN id END) AS plain, GROUP_CONCAT(DISTINCT id) AS ids
+  FROM a GROUP BY platform, alias, kind
+), folded AS (
+  -- an old variant whose own feature is an alias of the same item counts with that feature
+  SELECT * FROM a x
+  WHERE NOT (instr(x.alias, '.') > 0
+             AND EXISTS (SELECT 1 FROM a y WHERE y.id = x.id AND y.platform IS x.platform
+                         AND y.alias = substr(x.alias, 1, instr(x.alias, '.') - 1)))
+), merged AS (
+  SELECT platform, id, COUNT(DISTINCT alias) AS n,
+    COUNT(DISTINCT CASE WHEN partial = 0 THEN alias END) AS plain, GROUP_CONCAT(DISTINCT alias) AS aliases
+  FROM folded GROUP BY platform, id, kind
 )
-SELECT platform AS alias_platform, alias AS id, 'alias of ' || COUNT(DISTINCT id) || ' canonical IDs: ' || GROUP_CONCAT(DISTINCT id) AS problem
-FROM a GROUP BY platform, alias, kind HAVING COUNT(DISTINCT id) > 1
+SELECT platform AS alias_platform, alias AS id,
+  'alias of ' || n || ' canonical IDs (' || ids || '), ' || plain || ' of them without it in alias_partiel' AS problem
+FROM split WHERE n > 1 AND plain > 1
 UNION ALL
-SELECT platform, id, 'has ' || COUNT(DISTINCT alias) || ' aliases from ' || platform || ': ' || GROUP_CONCAT(DISTINCT alias)
-FROM a GROUP BY platform, id HAVING COUNT(DISTINCT alias) > 1
+SELECT platform, id, 'has ' || n || ' aliases from ' || platform || ' (' || aliases || ') and no alias_decision naming an existing decision'
+FROM merged m
+WHERE n > 1 AND plain > 1
+  AND NOT EXISTS (SELECT 1 FROM alias_decisions ad JOIN decisions d ON d.scope = ad.scope AND d.id = ad.decision
+                  WHERE ad.scope = 'canonical' AND ad.id = m.id)
+UNION ALL
+SELECT 'canonical', ad.id, 'alias_decision names ' || ad.decision || ', which is not a decision'
+FROM alias_decisions ad
+WHERE ad.scope = 'canonical' AND NOT EXISTS (SELECT 1 FROM decisions d WHERE d.scope = 'canonical' AND d.id = ad.decision)
 ORDER BY 1, 2;
 
 -- check: L4-04
@@ -211,14 +238,24 @@ ORDER BY 1;
 -- how: Query, then read
 -- severity: Major
 -- needs: registry, multi_platform
-SELECT a.id AS entity, a.platform, a.alias, f.field AS platform_field,
-  'not found word for word in the canonical fields' AS problem
-FROM aliases a
-JOIN entity_fields f ON f.scope = a.platform AND f.entity = a.alias
-WHERE a.kind = 'entity'
-  AND NOT EXISTS (SELECT 1 FROM entity_fields c WHERE c.scope = 'canonical' AND c.entity = a.id
-                  AND LOWER(TRIM(c.field)) = LOWER(TRIM(f.field)))
-ORDER BY 1, 2, 4;
+-- A field is compared by its name before " (", against every canonical entity that has the
+-- platform entity as alias, partial or not.
+WITH fam AS (
+  SELECT DISTINCT platform, alias, id FROM aliases WHERE kind = 'entity' AND retired = 0
+), canon AS (
+  SELECT f.platform, f.alias,
+    LOWER(TRIM(CASE WHEN instr(c.field, ' (') > 0 THEN substr(c.field, 1, instr(c.field, ' (') - 1) ELSE c.field END)) AS name
+  FROM fam f JOIN entity_fields c ON c.scope = 'canonical' AND c.entity = f.id
+)
+SELECT GROUP_CONCAT(DISTINCT f.id) AS entities, f.platform, f.alias, pf.field AS platform_field,
+  'no field of that name in the canonical entities that have it as alias' AS problem
+FROM fam f
+JOIN entity_fields pf ON pf.scope = f.platform AND pf.entity = f.alias
+WHERE NOT EXISTS (
+  SELECT 1 FROM canon c WHERE c.platform = f.platform AND c.alias = f.alias
+    AND c.name = LOWER(TRIM(CASE WHEN instr(pf.field, ' (') > 0 THEN substr(pf.field, 1, instr(pf.field, ' (') - 1) ELSE pf.field END)))
+GROUP BY f.platform, f.alias, pf.field
+ORDER BY 2, 3, 4;
 
 -- check: L4-13
 -- title: No later document still uses a per-platform ID instead of the canonical one
@@ -436,10 +473,14 @@ SELECT path, line, text FROM missing ORDER BY 1, 2;
 -- how: Query, then read
 -- severity: Blocking
 -- needs: registry, multi_platform
-SELECT d.kind, d.id, 'no alias: find the decision that created it' AS problem, d.path
+-- A decision with no alias was taken after the merge: one that cites the item explains it.
+SELECT d.kind, d.id, 'no alias, and no decision taken after the merge cites it' AS problem, d.path
 FROM defs d
 WHERE d.scope = 'canonical' AND d.expected_kind IN ('role', 'page', 'feature', 'variant', 'entity')
   AND NOT EXISTS (SELECT 1 FROM aliases a WHERE a.id = d.id)
+  AND NOT EXISTS (SELECT 1 FROM refs r JOIN decisions x ON x.scope = 'canonical' AND x.id = r.source
+                  WHERE r.scope = 'canonical' AND r.rel = 'decision_cites' AND r.target = d.id
+                    AND NOT EXISTS (SELECT 1 FROM aliases a WHERE a.id = x.id))
 ORDER BY 1, 2;
 
 -- check: B8-03
@@ -491,7 +532,7 @@ GROUP BY scope, id HAVING COUNT(*) > 1
 ORDER BY 1, 2;
 
 -- check: G-02
--- title: Every ID cited anywhere exists (for the kinds the database reads: P, F, E, R, D, TB, N, DF, C)
+-- title: Every ID cited anywhere exists or is in ids_retires (for the kinds the database reads: P, F, E, R, D, TB, N, DF, C); an ID followed by … is an example
 -- how: Query, then read
 -- severity: Major
 -- needs:
@@ -501,6 +542,7 @@ WHERE m.kind IN ('role','page','page_state','feature','variant','entity','decisi
   AND EXISTS (SELECT 1 FROM defs k WHERE k.scope = m.scope
               AND k.expected_kind = CASE m.kind WHEN 'page_state' THEN 'page' ELSE m.kind END)
   AND NOT EXISTS (SELECT 1 FROM defs d WHERE d.scope = m.scope AND d.id = m.id)
+  AND NOT EXISTS (SELECT 1 FROM retired r WHERE r.scope = m.scope AND r.id = m.id)
   AND NOT (m.path IN (SELECT path FROM sources WHERE content = 'registry')
            AND EXISTS (SELECT 1 FROM aliases a WHERE a.alias = m.id))
 GROUP BY m.scope, m.id, m.path

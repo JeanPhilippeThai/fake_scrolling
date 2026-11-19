@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 31).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 36).
 For now the Claude Doc is the source of truth and this file is a copy of it.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the Claude Design screens down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -90,11 +90,11 @@ One extraction per platform design. Run these checks on each of them.
 
 ### L3 · Registry (prompts 2, 3, 4, 8, 9, 10)
 
-Run this layer on each per-platform registry, then once more on the canonical registry. L4 then checks that the merge gathered everything.
+Run this layer on each per-platform registry, then once more on the canonical registry. L4 then checks that the merge gathered everything. Once a per-platform registry is archived beside the canonical one, the L3 checks run on the canonical registry only; L4-01 records that each archive passed L3 before the merge, by the rules in force then.
 
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
-| L3-01 | Every ID has its kind's format (`P-D04`, `P-04.a`, `F-012`, `F-012.a`, `E-03`, `R-01`, `D-07`) and is unique; every page state's page exists and is on the same platform | Query | Major |
+| L3-01 | Every ID has its kind's format (`P-D04`, `P-04.a`, `F-012`, `F-012.a`, `E-03`, `R-01`, `D-07`) and is unique; every page state's page exists and is on the same platform; no ID listed in ids_retires is defined again | Query | Major |
 | L3-02 | Pages list their features and features list their pages, both ways; a page state counts as a page of its own, not as its page | Query | Major |
 | L3-03 | No feature without a page or a role; no entity, role or variant without its feature; every role cited exists | Query | Major |
 | L3-04 | Features and entities list each other both ways (`entites`, `utilisee_par`) | Query | Major |
@@ -115,8 +115,8 @@ Only when the app has more than one version (web and mobile, desktop and mobile,
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
 | L4-01 | Every per-platform registry passed L3 before the merge, and every one is archived and named (platform, date) | Read | Major |
-| L4-02 | Every page, feature, variant, entity, role, decision and open question of every per-platform registry appears in the canonical registry, through its `alias`, or a merge note says why not | Query, then read | Blocking |
-| L4-03 | No per-platform ID is the alias of two canonical IDs, and no canonical ID has two aliases from the same platform | Query | Major |
+| L4-02 | Every page, feature, variant, entity, role, decision and open question of every per-platform registry appears in the canonical registry, through its `alias`, or a merge note says why not, or ids_retires lists it with the decision that retired it | Query, then read | Blocking |
+| L4-03 | No per-platform ID is the alias of two canonical IDs, and no canonical ID has two aliases from the same platform, unless the split or the merge is declared: a split old ID is in alias_partiel on every canonical item that has it except at most one; a merge names an existing decision in alias_decision; an old variant counts with its own feature | Query | Major |
 | L4-04 | Pages carry their platform prefix (`P-D04`, `P-M02`), their `plateforme` matches it, and a feature's `plateformes` equals the platforms of its pages | Query | Major |
 | L4-05 | Features merged across platforms share their intent and data; a behavior that differs by platform became a variant with its `plateforme` | Read | Major |
 | L4-06 | A feature found on one platform only lists that platform alone; nothing was invented for the other | Read | Major |
@@ -357,7 +357,7 @@ Layer checks look at one document at a time. These follow a chain from end to en
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
 | G-01 | Every ID is unique across all documents, and its prefix belongs to one kind of item only | Query | Major |
-| G-02 | Every ID cited anywhere exists | Query, then read | Major |
+| G-02 | Every ID cited anywhere exists, or is listed in ids_retires; an ID followed by … is a format example, not a citation | Query, then read | Major |
 | G-03 | No ID was renumbered or reused: compare with the last check report or the documents' git history; an ID that disappeared is explained by a decision | Read | Major |
 | G-04 | One source of truth: a fact found in two places with different values is a finding, and the precedence order says which is probably wrong | Read | Major |
 | G-05 | Mode B: every query in the method's "Checks that run on every pull request" returns no rows, except those that read the code scan | Query | Major |
