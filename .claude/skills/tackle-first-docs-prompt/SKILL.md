@@ -37,7 +37,7 @@ Take the first item of "Fix first", or of "Next prompts". Tell the owner in one 
    - At most 4 questions per call, each with 2 or 3 options, your recommendation first.
    - Before asking, show what the question is about: the IDs and the quoted lines.
    - Ask until each question is answered, or the owner leaves it open. An open question goes in the feature's `questions_ouvertes`, or in `docs/questions.md` for the whole app.
-4. Write each result where the "Sources of truth" table of `workflow_docs/method/reference.md` puts it. If the app's `CLAUDE.md` says a document lives in a Claude Doc, edit that doc, not a local copy. Record each owner choice in `decisions` with its ID, subject, choice and reason. Never renumber an ID.
+4. Write each result where the "Sources of truth" table of `workflow_docs/method/reference.md` puts it. If the app's `CLAUDE.md` says a document lives in a Claude Doc, edit that doc, not a local copy. One Claude Docs edit call takes at most 64 operations: split a large change (renaming IDs across a whole doc, for example) into several calls, then search the doc to check that nothing was left. Record each owner choice in `decisions` with its ID, subject, choice and reason. Never renumber an ID.
 5. Run `python3 .claude/skills/registry-db/registry_db.py check`. A row your change caused is fixed before you go on; a row that was already there before you started is not yours, so leave it and mention it.
 6. Show the files and IDs you changed, and revise until the owner confirms.
 
