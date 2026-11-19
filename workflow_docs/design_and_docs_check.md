@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 36).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 38).
 For now the Claude Doc is the source of truth and this file is a copy of it.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the Claude Design screens down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -126,7 +126,7 @@ Only when the app has more than one version (web and mobile, desktop and mobile,
 | L4-10 | Every decision from every platform is carried over with its alias, and decisions that contradicted each other across platforms are settled by a new decision | Read | Blocking |
 | L4-11 | Every ambiguous case and open question from every platform is carried over once, with its aliases | Read | Major |
 | L4-12 | Prompts 3 and 8 ran on the canonical registry after the merge | Read | Major |
-| L4-13 | No later document (flows, state models, data model, data flows, page contracts, specs, backlog) still uses a per-platform ID instead of the canonical one | Query | Major |
+| L4-13 | No later document (flows, state models, data model, data flows, page contracts, specs, backlog, and screen inventories still kept up to date) still uses a per-platform ID instead of the canonical one | Query | Major |
 
 ### L5 · Flows (prompt 5)
 
@@ -357,7 +357,7 @@ Layer checks look at one document at a time. These follow a chain from end to en
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
 | G-01 | Every ID is unique across all documents, and its prefix belongs to one kind of item only | Query | Major |
-| G-02 | Every ID cited anywhere exists, or is listed in ids_retires; an ID followed by … is a format example, not a citation | Query, then read | Major |
+| G-02 | Every ID cited anywhere exists, or is listed in ids_retires; an ID followed by … is a format example, not a citation; a range (R-01 à R-07) cites every ID in it; archived registries are not checked | Query, then read | Major |
 | G-03 | No ID was renumbered or reused: compare with the last check report or the documents' git history; an ID that disappeared is explained by a decision | Read | Major |
 | G-04 | One source of truth: a fact found in two places with different values is a finding, and the precedence order says which is probably wrong | Read | Major |
 | G-05 | Mode B: every query in the method's "Checks that run on every pull request" returns no rows, except those that read the code scan | Query | Major |

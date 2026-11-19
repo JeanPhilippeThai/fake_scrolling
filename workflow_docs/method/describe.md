@@ -1,6 +1,6 @@
 # Describe the app
 
-Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 18, taken on 2026-11-19.
+Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 19, taken on 2026-11-19.
 
 Steps 1 to 8 of the pipeline, wide and shallow: from the Claude Design mock-up to a checked registry, flows, entity states and a system design. Read this part before starting an app, and whenever the registry, a flow or a design decision changes. How the code is laid out is in [Code structure](code-structure.md); how the design is checked is in [Verification](verification.md).
 
@@ -208,7 +208,8 @@ Règles :
 - Quand un registre découpe en plusieurs features ce que l'autre décrit en une, garde le découpage le plus fin. L'ancien ID figure dans `alias` de chaque morceau, et aussi dans `alias_partiel` de chaque morceau qui n'en reprend qu'une partie : `alias_partiel: {desktop: [F-020]}`. Le morceau qui garde l'essentiel de l'ancien ID peut l'avoir en `alias` seul.
 - Quand une décision réunit plusieurs anciens ID d'une même plateforme en un seul élément, cite-la : `alias_decision: D-055`.
 - Une variante absorbée par sa feature garde son ancien ID dans l'`alias` de cette feature.
-- Un ancien ID retiré pendant la fusion va dans `ids_retires`, avec son alias et la décision : `- {id: F-004.a, alias: {desktop: F-003.a}, decision: D-066}`.
+- Un ID retiré va dans `ids_retires` avec sa décision, et son ancien ID quand il en a un : `- {id: F-004.a, alias: {desktop: F-003.a}, decision: D-066}`. Un ancien ID qui n'a jamais été canonique s'écrit sans `id` : `- {alias: {desktop: F-009.a}, decision: D-010}`.
+- Après la fusion, tout document encore tenu à jour, inventaires d'écrans compris, cite les IDs canoniques (P-D04, pas P-04). Un alias pointe toujours vers un ID d'un registre par plateforme archivé.
 - Fusionne les questions ouvertes qui portent sur le même sujet.
 
 Après le YAML, ajoute :

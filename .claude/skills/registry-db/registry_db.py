@@ -102,6 +102,7 @@ REL_DIRECTION = {
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);
 CREATE TABLE sources(path TEXT, part TEXT, content TEXT, scope TEXT, note TEXT);
+CREATE TABLE docs(path TEXT PRIMARY KEY, scope TEXT, archived INT);
 CREATE TABLE defs(scope TEXT, id TEXT, kind TEXT, expected_kind TEXT, path TEXT, line INT, name TEXT, data TEXT);
 CREATE TABLE refs(scope TEXT, source TEXT, rel TEXT, target TEXT, path TEXT);
 CREATE TABLE aliases(kind TEXT, id TEXT, platform TEXT, alias TEXT, path TEXT, partial INT DEFAULT 0, retired INT DEFAULT 0);
@@ -165,14 +166,27 @@ def text(v):
     return str(v)
 
 
+RANGE_WORD_RE = re.compile(r"\s+(?:à|au|to)\s+$")
+NUMBERED_RE = re.compile(r"^(.*-)(\d+)$")
+
+
 def cited_ids(line):
-    """The IDs a text cites. An ID followed by "…" or "..." is a format example (D-01…), not a citation."""
-    out = []
+    """The IDs a text cites. An ID followed by "…" or "..." is a format example (D-01…), not a
+    citation. A range of one kind ("R-01 à R-07", "F-024 to F-035") cites every ID in it."""
+    out, prev = [], None
     for m in MENTION_RE.finditer(line):
         rest = line[m.end():m.end() + 3]
         if rest.startswith("…") or rest.startswith("..."):
+            prev = None
             continue
-        out.append(m.group(0))
+        id_ = m.group(0)
+        if prev and RANGE_WORD_RE.search(line[prev.end():m.start()]):
+            a, b = NUMBERED_RE.match(prev.group(0)), NUMBERED_RE.match(id_)
+            if a and b and a.group(1) == b.group(1) and 0 < int(b.group(2)) - int(a.group(2)) <= 200:
+                width = len(a.group(2))
+                out += [f"{a.group(1)}{n:0{width}d}" for n in range(int(a.group(2)) + 1, int(b.group(2)))]
+        out.append(id_)
+        prev = m
     return out
 
 
@@ -371,27 +385,14 @@ class Builder:
                     canonical_registries.append(path)
             elif doc is not None:
                 self.problem(path, "the YAML is not a mapping of sections (roles, pages, features, …)")
-        # Every ID cited, once every alias is known. A live doc named after one platform (a screen
-        # inventory) numbers pages per platform: its P-17 is read through that platform's page aliases.
-        page_alias = {}
-        for cid, platform, old in self.db.execute(
-                "SELECT a.id, COALESCE(a.platform, p.platform), a.alias FROM aliases a "
-                "LEFT JOIN pages p ON p.scope = 'canonical' AND p.id = a.id WHERE a.kind = 'page' AND a.retired = 0").fetchall():
-            page_alias.setdefault((platform, old), cid)
-        for p, path, raw, lines, doc, skip in parsed:
-            scope = self.file_scope[path]
-            words = platform_words(Path(path).name)
-            platform = words[0] if multi and scope == CANONICAL and len(words) == 1 else None
+            # A doc named or titled "archive" is frozen history: kept, never held to the current IDs.
+            self.db.execute("INSERT INTO docs VALUES (?,?,?)", (path, scope, int(self.is_archive(path, lines))))
+            # Every ID cited. After the merge, a live doc cites canonical IDs only, inventories included.
             for n, line in enumerate(lines, 1):
                 if n in skip:
                     continue
                 for m in cited_ids(line):
-                    mid = m
-                    if platform and kind_of(m) in ("page", "page_state"):
-                        base, _, letter = m.partition(".")
-                        if (platform, base) in page_alias:
-                            mid = page_alias[(platform, base)] + ("." + letter if letter else "")
-                    self.db.execute("INSERT INTO mentions VALUES (?,?,?,?,?,?)", (scope, mid, kind_of(mid), path, n, m))
+                    self.db.execute("INSERT INTO mentions VALUES (?,?,?,?,?,?)", (scope, m, kind_of(m), path, n, m))
         if len(canonical_registries) > 1:
             self.problem(", ".join(canonical_registries),
                          "more than one canonical registry: archive the per-platform ones (name them with 'archive' and their platform)")
@@ -521,12 +522,15 @@ class Builder:
             self.ref(scope, did, "decision_cites", sorted(set(cited) - {did}), path)
             self.alias("decision", did, d, scope, path)
         for r in self.items(doc, "ids_retires", path):
+            # No `id`: an old per-platform ID retired before the merge, never canonical.
             rid = text(r.get("id"))
-            if not rid:
-                self.problem(path, f"an entry of ids_retires has no id: {text(r)[:120]}")
+            if not rid and not r.get("alias"):
+                self.problem(path, f"an entry of ids_retires has neither id nor alias: {text(r)[:120]}")
                 continue
-            self.db.execute("INSERT INTO retired VALUES (?,?,?,?)", (scope, rid, text(r.get("decision")), path))
-            self.alias(kind_of(rid) or "unknown", rid, r, scope, path, retired=1)
+            if rid:
+                self.db.execute("INSERT INTO retired VALUES (?,?,?,?)", (scope, rid, text(r.get("decision")), path))
+            olds = ids_in(r.get("alias"))
+            self.alias(kind_of(rid or (olds[0] if olds else "")) or "unknown", rid, r, scope, path, retired=1)
 
     def load_data_model(self, doc, path):
         s = CANONICAL
