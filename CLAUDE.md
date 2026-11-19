@@ -4,7 +4,7 @@ Fake scrolling: a mobile social-feed app, specified with the method in [workflow
 
 ## Where things are
 - `claude_design/`: the Claude Design mock-up. View it with the `preview-live-designs` skill.
-- `claude_docs/`: the docs. Read `INDEX.md` first. Decisions (D-xxx) and features (F-xxx) live in `registre-canonique.yaml`.
+- `claude_docs/`: the docs. Read `INDEX.md` first. Decisions (D-xxx), features (F-xxx) and retired IDs (`ids_retires`) live in `registry.yaml`.
 - `claude_skills_output/`: skill reports. `what_are_the_next_docs_prompts_output.md` says what to do next.
 - `newest_claude_*/`: gitignored scratch imports from claude.ai.
 - `workflow_docs/` and the skills listed in `.claude/skills/.workflow_claude` are synced from `workflow_claude`: don't edit them here.

@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 54, exported 2026-11-18 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 54, exported 2026-11-19 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
