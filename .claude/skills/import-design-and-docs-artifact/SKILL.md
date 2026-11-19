@@ -67,8 +67,8 @@ For each matched Design artifact, `<canvas>` = a short kebab-case name from its 
    For each id, `Artifact(action: "read", url: <the canvas that uses it>, path: "<id>", out_dir: "<repo>/newest_claude_design/_blob")`.
 4. Build: `python3 .claude/skills/import-design-and-docs-artifact/build_viewer.py newest_claude_design`
    It copies the runtime next to every artboard as `support.js`, points `/_blob/` links at the saved files, and writes `newest_claude_design/index.html` and `newest_claude_design/<canvas>/index.html` (the artboards laid out as on the canvas, each one live).
-5. Write `newest_claude_design/README.md`: the source URL of each canvas, today's date, and how to open it:
-   `python3 -m http.server 8000 -d newest_claude_design`, then http://localhost:8000.
+5. Write `newest_claude_design/README.md`: the source URL of each canvas, today's date, and how to open it, worded so that it stays true once `promote-newest-claude-files` copies it into `claude_design/`:
+   "From this folder, run `python3 -m http.server 8000`, then open http://localhost:8000." Never name the folder in the command.
    A server is required: the artboards fetch their own source, so `file://` shows nothing.
 
 ## 4. The Claude Docs: `./newest_claude_docs/`
@@ -81,7 +81,7 @@ For each matched doc, `<doc>` = a short kebab-case name from its title, or the r
 
    Otherwise export it: `mcp__claude_ai_Claude_Docs__export(container: {"kind": "project", "id": "<doc id>"}, file: "<tab id>", format: "markdown")`. The result holds `data.bytes` and the file in base64 in `data.bytes_b64`.
 4. Write the decoded bytes, never a retyped or summarized version:
-   - result saved to a file by the client: `jq -r '.data.bytes_b64' <that file> | base64 -d > <out>`
+   - result saved to a file by the client: `python3 .claude/skills/import-design-and-docs-artifact/decode_export.py <that file> <out>`. It finds `bytes_b64` in the saved result, writes `<out>`, and fails if the size differs from `data.bytes`. It needs only python3, not jq.
    - result shown inline: `base64 -d > <out> <<'EOF'` with the `bytes_b64` value, then `EOF`.
 5. Check `<out>` before adding anything to it. An inline result is copied by hand, and a copy error can keep the length, so the length alone proves nothing:
    - `wc -c < <out>` equals `data.bytes`;

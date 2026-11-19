@@ -1,12 +1,12 @@
 # Build the app
 
-Part of [the method](../method.md). Snapshot of the "Build" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 11, taken on 2026-11-17.
+Part of [the method](../method.md). Snapshot of the "Build" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 12, taken on 2026-11-19.
 
 Steps 9 and 10, narrow and deep: how Claude works on the repo, the loop for one feature, and what happens when the description changes after code exists. Read this part at the start of every coding session. "The description" means everything decided in [Describe the app](describe.md) and [Code structure](code-structure.md): the registry, flows, state models and system design.
 
 ## Working with Claude
 
-Claude starts every session with no memory of the last one. `CLAUDE.md` is its map: what the project is, where each source of truth lives, how to work. Keep it short, and keep it pointing to the docs instead of copying them.
+Claude starts every session with no memory of the last one. `CLAUDE.md` is its map: what the project is, where each source of truth lives, how to work. Keep it short, and keep it pointing to the docs instead of copying them. Start every session from the main checkout, up to date with git pull --ff-only, before opening a task's worktree: Claude Code loads the skills from the checkout the session starts in, so a checkout behind main runs old skills.
 
 The loop for one feature (step 10):
 
