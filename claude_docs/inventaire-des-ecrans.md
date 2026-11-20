@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 94, exported 2026-11-20 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 98, exported 2026-11-20 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -135,7 +135,7 @@ Panneau qui monte du bas sur un post : on lit, on like et on publie des commenta
 | --- | --- | --- | --- |
 | Fermer les commentaires | Croix en haut à droite ou tap sur le fond assombri | Aucune | — |
 | Lire les commentaires | Liste : photo floue, pseudo · ancienneté, texte | 6 commentaires en démo + les miens en tête ; texte en charabia + émojis | Chargement (P-05.a) ; vide (P-05.b) ; erreur (P-05.d) |
-| Liker un commentaire | Petit cœur à droite de chaque commentaire, compteur dessous | Nombre de likes du commentaire | Vide gris ; plein rouge quand liké (+1) |
+| Liker un commentaire | Petit cœur à droite de chaque commentaire, compteur dessous | Nombre de likes du commentaire | Vide gris ; plein rouge quand liké (+1) ; échec : redevient gris, « Le like n’a pas été enregistré. » en bas du panneau pendant 2 s (D-043, non dessiné) |
 | Écrire un commentaire | Champ « Ajouter un commentaire… » en bas, avec sa photo | Texte (150 caractères max) | Vide ; rempli |
 | Publier un commentaire | Bouton « Publier » à droite du champ | Nouveau commentaire signé moi.ici · à l'instant ; compteur du post +1 | Gris si champ vide ; texte tapé visible moins d'1 s puis charabia (émojis gardés) ; échec : « Non publié. » (P-05.c) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
@@ -175,7 +175,7 @@ Panneau qui monte du bas : trois façons de partager le post.
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
 | Fermer le panneau | Croix ou tap sur le fond assombri | Aucune | — |
-| Envoyer à un ami | Rangée d'amis en tête du panneau ; un tap envoie le post à cet ami | Post envoyé en message (réception côté ami : à confirmer) ; message « Envoyé à … » sur P-03 | Échec : « Non envoyé à … » (P-07.a) |
+| Envoyer à un ami | Rangée d'amis en tête du panneau ; un tap envoie le post à cet ami | Post envoyé en message (réception côté ami : à confirmer) ; message « Envoyé à … » sur P-03 | Chargement de la rangée : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) ; échec de l'envoi : « Non envoyé à … » (P-07.a) |
 | Copier le lien | Ligne qui copie le lien du post | Lien du post (copie réelle : à confirmer) | Message « Lien copié. Il mène à une version floutée. » |
 | Partager ailleurs | Ligne vers d'autres apps | Post (feuille de partage du téléphone : à confirmer) | Message « Partagé, flouté comme toujours. » |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
@@ -547,7 +547,7 @@ Panneau qui monte du bas sur P-13 pour identifier des amis dans le post.
 | --- | --- | --- | --- |
 | Fermer le panneau | Lien « OK » en haut à droite ou tap sur le fond assombri | Aucune | — |
 | Rechercher un ami | Champ « Rechercher », filtre par pseudo ou @ | Texte saisi | Vide ; liste filtrée |
-| Identifier un ami | Ligne avec photo floue, pseudo, @ et case ronde à cocher | Personnes identifiées (8 amis en démo ; vraie liste d'amis : à confirmer) | Case vide ; cochée en vert ; second tap décoche |
+| Identifier un ami | Ligne avec photo floue, pseudo, @ et case ronde à cocher | Personnes identifiées (8 amis en démo ; vraie liste d'amis : à confirmer) | Case vide ; cochée en vert ; second tap décoche ; chargement de la liste : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) |
 | Lire l'absence de résultat | Texte « Aucun ami trouvé. » | Aucune | Affiché si rien ne correspond |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
@@ -559,7 +559,7 @@ Panneau qui monte du bas sur P-13 pour rattacher un lieu au post.
 | --- | --- | --- | --- |
 | Fermer le panneau | Lien « OK » en haut à droite ou tap sur le fond assombri | Aucune | — |
 | Rechercher un lieu | Champ « Rechercher », filtre par nom ou ville | Texte saisi | Vide ; liste filtrée |
-| Choisir un lieu | Ligne avec icône, nom du lieu, quartier ou ville | Lieu du post (8 lieux de démo ; vraie recherche de lieux : à confirmer) | Lieu choisi coché ; le panneau se ferme |
+| Choisir un lieu | Ligne avec icône, nom du lieu, quartier ou ville | Lieu du post (8 lieux de démo ; vraie recherche de lieux : à confirmer) | Lieu choisi coché ; le panneau se ferme ; chargement de la recherche : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) |
 | Retirer le lieu | Lien rouge « Retirer le lieu » en tête de liste | Lieu du post | Visible seulement si un lieu est choisi |
 | Lire l'absence de résultat | Texte « Aucun lieu trouvé. » | Aucune | Affiché si rien ne correspond |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |

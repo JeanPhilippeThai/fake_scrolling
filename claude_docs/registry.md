@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 101, exported 2026-11-20 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 107, exported 2026-11-20 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -644,6 +644,7 @@ features:
       - vide
       - plein (liké)
       - 'échec : le cœur redevient vide, « Le like n’a pas été enregistré. » en bas du fil pendant 2 s'
+      - 'échec du like d''un commentaire (F-016.b) : le petit cœur redevient gris, « Le like n’a pas été enregistré. » en bas du panneau pendant 2 s (D-043)'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
 
@@ -706,6 +707,7 @@ features:
     etats_ui:
       - message « Envoyé à … », « Lien copié… » ou « Partagé… » en bas du fil pendant 2 s
       - 'envoi à un ami échoué : l’ami cerclé de rouge, « Non envoyé à … » avec « Réessayer », le panneau reste ouvert'
+      - 'rangée d''amis (F-019.a) en chargement : anneau centré ; en échec : message sur place avec « Réessayer » (D-043)'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050) ; peut-on partager un post « Amis proches » ?'
       - 'Envoyer à un ami (F-019.a) : amis seulement (ami ou non, E-09)'
@@ -1121,6 +1123,8 @@ features:
       - '@ de la personne'
       - « N personnes »
       - « Aucun ami trouvé. »
+      - 'chargement : anneau centré dans la liste (D-043)'
+      - 'échec du chargement : message sur place avec « Réessayer » (D-043)'
     questions_ouvertes:
       - Liste limitée à 8 amis de démo
       - 'Accès supposé : seuls des amis peuvent être identifiés (ami ou non, E-09)'
@@ -1139,6 +1143,8 @@ features:
       - lieu affiché sur la ligne
       - « Retirer le lieu »
       - « Aucun lieu trouvé. »
+      - 'chargement : anneau centré dans la liste (D-043)'
+      - 'échec de la recherche : message sur place avec « Réessayer » (D-043)'
     questions_ouvertes:
       - Vraie recherche de lieux (8 lieux de démo)
 
@@ -1805,9 +1811,14 @@ decisions:
     impacte: [F-016, F-017, F-018, F-019, F-022, F-028, F-031, F-034, F-036, F-037, F-038, F-042, F-043, F-052, F-053, F-062]
   - id: D-042
     sujet: Échec d'une action en un tap
-    choix: 'Le like (F-016) et l''enregistrement (F-018) changent aussitôt ; si le serveur échoue, ils reviennent en arrière et un message le dit en bas du fil pendant 2 s. Accepter ou refuser une invitation (F-028), ajouter un ami (F-034) et créer une collection (F-031) montrent l''anneau dans le bouton (D-028), puis l''erreur sur place avec « Réessayer » (D-027). Envoyer un post à un ami (F-019.a) ou une photo (F-042) suit D-027 : « Non envoyé » avec « Réessayer ».'
+    choix: 'Le like (F-016) et l''enregistrement (F-018) changent aussitôt ; si le serveur échoue, ils reviennent en arrière et un message le dit en bas du fil pendant 2 s (en bas du panneau des commentaires pour le like d''un commentaire, D-043). Accepter ou refuser une invitation (F-028), ajouter un ami (F-034) et créer une collection (F-031) montrent l''anneau dans le bouton (D-028), puis l''erreur sur place avec « Réessayer » (D-027). Envoyer un post à un ami (F-019.a) ou une photo (F-042) suit D-027 : « Non envoyé » avec « Réessayer ».'
     raison: 'Un like ou un signet doit rester instantané et se refait d''un tap ; une invitation, une demande d''ami ou une collection crée ou change une donnée, on attend la réponse du serveur.'
     impacte: [F-016, F-018, F-019, F-028, F-031, F-034, F-042]
+  - id: D-043
+    sujet: États de chargement et d'erreur par analogie
+    choix: 'La liste d''amis de P-24 (F-048), la recherche de lieux de P-25 (F-049) et la rangée d''amis de P-07 (F-019.a) suivent D-028 et D-027 : un anneau centré dans la liste pendant le chargement, puis un message sur place avec « Réessayer » si elle échoue. L''échec du like d''un commentaire (F-016.b) suit D-042 : le petit cœur redevient gris et « Le like n’a pas été enregistré. » s''affiche pendant 2 s en bas du panneau des commentaires (P-05), au-dessus du champ « Ajouter un commentaire… ». Pas de nouvel artboard.'
+    raison: 'Même motif que les états dessinés pour D-041 ; seul l''emplacement change, comme pour D-036. P-05 n''a pas de fil : le bas du panneau en tient lieu.'
+    impacte: [F-016, F-019, F-048, F-049]
 
 ids_retires:
   - {id: F-013, decision: D-002}
