@@ -37,10 +37,9 @@ def missing_blobs(root):
     have = {p.name.split(".")[0] for p in (root / "_blob").glob("*")}
     wanted = set()
     for canvas in canvases(root):
-        for f in artboard_files(canvas):
-            wanted.update(BLOB.findall(f.read_text(encoding="utf-8")))
-        for f in (canvas / "project").rglob("*.css"):
-            wanted.update(BLOB.findall(f.read_text(encoding="utf-8")))
+        for f in (canvas / "project").rglob("*"):
+            if f.name.endswith((".dc.html", ".css")):
+                wanted.update(BLOB.findall(f.read_text(encoding="utf-8")))
     return sorted(wanted - have)
 
 

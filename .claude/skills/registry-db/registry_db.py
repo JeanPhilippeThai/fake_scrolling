@@ -67,11 +67,7 @@ KINDS = [
     ("task", r"T-\d{3,}"),
 ]
 KIND_RES = [(k, re.compile(p)) for k, p in KINDS]
-MENTION_RE = re.compile(
-    r"(?<![\w-])(?:SM-E-\d{2,}|(?:NFR|BR|AC)-(?:\d{3}|X)-\d+|TB-\d{2,}|DF-\d{2,}|FL-\d{2,}"
-    r"|C-[WDM]?\d{2,}-\d{2,}|P-[WDM]?\d{2,}(?:\.[a-z]{1,2}(?![\w]))?|F-\d{3,}(?:\.[a-z]{1,2}(?![\w]))?|E-\d{2,}|R-\d{2,}"
-    r"|D-\d{2,}|N-\d{2,}|Q-\d{2,}|W-\d{2,}|T-\d{3,})(?![\w-])"
-)
+MENTION_RE = re.compile(r"(?<![\w-])(?:" + "|".join(p for _, p in KINDS) + r")(?![\w-])")
 # A format template copied from a prompt is not data. It is a YAML block where a placeholder ID is a
 # value (`stockage: N-xx`, not a quoted sentence or a comment that names one), or where every `nom:`
 # is empty.
@@ -140,6 +136,21 @@ CREATE VIEW links AS SELECT DISTINCT
   CASE d.forward WHEN 1 THEN r.target ELSE r.source END AS target,
   r.rel AS rel
   FROM refs r JOIN rel_direction d ON d.rel = r.rel WHERE r.scope = 'canonical';
+-- An ID out of its kind's format, defined twice, or written with other digits (D-01 and D-001):
+-- L3-01 reads the registry's rows (registry = 1), G-01 the others.
+CREATE VIEW id_problems AS
+  WITH d AS (SELECT *, expected_kind IN ('role','page','feature','variant','entity','decision') AS registry FROM defs)
+  SELECT scope, id,
+    'a ' || expected_kind || ' whose ID ' || CASE kind WHEN 'unknown' THEN 'has no known format' ELSE 'reads as a ' || kind END AS problem,
+    path, line, registry
+  FROM d WHERE kind != expected_kind AND NOT (expected_kind = 'page' AND kind = 'page_state')
+  UNION ALL
+  SELECT scope, id, 'defined ' || COUNT(*) || ' times', GROUP_CONCAT(DISTINCT path), MIN(line), registry
+  FROM d GROUP BY scope, id, registry HAVING COUNT(*) > 1
+  UNION ALL
+  SELECT scope, GROUP_CONCAT(DISTINCT id), 'the same ID written with different digits: an ID is a number',
+    GROUP_CONCAT(DISTINCT path), MIN(line), registry
+  FROM d GROUP BY scope, number, registry HAVING COUNT(DISTINCT id) > 1;
 CREATE INDEX refs_source ON refs(scope, source);
 CREATE INDEX refs_target ON refs(scope, target);
 CREATE INDEX defs_id ON defs(scope, id);
@@ -276,13 +287,17 @@ def yaml_blocks(lines):
     return blocks
 
 
+def is_registry(doc):
+    return isinstance(doc, dict) and ("pages" in doc or "features" in doc)
+
+
 def platform_words(name):
     return [p for p in PLATFORMS if re.search(rf"(?<![a-z]){p}(?![a-z])", name, re.I)]
 
 
 class Builder:
-    def __init__(self, root, docs, db_path):
-        self.root, self.docs, self.db_path = root, docs, db_path
+    def __init__(self, root, docs, db_path, fp=None):
+        self.root, self.docs, self.db_path, self.fp = root, docs, db_path, fp
         self.file_scope = {}
         self.id_lines = {}
 
@@ -290,8 +305,11 @@ class Builder:
         return str(p.relative_to(self.root))
 
     # -- writing rows -------------------------------------------------------------------------
+    def row(self, table, *values):
+        self.db.execute(f"INSERT INTO {table} VALUES ({','.join('?' * len(values))})", values)
+
     def problem(self, path, msg, line=None):
-        self.db.execute("INSERT INTO problems VALUES (?,?,?)", (path, line, msg))
+        self.row("problems", path, line, msg)
 
     def define(self, scope, id_, expected, path, name=None, data=None):
         if not isinstance(id_, str) or not id_.strip():
@@ -299,10 +317,7 @@ class Builder:
             return None
         id_ = id_.strip()
         line = self.id_lines.get(path, {}).get(id_)
-        self.db.execute(
-            "INSERT INTO defs VALUES (?,?,?,?,?,?,?,?,?)",
-            (scope, id_, kind_of(id_) or "unknown", expected, path, line, text(name), text(data), id_number(id_)),
-        )
+        self.row("defs", scope, id_, kind_of(id_) or "unknown", expected, path, line, text(name), text(data), id_number(id_))
         return id_
 
     def ref(self, scope, source, rel, targets, path):
@@ -313,7 +328,7 @@ class Builder:
             # a sentence or a nested value gives every ID it cites.
             single = isinstance(t, (str, int)) and len(str(t).split()) == 1
             for tid in ([str(t).strip()] if single else ids_in(t)):
-                self.db.execute("INSERT INTO refs VALUES (?,?,?,?,?)", (scope, source, rel, tid, path))
+                self.row("refs", scope, source, rel, tid, path)
 
     def alias(self, kind, id_, item, scope, path, retired=0):
         """An item's old IDs: `alias`, `alias_partiel` (a split, prompt 10) and `alias_decision` (a merge)."""
@@ -324,14 +339,14 @@ class Builder:
                 return [(str(pl), str(o)) for pl, old in value.items() for o in as_list(old)]
             return [(None, str(o)) for o in as_list(value)]
         for platform, old in pairs(item.get("alias")):
-            self.db.execute("INSERT INTO aliases VALUES (?,?,?,?,?,0,?)", (kind, id_, platform, old, path, retired))
+            self.row("aliases", kind, id_, platform, old, path, 0, retired)
         for platform, old in pairs(item.get("alias_partiel")):
             hit = self.db.execute("UPDATE aliases SET partial = 1 WHERE id = ? AND alias = ? AND platform IS ?",
                                   (id_, old, platform)).rowcount
             if not hit:
-                self.db.execute("INSERT INTO aliases VALUES (?,?,?,?,?,1,?)", (kind, id_, platform, old, path, retired))
+                self.row("aliases", kind, id_, platform, old, path, 1, retired)
         for dec in as_list(item.get("alias_decision")):
-            self.db.execute("INSERT INTO alias_decisions VALUES (?,?,?,?)", (scope, id_, text(dec), path))
+            self.row("alias_decisions", scope, id_, text(dec), path)
 
     # -- reading the docs ---------------------------------------------------------------------
     def build(self):
@@ -343,7 +358,7 @@ class Builder:
         if tmp.exists():
             tmp.unlink()
         self.db = sqlite3.connect(tmp)
-        self.db.executescript(SCHEMA)
+        self.db.executescript("PRAGMA journal_mode=OFF; PRAGMA synchronous=OFF; BEGIN;" + SCHEMA + "COMMIT;")
         self.db.executemany("INSERT INTO rel_direction VALUES (?,?)", REL_DIRECTION.items())
 
         files = doc_files(self.root, self.docs)
@@ -371,8 +386,7 @@ class Builder:
                 if is_template(block):
                     n = block.count("\n") + 1
                     skip_lines.update(range(first, first + n))
-                    self.db.execute("INSERT INTO sources VALUES (?,?,?,?,?)",
-                                    (path, f"line {first}", "template", None, "format template from a prompt: not read as data"))
+                    self.row("sources", path, f"line {first}", "template", None, "format template from a prompt: not read as data")
                 else:
                     data_text.append(block)
             doc = None
@@ -386,7 +400,7 @@ class Builder:
             parsed.append((p, path, raw, lines, doc, skip_lines))
 
         # An app with an archived per-platform registry targets several platforms.
-        multi = any(isinstance(d, dict) and ("pages" in d or "features" in d) and self.is_archive(path, lines)
+        multi = any(is_registry(d) and self.is_archive(path, lines)
                     for _, path, _, lines, d, _ in parsed)
 
         canonical_registries = []
@@ -394,19 +408,19 @@ class Builder:
             scope = self.scope_of(path, lines, doc, multi)
             self.file_scope[path] = scope
             if isinstance(doc, dict):
-                self.load(doc, path, scope)
-                if scope == CANONICAL and ("pages" in doc or "features" in doc):
+                self.load(doc, path, scope, lines)
+                if scope == CANONICAL and is_registry(doc):
                     canonical_registries.append(path)
             elif doc is not None:
                 self.problem(path, "the YAML is not a mapping of sections (roles, pages, features, …)")
             # A doc named or titled "archive" is frozen history: kept, never held to the current IDs.
-            self.db.execute("INSERT INTO docs VALUES (?,?,?)", (path, scope, int(self.is_archive(path, lines))))
+            self.row("docs", path, scope, int(self.is_archive(path, lines)))
             # Every ID cited. After the merge, a live doc cites canonical IDs only, inventories included.
             for n, line in enumerate(lines, 1):
                 if n in skip:
                     continue
                 for m in cited_ids(line):
-                    self.db.execute("INSERT INTO mentions VALUES (?,?,?,?,?,?)", (scope, m, kind_of(m), path, n, m))
+                    self.row("mentions", scope, m, kind_of(m), path, n, m)
         if len(canonical_registries) > 1:
             self.problem(", ".join(canonical_registries),
                          "more than one canonical registry: archive the per-platform ones (name them with 'archive' and their platform)")
@@ -414,7 +428,7 @@ class Builder:
         meta = {
             "built_at": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
             "commit": git_head(self.root),
-            "fingerprint": fingerprint(self.root, self.docs),
+            "fingerprint": self.fp or fingerprint(self.root, self.docs),
             "docs": json.dumps(self.docs),
             "multi_platform": "1" if multi else "0",
         }
@@ -433,9 +447,8 @@ class Builder:
         return bool(ARCHIVE_RE.search(Path(path).name) or ARCHIVE_RE.search(self.title(lines)))
 
     def scope_of(self, path, lines, doc, multi):
-        is_registry = isinstance(doc, dict) and ("pages" in doc or "features" in doc)
         words = platform_words(Path(path).name)
-        if is_registry and self.is_archive(path, lines):
+        if is_registry(doc) and self.is_archive(path, lines):
             if len(words) == 1:
                 return words[0]
             title = platform_words(self.title(lines))
@@ -448,7 +461,7 @@ class Builder:
             return "unknown"
         return CANONICAL
 
-    def load(self, doc, path, scope):
+    def load(self, doc, path, scope, lines):
         sections = []
         if any(k in doc for k in ("roles", "pages", "features", "entites", "decisions", "ids_retires")):
             self.load_registry(doc, path, scope)
@@ -460,12 +473,12 @@ class Builder:
             self.load_data_flows(doc, path)
             sections.append("data_flows")
         if "page" in doc and "composants" in doc:
-            self.load_contract(doc, path)
+            self.load_contract(doc, path, lines)
             sections.append("page_contract")
         if not sections:
             sections.append("other")
         for s in sections:
-            self.db.execute("INSERT INTO sources VALUES (?,?,?,?,?)", (path, "yaml", s, scope, None))
+            self.row("sources", path, "yaml", s, scope, None)
 
     def items(self, doc, key, path):
         out = []
@@ -480,24 +493,24 @@ class Builder:
         for r in self.items(doc, "roles", path):
             rid = self.define(scope, r.get("id"), "role", path, r.get("nom"), r)
             if rid:
-                self.db.execute("INSERT INTO roles VALUES (?,?,?,?,?)", (scope, rid, text(r.get("nom")), text(r.get("portee")), path))
+                self.row("roles", scope, rid, text(r.get("nom")), text(r.get("portee")), path)
                 self.alias("role", rid, r, scope, path)
         for pg in self.items(doc, "pages", path):
             pid = self.define(scope, pg.get("id"), "page", path, pg.get("nom"), pg)
             if pid:
-                self.db.execute("INSERT INTO pages VALUES (?,?,?,?,?)", (scope, pid, text(pg.get("nom")), text(pg.get("plateforme")), path))
+                self.row("pages", scope, pid, text(pg.get("nom")), text(pg.get("plateforme")), path)
                 self.ref(scope, pid, "page_feature", pg.get("features"), path)
                 self.alias("page", pid, pg, scope, path)
                 if kind_of(pid) == "page_state":
                     # A state belongs to its page: a change to the page can reach it.
-                    self.db.execute("INSERT INTO refs VALUES (?,?,?,?,?)", (scope, pid.split(".")[0], "page_state", pid, path))
+                    self.row("refs", scope, pid.split(".")[0], "page_state", pid, path)
         for f in self.items(doc, "features", path):
             fid = self.define(scope, f.get("id"), "feature", path, f.get("nom"), {k: v for k, v in f.items() if k != "variantes"})
             if not fid:
                 continue
-            self.db.execute("INSERT INTO features VALUES (?,?,?,?,?)", (scope, fid, text(f.get("nom")), text(f.get("operations")), path))
+            self.row("features", scope, fid, text(f.get("nom")), text(f.get("operations")), path)
             for plat in as_list(f.get("plateformes")):
-                self.db.execute("INSERT INTO feature_platforms VALUES (?,?,?)", (scope, fid, str(plat)))
+                self.row("feature_platforms", scope, fid, str(plat))
             self.ref(scope, fid, "feature_page", f.get("pages"), path)
             self.ref(scope, fid, "feature_role", f.get("acces"), path)
             self.ref(scope, fid, "feature_entity", f.get("entites"), path)
@@ -509,11 +522,10 @@ class Builder:
                 vid = self.define(scope, v.get("id"), "variant", path, v.get("difference"), v)
                 if not vid:
                     continue
-                self.db.execute("INSERT INTO variants VALUES (?,?,?,?,?,?)",
-                                (scope, vid, fid, text(v.get("difference")), 1 if "acces" in v else 0, path))
+                self.row("variants", scope, vid, fid, text(v.get("difference")), 1 if "acces" in v else 0, path)
                 for plat in as_list(v.get("plateforme")):
-                    self.db.execute("INSERT INTO variant_platforms VALUES (?,?,?)", (scope, vid, str(plat)))
-                self.db.execute("INSERT INTO refs VALUES (?,?,?,?,?)", (scope, vid, "variant_feature", fid, path))
+                    self.row("variant_platforms", scope, vid, str(plat))
+                self.row("refs", scope, vid, "variant_feature", fid, path)
                 self.ref(scope, vid, "variant_page", v.get("pages"), path)
                 self.ref(scope, vid, "variant_role", v.get("acces"), path)
                 self.alias("variant", vid, v, scope, path)
@@ -521,17 +533,17 @@ class Builder:
             eid = self.define(scope, e.get("id"), "entity", path, e.get("nom"), e)
             if not eid:
                 continue
-            self.db.execute("INSERT INTO entities VALUES (?,?,?,?)", (scope, eid, text(e.get("nom")), path))
+            self.row("entities", scope, eid, text(e.get("nom")), path)
             for fld in as_list(e.get("champs", e.get("champs_visibles"))):
-                self.db.execute("INSERT INTO entity_fields VALUES (?,?,?)", (scope, eid, text(fld)))
+                self.row("entity_fields", scope, eid, text(fld))
             self.ref(scope, eid, "entity_feature", e.get("utilisee_par"), path)
             self.alias("entity", eid, e, scope, path)
         for d in self.items(doc, "decisions", path):
             did = self.define(scope, d.get("id"), "decision", path, d.get("sujet"), d)
             if not did:
                 continue
-            self.db.execute("INSERT INTO decisions VALUES (?,?,?,?,?,?)",
-                            (scope, did, text(d.get("sujet")), text(d.get("choix")), text(d.get("raison")), path))
+            self.row("decisions", scope, did, text(d.get("sujet")), text(d.get("choix")), text(d.get("raison")),
+                     path)
             cited = ids_in({k: v for k, v in d.items() if k not in ("id", "alias", "alias_partiel")})
             self.ref(scope, did, "decision_cites", sorted(set(cited) - {did}), path)
             self.alias("decision", did, d, scope, path)
@@ -542,7 +554,7 @@ class Builder:
                 self.problem(path, f"an entry of ids_retires has neither id nor alias: {text(r)[:120]}")
                 continue
             if rid:
-                self.db.execute("INSERT INTO retired VALUES (?,?,?,?)", (scope, rid, text(r.get("decision")), path))
+                self.row("retired", scope, rid, text(r.get("decision")), path)
             olds = ids_in(r.get("alias"))
             self.alias(kind_of(rid or (olds[0] if olds else "")) or "unknown", rid, r, scope, path, retired=1)
 
@@ -552,9 +564,8 @@ class Builder:
             tid = self.define(s, t.get("id"), "table", path, t.get("nom"), {k: v for k, v in t.items() if k != "colonnes"})
             if not tid:
                 continue
-            self.db.execute("INSERT INTO data_tables VALUES (?,?,?,?,?,?,?)",
-                            (tid, text(t.get("nom")), text(t.get("type")), text(t.get("stockage")),
-                             text(t.get("entite")), text(t.get("raison")), path))
+            self.row("data_tables", tid, text(t.get("nom")), text(t.get("type")), text(t.get("stockage")),
+                     text(t.get("entite")), text(t.get("raison")), path)
             self.ref(s, tid, "table_entity", [x for x in ids_in(t.get("entite")) if kind_of(x) == "entity"], path)
             self.ref(s, tid, "table_store", t.get("stockage"), path)
             for c in as_list(t.get("colonnes")):
@@ -562,9 +573,8 @@ class Builder:
                     self.problem(path, f"a column of {tid} is not a mapping: {text(c)[:120]}")
                     continue
                 req = c.get("obligatoire")
-                self.db.execute("INSERT INTO table_columns VALUES (?,?,?,?,?,?)",
-                                (tid, text(c.get("nom")), text(c.get("type")), text(c.get("cle")),
-                                 text(c.get("reference")), None if req is None else int(bool(req))))
+                self.row("table_columns", tid, text(c.get("nom")), text(c.get("type")), text(c.get("cle")),
+                         text(c.get("reference")), None if req is None else int(bool(req)))
                 self.ref(s, tid, "column_reference", [x for x in ids_in(c.get("reference")) if kind_of(x) == "table"], path)
 
     def load_data_flows(self, doc, path):
@@ -572,66 +582,68 @@ class Builder:
         for n in self.items(doc, "noeuds", path):
             nid = self.define(s, n.get("id"), "node", path, n.get("nom"), n)
             if nid:
-                self.db.execute("INSERT INTO nodes VALUES (?,?,?,?,?,?)",
-                                (nid, text(n.get("type")), text(n.get("nom")), text(n.get("role")), text(n.get("modele")), path))
+                self.row("nodes", nid, text(n.get("type")), text(n.get("nom")), text(n.get("role")),
+                         text(n.get("modele")), path)
                 self.ref(s, nid, "node_role", n.get("role"), path)
         for f in self.items(doc, "flux", path):
             fid = self.define(s, f.get("id"), "data_flow", path, None, f)
             if not fid:
                 continue
             sens = f.get("sensible")
-            self.db.execute("INSERT INTO data_flows VALUES (?,?,?,?,?,?)",
-                            (fid, text(f.get("de")), text(f.get("vers")), text(f.get("protocole")),
-                             None if sens is None else int(bool(sens)), path))
+            self.row("data_flows", fid, text(f.get("de")), text(f.get("vers")), text(f.get("protocole")),
+                     None if sens is None else int(bool(sens)), path)
             self.ref(s, fid, "data_flow_source", f.get("de"), path)
             self.ref(s, fid, "data_flow_target", f.get("vers"), path)
             self.ref(s, fid, "data_flow_entity", f.get("donnees"), path)
             self.ref(s, fid, "data_flow_feature", f.get("features"), path)
             self.ref(s, fid, "data_flow_flow", f.get("flows"), path)
 
-    def load_contract(self, doc, path):
+    def load_contract(self, doc, path, lines):
         s = CANONICAL
         page = text(doc.get("page"))
-        self.db.execute("INSERT INTO page_contracts VALUES (?,?,?)", (page, text(doc.get("nom")), path))
+        self.row("page_contracts", page, text(doc.get("nom")), path)
         self.ref(s, page, "contract_role", doc.get("acces"), path)
         for c in self.items(doc, "composants", path):
             cid = self.define(s, c.get("id"), "component", path, c.get("nom_accessible"), c)
             if not cid:
                 continue
-            self.db.execute("INSERT INTO components VALUES (?,?,?,?,?,?)",
-                            (cid, page, text(c.get("nom_accessible")), text(c.get("type")), text(c.get("feature")), path))
-            self.db.execute("INSERT INTO refs VALUES (?,?,?,?,?)", (s, cid, "component_page", page, path))
+            self.row("components", cid, page, text(c.get("nom_accessible")), text(c.get("type")),
+                     text(c.get("feature")), path)
+            self.row("refs", s, cid, "component_page", page, path)
             self.ref(s, cid, "component_feature", c.get("feature"), path)
             for mode, key in (("read", "lit"), ("write", "ecrit")):
                 for col in as_list(c.get(key)):
-                    self.db.execute("INSERT INTO component_columns VALUES (?,?,?)", (cid, text(col), mode))
+                    self.row("component_columns", cid, text(col), mode)
                     self.ref(s, cid, "component_table", [x for x in ids_in(col) if kind_of(x) == "table"], path)
             self.ref(s, cid, "component_data_flow", c.get("flux"), path)
             for mode, key in (("visible", "visible_si"), ("enabled", "actif_si")):
                 for cond in as_list(c.get(key)):
-                    self.db.execute("INSERT INTO component_conditions VALUES (?,?,?)", (cid, mode, text(cond)))
+                    self.row("component_conditions", cid, mode, text(cond))
                     self.ref(s, cid, "component_condition", ids_in(cond), path)
-        full = (self.root / path).read_text(encoding="utf-8").splitlines()
-        for n, line in enumerate(full, 1):
+        for n, line in enumerate(lines, 1):
             if "MANQUANT" in line:
-                self.db.execute("INSERT INTO missing VALUES (?,?,?)", (path, n, line.strip()))
+                self.row("missing", path, n, line.strip())
 
 
 # -- commands -----------------------------------------------------------------------------------
 
-def open_db(args, rebuild_if_stale=True):
+def open_db(args):
     db_path = args.root / DB_REL
-    fresh = False
+    fp, fresh = fingerprint(args.root, args.docs), False
     if db_path.exists():
         try:
             con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
             row = con.execute("SELECT value FROM meta WHERE key='fingerprint'").fetchone()
-            fresh = row is not None and row[0] == fingerprint(args.root, args.docs)
+            fresh = row is not None and row[0] == fp
             con.close()
         except sqlite3.Error:
             fresh = False
-    if not fresh and rebuild_if_stale:
-        Builder(args.root, args.docs, db_path).build()
+    if not fresh:
+        Builder(args.root, args.docs, db_path, fp).build()
+    return read_only(db_path)
+
+
+def read_only(db_path):
     return prepare(sqlite3.connect(f"file:{db_path}?mode=ro", uri=True))
 
 
@@ -676,7 +688,7 @@ def md_table(rows, cols=None, limit=None):
 
 def cmd_build(args):
     meta = Builder(args.root, args.docs, args.root / DB_REL).build()
-    con = open_db(args, rebuild_if_stale=False)
+    con = read_only(args.root / DB_REL)
     print(f"Built {DB_REL} from {', '.join(args.docs)} at commit {meta['commit'] or '-'} (fingerprint {meta['fingerprint']}).")
     rows = con.execute("SELECT scope, kind, COUNT(DISTINCT id) AS n FROM defs GROUP BY scope, kind ORDER BY scope, kind").fetchall()
     print(md_table(rows))

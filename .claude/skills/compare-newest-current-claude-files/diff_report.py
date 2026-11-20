@@ -95,14 +95,12 @@ def source_key(path, rel, index):
 
 def find_moves(repo, current, newest, old, new, removed, added):
     """Pairs a removed and an added file imported from the same source: the file was renamed."""
-    keys_old = {}
-    idx = index_sources(repo / current)
-    for rel in removed:
-        keys_old.setdefault(source_key(old[rel], rel, idx), []).append(rel)
-    keys_new = {}
-    idx = index_sources(repo / newest)
-    for rel in added:
-        keys_new.setdefault(source_key(new[rel], rel, idx), []).append(rel)
+    def keys(folder, rels, paths):
+        idx, out = index_sources(repo / folder), {}
+        for rel in rels:
+            out.setdefault(source_key(paths[rel], rel, idx), []).append(rel)
+        return out
+    keys_old, keys_new = keys(current, removed, old), keys(newest, added, new)
     return sorted((keys_old[k][0], keys_new[k][0]) for k in keys_old
                   if len(keys_old[k]) == 1 and len(keys_new.get(k, [])) == 1)
 
@@ -117,28 +115,21 @@ def compare(repo, current, newest):
     added = sorted(set(new) - set(old))
     removed = sorted(set(old) - set(new))
     moves = find_moves(repo, current, newest, old, new, removed, added)
-    added = [r for r in added if r not in {n for _, n in moves}]
-    removed = [r for r in removed if r not in {o for o, _ in moves}]
+    moved_from, moved_to = {o for o, _ in moves}, {n for _, n in moves}
+    added = [r for r in added if r not in moved_to]
+    removed = [r for r in removed if r not in moved_from]
     diffs = []  # (old path, new path, old lines, new lines); lines None for binary content
     same = 0
     moved_same = set()
     for o, n in [(rel, rel) for rel in sorted(set(old) & set(new))] + moves:
         a, b = text_lines(old[o]), text_lines(new[n])
-        if a is None or b is None:
-            if digest(old[o]) != digest(new[n]):
-                diffs.append((o, n, None, None))
-            elif o == n:
-                same += 1
-            else:
-                moved_same.add(o)
-            continue
-        if a[0] == b[0]:
-            if o == n:
-                same += 1
-            else:
-                moved_same.add(o)
-            continue
-        diffs.append((o, n, a, b))
+        binary = a is None or b is None
+        if digest(old[o]) != digest(new[n]) if binary else a[0] != b[0]:
+            diffs.append((o, n, None, None) if binary else (o, n, a, b))
+        elif o == n:
+            same += 1
+        else:
+            moved_same.add(o)
     for rel in added:
         print(f"ADDED    {rel}")
     for rel in removed:
