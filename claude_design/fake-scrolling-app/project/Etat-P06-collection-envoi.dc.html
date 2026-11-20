@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Collections — création en cours</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F6B4A}a:hover{color:#174F37}
+button:focus-visible,a:focus-visible{outline:2px solid #2F4F9E;outline-offset:2px}
+@keyframes fs-spin{to{transform:rotate(360deg)}}
+.fs-spin{animation:fs-spin 0.9s linear infinite}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #24315E; color: #1C1C1C; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; overflow: hidden; position: relative">
+  <div aria-hidden="true" style="position: absolute; inset: 0; filter: blur(22px)">
+    <div style="position: absolute; left: 30px; top: 120px; width: 220px; height: 220px; border-radius: 50%; background: #FF7A59"></div>
+    <div style="position: absolute; left: 170px; top: 330px; width: 240px; height: 200px; border-radius: 30%; background: #2EC4B6"></div>
+  </div>
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(28, 28, 28, 0.5)"></div>
+
+  <div role="dialog" aria-modal="true" aria-labelledby="sheet-title" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 10px 16px 28px; border-radius: 24px 24px 0 0; background: #FFFFFF">
+    <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #DEDEDA"></span>
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+      <h2 id="sheet-title" style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 22px">Enregistrer dans une collection</h2>
+      <button type="button" aria-label="Fermer" style="width: 44px; height: 44px; margin-right: -8px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <button type="button" aria-pressed="false" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid #DEDEDA; background: #FFFFFF; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+        <span aria-hidden="true" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #FFD166; filter: blur(1px)"></span>
+        <span style="flex: 1">Pour plus tard</span>
+        <span style="font: 500 12px 'IBM Plex Mono', monospace; color: #1F6B4A"></span>
+      </button>
+      <button type="button" aria-pressed="false" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid #DEDEDA; background: #FFFFFF; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+        <span aria-hidden="true" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #06D6A0; filter: blur(1px)"></span>
+        <span style="flex: 1">Formes calmes</span>
+        <span style="font: 500 12px 'IBM Plex Mono', monospace; color: #1F6B4A"></span>
+      </button>
+      <button type="button" aria-pressed="false" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid #DEDEDA; background: #FFFFFF; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+        <span aria-hidden="true" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #3A86FF; filter: blur(1px)"></span>
+        <span style="flex: 1">Couleurs à garder</span>
+        <span style="font: 500 12px 'IBM Plex Mono', monospace; color: #1F6B4A"></span>
+      </button>
+      <button type="button" disabled style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px dashed #DEDEDA; background: #F5F5F4; color: #5E5E5B; font: 600 16px 'IBM Plex Sans', sans-serif; text-align: left">
+        <span style="width: 22px; height: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: center">
+          <span role="status" aria-label="Création en cours" class="fs-spin" style="width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 2px solid #DEDEDA; border-top-color: #1C1C1C"></span>
+        </span>
+        Nouvelle collection
+      </button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

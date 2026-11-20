@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Notifications — chargement</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F6B4A}a:hover{color:#174F37}
+button:focus-visible,a:focus-visible{outline:2px solid #2F4F9E;outline-offset:2px}
+@keyframes fs-spin{to{transform:rotate(360deg)}}
+.fs-spin{animation:fs-spin 0.9s linear infinite}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; color: #1C1C1C; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; overflow: hidden; position: relative">
+
+  <div style="flex: 1; min-height: 0; position: relative; overflow: hidden; background: #24315E">
+    <div aria-hidden="true" style="position: absolute; inset: 0; filter: blur(22px)">
+      <div style="position: absolute; left: 30px; top: 120px; width: 220px; height: 220px; border-radius: 50%; background: #FF7A59"></div>
+      <div style="position: absolute; left: 170px; top: 330px; width: 240px; height: 200px; border-radius: 30%; background: #2EC4B6"></div>
+      <div style="position: absolute; left: -30px; top: 480px; width: 180px; height: 180px; border-radius: 50%; background: #FFBE0B"></div>
+    </div>
+    <div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(28, 28, 28, 0.2)"></div>
+    <div style="position: absolute; top: 0; right: 0; padding: 14px 12px; color: #FFFFFF">
+      <button type="button" aria-label="Notifications" aria-expanded="true" style="position: relative; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6))"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg>
+      </button>
+    </div>
+    <div role="dialog" aria-label="Notifications" style="position: absolute; top: 62px; left: 12px; right: 12px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 160px; padding: 36px 24px; text-align: center; background: #FFFFFF; border-radius: 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25)">
+      <span role="status" aria-label="Chargement des notifications" class="fs-spin" style="width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; border: 3px solid #DEDEDA; border-top-color: #1C1C1C"></span>
+    </div>
+  </div>
+
+  <nav aria-label="Navigation principale" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid #DEDEDA; background: #FFFFFF; padding: 6px 4px 14px">
+    <span aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; color: #1F6B4A; font: 600 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"></path></svg>
+      Accueil
+    </span>
+    <span style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-9l-5 4V6a1 1 0 0 1 1-1z"></path></svg>
+      Messages
+    </span>
+    <span aria-label="Publier" style="display: flex; align-items: center; justify-content: center; min-height: 52px">
+      <span style="width: 54px; height: 40px; border-radius: 13px; background: #1C1C1C; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+      </span>
+    </span>
+    <span style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      Recherche
+    </span>
+    <span style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; color: #5E5E5B; font: 500 11px 'IBM Plex Sans', sans-serif">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+      Profil
+    </span>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

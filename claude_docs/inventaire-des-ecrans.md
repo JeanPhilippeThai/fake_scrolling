@@ -1,9 +1,9 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 76, exported 2026-11-19 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 94, exported 2026-11-20 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
 
-Le design compte 26 écrans, de P-01 à P-26, plus 33 états de page dessinés à part (D-040). Ils suivent l'ordre du parcours : connexion, Accueil, Messages, Nouveau post, Recherche, Profil. Les panneaux de la création d'un post, ajoutés ensuite, sont à la fin (P-24 à P-26).
+Le design compte 26 écrans, de P-01 à P-26, plus 58 états de page dessinés à part (D-040, D-041). Ils suivent l'ordre du parcours : connexion, Accueil, Messages, Nouveau post, Recherche, Profil. Les panneaux de la création d'un post, ajoutés ensuite, sont à la fin (P-24 à P-26).
 
 - **Écran** : toute vue distincte, y compris un panneau qui se superpose à une autre page (notifications, commentaires, options…).
 - **Pas de regroupement** : un même élément présent sur plusieurs pages (menu du bas, grisage) est relisté sur chacune.
@@ -74,9 +74,9 @@ Fil plein écran, un post à la fois, avec actions en colonne à droite et cloch
 | Voir un post Premium | Après 1 h dans l'app, 1 post sur 20 propose de soutenir le projet | Temps passé, icône du thème, prix 1,99 € | Absent avant 1 h ou si déjà soutenu |
 | Soutenir le projet | Bouton noir « Soutenir le projet » du post Premium | Achat 1,99 € (paiement par le store : à confirmer) | Bouton ; puis « Merci pour ton soutien. » ; paiement échoué (P-03.c) |
 | Liker un post par double tap | Double tap sur l'image : grand cœur animé | Like du post (+1) | Animation du cœur ; ne retire jamais le like |
-| Liker ou retirer son like | Cœur blanc dans la colonne de droite | Nombre de likes | Vide blanc ; plein rose quand liké |
+| Liker ou retirer son like | Cœur blanc dans la colonne de droite | Nombre de likes | Vide blanc ; plein rose quand liké ; échec : redevient vide (P-03.e) |
 | Ouvrir les commentaires | Bulle dans la colonne de droite, ouvre P-05 | Nombre de commentaires (+ les miens) | — |
-| Enregistrer un post | Signet dans la colonne de droite, ouvre P-06 | Nombre d'enregistrements | Vide ; plein quand enregistré |
+| Enregistrer un post | Signet dans la colonne de droite, ouvre P-06 | Nombre d'enregistrements | Vide ; plein quand enregistré ; échec : redevient vide (P-03.f) |
 | Partager un post | Flèche dans la colonne de droite, ouvre P-07 | Nombre de partages | — |
 | Voir la photo du publieur | Rond en haut de la colonne de droite | Photo floue du publieur | Non cliquable |
 | Lire le pseudo du publieur | Nom en blanc au-dessus de la légende | Pseudo en charabia | — |
@@ -99,6 +99,8 @@ Fil plein écran, un post à la fois, avec actions en colonne à droite et cloch
 | P-03.b | Fil : erreur de chargement | « Les posts suivants n’ont pas pu être chargés. » avec « Réessayer » | `Etat-P03-fil-erreur.dc.html` |
 | P-03.c | Paiement échoué | Post Premium : « Le paiement n’a pas abouti. Tu n’as pas été débité. » avec « Réessayer » | `Etat-P03-premium-echec.dc.html` |
 | P-03.d | Post publié | Toast « Post publié. » sur le post qu’on vient de publier | `Etat-P13-publication-succes.dc.html` |
+| P-03.e | Like non enregistré | Cœur redevenu vide ; « Le like n’a pas été enregistré. » en bas du fil | `Etat-P03-like-echec.dc.html` |
+| P-03.f | Enregistrement : échec | Signet redevenu vide ; « Le post n’a pas été enregistré. » en bas du fil | `Etat-P03-enregistrement-echec.dc.html` |
 
 ## P-04 Accueil — panneau Notifications
 
@@ -109,9 +111,9 @@ Panneau centré sous la cloche, par-dessus le fil : invitations d'amis puis like
 | Fermer les notifications | Tap sur la partie assombrie autour du panneau | Aucune | — |
 | Faire défiler les notifications | Liste qui défile, sans barre de défilement | Aucune | — |
 | Voir les invitations d'amis | Section « Invitations » : photo floue, pseudo, @ | 3 demandes en démo (vraies demandes : à confirmer) | Section masquée quand toutes sont refusées |
-| Accepter une invitation | Bouton vert « Accepter » | Statut de la demande | Devient « Ami » en vert |
+| Accepter une invitation | Bouton vert « Accepter » | Statut de la demande | Devient « Ami » en vert ; réponse en cours (P-04.d) ; erreur (P-04.e) |
 | Refuser une invitation | Bouton « Refuser » | Statut de la demande | La ligne disparaît |
-| Voir les likes reçus | Section « Likes » : photo floue, « X a aimé ton post · 9 min » | 7 likes en démo, pseudo, ancienneté | Panneau vide : « Aucune notification » (P-04.a) |
+| Voir les likes reçus | Section « Likes » : photo floue, « X a aimé ton post · 9 min » | 7 likes en démo, pseudo, ancienneté | Chargement (P-04.b) ; erreur (P-04.c) ; panneau vide : « Aucune notification » (P-04.a) |
 | Voir le post liké | Miniature carrée à droite de chaque like | Aperçu du post | Non cliquable (ouverture du post : à confirmer) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
@@ -120,6 +122,10 @@ Panneau centré sous la cloche, par-dessus le fil : invitations d'amis puis like
 | État | Nom | Ce qu'il montre | Artboard |
 | --- | --- | --- | --- |
 | P-04.a | Aucune notification | « Aucune notification » · « Les invitations et les likes reçus s’affichent ici. » | `Etat-P04-notifications-vide.dc.html` |
+| P-04.b | Notifications : chargement | Panneau avec indicateur de chargement | `Etat-P04-notifications-chargement.dc.html` |
+| P-04.c | Notifications : erreur | « Les notifications n’ont pas pu être chargées. » avec « Réessayer » | `Etat-P04-notifications-erreur.dc.html` |
+| P-04.d | Invitation : réponse en cours | Indicateur dans « Accepter », les deux boutons désactivés | `Etat-P04-invitation-envoi.dc.html` |
+| P-04.e | Invitation : erreur | « Ta réponse n’a pas été envoyée. » avec « Réessayer » sous l’invitation | `Etat-P04-invitation-erreur.dc.html` |
 
 ## P-05 Accueil — panneau Commentaires
 
@@ -128,7 +134,7 @@ Panneau qui monte du bas sur un post : on lit, on like et on publie des commenta
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
 | Fermer les commentaires | Croix en haut à droite ou tap sur le fond assombri | Aucune | — |
-| Lire les commentaires | Liste : photo floue, pseudo · ancienneté, texte | 6 commentaires en démo + les miens en tête ; texte en charabia + émojis | Chargement (P-05.a) ; vide (P-05.b) |
+| Lire les commentaires | Liste : photo floue, pseudo · ancienneté, texte | 6 commentaires en démo + les miens en tête ; texte en charabia + émojis | Chargement (P-05.a) ; vide (P-05.b) ; erreur (P-05.d) |
 | Liker un commentaire | Petit cœur à droite de chaque commentaire, compteur dessous | Nombre de likes du commentaire | Vide gris ; plein rouge quand liké (+1) |
 | Écrire un commentaire | Champ « Ajouter un commentaire… » en bas, avec sa photo | Texte (150 caractères max) | Vide ; rempli |
 | Publier un commentaire | Bouton « Publier » à droite du champ | Nouveau commentaire signé moi.ici · à l'instant ; compteur du post +1 | Gris si champ vide ; texte tapé visible moins d'1 s puis charabia (émojis gardés) ; échec : « Non publié. » (P-05.c) |
@@ -141,6 +147,7 @@ Panneau qui monte du bas sur un post : on lit, on like et on publie des commenta
 | P-05.a | Commentaires : chargement | Panneau sans commentaires, indicateur de chargement | `Etat-P05-commentaires-chargement.dc.html` |
 | P-05.b | Aucun commentaire | « Aucun commentaire » · « Écris le premier. » | `Etat-P05-commentaires-vide.dc.html` |
 | P-05.c | Commentaire non publié | Mon commentaire marqué « Non publié. » avec « Réessayer » | `Etat-P05-commentaire-echec.dc.html` |
+| P-05.d | Commentaires : erreur | « Les commentaires n’ont pas pu être chargés. » avec « Réessayer » | `Etat-P05-commentaires-erreur.dc.html` |
 
 ## P-06 Accueil — panneau Enregistrer dans une collection
 
@@ -151,8 +158,15 @@ Panneau qui monte du bas : on range le post dans une collection.
 | Fermer le panneau | Croix ou tap sur le fond assombri | Aucune | — |
 | Enregistrer dans une collection | Ligne par collection avec pastille de couleur et nom | 3 collections par défaut : Pour plus tard, Formes calmes, Couleurs à garder | Collection choisie encadrée en vert avec « enregistré » ; le panneau se ferme |
 | Retirer d'une collection | Tap sur la collection déjà choisie | Enregistrement du post | Message « Retiré de … » |
-| Créer une collection | Ligne en pointillé « Nouvelle collection » | Nouvelle collection nommée automatiquement « Collection 4 »… (saisie du nom : à confirmer) | Le post y est enregistré aussitôt |
+| Créer une collection | Ligne en pointillé « Nouvelle collection » | Nouvelle collection nommée automatiquement « Collection 4 »… (saisie du nom : à confirmer) | Le post y est enregistré aussitôt ; création en cours (P-06.a) ; erreur (P-06.b) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
+
+**États dessinés à part**
+
+| État | Nom | Ce qu'il montre | Artboard |
+| --- | --- | --- | --- |
+| P-06.a | Nouvelle collection : création | Indicateur dans la ligne « Nouvelle collection », désactivée | `Etat-P06-collection-envoi.dc.html` |
+| P-06.b | Nouvelle collection : erreur | « La collection n’a pas été créée. » avec « Réessayer » | `Etat-P06-collection-erreur.dc.html` |
 
 ## P-07 Accueil — panneau Partager
 
@@ -161,10 +175,16 @@ Panneau qui monte du bas : trois façons de partager le post.
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
 | Fermer le panneau | Croix ou tap sur le fond assombri | Aucune | — |
-| Envoyer à un ami | Rangée d'amis en tête du panneau ; un tap envoie le post à cet ami | Post envoyé en message (réception côté ami : à confirmer) ; message « Envoyé à … » sur P-03 | — |
+| Envoyer à un ami | Rangée d'amis en tête du panneau ; un tap envoie le post à cet ami | Post envoyé en message (réception côté ami : à confirmer) ; message « Envoyé à … » sur P-03 | Échec : « Non envoyé à … » (P-07.a) |
 | Copier le lien | Ligne qui copie le lien du post | Lien du post (copie réelle : à confirmer) | Message « Lien copié. Il mène à une version floutée. » |
 | Partager ailleurs | Ligne vers d'autres apps | Post (feuille de partage du téléphone : à confirmer) | Message « Partagé, flouté comme toujours. » |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
+
+**États dessinés à part**
+
+| État | Nom | Ce qu'il montre | Artboard |
+| --- | --- | --- | --- |
+| P-07.a | Envoi à un ami : échec | Ami cerclé de rouge, « Non envoyé à … » avec « Réessayer » ; le panneau reste ouvert | `Etat-P07-envoi-ami-echec.dc.html` |
 
 ## P-08 Messages — liste des discussions
 
@@ -179,7 +199,7 @@ Titre, loupe et + en haut, rangée de stories, puis la liste des discussions.
 | Faire défiler les stories | Glisser la rangée de gauche à droite | Aucune | — |
 | Voir la story d'un ami depuis la liste | Tap sur la photo cerclée d'une discussion, ouvre P-10 | Story de l'ami | Cercle vert ou gris ; photo sans cercle si pas de story |
 | Ouvrir une discussion | Tap sur le nom ou l'aperçu, ouvre P-09 | Discussion ; passe en lu | — |
-| Lire l'aperçu d'une discussion | Pseudo, dernier message (« Toi : », « Photo ») · heure | 8 discussions en démo, texte en charabia | Non lu : gras et point bleu ; lu : normal ; vide (P-08.a) |
+| Lire l'aperçu d'une discussion | Pseudo, dernier message (« Toi : », « Photo ») · heure | 8 discussions en démo, texte en charabia | Non lu : gras et point bleu ; lu : normal ; vide (P-08.a) ; chargement (P-08.c) ; erreur (P-08.d) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 | Ouvrir l'Accueil | Icône maison du menu du bas, ouvre P-03 | Aucune | Inactive (grise) |
 | Ouvrir Messages | Icône bulle du menu du bas | Aucune | Active (verte) sur cette page |
@@ -193,6 +213,8 @@ Titre, loupe et + en haut, rangée de stories, puis la liste des discussions.
 | --- | --- | --- | --- |
 | P-08.a | Aucune discussion | « Aucune discussion » · « Ajoute un ami pour commencer à discuter. » avec « Ajouter un ami » | `Etat-P08-discussions-vide.dc.html` |
 | P-08.b | Story publiée | Toast « Story publiée. » sur la liste des discussions | `Etat-P13-story-succes.dc.html` |
+| P-08.c | Discussions : chargement | Liste sans discussions, indicateur de chargement | `Etat-P08-discussions-chargement.dc.html` |
+| P-08.d | Discussions : erreur | « Les discussions n’ont pas pu être chargées. » avec « Réessayer » | `Etat-P08-discussions-erreur.dc.html` |
 
 ## P-09 Messages — conversation
 
@@ -204,14 +226,14 @@ Fil de discussion avec un ami ; le menu du bas est masqué.
 | Voir la story du contact | Tap sur sa photo cerclée en haut, ouvre P-10 | Story du contact | Cercle vert ou gris ; sans cercle si pas de story |
 | Lire le nom du contact | Pseudo et @ en haut | Pseudo en charabia, @ en clair | — |
 | Appeler le contact | Icône téléphone en haut à droite | Aucune | Sans effet dans la maquette (appel : à confirmer) |
-| Lire les messages | Bulles vertes (moi) à droite, grises (contact) à gauche, repère « Aujourd'hui » | Messages en charabia + émojis | Chargement (P-09.a) ; vide (P-09.b) |
+| Lire les messages | Bulles vertes (moi) à droite, grises (contact) à gauche, repère « Aujourd'hui » | Messages en charabia + émojis | Chargement (P-09.a) ; vide (P-09.b) ; erreur (P-09.d) |
 | Voir une photo envoyée ou reçue | Image dans le fil de messages | Photo floutée | — |
 | Répondre à un message | Glisser un message vers la droite | Message cité | Flèche de réponse qui apparaît ; sélectionné au-delà d'un seuil |
 | Voir le message cité | Bandeau « Réponse à … » au-dessus du champ, puis petite bulle au-dessus du message envoyé | Extrait du message cité | — |
 | Annuler la réponse | Croix dans le bandeau « Réponse à … » | Message cité | Bandeau disparaît |
 | Écrire un message | Champ « Message… » en bas | Texte saisi | Vide ; rempli |
 | Envoyer un message | « Envoyer » apparaît dans la bulle dès qu'on tape | Nouveau message | Texte tapé visible moins d'1 s puis charabia (émojis gardés) ; échec : « Non envoyé. » (P-09.c) |
-| Envoyer une photo | Icône image tout à droite dans la bulle, visible quand le champ est vide | Photo floutée (choix de la photo : à confirmer, la maquette envoie une image de démo) | Masquée quand on tape |
+| Envoyer une photo | Icône image tout à droite dans la bulle, visible quand le champ est vide | Photo floutée (choix de la photo : à confirmer, la maquette envoie une image de démo) | Masquée quand on tape ; échec : « Non envoyée. » (P-09.e) |
 | Voir que le contact écrit | Bulle grise à trois points | Saisie du contact | Réponse automatique de démo (vraies réponses : à confirmer) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
@@ -222,6 +244,8 @@ Fil de discussion avec un ami ; le menu du bas est masqué.
 | P-09.a | Conversation : chargement | Conversation sans messages, indicateur de chargement | `Etat-P09-conversation-chargement.dc.html` |
 | P-09.b | Aucun message | « Aucun message » · « Écris le premier message à Léa. » | `Etat-P09-conversation-vide.dc.html` |
 | P-09.c | Message non envoyé | Mon dernier message marqué « Non envoyé. » avec « Réessayer » | `Etat-P09-message-echec.dc.html` |
+| P-09.d | Conversation : erreur | « Les messages n’ont pas pu être chargés. » avec « Réessayer » | `Etat-P09-conversation-erreur.dc.html` |
+| P-09.e | Photo non envoyée | Ma dernière photo cerclée de rouge, « Non envoyée. » avec « Réessayer » | `Etat-P09-photo-echec.dc.html` |
 
 ## P-10 Messages — lecteur de story
 
@@ -229,13 +253,20 @@ Story d'un ami en plein écran, image par image.
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
-| Regarder une story | Image plein écran, parfois avec un court texte | Image floutée ; texte en charabia + émoji | — |
+| Regarder une story | Image plein écran, parfois avec un court texte | Image floutée ; texte en charabia + émoji | Chargement (P-10.a) ; erreur (P-10.b) |
 | Suivre la progression | Barres fines en haut, une par image | 2 ou 3 images, 5 s chacune | Barre en cours qui se remplit ; passées pleines ; à venir vides |
 | Passer à l'image suivante | Tap sur les deux tiers droits de l'écran | Image affichée | Ferme la story après la dernière |
 | Revenir à l'image précédente | Tap sur le tiers gauche de l'écran | Image affichée | Reste sur la première |
 | Voir l'auteur de la story | Photo, prénom et ancienneté en haut | Prénom en charabia, « 2 h »… | — |
 | Fermer la story | Croix en haut à droite, ou fin automatique | Story marquée vue | Cercle gris ensuite dans P-08 et P-09 |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
+
+**États dessinés à part**
+
+| État | Nom | Ce qu'il montre | Artboard |
+| --- | --- | --- | --- |
+| P-10.a | Story : chargement | Lecteur sans image, indicateur de chargement | `Etat-P10-story-chargement.dc.html` |
+| P-10.b | Story : erreur | « La story n’a pas pu être chargée. » avec « Réessayer » | `Etat-P10-story-erreur.dc.html` |
 
 ## P-11 Messages — Ajouter un ami
 
@@ -245,11 +276,20 @@ On cherche un compte par son @ et on lui envoie une demande d'ami.
 | --- | --- | --- | --- |
 | Revenir à la liste | Flèche en haut à gauche, ouvre P-08 | Aucune | — |
 | Saisir un identifiant | Champ précédé d'un @, prêt à taper | Identifiant (minuscules, sans espace) | Vide ; rempli |
-| Voir les comptes trouvés | Lignes : photo floue, @, pseudo | Jusqu'à 8 comptes dont le @ commence par la saisie (annuaire de 20 comptes en démo ; vrai annuaire : à confirmer) | Rien tant que le champ est vide ; liste de résultats |
-| Envoyer une demande d'ami | Bouton vert « Ajouter » | Demande d'ami | Devient « Demandé », gris et désactivé |
+| Voir les comptes trouvés | Lignes : photo floue, @, pseudo | Jusqu'à 8 comptes dont le @ commence par la saisie (annuaire de 20 comptes en démo ; vrai annuaire : à confirmer) | Rien tant que le champ est vide ; liste de résultats ; recherche en cours (P-11.a) ; erreur (P-11.b) |
+| Envoyer une demande d'ami | Bouton vert « Ajouter » | Demande d'ami | Devient « Demandé », gris et désactivé ; envoi en cours (P-11.c) ; erreur (P-11.d) |
 | Voir qu'un compte est déjà ami | Bouton « Ami » gris et désactivé | Lien d'amitié existant | — |
 | Lire l'absence de résultat | Texte « Aucun compte trouvé. » | Aucune | Affiché si rien ne correspond |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
+
+**États dessinés à part**
+
+| État | Nom | Ce qu'il montre | Artboard |
+| --- | --- | --- | --- |
+| P-11.a | Recherche de comptes : chargement | Identifiant saisi, indicateur de recherche en cours | `Etat-P11-comptes-chargement.dc.html` |
+| P-11.b | Recherche de comptes : erreur | « La recherche n’a pas abouti. » avec « Réessayer » | `Etat-P11-comptes-erreur.dc.html` |
+| P-11.c | Demande d’ami : envoi | Indicateur dans « Ajouter », désactivé | `Etat-P11-ajout-envoi.dc.html` |
+| P-11.d | Demande d’ami : erreur | « La demande n’a pas été envoyée. » avec « Réessayer » ; le bouton redevient « Ajouter » | `Etat-P11-ajout-erreur.dc.html` |
 
 ## P-12 Nouveau post — choix des photos
 
@@ -304,7 +344,7 @@ Champ de recherche vide : suggestions puis tendances.
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
 | Saisir une recherche | Champ « Rechercher » en haut, ouvre P-15 dès qu'on tape | Texte saisi | Vide (cet écran) |
-| Lancer une suggestion | 8 lignes empilées : loupe, texte, flèche en diagonale | Recherches en charabia (« vralo mizé »…) ; origine des suggestions : à confirmer | Remplit le champ et ouvre P-15 |
+| Lancer une suggestion | 8 lignes empilées : loupe, texte, flèche en diagonale | Recherches en charabia (« vralo mizé »…) ; origine des suggestions : à confirmer | Remplit le champ et ouvre P-15 ; chargement (P-14.a) ; erreur (P-14.b) |
 | Lancer une tendance | 6 lignes classées : rang, texte, nombre de posts, 3 bandes de couleur | Recherche en charabia, « 24,1 k posts » (chiffres de démo), palette d'arrivée | Remplit le champ et ouvre P-15 |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 | Ouvrir l'Accueil | Icône maison du menu du bas, ouvre P-03 | Aucune | Inactive (grise) |
@@ -312,6 +352,13 @@ Champ de recherche vide : suggestions puis tendances.
 | Publier un post | Bouton + noir au centre du menu, ouvre P-12 | Aucune | — |
 | Ouvrir la Recherche | Icône loupe du menu du bas | Aucune | Active (verte) sur cette page |
 | Ouvrir le Profil | Icône silhouette du menu du bas, ouvre P-17 | Aucune | Inactive (grise) |
+
+**États dessinés à part**
+
+| État | Nom | Ce qu'il montre | Artboard |
+| --- | --- | --- | --- |
+| P-14.a | Suggestions : chargement | Champ vide, indicateur de chargement à la place des suggestions | `Etat-P14-suggestions-chargement.dc.html` |
+| P-14.b | Suggestions : erreur | « Les suggestions n’ont pas pu être chargées. » avec « Réessayer » | `Etat-P14-suggestions-erreur.dc.html` |
 
 ## P-15 Recherche — résultats
 
@@ -321,7 +368,7 @@ Toute recherche non vide donne une grille de posts dans l'une des 5 palettes.
 | --- | --- | --- | --- |
 | Modifier la recherche | Champ « Rechercher » en haut | Texte saisi ; palette = somme des codes des caractères modulo 5 | Les résultats changent à chaque frappe |
 | Revenir aux suggestions | Vider le champ, retour à P-14 | Aucune | — |
-| Parcourir les résultats | Grille de 3 colonnes, tuiles verticales | 18 posts de la palette (soleil, océan, forêt, lavande ou terre), nombre de likes | Toujours 18 ; chargement (P-15.a) ; aucun résultat (P-15.b) |
+| Parcourir les résultats | Grille de 3 colonnes, tuiles verticales | 18 posts de la palette (soleil, océan, forêt, lavande ou terre), nombre de likes | Toujours 18 ; chargement (P-15.a) ; aucun résultat (P-15.b) ; erreur (P-15.c) |
 | Ouvrir un résultat | Tap sur une tuile, ouvre P-16 | Post choisi | — |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 | Ouvrir l'Accueil | Icône maison du menu du bas, ouvre P-03 | Aucune | Inactive (grise) |
@@ -336,6 +383,7 @@ Toute recherche non vide donne une grille de posts dans l'une des 5 palettes.
 | --- | --- | --- | --- |
 | P-15.a | Recherche : chargement | Grille vide, indicateur de recherche en cours | `Etat-P15-recherche-chargement.dc.html` |
 | P-15.b | Aucun résultat | « Aucun résultat » · « Aucun post ne correspond à « xkqzw ». Essaie un autre mot. » | `Etat-P15-recherche-vide.dc.html` |
+| P-15.c | Recherche : erreur | « La recherche n’a pas abouti. » avec « Réessayer » | `Etat-P15-recherche-erreur.dc.html` |
 
 ## P-16 Recherche — post ouvert
 
@@ -373,7 +421,7 @@ Son propre profil : identité, minuteur de couleur, puis ses posts.
 | Allonger le cycle | Petite flèche haut dans la case « 2 min », à droite | Durée : 1, 2, 3, 5, 10, 15, 20 ou 30 min (2 par défaut) | Flèche grisée à 30 min |
 | Raccourcir le cycle | Petite flèche bas dans la même case | Durée du cycle | Flèche grisée à 1 min |
 | Réinitialiser les cycles | Bouton « Réinitialiser » sous la case, à droite | Repart du cycle 1, couleurs revenues partout | — |
-| Voir ses posts | Titre « Tes posts, tels que les voient tes amis » et grille de 3 colonnes | 9 posts floutés, jours restants (« 7 j ») | Non cliquables ; vide (P-17.a) |
+| Voir ses posts | Titre « Tes posts, tels que les voient tes amis » et grille de 3 colonnes | 9 posts floutés, jours restants (« 7 j ») | Non cliquables ; vide (P-17.a) ; chargement (P-17.b) ; erreur (P-17.c) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 | Ouvrir l'Accueil | Icône maison du menu du bas, ouvre P-03 | Aucune | Inactive (grise) |
 | Ouvrir Messages | Icône bulle du menu du bas, ouvre P-08 | Aucune | Inactive (grise) |
@@ -386,6 +434,8 @@ Son propre profil : identité, minuteur de couleur, puis ses posts.
 | État | Nom | Ce qu'il montre | Artboard |
 | --- | --- | --- | --- |
 | P-17.a | Aucun post | « Aucun post pour l’instant » avec « Créer un post » | `Etat-P17-posts-vide.dc.html` |
+| P-17.b | Mes posts : chargement | Grille remplacée par un indicateur de chargement | `Etat-P17-posts-chargement.dc.html` |
+| P-17.c | Mes posts : erreur | « Tes posts n’ont pas pu être chargés. » avec « Réessayer » | `Etat-P17-posts-erreur.dc.html` |
 
 ## P-18 Profil — panneau Photo de profil
 
