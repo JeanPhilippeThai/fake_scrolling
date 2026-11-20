@@ -4,7 +4,7 @@ Imported 2026-11-20 by the `import-design-and-docs-artifact` skill.
 
 | Canvas | Folder | Source |
 | --- | --- | --- |
-| Fake scrolling — app (40 artboards) | `fake-scrolling-app/` | https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT |
+| Fake scrolling — app (65 artboards) | `fake-scrolling-app/` | https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT |
 
 `fake-scrolling-app/.claude-ai.json` records what claude.ai held at this import, file by file (the method's design cycle).
 

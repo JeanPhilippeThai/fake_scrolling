@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 55, exported 2026-11-20 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 101, exported 2026-11-20 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -73,6 +73,14 @@ pages:
     nom: Post publié
     plateforme: mobile
     features: [F-051]
+  - id: P-03.e
+    nom: Like non enregistré
+    plateforme: mobile
+    features: [F-016]
+  - id: P-03.f
+    nom: 'Enregistrement : échec'
+    plateforme: mobile
+    features: [F-018]
   - id: P-04
     nom: Accueil — panneau Notifications
     plateforme: mobile
@@ -81,6 +89,22 @@ pages:
     nom: Aucune notification
     plateforme: mobile
     features: [F-022]
+  - id: P-04.b
+    nom: 'Notifications : chargement'
+    plateforme: mobile
+    features: [F-022]
+  - id: P-04.c
+    nom: 'Notifications : erreur'
+    plateforme: mobile
+    features: [F-022]
+  - id: P-04.d
+    nom: 'Invitation : réponse en cours'
+    plateforme: mobile
+    features: [F-028]
+  - id: P-04.e
+    nom: 'Invitation : erreur'
+    plateforme: mobile
+    features: [F-028]
   - id: P-05
     nom: Accueil — panneau Commentaires
     plateforme: mobile
@@ -97,14 +121,30 @@ pages:
     nom: Commentaire non publié
     plateforme: mobile
     features: [F-030]
+  - id: P-05.d
+    nom: 'Commentaires : erreur'
+    plateforme: mobile
+    features: [F-017]
   - id: P-06
     nom: Accueil — panneau Enregistrer dans une collection
     plateforme: mobile
     features: [F-018, F-024, F-027, F-031]
+  - id: P-06.a
+    nom: 'Nouvelle collection : création'
+    plateforme: mobile
+    features: [F-031]
+  - id: P-06.b
+    nom: 'Nouvelle collection : erreur'
+    plateforme: mobile
+    features: [F-031]
   - id: P-07
     nom: Accueil — panneau Partager
     plateforme: mobile
     features: [F-019.a, F-019.b, F-019.c, F-024, F-027]
+  - id: P-07.a
+    nom: 'Envoi à un ami : échec'
+    plateforme: mobile
+    features: [F-019.a]
   - id: P-08
     nom: Messages — liste des discussions
     plateforme: mobile
@@ -117,6 +157,14 @@ pages:
     nom: Story publiée
     plateforme: mobile
     features: [F-051]
+  - id: P-08.c
+    nom: 'Discussions : chargement'
+    plateforme: mobile
+    features: [F-037]
+  - id: P-08.d
+    nom: 'Discussions : erreur'
+    plateforme: mobile
+    features: [F-037]
   - id: P-09
     nom: Messages — conversation
     plateforme: mobile
@@ -133,14 +181,46 @@ pages:
     nom: Message non envoyé
     plateforme: mobile
     features: [F-041]
+  - id: P-09.d
+    nom: 'Conversation : erreur'
+    plateforme: mobile
+    features: [F-038]
+  - id: P-09.e
+    nom: Photo non envoyée
+    plateforme: mobile
+    features: [F-042]
   - id: P-10
     nom: Messages — lecteur de story
     plateforme: mobile
     features: [F-024, F-036]
+  - id: P-10.a
+    nom: 'Story : chargement'
+    plateforme: mobile
+    features: [F-036]
+  - id: P-10.b
+    nom: 'Story : erreur'
+    plateforme: mobile
+    features: [F-036]
   - id: P-11
     nom: Messages — Ajouter un ami
     plateforme: mobile
     features: [F-005, F-024, F-034, F-043]
+  - id: P-11.a
+    nom: 'Recherche de comptes : chargement'
+    plateforme: mobile
+    features: [F-043]
+  - id: P-11.b
+    nom: 'Recherche de comptes : erreur'
+    plateforme: mobile
+    features: [F-043]
+  - id: P-11.c
+    nom: 'Demande d’ami : envoi'
+    plateforme: mobile
+    features: [F-034]
+  - id: P-11.d
+    nom: 'Demande d’ami : erreur'
+    plateforme: mobile
+    features: [F-034]
   - id: P-12
     nom: Nouveau post — choix des photos
     plateforme: mobile
@@ -169,6 +249,14 @@ pages:
     nom: Recherche — suggestions et tendances
     plateforme: mobile
     features: [F-024, F-025, F-026, F-052, F-053, F-053.a]
+  - id: P-14.a
+    nom: 'Suggestions : chargement'
+    plateforme: mobile
+    features: [F-053]
+  - id: P-14.b
+    nom: 'Suggestions : erreur'
+    plateforme: mobile
+    features: [F-053]
   - id: P-15
     nom: Recherche — résultats
     plateforme: mobile
@@ -179,6 +267,10 @@ pages:
     features: [F-052]
   - id: P-15.b
     nom: Aucun résultat
+    plateforme: mobile
+    features: [F-052]
+  - id: P-15.c
+    nom: 'Recherche : erreur'
     plateforme: mobile
     features: [F-052]
   - id: P-16
@@ -193,6 +285,14 @@ pages:
     nom: Aucun post
     plateforme: mobile
     features: [F-062, F-026]
+  - id: P-17.b
+    nom: 'Mes posts : chargement'
+    plateforme: mobile
+    features: [F-062]
+  - id: P-17.c
+    nom: 'Mes posts : erreur'
+    plateforme: mobile
+    features: [F-062]
   - id: P-18
     nom: Profil — panneau Photo de profil
     plateforme: mobile
@@ -526,7 +626,7 @@ features:
   - id: F-016
     nom: Liker un contenu
     description: Cœur qui ajoute ou retire un like et met à jour le compteur.
-    pages: [P-03, P-05]
+    pages: [P-03, P-03.e, P-05]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -540,14 +640,17 @@ features:
         difference: 'Like d''un commentaire : petit cœur rouge et compteur sous le cœur'
     entites: [E-06, E-03, E-05]
     operations: [lecture, écriture, suppression]
-    etats_ui: [vide, plein (liké)]
+    etats_ui:
+      - vide
+      - plein (liké)
+      - 'échec : le cœur redevient vide, « Le like n’a pas été enregistré. » en bas du fil pendant 2 s'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
 
   - id: F-017
     nom: Consulter les commentaires
     description: Bulle du post puis panneau listant les commentaires.
-    pages: [P-03, P-05, P-05.a, P-05.b]
+    pages: [P-03, P-05, P-05.a, P-05.b, P-05.d]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -557,13 +660,14 @@ features:
       - liste
       - 'chargement : anneau centré'
       - 'vide : « Aucun commentaire » · « Écris le premier. »'
+      - 'erreur : « Les commentaires n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
 
   - id: F-018
     nom: Enregistrer un post dans une collection
     description: Signet du post puis choix d'une collection ; second tap retire.
-    pages: [P-03, P-06]
+    pages: [P-03, P-03.f, P-06]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -574,18 +678,19 @@ features:
       - signet plein
       - collection choisie encadrée « enregistré »
       - message « Enregistré dans … » ou « Retiré de … » en bas du fil pendant 2 s
+      - 'échec : le signet redevient vide, « Le post n’a pas été enregistré. » en bas du fil pendant 2 s'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
 
   - id: F-019
     nom: Partager un post
     description: Flèche du post puis panneau de partage.
-    pages: [P-03, P-07]
+    pages: [P-03, P-07, P-07.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
       - id: F-019.a
-        pages: [P-07]
+        pages: [P-07, P-07.a]
         plateforme: mobile
         difference: 'Envoyer à un ami : rangée d''amis en tête du panneau, un tap envoie le post à cet ami'
       - id: F-019.b
@@ -600,6 +705,7 @@ features:
     operations: [lecture, écriture]
     etats_ui:
       - message « Envoyé à … », « Lien copié… » ou « Partagé… » en bas du fil pendant 2 s
+      - 'envoi à un ami échoué : l’ami cerclé de rouge, « Non envoyé à … » avec « Réessayer », le panneau reste ouvert'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050) ; peut-on partager un post « Amis proches » ?'
       - 'Envoyer à un ami (F-019.a) : amis seulement (ami ou non, E-09)'
@@ -638,7 +744,7 @@ features:
   - id: F-022
     nom: Consulter ses notifications
     description: Cloche avec pastille puis panneau des invitations et des likes reçus.
-    pages: [P-03, P-04, P-04.a]
+    pages: [P-03, P-04, P-04.a, P-04.b, P-04.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -649,6 +755,8 @@ features:
       - sans pastille
       - section Invitations masquée si vide
       - 'vide : « Aucune notification » · « Les invitations et les likes reçus s’affichent ici. »'
+      - 'chargement : anneau centré'
+      - 'erreur : « Les notifications n’ont pas pu être chargées. » avec « Réessayer »'
     questions_ouvertes:
       - Ouvrir le post liké depuis sa miniature
       - 'Accès supposé : seulement les invitations reçues et en attente (statut de la demande, E-09)'
@@ -719,7 +827,7 @@ features:
   - id: F-028
     nom: Répondre à une invitation d'ami
     description: Boutons « Accepter » et « Refuser » sur une invitation du panneau Notifications.
-    pages: [P-04]
+    pages: [P-04, P-04.d, P-04.e]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -731,6 +839,8 @@ features:
     operations: [écriture]
     etats_ui:
       - 'Accepter : devient « Ami » en vert'
+      - 'réponse en cours : anneau dans « Accepter », les deux boutons désactivés'
+      - 'erreur : « Ta réponse n’a pas été envoyée. » avec « Réessayer » sous l’invitation'
     questions_ouvertes:
       - 'Accès supposé : seulement les invitations reçues et en attente (statut de la demande, E-09)'
 
@@ -753,7 +863,7 @@ features:
   - id: F-031
     nom: Créer une collection
     description: Ligne « Nouvelle collection » qui crée et enregistre aussitôt.
-    pages: [P-06]
+    pages: [P-06, P-06.a, P-06.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -762,6 +872,8 @@ features:
     etats_ui:
       - nom automatique « Collection N »
       - message « Enregistré dans Collection N » en bas du fil pendant 2 s
+      - 'création en cours : anneau dans la ligne « Nouvelle collection », désactivée'
+      - 'erreur : « La collection n’a pas été créée. » avec « Réessayer »'
     questions_ouvertes:
       - Saisie du nom de la collection
 
@@ -784,7 +896,7 @@ features:
   - id: F-034
     nom: Ajouter un ami
     description: 'Bouton + des Messages puis « Ajouter » sur un compte trouvé : la demande part. Aussi depuis « Ajouter un ami » de l''état vide de P-08 (D-035).'
-    pages: [P-08, P-11, P-08.a]
+    pages: [P-08, P-11, P-08.a, P-11.c, P-11.d]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -793,13 +905,15 @@ features:
     etats_ui:
       - Ajouter
       - devient Demandé (désactivé)
+      - 'envoi : anneau dans « Ajouter », désactivé'
+      - 'erreur : « La demande n’a pas été envoyée. » avec « Réessayer » ; le bouton redevient « Ajouter »'
     questions_ouvertes:
       - Notification côté destinataire
 
   - id: F-036
     nom: Voir une story
     description: Story plein écran, 2 ou 3 images de 5 s, tap à droite ou à gauche, croix pour fermer.
-    pages: [P-08, P-09, P-10]
+    pages: [P-08, P-09, P-10, P-10.a, P-10.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -809,6 +923,8 @@ features:
       - cercle vert non vue
       - cercle gris vue
       - barres de progression
+      - 'chargement : anneau blanc centré'
+      - 'erreur : « La story n’a pas pu être chargée. » avec « Réessayer »'
     questions_ouvertes:
       - Le statut « vue » n'est pas partagé entre écrans dans la maquette
       - 'Accès supposé : stories des amis seulement (ami ou non, E-09)'
@@ -818,7 +934,7 @@ features:
   - id: F-037
     nom: Consulter ses discussions
     description: Liste des discussions avec dernier message et heure ; tap pour ouvrir.
-    pages: [P-08, P-08.a]
+    pages: [P-08, P-08.a, P-08.c, P-08.d]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -828,13 +944,15 @@ features:
       - 'non lu : gras et point bleu'
       - lu
       - 'vide : « Aucune discussion » · « Ajoute un ami pour commencer à discuter. » avec « Ajouter un ami » (F-034, D-035)'
+      - 'chargement : anneau centré'
+      - 'erreur : « Les discussions n’ont pas pu être chargées. » avec « Réessayer »'
     questions_ouvertes:
       - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09) ; peut-on écrire à un non-ami ?'
 
   - id: F-038
     nom: Lire une conversation
     description: Bulles vertes à droite, grises à gauche, photos et saisie du contact.
-    pages: [P-09, P-09.a, P-09.b]
+    pages: [P-09, P-09.a, P-09.b, P-09.d]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -844,6 +962,7 @@ features:
       - contact en train d'écrire
       - 'chargement : anneau centré'
       - 'vide : « Aucun message » · « Écris le premier message à Léa. »'
+      - 'erreur : « Les messages n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
       - Réponses automatiques de démo
       - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09)'
@@ -896,7 +1015,7 @@ features:
   - id: F-042
     nom: Envoyer une photo dans une conversation
     description: Icône image à droite dans la bulle de saisie.
-    pages: [P-09]
+    pages: [P-09, P-09.e]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -904,6 +1023,7 @@ features:
     operations: [écriture]
     etats_ui:
       - visible quand le champ est vide
+      - 'échec : la photo cerclée de rouge, « Non envoyée. » avec « Réessayer »'
     questions_ouvertes:
       - Choix de la photo (la maquette envoie une image de démo)
       - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09)'
@@ -911,7 +1031,7 @@ features:
   - id: F-043
     nom: Rechercher un compte par identifiant
     description: Champ précédé d'un @, jusqu'à 8 comptes dont le @ commence par la saisie.
-    pages: [P-11]
+    pages: [P-11, P-11.a, P-11.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -921,6 +1041,8 @@ features:
       - rien tant que vide
       - résultats avec le statut de chaque compte (Ajouter, Demandé, Ami)
       - « Aucun compte trouvé. »
+      - 'chargement : anneau centré'
+      - 'erreur : « La recherche n’a pas abouti. » avec « Réessayer »'
     questions_ouvertes:
       - Vrai annuaire (20 comptes de démo)
       - 'Accès supposé : tous les comptes sont trouvables ; existe-t-il des comptes privés ou bloqués ?'
@@ -1056,7 +1178,7 @@ features:
   - id: F-052
     nom: Rechercher des posts
     description: Toute saisie donne 18 posts dans l'une des 5 palettes (somme des codes modulo 5).
-    pages: [P-14, P-15, P-15.a, P-15.b]
+    pages: [P-14, P-15, P-15.a, P-15.b, P-15.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1067,6 +1189,7 @@ features:
       - 'champ rempli : résultats'
       - 'chargement : anneau centré (P-15)'
       - 'aucun résultat : « Aucun résultat » · « Aucun post ne correspond à « … ». Essaie un autre mot. »'
+      - 'erreur : « La recherche n’a pas abouti. » avec « Réessayer » (P-15)'
     questions_ouvertes:
       - 'Accès supposé : les résultats incluent des posts de non-amis s''ils sont publics (audience du post, F-050)'
 ```
@@ -1075,7 +1198,7 @@ features:
   - id: F-053
     nom: Lancer une recherche proposée
     description: Tap sur une suggestion qui remplit le champ et affiche les résultats.
-    pages: [P-14]
+    pages: [P-14, P-14.a, P-14.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -1085,7 +1208,9 @@ features:
         difference: 'Tendance : rang, nombre de posts et 3 bandes de la palette d''arrivée'
     entites: [E-13]
     operations: [lecture]
-    etats_ui: []
+    etats_ui:
+      - 'chargement : anneau centré'
+      - 'erreur : « Les suggestions n’ont pas pu être chargées. » avec « Réessayer » ; le champ reste utilisable'
     questions_ouvertes:
       - Origine des suggestions et des tendances
 
@@ -1214,7 +1339,7 @@ features:
   - id: F-062
     nom: Voir ses posts
     description: Grille de 9 posts floutés avec jours restants.
-    pages: [P-17, P-17.a]
+    pages: [P-17, P-17.a, P-17.b, P-17.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1223,6 +1348,8 @@ features:
     etats_ui:
       - non cliquables
       - 'vide : « Aucun post pour l’instant » · « Tes posts s’affichent ici, floutés, avec leurs jours restants. » avec « Créer un post » (F-026, D-035)'
+      - 'chargement : anneau centré'
+      - 'erreur : « Tes posts n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
       - Ouvrir un de ses posts
 
@@ -1671,6 +1798,16 @@ decisions:
     choix: 'Chacun des 33 artboards d''état du design (D-025, D-026) est un état de page, P-xx.a, P-xx.b…, lettré dans l''ordre du canvas, juste après sa page dans pages. Un état liste seulement la feature dont il montre l''état, plus celle que lance un bouton propre à l''état (P-08.a : F-034 ; P-12.a : F-069 ; P-17.a : F-026) ; le menu du bas et le reste de l''écran restent sur la page. Les toasts de succès appartiennent à la page qui les affiche (D-031) : P-03.d et P-08.b. Le design n''est pas modifié : l''inventaire des écrans donne l''artboard de chaque état.'
     raison: 'La méthode (synchro du 2026-11-19) donne un ID à chaque écran dessiné à part (L2-01). Lister le menu sur chaque état le répéterait sur 15 états à tenir à jour ; l''inventaire relie déjà chaque écran à son ID.'
     impacte: [P-01, P-02, P-03, P-04, P-05, P-08, P-09, P-12, P-13, P-15, P-17, P-18, P-19, P-21, P-22]
+  - id: D-041
+    sujet: États encore non dessinés
+    choix: 'Les états manquants de 16 features sont dessinés comme pour D-025 et D-026 : chargement et erreur des listes (F-017, F-022, F-036, F-037, F-038, F-043, F-052, F-053, F-062), échec des actions (F-016, F-018, F-019.a, F-028, F-031, F-034, F-042). Leurs 25 artboards sont des états de page (D-040), de P-03.e à P-17.c. Dessinés et rapprochés du registre dans la même passe (prompt 9), ces features ne portent pas design_a_mettre_a_jour.'
+    raison: 'Même motif que D-025 : l''étape 1 de la méthode demande les états chargement et erreur de chaque écran, et aucune décision ne disait que ces features n''en ont pas (L1-02).'
+    impacte: [F-016, F-017, F-018, F-019, F-022, F-028, F-031, F-034, F-036, F-037, F-038, F-042, F-043, F-052, F-053, F-062]
+  - id: D-042
+    sujet: Échec d'une action en un tap
+    choix: 'Le like (F-016) et l''enregistrement (F-018) changent aussitôt ; si le serveur échoue, ils reviennent en arrière et un message le dit en bas du fil pendant 2 s. Accepter ou refuser une invitation (F-028), ajouter un ami (F-034) et créer une collection (F-031) montrent l''anneau dans le bouton (D-028), puis l''erreur sur place avec « Réessayer » (D-027). Envoyer un post à un ami (F-019.a) ou une photo (F-042) suit D-027 : « Non envoyé » avec « Réessayer ».'
+    raison: 'Un like ou un signet doit rester instantané et se refait d''un tap ; une invitation, une demande d''ami ou une collection crée ou change une donnée, on attend la réponse du serveur.'
+    impacte: [F-016, F-018, F-019, F-028, F-031, F-034, F-042]
 
 ids_retires:
   - {id: F-013, decision: D-002}
