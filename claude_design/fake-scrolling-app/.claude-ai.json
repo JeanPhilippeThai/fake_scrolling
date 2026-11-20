@@ -1,7 +1,7 @@
 {
  "url": "https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT",
  "format": 2,
- "synced": "2026-11-20T11:13:46+00:00",
+ "synced": "2026-11-20T13:13:22+00:00",
  "files": {
   "project/Chat.dc.html": "ae709f0b59aa3c99621e73f1884a31a8ea671b2bff9118ac7448bfeb7a2e3267",
   "project/Code.dc.html": "9f1091e023fa3fb8c422281ee39421bafb5547210bbb29c640514489cd1ec0a5",
@@ -69,33 +69,5 @@
   "project/Profile.dc.html": "301314cd8944646b3d275536a719c2c287ad5959100e2e022aa56de7c45f525f",
   "project/Search.dc.html": "a3ea52b6d9f7cb46a71ae6f2db1ad771c9fcfe029c32a3acebadc2beae3c6dc8",
   "project/canvas.json": "cc436320abdf98aebde833e2f7bd7f7687b2741c8f628ff7f599229201c66541"
- },
- "round": {
-  "project/Etat-P03-enregistrement-echec.dc.html": "added",
-  "project/Etat-P03-like-echec.dc.html": "added",
-  "project/Etat-P04-invitation-envoi.dc.html": "added",
-  "project/Etat-P04-invitation-erreur.dc.html": "added",
-  "project/Etat-P04-notifications-chargement.dc.html": "added",
-  "project/Etat-P04-notifications-erreur.dc.html": "added",
-  "project/Etat-P05-commentaires-erreur.dc.html": "added",
-  "project/Etat-P06-collection-envoi.dc.html": "added",
-  "project/Etat-P06-collection-erreur.dc.html": "added",
-  "project/Etat-P07-envoi-ami-echec.dc.html": "added",
-  "project/Etat-P08-discussions-chargement.dc.html": "added",
-  "project/Etat-P08-discussions-erreur.dc.html": "added",
-  "project/Etat-P09-conversation-erreur.dc.html": "added",
-  "project/Etat-P09-photo-echec.dc.html": "added",
-  "project/Etat-P10-story-chargement.dc.html": "added",
-  "project/Etat-P10-story-erreur.dc.html": "added",
-  "project/Etat-P11-ajout-envoi.dc.html": "added",
-  "project/Etat-P11-ajout-erreur.dc.html": "added",
-  "project/Etat-P11-comptes-chargement.dc.html": "added",
-  "project/Etat-P11-comptes-erreur.dc.html": "added",
-  "project/Etat-P14-suggestions-chargement.dc.html": "added",
-  "project/Etat-P14-suggestions-erreur.dc.html": "added",
-  "project/Etat-P15-recherche-erreur.dc.html": "added",
-  "project/Etat-P17-posts-chargement.dc.html": "added",
-  "project/Etat-P17-posts-erreur.dc.html": "added",
-  "project/canvas.json": "changed"
  }
 }
