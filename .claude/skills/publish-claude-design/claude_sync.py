@@ -61,24 +61,17 @@ def units(folder):
     return canvases or [folder]
 
 
-def project_files(root):
-    """project/<path> -> hash, leaving out support.js, the runtime the import copies for the viewer."""
+def hashes(root, prefix=""):
+    """<prefix><path> -> hash, leaving out what the import generates, such as the viewer's support.js."""
     if not root.is_dir():
         return {}
-    return {f"project/{p.relative_to(root)}": digest(p) for p in sorted(root.rglob("*"))
-            if p.is_file() and p.name not in GENERATED}
+    return {f"{prefix}{p.relative_to(root)}": digest(p) for p in sorted(root.rglob("*"))
+            if p.is_file() and p.name not in GENERATED and "__pycache__" not in p.relative_to(root).parts}
 
 
 def tracked(unit):
     """Path -> hash of the files claude.ai holds for this unit."""
-    if is_canvas(unit):
-        return project_files(unit / "project")
-    out = {}
-    for p in sorted(unit.rglob("*")):
-        rel = p.relative_to(unit)
-        if p.is_file() and p.name not in GENERATED and "__pycache__" not in rel.parts:
-            out[str(rel)] = digest(p)
-    return out
+    return hashes(unit / "project", "project/") if is_canvas(unit) else hashes(unit)
 
 
 def read_stamp(unit):
@@ -242,7 +235,7 @@ def cmd_check_remote(args):
     if stamp is None:
         print(f"{unit}: no stamp. Import and promote first, so that the repo knows what claude.ai holds.")
         return 1
-    ch = changes(stamp["files"], project_files(remote / "project"))
+    ch = changes(stamp["files"], hashes(remote / "project", "project/"))
     if any(ch):
         print(f"{unit}: claude.ai changed since the last exchange ({stamp['synced']}). Publishing would overwrite it:")
         show("claude.ai", ch)

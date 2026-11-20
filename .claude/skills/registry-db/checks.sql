@@ -34,12 +34,7 @@ ORDER BY 1;
 -- how: Query
 -- severity: Major
 -- needs: registry
-SELECT scope, id,
-  'a ' || expected_kind || ' whose ID ' || CASE kind WHEN 'unknown' THEN 'has no known format' ELSE 'reads as a ' || kind END AS problem,
-  path, line
-FROM defs
-WHERE kind != expected_kind AND NOT (expected_kind = 'page' AND kind = 'page_state')
-  AND expected_kind IN ('role','page','feature','variant','entity','decision')
+SELECT scope, id, problem, path, line FROM id_problems WHERE registry
 UNION ALL
 SELECT s.scope, s.id,
   CASE WHEN p.id IS NULL THEN 'a page state whose page ' || substr(s.id, 1, instr(s.id, '.') - 1) || ' is not defined'
@@ -52,14 +47,6 @@ WHERE instr(s.id, '.') > 0
 UNION ALL
 SELECT d.scope, d.id, 'listed in ids_retires (' || COALESCE(r.decision, 'no decision') || ') and defined again', d.path, d.line
 FROM defs d JOIN retired r ON r.scope = d.scope AND r.id = d.id
-UNION ALL
-SELECT scope, id, 'defined ' || COUNT(*) || ' times', GROUP_CONCAT(DISTINCT path), MIN(line)
-FROM defs WHERE expected_kind IN ('role','page','feature','variant','entity','decision')
-GROUP BY scope, id HAVING COUNT(*) > 1
-UNION ALL
-SELECT scope, GROUP_CONCAT(DISTINCT id), 'the same ID written with different digits: an ID is a number', GROUP_CONCAT(DISTINCT path), MIN(line)
-FROM defs WHERE expected_kind IN ('role','page','feature','variant','entity','decision')
-GROUP BY scope, number HAVING COUNT(DISTINCT id) > 1
 ORDER BY 1, 2;
 
 -- check: L3-02
@@ -262,18 +249,20 @@ ORDER BY 1;
 -- platform entity as alias, partial or not.
 WITH fam AS (
   SELECT DISTINCT platform, alias, id FROM aliases WHERE kind = 'entity' AND retired = 0
+), fields AS (
+  SELECT scope, entity, field,
+    LOWER(TRIM(CASE WHEN instr(field, ' (') > 0 THEN substr(field, 1, instr(field, ' (') - 1) ELSE field END)) AS name
+  FROM entity_fields
 ), canon AS (
-  SELECT f.platform, f.alias,
-    LOWER(TRIM(CASE WHEN instr(c.field, ' (') > 0 THEN substr(c.field, 1, instr(c.field, ' (') - 1) ELSE c.field END)) AS name
-  FROM fam f JOIN entity_fields c ON c.scope = 'canonical' AND c.entity = f.id
+  SELECT f.platform, f.alias, c.name
+  FROM fam f JOIN fields c ON c.scope = 'canonical' AND c.entity = f.id
 )
 SELECT GROUP_CONCAT(DISTINCT f.id) AS entities, f.platform, f.alias, pf.field AS platform_field,
   'no field of that name in the canonical entities that have it as alias' AS problem
 FROM fam f
-JOIN entity_fields pf ON pf.scope = f.platform AND pf.entity = f.alias
+JOIN fields pf ON pf.scope = f.platform AND pf.entity = f.alias
 WHERE NOT EXISTS (
-  SELECT 1 FROM canon c WHERE c.platform = f.platform AND c.alias = f.alias
-    AND c.name = LOWER(TRIM(CASE WHEN instr(pf.field, ' (') > 0 THEN substr(pf.field, 1, instr(pf.field, ' (') - 1) ELSE pf.field END)))
+  SELECT 1 FROM canon c WHERE c.platform = f.platform AND c.alias = f.alias AND c.name = pf.name)
 GROUP BY f.platform, f.alias, pf.field
 ORDER BY 2, 3, 4;
 
@@ -542,19 +531,7 @@ ORDER BY 1;
 -- how: Query
 -- severity: Major
 -- needs:
-SELECT scope, id,
-  'a ' || expected_kind || ' whose ID ' || CASE kind WHEN 'unknown' THEN 'has no known format' ELSE 'reads as a ' || kind END AS problem,
-  path, line
-FROM defs WHERE kind != expected_kind AND expected_kind NOT IN ('role','page','feature','variant','entity','decision')
-UNION ALL
-SELECT scope, id, 'defined ' || COUNT(*) || ' times', GROUP_CONCAT(DISTINCT path), MIN(line)
-FROM defs WHERE expected_kind NOT IN ('role','page','feature','variant','entity','decision')
-GROUP BY scope, id HAVING COUNT(*) > 1
-UNION ALL
-SELECT scope, GROUP_CONCAT(DISTINCT id), 'the same ID written with different digits: an ID is a number', GROUP_CONCAT(DISTINCT path), MIN(line)
-FROM defs WHERE expected_kind NOT IN ('role','page','feature','variant','entity','decision')
-GROUP BY scope, number HAVING COUNT(DISTINCT id) > 1
-ORDER BY 1, 2;
+SELECT scope, id, problem, path, line FROM id_problems WHERE NOT registry ORDER BY 1, 2;
 
 -- check: G-02
 -- title: Every ID cited anywhere exists or is in ids_retires (for the kinds the database reads: P, F, E, R, D, TB, N, DF, C); an ID followed by … is an example; a range cites every ID in it; archives are not checked

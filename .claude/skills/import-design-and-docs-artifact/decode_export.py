@@ -14,19 +14,11 @@ import sys
 
 def find(node):
     """The first mapping that holds `bytes_b64`, searching nested values and JSON strings."""
-    if isinstance(node, dict):
-        if isinstance(node.get("bytes_b64"), str):
-            return node
-        for value in node.values():
-            hit = find(value)
-            if hit:
-                return hit
-    elif isinstance(node, list):
-        for value in node:
-            hit = find(value)
-            if hit:
-                return hit
-    elif isinstance(node, str) and "bytes_b64" in node:
+    if isinstance(node, dict) and isinstance(node.get("bytes_b64"), str):
+        return node
+    if isinstance(node, (dict, list)):
+        return next(filter(None, map(find, node.values() if isinstance(node, dict) else node)), None)
+    if isinstance(node, str) and "bytes_b64" in node:
         start = node.find("{")
         if start >= 0:
             try:
