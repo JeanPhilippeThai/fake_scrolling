@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 115, exported 2026-11-20 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 130, exported 2026-11-20 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -52,7 +52,7 @@ pages:
   - id: P-02.b
     nom: Code expiré
     plateforme: mobile
-    features: [F-007]
+    features: [F-007, F-008]
   - id: P-03
     nom: Accueil — fil
     plateforme: mobile
@@ -224,11 +224,11 @@ pages:
   - id: P-12
     nom: Nouveau post — choix des photos
     plateforme: mobile
-    features: [F-005.a, F-024, F-044, F-045, F-046, F-069]
+    features: [F-005.a, F-024, F-044, F-045, F-046, F-046.a]
   - id: P-12.a
     nom: Galerie vide
     plateforme: mobile
-    features: [F-044, F-069]
+    features: [F-044, F-046.a]
   - id: P-12.b
     nom: Accès aux photos refusé
     plateforme: mobile
@@ -503,7 +503,7 @@ features:
   - id: F-008
     nom: Renvoyer le code
     description: Compte à rebours de 30 s puis lien pour renvoyer un code.
-    pages: [P-02]
+    pages: [P-02, P-02.b]
     plateformes: [mobile]
     acces: [R-01]
     variantes: []
@@ -1068,7 +1068,7 @@ features:
       - photo affichée voilée
       - numéros 1 à 10 en multiple
       - position « 2/4 »
-      - 'galerie vide : « Aucune photo » · « Ta galerie est vide. Prends une photo pour créer un post. » avec « Ouvrir l’appareil photo » (F-069, D-033)'
+      - 'galerie vide : « Aucune photo » · « Ta galerie est vide. Prends une photo pour créer un post. » avec « Ouvrir l’appareil photo » (F-046.a, D-033, D-047)'
       - 'accès refusé : « Accès aux photos refusé » avec « Ouvrir les réglages » du téléphone (D-034)'
     questions_ouvertes:
       - Vraie galerie et autorisation d'accès
@@ -1088,16 +1088,23 @@ features:
 
   - id: F-046
     nom: Prendre une photo
-    description: Bouton appareil photo.
+    description: 'Bouton appareil photo au-dessus de la grille : la photo prise devient la photo du post.'
     pages: [P-12]
     plateformes: [mobile]
     acces: [R-02]
-    variantes: []
-    entites: [E-04]
+    variantes:
+      - id: F-046.a
+        pages: [P-12, P-12.a]
+        plateforme: mobile
+        difference: '« Ouvrir l''appareil photo » depuis la galerie vide (D-047)'
+    entites: [E-04, E-03]
     operations: [écriture]
-    etats_ui: [sans effet]
+    etats_ui:
+      - sans effet
+      - 'galerie vide : bouton « Ouvrir l''appareil photo » (F-046.a)'
     questions_ouvertes:
-      - Écran de prise de vue
+      - 'Écran de prise de vue non dessiné : appareil photo du téléphone ou caméra dans l''appli ?'
+      - Autorisation d'accès à l'appareil photo, et état si elle est refusée
 
   - id: F-047
     nom: Rédiger la légende
@@ -1437,22 +1444,6 @@ features:
       - Fil d'actualité par défaut
       - Story présélectionnée depuis « Ta story »
     questions_ouvertes: []
-
-  - id: F-069
-    nom: Prendre une photo pour un post
-    description: '« Ouvrir l''appareil photo » depuis la galerie vide : la photo prise devient la photo du post.'
-    pages: [P-12, P-12.a]
-    plateformes: [mobile]
-    acces: [R-02]
-    variantes: []
-    entites: [E-04, E-03]
-    operations: [écriture]
-    etats_ui:
-      - 'galerie vide : bouton « Ouvrir l''appareil photo »'
-    questions_ouvertes:
-      - 'Écran de prise de vue non dessiné : appareil photo du téléphone ou caméra dans l''appli ?'
-      - Autorisation d'accès à l'appareil photo, et état si elle est refusée
-      - Bouton seulement dans la galerie vide, ou aussi au-dessus de la grille ?
 ```
 
 ```yaml
@@ -1493,7 +1484,9 @@ entites:
       - jours restants avant expiration
       - palette
       - lien
-    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-047, F-048, F-049, F-050, F-051, F-052, F-054, F-062, F-068, F-069]
+      - personnes identifiées
+      - lieu
+    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-054, F-062, F-068]
 
   - id: E-04
     nom: Média
@@ -1502,7 +1495,7 @@ entites:
       - durée de la vidéo
       - rang dans le carrousel
       - version floutée
-    utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, F-069]
+    utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058]
 
   - id: E-05
     nom: Commentaire
@@ -1541,7 +1534,7 @@ entites:
     nom: Relation d'amitié
     champs:
       - compte (pseudo, identifiant, photo)
-      - statut (en attente, demandé, ami, refusé)
+      - statut (en attente, demandé, ami)
     utilisee_par: [F-022, F-028, F-034, F-043, F-048]
 
   - id: E-10
@@ -1772,8 +1765,8 @@ decisions:
     impacte: [F-009]
   - id: D-033
     sujet: Appareil photo depuis la galerie vide
-    choix: '« Ouvrir l''appareil photo », dans l''état galerie vide de P-12, devient la feature F-069 « Prendre une photo pour un post ». Le design reste tel quel.'
-    raison: Le bouton donne une issue à une galerie vide, et aucune feature existante ne prend de photo.
+    choix: '« Ouvrir l''appareil photo », dans l''état galerie vide de P-12, devient la feature F-069 « Prendre une photo pour un post ». Le design reste tel quel. Remplacée en partie par D-047 : F-069 devient la variante F-046.a.'
+    raison: Le bouton donne une issue à une galerie vide.
     impacte: [F-044, F-069]
   - id: D-034
     sujet: Accès aux photos refusé
@@ -1807,7 +1800,7 @@ decisions:
     impacte: []
   - id: D-040
     sujet: États de page dessinés à part
-    choix: 'Chacun des 33 artboards d''état du design (D-025, D-026) est un état de page, P-xx.a, P-xx.b…, lettré dans l''ordre du canvas, juste après sa page dans pages. Un état liste seulement la feature dont il montre l''état, plus celle que lance un bouton propre à l''état (P-08.a : F-034 ; P-12.a : F-069 ; P-17.a : F-026) ; le menu du bas et le reste de l''écran restent sur la page. Les toasts de succès appartiennent à la page qui les affiche (D-031) : P-03.d et P-08.b. Le design n''est pas modifié : l''inventaire des écrans donne l''artboard de chaque état.'
+    choix: 'Chacun des 33 artboards d''état du design (D-025, D-026) est un état de page, P-xx.a, P-xx.b…, lettré dans l''ordre du canvas, juste après sa page dans pages. Un état liste seulement la feature dont il montre l''état, plus celle que lance un bouton propre à l''état (P-08.a : F-034 ; P-12.a : F-046.a, ex-F-069 (D-047) ; P-17.a : F-026) ; le menu du bas et le reste de l''écran restent sur la page. Les toasts de succès appartiennent à la page qui les affiche (D-031) : P-03.d et P-08.b. Le design n''est pas modifié : l''inventaire des écrans donne l''artboard de chaque état.'
     raison: 'La méthode (synchro du 2026-11-19) donne un ID à chaque écran dessiné à part (L2-01). Lister le menu sur chaque état le répéterait sur 15 états à tenir à jour ; l''inventaire relie déjà chaque écran à son ID.'
     impacte: [P-01, P-02, P-03, P-04, P-05, P-08, P-09, P-12, P-13, P-15, P-17, P-18, P-19, P-21, P-22]
   - id: D-041
@@ -1840,6 +1833,16 @@ decisions:
     choix: 'Un post ouvert depuis la recherche (P-16) a les mêmes actions que dans le fil (P-03) : liker (F-016), commenter (F-017), enregistrer (F-018), partager (F-019). P-16 est à redessiner : F-010, F-016, F-017, F-018 et F-019 portent design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
     raison: 'Choix du propriétaire : un post trouvé se traite comme un post du fil (L2-03, « mêmes actions que P-03 ? »).'
     impacte: [F-010, F-016, F-017, F-018, F-019]
+  - id: D-047
+    sujet: Une seule feature pour prendre une photo
+    choix: 'F-069 « Prendre une photo pour un post » devient la variante F-046.a de F-046 « Prendre une photo » et est retiré (ids_retires). Le bouton appareil photo au-dessus de la grille (P-12) et « Ouvrir l''appareil photo » de la galerie vide (P-12.a) prennent la même photo pour le post. Le design reste tel quel.'
+    raison: 'Choix du propriétaire : deux boutons, une seule intention et les mêmes données (E-04, E-03), regroupés comme pour D-001 et D-015. La raison de D-033 (« aucune feature existante ne prend de photo ») oubliait F-046 (L3-07).'
+    impacte: [F-044, F-046]
+  - id: D-048
+    sujet: Invitation refusée
+    choix: 'Refuser une invitation (F-028.a) supprime la demande : la relation d''amitié (E-09) n''a pas de statut « refusé », et l''expéditeur peut envoyer une nouvelle demande.'
+    raison: 'Choix du propriétaire : le design ne montre jamais de statut « refusé », et F-028.a dit déjà que la demande est supprimée (B3-02).'
+    impacte: [F-028]
 
 ids_retires:
   - {id: F-013, decision: D-002}
@@ -1850,6 +1853,7 @@ ids_retires:
   - {id: F-058.a, decision: D-020}
   - {id: F-064, decision: D-020}
   - {id: F-067.a, decision: D-021}
+  - {id: F-069, decision: D-047}
 ```
 
 ## Regroupements effectués
@@ -1874,6 +1878,7 @@ ids_retires:
 | F-028 | Accepter et Refuser une invitation : même invitation, même panneau ; Refuser (ex-F-029) en variante F-028.a (décision D-015). |
 | F-034 | Bouton + de P-08 et « Ajouter » sur P-11 ; l'affichage des statuts relève de F-043. |
 | F-036 | 3 entrées (rangée P-08, photo de la liste P-08, photo P-09) et le lecteur P-10. |
+| F-046 | Bouton appareil photo au-dessus de la grille (P-12) et « Ouvrir l'appareil photo » de la galerie vide (P-12.a) : même photo pour le post ; la galerie vide (ex-F-069) en variante F-046.a (décision D-047). |
 | F-048 à F-050 | Chaque ligne de la légende (P-13) et son panneau (P-24, P-25, P-26) forment une seule feature. |
 | F-052 | Saisir sur P-14, puis modifier, parcourir et revenir sur P-15. |
 | F-055 | Engrenage de P-17 et panneau P-20 avec ses 3 entrées. |
