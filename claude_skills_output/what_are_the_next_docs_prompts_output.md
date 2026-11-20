@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-20 · commit 620ad29 · fingerprint 7cddbdebb183
+2026-11-20 · commit 620ad29 · fingerprint 0f141510a9df
 
 Doc tests: all passed. The docs are at step 1, Design.
 
@@ -16,5 +16,4 @@ Doc tests: all passed. The docs are at step 1, Design.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 8: sort the check's findings** (steps 3 and 4). Give it: findings #3 (L3-07, F-046 and F-069), #4 (B3-02, E-09 « refusé »), #7 (T-01, E-03 fields for F-048 and F-049) and #8 (T-04, P-02.b and F-008), with questions 3 and 4. It produces: the class A fixes (#7, #8) and decisions for #3 and #4 in the registry Claude Doc, then import and promote.
-2. **Prompt 5: flows** (step 5), one run per flow. Give it: flow FL-01 and its name, from the owner (no flow is named in the docs yet). It produces: the flow's sequence, the entities read and written, its decision points and errors, and the features or pages missing from the registry.
+1. **Prompt 5: flows** (step 5), one run per flow. Give it: flow FL-01 and its name, from the owner (no flow is named in the docs yet). It produces: the flow's sequence, the entities read and written, its decision points and errors, and the features or pages missing from the registry.

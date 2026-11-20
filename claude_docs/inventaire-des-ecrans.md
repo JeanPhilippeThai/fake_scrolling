@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 105, exported 2026-11-20 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 106, exported 2026-11-20 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -48,7 +48,7 @@ On saisit le code à 6 chiffres reçu par e-mail pour se connecter.
 | Saisir le code à 6 chiffres | Six cases qui se remplissent au fil de la frappe, clavier numérique | Code (modifié), chiffres seulement ; remplissage auto depuis l'e-mail : à confirmer selon le téléphone | Vide ; case en cours encadrée en noir ; partiel ; complet |
 | Se connecter | Valide le code et ouvre P-03 | Code saisi (vérification réelle : à confirmer, la maquette accepte tout code) | Désactivé gris sous 6 chiffres ; actif vert ; code faux (P-02.a) ; code expiré (P-02.b) |
 | Attendre pour renvoyer le code | Texte « Renvoyer le code dans 30 s » | Secondes restantes | Décompte de 30 à 0 |
-| Renvoyer le code | Lien affiché à 0 s, vide les cases et relance le décompte | Nouvel envoi du code (à confirmer) | Visible seulement après le décompte |
+| Renvoyer le code | Lien affiché à 0 s, vide les cases et relance le décompte | Nouvel envoi du code (à confirmer) | Visible seulement après le décompte ; code expiré (P-02.b) : bouton « Renvoyer un code » à la place de « Se connecter » |
 
 **États dessinés à part**
 
