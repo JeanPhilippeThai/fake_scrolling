@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 98, exported 2026-11-20 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 105, exported 2026-11-20 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -110,7 +110,7 @@ Panneau centré sous la cloche, par-dessus le fil : invitations d'amis puis like
 | --- | --- | --- | --- |
 | Fermer les notifications | Tap sur la partie assombrie autour du panneau | Aucune | — |
 | Faire défiler les notifications | Liste qui défile, sans barre de défilement | Aucune | — |
-| Voir les invitations d'amis | Section « Invitations » : photo floue, pseudo, @ | 3 demandes en démo (vraies demandes : à confirmer) | Section masquée quand toutes sont refusées |
+| Voir les invitations d'amis | Section « Invitations » : photo floue, pseudo, @ | 3 demandes en démo (hors démo : vraies demandes reçues et en attente, D-044) | Section masquée quand toutes sont refusées |
 | Accepter une invitation | Bouton vert « Accepter » | Statut de la demande | Devient « Ami » en vert ; réponse en cours (P-04.d) ; erreur (P-04.e) |
 | Refuser une invitation | Bouton « Refuser » | Statut de la demande | La ligne disparaît |
 | Voir les likes reçus | Section « Likes » : photo floue, « X a aimé ton post · 9 min » | 7 likes en démo, pseudo, ancienneté | Chargement (P-04.b) ; erreur (P-04.c) ; panneau vide : « Aucune notification » (P-04.a) |
@@ -175,9 +175,9 @@ Panneau qui monte du bas : trois façons de partager le post.
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
 | Fermer le panneau | Croix ou tap sur le fond assombri | Aucune | — |
-| Envoyer à un ami | Rangée d'amis en tête du panneau ; un tap envoie le post à cet ami | Post envoyé en message (réception côté ami : à confirmer) ; message « Envoyé à … » sur P-03 | Chargement de la rangée : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) ; échec de l'envoi : « Non envoyé à … » (P-07.a) |
-| Copier le lien | Ligne qui copie le lien du post | Lien du post (copie réelle : à confirmer) | Message « Lien copié. Il mène à une version floutée. » |
-| Partager ailleurs | Ligne vers d'autres apps | Post (feuille de partage du téléphone : à confirmer) | Message « Partagé, flouté comme toujours. » |
+| Envoyer à un ami | Rangée d'amis en tête du panneau ; un tap envoie le post à cet ami | Post envoyé en message (reçu dans la conversation de l'ami, D-044) ; message « Envoyé à … » sur P-03 | Chargement de la rangée : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) ; échec de l'envoi : « Non envoyé à … » (P-07.a) |
+| Copier le lien | Ligne qui copie le lien du post | Lien du post, copié dans le presse-papiers (D-044) | Message « Lien copié. Il mène à une version floutée. » |
+| Partager ailleurs | Ligne vers d'autres apps | Post, via la feuille de partage du téléphone (D-044) | Message « Partagé, flouté comme toujours. » |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
 **États dessinés à part**
@@ -297,7 +297,7 @@ Première étape de publication : aperçu carré en haut, galerie en dessous ; l
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
-| Fermer la création | Croix en haut à gauche, ouvre P-03 | Brouillon abandonné (sauvegarde : à confirmer) | — |
+| Fermer la création | Croix en haut à gauche, ouvre P-03 | Brouillon abandonné, sans confirmation ni sauvegarde (D-045) | — |
 | Voir l'aperçu de la photo | Grand carré sous le titre | Photo affichée | — |
 | Voir sa position dans la sélection | Pastille « 2/4 » sur l'aperçu | Rang de la photo, nombre choisi | Visible seulement en sélection multiple |
 | Choisir un album | Bouton « Récents » avec chevron | Album (liste des albums : à confirmer) | Sans effet dans la maquette |
@@ -395,7 +395,7 @@ Un résultat en plein écran, par-dessus la grille ; le menu du bas reste visibl
 | Voir le post | Image plein écran aux couleurs de la palette | Formes du post | — |
 | Lire le pseudo du publieur | Nom en blanc en bas | Pseudo en charabia | — |
 | Lire la légende | Texte blanc sous le pseudo | Légende en charabia + émoji | Jamais tronquée |
-| Liker, commenter, enregistrer, partager | Absents de cet écran | Aucune | Non dessinés (à confirmer : mêmes actions que P-03 ?) |
+| Liker, commenter, enregistrer, partager | Absents de cet écran ; à ajouter comme sur P-03 (D-046) | Aucune | Non dessinés ; mêmes états que sur P-03 (D-046) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 | Ouvrir l'Accueil | Icône maison du menu du bas, ouvre P-03 | Aucune | Inactive (grise) |
 | Ouvrir Messages | Icône bulle du menu du bas, ouvre P-08 | Aucune | Inactive (grise) |
