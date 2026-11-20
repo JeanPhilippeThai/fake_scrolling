@@ -1,7 +1,7 @@
 # Building apps with Claude: the method
 
 Snapshot of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), taken on 2026-11-19: this file is its Overview tab (revision 90), and each other tab is a file in [method/](method/).
-For now the Claude Doc is the source of truth and these files are copies of it.
+For now the Claude Doc is the source of truth of the method and these files are copies of it. An app's design is different: its source of truth is the app repo's `claude_design/`, not claude.ai ([the design cycle](method/describe.md#the-design-cycle)).
 
 ## The idea in short
 
