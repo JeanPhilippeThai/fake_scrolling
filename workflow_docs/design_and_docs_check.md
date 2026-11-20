@@ -1,9 +1,9 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-19 (revision 43).
-For now the Claude Doc is the source of truth and this file is a copy of it.
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-20 (revision 50).
+For now the Claude Doc is the source of truth of this check and this file is a copy of it. An app's design is different: its source of truth is the app repo's `claude_design/`, not claude.ai.
 
-These are instructions for an agent. They tell it how to check, layer by layer from the Claude Design screens down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
+These are instructions for an agent. They tell it how to check, layer by layer from the screens of the repo's design down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
 
 ## How to run the check
 
@@ -11,7 +11,7 @@ Read the method doc first, "Building apps with Claude: the method" ([method.md](
 
 | Input | Where it lives |
 | --- | --- |
-| Claude Design screens and the design export, one design per platform | Claude Design, `design/` |
+| The design's screens, one design per platform | `claude_design/` in the repo, its source of truth; never the canvases on claude.ai |
 | Raw extractions (prompt 1), one per platform | Kept with the registry's history |
 | Registry: roles, pages, features, variants, entities, decisions. One per platform first (those the app targets among web, desktop and mobile), then the canonical registry that prompt 10 merges from them; the per-platform ones are archived beside it | `docs/registry.yaml` |
 | Flows, state models and TLA+ models, threat model | `docs/system-design/` |
@@ -36,7 +36,7 @@ Read the method doc first, "Building apps with Claude: the method" ([method.md](
 3. **Top to bottom.** Finish a layer before the next. Then run the bottom-up pass, from B12 up to B1, then the checks across layers. When an upstream finding explains a downstream one, record the downstream one with "caused by" and the upstream finding's number, so one root cause does not show up ten times.
 4. **Do not stop at the first problem.** Run every layer. If a layer's inputs are missing entirely, mark its checks "not run" with the reason, and go on.
 5. **Evidence for every finding:** the IDs, the file, and the quoted line or the query result.
-6. **Do not decide product questions.** When two documents disagree, use the method's precedence order (decisions, registry, feature specs, product brief, system design, design export) to say which one is probably wrong, and leave the choice to the owner.
+6. **Do not decide product questions.** When two documents disagree, use the method's precedence order (decisions, registry, feature specs, product brief, system design, the repo's design) to say which one is probably wrong, and leave the choice to the owner.
 7. **Classify every finding as prompt 8 does.** A: an error in a document, with a mechanical fix. B: behavior nobody defined, which needs the owner's decision. C: the design itself is inconsistent, which needs a design change.
 8. **Give every finding a severity.** Blocking: it stops the method's next step, or step 10 for a feature. Major: a wrong or missing link that will cause rework. Minor: format, naming or wording.
 9. **Stop before the code.** Do not open `src/`, tests, or the database rows that come from the code scan (feature folders, test names, proof screenshots, event names). Those belong to the code checker.
@@ -45,7 +45,7 @@ Read the method doc first, "Building apps with Claude: the method" ([method.md](
 
 ```mermaid
 flowchart TB
-  L0["L0 Method and inputs"] --> L1D["L1 Claude Design: desktop"] & L1M["L1 Claude Design: mobile"]
+  L0["L0 Method and inputs"] --> L1D["L1 Design: desktop"] & L1M["L1 Design: mobile"]
   L1D --> L2D["L2 Raw extraction: desktop"] --> L3D["L3 Registry: desktop"]
   L1M --> L2M["L2 Raw extraction: mobile"] --> L3M["L3 Registry: mobile"]
   L3D & L3M --> L4["L4 Canonical registry (prompt 10)"]
@@ -70,13 +70,13 @@ Run the layers in this order. Each check has an ID; cite it in every finding. In
 | L0-04 | Mode B: every document the database reads parses, and every item in it has an ID | Query | Blocking |
 | L0-05 | The registry is at its fixed path: docs/registry.yaml in the repo, or claude_docs/registry.md, the import of its Claude Doc (never a plain page); each archived per-platform registry is claude_docs/registry-<platform>-archive.md (or .yaml) | Query | Major |
 
-### L1 · Claude Design
+### L1 · Design
 
 | ID | Check | How | If it fails |
 | --- | --- | --- | --- |
 | L1-01 | There is one design per platform the app targets (web, desktop, mobile); iOS and Android share the mobile design unless a decision gives each its own | Read | Blocking |
 | L1-02 | Every screen shows its empty, loading and error states, or a decision says it has none | Read | Major |
-| L1-03 | The export in `design/` matches the current design: same screens, same copy | Read | Major |
+| L1-03 | The design checked is the repo's `claude_design/`, never the canvases on claude.ai: claude.ai only drafts the next version (the method's design cycle). A screen or a copy seen only on claude.ai is not in the design until it is imported and promoted | Read | Major |
 | L1-04 | Every feature marked `design_a_mettre_a_jour: true` still differs from the design; if it now matches, the flag should be gone (prompt 9) | Read | Minor |
 
 ### L2 · Raw extraction (prompt 1)
@@ -341,7 +341,7 @@ Only when the app has more than one version.
 | --- | --- | --- | --- |
 | B2-01 | Every extracted element is on its screen in the design; anything deduced rather than seen is marked "à confirmer" | Read | Major |
 
-### B1 · Claude Design
+### B1 · Design
 
 The design is the top: only the product brief and decisions sit above it.
 

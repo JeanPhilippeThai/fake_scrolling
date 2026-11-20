@@ -1,6 +1,6 @@
 # Reference
 
-Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 24, taken on 2026-11-19.
+Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 26, taken on 2026-11-20.
 
 Where each fact lives, how it is named, and how any line of code traces back to it. Every other part relies on these rules: read this one once, then come back to look things up.
 
@@ -25,7 +25,7 @@ Each kind of fact has one home. Any other place that mentions it links there ins
 | Open questions about one feature | That feature's `questions_ouvertes` | `docs/registry.yaml` |
 | Open questions about the whole app | The questions register | `docs/questions.md` |
 | Shortcuts taken on purpose, technical debt | The workarounds log | `docs/workarounds.md` |
-| Look and copy of the screens | The design in the repo, drawn on claude.ai and published back to it ([the design cycle](describe.md#the-design-cycle)) | `claude_design/` |
+| Look and copy of the screens | The design in the repo, never the canvases on claude.ai: claude.ai only drafts the next version, and the repo's version is published back to it ([the design cycle](describe.md#the-design-cycle)) | `claude_design/` |
 | How Claude works on the repo, including the file-name markers | The agent instructions | `CLAUDE.md` |
 | What the code actually does | The code and its tests | `src/ui/`, `src/platform/`, `src/server/`, `src/shared/` |
 | Which features are on, and for whom | The feature flag service, one flag per feature | the flag service |
@@ -41,7 +41,7 @@ When the registry is not kept in the repo, it lives in a Claude Doc, never in a 
 3. Feature specs
 4. Product brief
 5. System design
-6. Design export
+6. The repo's design
 
 The loser is fixed in the same pull request. A real conflict that needs a choice is put to you; your answer goes into the registry as a decision (`D`).
 
