@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 107, exported 2026-11-20 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 115, exported 2026-11-20 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -542,7 +542,7 @@ features:
       - id: F-010.a
         pages: [P-16]
         plateforme: mobile
-        difference: 'Résultat de recherche : aucune action (like, commentaire, enregistrement, partage)'
+        difference: 'Résultat de recherche : par-dessus la grille, flèche retour vers P-15 ; mêmes actions que sur P-03 (D-046)'
     entites: [E-03, E-04]
     operations: [lecture]
     etats_ui:
@@ -551,6 +551,7 @@ features:
     questions_ouvertes:
       - Vrais médias à la place des formes générées
       - 'Accès supposé : les résultats de recherche montrent des posts de non-amis s''ils sont publics (audience du post, F-050)'
+    design_a_mettre_a_jour: true
 
   - id: F-011
     nom: Regarder une vidéo
@@ -647,6 +648,7 @@ features:
       - 'échec du like d''un commentaire (F-016.b) : le petit cœur redevient gris, « Le like n’a pas été enregistré. » en bas du panneau pendant 2 s (D-043)'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
+    design_a_mettre_a_jour: true
 
   - id: F-017
     nom: Consulter les commentaires
@@ -664,6 +666,7 @@ features:
       - 'erreur : « Les commentaires n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
+    design_a_mettre_a_jour: true
 
   - id: F-018
     nom: Enregistrer un post dans une collection
@@ -682,6 +685,7 @@ features:
       - 'échec : le signet redevient vide, « Le post n’a pas été enregistré. » en bas du fil pendant 2 s'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
+    design_a_mettre_a_jour: true
 
   - id: F-019
     nom: Partager un post
@@ -712,6 +716,8 @@ features:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050) ; peut-on partager un post « Amis proches » ?'
       - 'Envoyer à un ami (F-019.a) : amis seulement (ami ou non, E-09)'
       - Un lien de post ouvert sans connexion mène à la connexion (P-01)
+      - 'Aspect du post reçu dans la conversation de l''ami (F-019.a, D-044) : non dessiné sur P-09'
+    design_a_mettre_a_jour: true
 
   - id: F-020
     nom: Lire l'auteur et la légende d'un post
@@ -1549,7 +1555,7 @@ entites:
 
   - id: E-11
     nom: Message
-    champs: [expéditeur, texte, photo, message cité, date]
+    champs: [expéditeur, texte, photo, message cité, post partagé, date]
     utilisee_par: [F-019, F-038, F-040, F-041, F-042]
 
   - id: E-12
@@ -1819,6 +1825,21 @@ decisions:
     choix: 'La liste d''amis de P-24 (F-048), la recherche de lieux de P-25 (F-049) et la rangée d''amis de P-07 (F-019.a) suivent D-028 et D-027 : un anneau centré dans la liste pendant le chargement, puis un message sur place avec « Réessayer » si elle échoue. L''échec du like d''un commentaire (F-016.b) suit D-042 : le petit cœur redevient gris et « Le like n’a pas été enregistré. » s''affiche pendant 2 s en bas du panneau des commentaires (P-05), au-dessus du champ « Ajouter un commentaire… ». Pas de nouvel artboard.'
     raison: 'Même motif que les états dessinés pour D-041 ; seul l''emplacement change, comme pour D-036. P-05 n''a pas de fil : le bas du panneau en tient lieu.'
     impacte: [F-016, F-019, F-048, F-049]
+  - id: D-044
+    sujet: Ce que la maquette simule
+    choix: 'Hors démo, l''app fait pour de vrai ce que la maquette simule : P-04 montre les vraies invitations reçues et en attente (E-09) ; un post envoyé à un ami (F-019.a) arrive en message (E-11, champ post partagé) dans sa conversation avec l''expéditeur (E-10, P-09) ; « Copier le lien » (F-019.b) copie le lien du post dans le presse-papiers du téléphone ; « Partager ailleurs » (F-019.c) ouvre la feuille de partage du téléphone.'
+    raison: 'Ces « à confirmer » de l''inventaire ne portaient que sur la démo ; le design dit déjà ce que fait l''app (L2-03).'
+    impacte: [F-019, F-022, F-028]
+  - id: D-045
+    sujet: Brouillon abandonné
+    choix: 'La croix « Fermer » de P-12 (F-005.a) abandonne le post en cours sans confirmation ni sauvegarde : rien n''est repris à la prochaine ouverture.'
+    raison: 'C''est ce que montre le design ; garder un brouillon ajouterait une feature et une donnée stockée.'
+    impacte: [F-005]
+  - id: D-046
+    sujet: Actions sur un résultat de recherche
+    choix: 'Un post ouvert depuis la recherche (P-16) a les mêmes actions que dans le fil (P-03) : liker (F-016), commenter (F-017), enregistrer (F-018), partager (F-019). P-16 est à redessiner : F-010, F-016, F-017, F-018 et F-019 portent design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
+    raison: 'Choix du propriétaire : un post trouvé se traite comme un post du fil (L2-03, « mêmes actions que P-03 ? »).'
+    impacte: [F-010, F-016, F-017, F-018, F-019]
 
 ids_retires:
   - {id: F-013, decision: D-002}

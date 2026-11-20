@@ -1,19 +1,23 @@
 # Design and docs: newest vs current
 
-Compared on 2026-11-20. New decision D-043 gives the friends list of P-24, the place search of P-25 and the row of friends of P-07 a loading and an error state by analogy (D-027, D-028), and it puts the failed like of a comment at the bottom of the P-05 panel. No artboard was added.
+Compared on 2026-11-20. Three new decisions settle the six « à confirmer » items of finding L2-03: D-044 (the real app does what the mockup simulates), D-045 (an abandoned draft is lost) and D-046 (a search result gets the feed's actions, so P-16 must be redrawn).
 
 ## Docs
 
-### Registre canonique – Fake scrolling (`registry.md`, rev 101 -> 107)
-- **D-043 added**, « États de chargement et d'erreur par analogie »: P-24 (F-048), P-25 (F-049) and the P-07 row (F-019.a) show « un anneau centré dans la liste pendant le chargement, puis un message sur place avec « Réessayer » si elle échoue ». When liking a comment fails (F-016.b), « le petit cœur redevient gris et « Le like n’a pas été enregistré. » s'affiche pendant 2 s en bas du panneau des commentaires (P-05), au-dessus du champ « Ajouter un commentaire… » ». « Pas de nouvel artboard. »
-- **D-042**: its `choix` now says where the message goes on P-05: « (en bas du panneau des commentaires pour le like d'un commentaire, D-043) ».
-- **F-016** `etats_ui`: adds the failure of F-016.b.
-- **F-019** `etats_ui`: adds the loading and the error of the row of friends (F-019.a).
-- **F-048**, **F-049** `etats_ui`: each adds a loading state (centred ring) and an error state (message in place with « Réessayer »), citing D-043.
+### Registre canonique – Fake scrolling (`registry.md`, rev 107 -> 115)
+- **D-044 « Ce que la maquette simule »** (new): outside the demo, P-04 shows the real pending invitations (E-09); a post sent to a friend (F-019.a) arrives as a message (E-11) in their conversation (E-10, P-09); « Copier le lien » (F-019.b) copies to the phone's clipboard; « Partager ailleurs » (F-019.c) opens the phone's share sheet.
+- **D-045 « Brouillon abandonné »** (new): the cross of P-12 (F-005.a) drops the post being drafted, with no confirmation and no save.
+- **D-046 « Actions sur un résultat de recherche »** (new): a post opened from search (P-16) gets the like, comment, save and share actions of the feed (F-016, F-017, F-018, F-019); P-16 must be redrawn.
+- **F-010.a**: the difference is now « Résultat de recherche : par-dessus la grille, flèche retour vers P-15 ; mêmes actions que sur P-03 (D-046) » (was « aucune action »).
+- **F-010, F-016, F-017, F-018, F-019**: now carry `design_a_mettre_a_jour: true` until P-16 is redrawn (D-046).
+- **F-019**: new open question « Aspect du post reçu dans la conversation de l'ami (F-019.a, D-044) : non dessiné sur P-09 ».
+- **E-11 Message**: new field `post partagé`.
 
-### Fake scrolling — inventaire des écrans (`inventaire-des-ecrans.md`, rev 94 -> 98)
-- The « États visibles » column gets the same states, each marked « D-043, non dessiné(s) »: « Liker un commentaire » (P-05), « Envoyer à un ami » (P-07), « Identifier un ami » (P-24), « Choisir un lieu » (P-25).
+### Fake scrolling — inventaire des écrans (`inventaire-des-ecrans.md`, rev 98 -> 105)
+- P-04 « Voir les invitations d'amis », P-07 « Envoyer à un ami », « Copier le lien », « Partager ailleurs »: their « à confirmer » notes are replaced with what D-044 settles.
+- P-12 « Fermer la création »: « Brouillon abandonné, sans confirmation ni sauvegarde (D-045) ».
+- P-16 « Liker, commenter, enregistrer, partager »: « à ajouter comme sur P-03 (D-046) », still not drawn.
 
 ## Unchanged
 
-Design canvas « Fake scrolling — app » (`fake-scrolling-app`): no file changed.
+Design canvas `fake-scrolling-app` (66 files).
