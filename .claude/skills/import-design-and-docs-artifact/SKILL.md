@@ -102,8 +102,8 @@ For each matched doc, `<doc>` = a short kebab-case name from its title, or the r
 
 For each matched page, `<doc>` = a short kebab-case name from its title, or the registry's fixed name (see "The layout").
 
-1. `Artifact(action: "read", url, path: "index.html", out_dir: "$TMPDIR/pages/<doc>")`. It saves the page as a file. Do not retype it.
-2. `python3 .claude/skills/import-design-and-docs-artifact/page_to_doc.py "$TMPDIR/pages/<doc>/index.html" newest_claude_docs/<doc>`
+1. `Artifact(action: "read", url, path: "index.html", out_dir: "<scratchpad>/pages/<doc>")`, `<scratchpad>` being the session's scratchpad directory, given in Claude Code's system prompt: the tool saves there without asking the user, unlike `$TMPDIR`. It saves the page as a file. Do not retype it.
+2. `python3 .claude/skills/import-design-and-docs-artifact/page_to_doc.py "<scratchpad>/pages/<doc>/index.html" newest_claude_docs/<doc>`
    A page that keeps its content as YAML in a `<pre>` or `<script>` block becomes `newest_claude_docs/<doc>.yaml`, that block byte for byte. Any other page becomes `newest_claude_docs/<doc>.md`, its visible text. The script prints which one it wrote.
 3. Add no source line to these files: their source goes in `INDEX.md` only.
 

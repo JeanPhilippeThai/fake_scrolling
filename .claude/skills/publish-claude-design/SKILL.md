@@ -11,6 +11,8 @@ Docs are not published: a doc is always edited in its Claude Doc first, then imp
 
 Script: `python3 .claude/skills/publish-claude-design/claude_sync.py`. Each canvas folder holds `.claude-ai.json`, written by the import: the canvas URL and the hash of every `project/` file as claude.ai held it.
 
+`<scratchpad>` below is the session's scratchpad directory, given in Claude Code's system prompt: the Artifact tool saves and publishes there without asking the user, unlike `$TMPDIR` or any other folder outside the working directory.
+
 ## 1. What changed in the repo
 
 `claude_sync.py status claude_design`
@@ -26,21 +28,21 @@ Publish from the branch that changed the design, right before landing it, so tha
 For each canvas to publish, with `<url>` from its `.claude-ai.json`:
 
 1. `Artifact(action: "list", scope: "files", url: "<url>")`. Keep the paths under `project/`.
-2. `Artifact(action: "read", url: "<url>", paths: [those paths], out_dir: "$TMPDIR/remote/<canvas>")`. Do not Read them back.
-3. `claude_sync.py check-remote claude_design/<canvas> $TMPDIR/remote/<canvas>`
+2. `Artifact(action: "read", url: "<url>", paths: [those paths], out_dir: "<scratchpad>/remote/<canvas>")`. Do not Read them back.
+3. `claude_sync.py check-remote claude_design/<canvas> <scratchpad>/remote/<canvas>`
 
 If it reports a change, someone drew on claude.ai since the last import, and publishing would overwrite it. Stop and tell the user what changed on each side: the drawing on claude.ai has to be imported and merged with the repo's changes by hand, with them.
 
 ## 3. Publish
 
-1. `claude_sync.py plan claude_design/<canvas> --stage <scratchpad>/stage/<canvas>`, `<scratchpad>` being the session's scratchpad directory (the Artifact tool publishes only from it or from the working directory). It copies the changed and added files into the stage in claude.ai's form: without the viewer's `support.js`, and with each `/_blob/<id>.<ext>` link back to `/_blob/<id>`, as claude.ai writes it. It prints the `url`, the `root` (the stage) and the `files` map: each changed or added file mapped to itself, each removed file to `null`. Never publish from `claude_design/` itself: its files are wired for the local viewer.
+1. `claude_sync.py plan claude_design/<canvas> --stage <scratchpad>/stage/<canvas>`. It copies the changed and added files into the stage in claude.ai's form: without the viewer's `support.js`, and with each `/_blob/<id>.<ext>` link back to `/_blob/<id>`, as claude.ai writes it. It prints the `url`, the `root` (the stage) and the `files` map: each changed or added file mapped to itself, each removed file to `null`. Never publish from `claude_design/` itself: its files are wired for the local viewer.
 2. A file that points to a new uploaded image (`/_blob/<id>` that claude.ai does not hold) needs that image uploaded first: `Artifact(action: "publish", url, asset: true, file_path: "claude_design/_blob/<id>")`, then the file's reference replaced by the URL it returns. If unsure, ask.
 3. `Artifact(action: "publish", url: "<url>", root: "<root>", files: <files>)`. If it is refused because claude.ai changed, go back to step 2. Never pass `force`.
 
 ## 4. Record it
 
 1. `claude_sync.py stamp claude_design/<canvas> --published`: the stamp now says that claude.ai holds the repo's version, and records which files the repo drew, so that the next comparison can tell the owner when claude.ai removes or changes one of them (`claude_sync.py undone`). Never stamp after a publish without `--published`.
-2. Check it: read the published paths again into `$TMPDIR/after/<canvas>` as in step 2, and `claude_sync.py check-remote claude_design/<canvas> $TMPDIR/after/<canvas>` must report no change.
+2. Check it: read the published paths again into `<scratchpad>/after/<canvas>` as in step 2, and `claude_sync.py check-remote claude_design/<canvas> <scratchpad>/after/<canvas>` must report no change.
 3. Commit the `.claude-ai.json` files with the design change.
 
 ## 5. Report
