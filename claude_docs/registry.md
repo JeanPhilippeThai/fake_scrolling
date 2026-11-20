@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 54, exported 2026-11-19 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 55, exported 2026-11-20 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -1653,7 +1653,7 @@ decisions:
     impacte: [F-001, F-015]
   - id: D-037
     sujet: Conventions de workflow_claude 1374eff
-    choix: 'Le registre importé s''appelle claude_docs/registry.yaml, nom fixé par la méthode quel que soit le titre de la page. Chaque ID retiré figure dans ids_retires avec la décision qui l''a retiré. Un ID garde son nombre de chiffres : il n''est jamais complété ni renuméroté.'
+    choix: 'Le registre importé s''appelle claude_docs/registry.yaml, nom fixé par la méthode quel que soit le titre de la page. Chaque ID retiré figure dans ids_retires avec la décision qui l''a retiré. Un ID garde son nombre de chiffres : il n''est jamais complété ni renuméroté. Remplacée en partie par D-038 : le registre importé s''appelle claude_docs/registry.md.'
     raison: 'La méthode fixe le nom du registre (L0-05), et G-02 bloque désormais le build quand un ID cité n''est ni défini ni listé dans ids_retires.'
     impacte: []
   - id: D-038
