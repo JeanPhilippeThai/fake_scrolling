@@ -16,7 +16,9 @@ the file, and the next command rebuilds it.
 
 Every command except build and diff first rebuilds the database when a doc changed since it was built.
 Docs are read from docs/ and claude_docs/ at the repo root: *.yaml files, and the ```yaml blocks of
-*.md files, joined in order so that a YAML split over several blocks parses as one.
+*.md files, joined in order so that a YAML split over several blocks parses as one. A flow (prompt 5)
+is prose, not YAML: it is defined by a Markdown heading that starts with its ID ("## FL-01 Connexion"),
+and its section cites the pages, features and entities it links to.
 """
 import argparse
 import datetime
@@ -86,6 +88,13 @@ def is_template(block):
 FENCE_OPEN_RE = re.compile(r"^(`{3,}|~{3,})\s*([\w-]*)\s*$")
 ID_LINE_RE = re.compile(r"^\s*(?:-\s*)?(?:id|page)\s*:\s*['\"]?([A-Z][\w.-]*)")
 ARCHIVE_RE = re.compile(r"archiv", re.I)
+HEADING_RE = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
+# A flow's heading starts with its ID, after an optional "Flow": "## FL-01 Connexion", "### Flow FL-02 : Purge".
+FLOW_HEADING_RE = re.compile(r"^(?:\*\*)?(?:flow\s+)?(FL-\d{2,})(?![\w-])(?:\*\*)?[\s:·.–—-]*(.*)$", re.I)
+NAME_TRIM = " \t\"'«»“”*:·–—-"
+# The link from a flow to each kind of ID its section cites.
+FLOW_RELS = {"page": "flow_page", "page_state": "flow_page", "feature": "flow_feature", "variant": "flow_feature",
+             "entity": "flow_entity", "role": "flow_role", "decision": "flow_decision", "flow": "flow_flow"}
 
 # Direction of each link for the impact walk: 1 when a change to `source` can affect `target`,
 # 0 when it is the other way round. Links not listed here (aliases) stay out of the `links` view.
@@ -96,7 +105,8 @@ REL_DIRECTION = {
     "node_role": 0, "data_flow_source": 0, "data_flow_target": 0, "data_flow_entity": 0,
     "data_flow_feature": 0, "data_flow_flow": 0, "contract_role": 0, "component_page": 0,
     "component_feature": 0, "component_table": 0, "component_data_flow": 0,
-    "component_condition": 0,
+    "component_condition": 0, "flow_page": 0, "flow_feature": 0, "flow_entity": 0, "flow_role": 0,
+    "flow_decision": 0, "flow_flow": 0, "flow_cites": 0,
 }
 
 SCHEMA = """
@@ -125,6 +135,7 @@ CREATE TABLE page_contracts(page TEXT, name TEXT, path TEXT);
 CREATE TABLE components(id TEXT, page TEXT, accessible_name TEXT, type TEXT, feature TEXT, path TEXT);
 CREATE TABLE component_columns(component TEXT, column_ref TEXT, mode TEXT);
 CREATE TABLE component_conditions(component TEXT, mode TEXT, condition TEXT);
+CREATE TABLE flows(scope TEXT, id TEXT, name TEXT, path TEXT, line INT, end_line INT);
 CREATE TABLE missing(path TEXT, line INT, text TEXT);
 CREATE TABLE mentions(scope TEXT, id TEXT, kind TEXT, path TEXT, line INT, written TEXT);
 CREATE TABLE problems(path TEXT, line INT, message TEXT);
@@ -287,6 +298,30 @@ def yaml_blocks(lines):
     return blocks
 
 
+def md_headings(lines):
+    """Headings of a Markdown file outside fenced blocks, as (line number, level, text, last line of
+    its section): the section runs to the next heading of the same or a higher level."""
+    heads, fence = [], None
+    for n, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if fence:
+            if stripped.startswith(fence) and stripped.strip(fence[0]) == "":
+                fence = None
+            continue
+        m = FENCE_OPEN_RE.match(stripped)
+        if m:
+            fence = m.group(1)
+            continue
+        m = HEADING_RE.match(line)
+        if m:
+            heads.append([n, len(m.group(1)), m.group(2), len(lines)])
+    for i, h in enumerate(heads):
+        nxt = next((g for g in heads[i + 1:] if g[1] <= h[1]), None)
+        if nxt:
+            h[3] = nxt[0] - 1
+    return [tuple(h) for h in heads]
+
+
 def is_registry(doc):
     return isinstance(doc, dict) and ("pages" in doc or "features" in doc)
 
@@ -311,12 +346,12 @@ class Builder:
     def problem(self, path, msg, line=None):
         self.row("problems", path, line, msg)
 
-    def define(self, scope, id_, expected, path, name=None, data=None):
+    def define(self, scope, id_, expected, path, name=None, data=None, line=None):
         if not isinstance(id_, str) or not id_.strip():
             self.problem(path, f"a {expected} has no id: {text(data)[:120] if data else ''}")
             return None
         id_ = id_.strip()
-        line = self.id_lines.get(path, {}).get(id_)
+        line = line or self.id_lines.get(path, {}).get(id_)
         self.row("defs", scope, id_, kind_of(id_) or "unknown", expected, path, line, text(name), text(data), id_number(id_))
         return id_
 
@@ -413,6 +448,8 @@ class Builder:
                     canonical_registries.append(path)
             elif doc is not None:
                 self.problem(path, "the YAML is not a mapping of sections (roles, pages, features, …)")
+            if p.suffix.lower() == ".md":
+                self.load_flows(path, scope, lines, skip)
             # A doc named or titled "archive" is frozen history: kept, never held to the current IDs.
             self.row("docs", path, scope, int(self.is_archive(path, lines)))
             # Every ID cited. After the merge, a live doc cites canonical IDs only, inventories included.
@@ -598,6 +635,26 @@ class Builder:
             self.ref(s, fid, "data_flow_feature", f.get("features"), path)
             self.ref(s, fid, "data_flow_flow", f.get("flows"), path)
 
+    def load_flows(self, path, scope, lines, skip):
+        """Flows (prompt 5) are prose: a heading that starts with an FL ID defines that flow, and every
+        ID its section cites (template blocks aside) is linked to it."""
+        found = False
+        for first, _, heading, last in md_headings(lines):
+            m = FLOW_HEADING_RE.match(heading)
+            if not m:
+                continue
+            fid = m.group(1).upper()
+            name = m.group(2).strip(NAME_TRIM) or None
+            section = [lines[n - 1] for n in range(first + 1, last + 1) if n not in skip]
+            self.define(scope, fid, "flow", path, name, {"nom": name, "texte": "\n".join(section).strip()}, first)
+            self.row("flows", scope, fid, name, path, first, last)
+            cited = sorted(set(ids_in(section)) - {fid}, key=id_key)
+            for kind in sorted({kind_of(c) for c in cited}):
+                self.ref(scope, fid, FLOW_RELS.get(kind, "flow_cites"), [c for c in cited if kind_of(c) == kind], path)
+            found = True
+        if found:
+            self.row("sources", path, "markdown", "flows", scope, None)
+
     def load_contract(self, doc, path, lines):
         s = CANONICAL
         page = text(doc.get("page"))
@@ -737,18 +794,25 @@ def run_checks(con, wanted=None):
     if any(r[1] == "prev" for r in con.execute("PRAGMA database_list")):
         have.add("previous")
     multi = con.execute("SELECT value FROM meta WHERE key='multi_platform'").fetchone()[0] == "1"
+    # Flows are written one at a time (prompt 5); step 8 starts once they all exist.
+    if "flows" in have and have & {"data_model", "data_flows"}:
+        have.add("flows_done")
     results = []
     for c in load_checks():
         if wanted and c["id"] not in wanted:
             continue
         needs = [n.strip() for n in c.get("needs", "").split(",") if n.strip()]
         reason = None
+        special = ("multi_platform", "previous", "flows_done")
         for n in needs:
             if n == "multi_platform" and not multi:
                 reason = "the app has one platform"
             elif n == "previous" and n not in have:
                 reason = "no previous version to compare with: pass --since <git revision>"
-            elif n not in ("multi_platform", "previous") and n not in have:
+            elif n == "flows_done" and n not in have:
+                reason = ("no flows in the docs yet" if "flows" not in have else
+                          "step 5 is in progress: the flows are complete once the data model or the data flows exist")
+            elif n not in special and n not in have:
                 reason = f"no {n.replace('_', ' ')} in the docs yet"
         if reason:
             results.append((c, "not reached", reason, []))

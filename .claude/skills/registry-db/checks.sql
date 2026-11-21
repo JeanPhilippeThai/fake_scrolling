@@ -281,6 +281,78 @@ WHERE m.scope = 'canonical'
   AND EXISTS (SELECT 1 FROM defs d WHERE d.scope != 'canonical' AND d.id = m.id)
 ORDER BY 1, 2;
 
+-- check: L5-01
+-- title: Every flow uses only canonical registry IDs (P, F, E, and the roles and decisions it cites)
+-- how: Query
+-- severity: Major
+-- needs: registry, flows
+-- A flow is a heading that starts with its FL ID; `lines` are the lines of its section that cite the ID.
+SELECT r.source AS flow, r.target AS id,
+  CASE WHEN EXISTS (SELECT 1 FROM aliases a WHERE a.alias = r.target AND a.id IS NOT NULL AND a.retired = 0)
+         THEN 'a per-platform ID: cite its canonical ID ' || (SELECT MIN(a.id) FROM aliases a WHERE a.alias = r.target AND a.id IS NOT NULL AND a.retired = 0)
+       WHEN EXISTS (SELECT 1 FROM retired t WHERE t.scope = r.scope AND t.id = r.target)
+         THEN 'retired by ' || COALESCE((SELECT MIN(t.decision) FROM retired t WHERE t.scope = r.scope AND t.id = r.target), 'no decision')
+       ELSE 'not in the canonical registry' END AS problem,
+  r.path,
+  (SELECT GROUP_CONCAT(m.line) FROM mentions m WHERE m.path = r.path AND m.id = r.target
+     AND m.line > f.line AND m.line <= f.end_line) AS lines
+FROM refs r
+JOIN flows f ON f.scope = r.scope AND f.id = r.source AND f.path = r.path
+WHERE r.scope = 'canonical'
+  AND r.rel IN ('flow_page', 'flow_feature', 'flow_entity', 'flow_role', 'flow_decision')
+  AND NOT EXISTS (SELECT 1 FROM defs d WHERE d.scope = 'canonical' AND d.id = r.target)
+GROUP BY r.source, r.target, r.path
+ORDER BY r.source COLLATE idnum, r.target COLLATE idnum;
+
+-- check: L5-06
+-- title: A feature on several platforms that a flow cites is reachable by a flow on each: one that cites the feature (or one of its variants) and a page of that platform
+-- how: Query, then read
+-- severity: Major
+-- needs: registry, flows
+-- A feature in no flow yet is left to L5-07, so that the leads hold while step 5 is in progress.
+WITH ff AS (
+  SELECT r.source AS flow, COALESCE(v.feature, r.target) AS feature
+  FROM refs r LEFT JOIN variants v ON v.scope = r.scope AND v.id = r.target
+  WHERE r.scope = 'canonical' AND r.rel = 'flow_feature'
+), fp AS (
+  SELECT r.source AS flow, p.platform
+  FROM refs r JOIN pages p ON p.scope = r.scope AND p.id = r.target
+  WHERE r.scope = 'canonical' AND r.rel = 'flow_page'
+)
+SELECT f.feature, f.platform,
+  'on ' || f.platform || ', but no flow cites it with a ' || f.platform || ' page' AS problem
+FROM feature_platforms f
+WHERE f.scope = 'canonical'
+  AND (SELECT COUNT(DISTINCT g.platform) FROM feature_platforms g WHERE g.scope = 'canonical' AND g.feature = f.feature) > 1
+  AND EXISTS (SELECT 1 FROM ff WHERE ff.feature = f.feature)
+  AND NOT EXISTS (SELECT 1 FROM ff JOIN fp ON fp.flow = ff.flow WHERE ff.feature = f.feature AND fp.platform = f.platform)
+ORDER BY f.feature COLLATE idnum, f.platform;
+
+-- check: L5-07
+-- title: Every feature used across pages (on two pages or more, a page's states counting as that page) appears in at least one flow, itself or through one of its variants
+-- how: Query
+-- severity: Minor
+-- needs: registry, flows_done
+-- Flows are written one at a time: this runs once step 8 has started (a data model or data flows
+-- exist), since prompts 11 and 12 run once every flow is written.
+WITH fpages AS (
+  SELECT scope, source AS feature, target AS page FROM refs WHERE rel = 'feature_page'
+  UNION SELECT scope, target, source FROM refs WHERE rel = 'page_feature'
+  UNION SELECT r.scope, v.feature, r.target FROM refs r JOIN variants v ON v.scope = r.scope AND v.id = r.source
+        WHERE r.rel = 'variant_page'
+), across AS (
+  SELECT feature,
+    GROUP_CONCAT(DISTINCT CASE WHEN instr(page, '.') > 0 THEN substr(page, 1, instr(page, '.') - 1) ELSE page END) AS pages,
+    COUNT(DISTINCT CASE WHEN instr(page, '.') > 0 THEN substr(page, 1, instr(page, '.') - 1) ELSE page END) AS n
+  FROM fpages WHERE scope = 'canonical' GROUP BY feature
+)
+SELECT f.id AS feature, f.name, a.pages, 'on ' || a.n || ' pages, but in no flow' AS problem, f.path
+FROM features f JOIN across a ON a.feature = f.id
+WHERE f.scope = 'canonical' AND a.n > 1
+  AND NOT EXISTS (SELECT 1 FROM refs r LEFT JOIN variants v ON v.scope = r.scope AND v.id = r.target
+                  WHERE r.scope = 'canonical' AND r.rel = 'flow_feature' AND COALESCE(v.feature, r.target) = f.id)
+ORDER BY f.id COLLATE idnum;
+
 -- check: L8-01
 -- title: Every table has an ID, a name, a type, a store (N-xx) and the entity it stores, or "aucune" with a reason
 -- how: Query
