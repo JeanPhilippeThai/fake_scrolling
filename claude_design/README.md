@@ -1,6 +1,6 @@
 # Designs — Fake scrolling
 
-Imported 2026-11-20 by the `import-design-and-docs-artifact` skill.
+Imported 2026-11-21 by the `import-design-and-docs-artifact` skill.
 
 | Canvas | Folder | Source |
 | --- | --- | --- |

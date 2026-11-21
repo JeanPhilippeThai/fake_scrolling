@@ -13,9 +13,14 @@
 body{margin:0}
 a{color:#1F6B4A}a:hover{color:#174F37}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #2F4F9E;outline-offset:2px}
+.fs-noscroll{scrollbar-width:none}
+.fs-noscroll::-webkit-scrollbar{display:none}
+@keyframes fs-pop{0%{transform:scale(0.3);opacity:0}15%{transform:scale(1.15);opacity:1}30%{transform:scale(1)}75%{transform:scale(1);opacity:1}100%{transform:scale(1.1) translateY(-40px);opacity:0}}
+.fs-burst{animation:fs-pop 0.9s ease-out forwards}
+@media (prefers-reduced-motion: reduce){.fs-burst{animation:none}}
 </style>
 </helmet>
-<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; color: #1C1C1C; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; overflow: hidden; filter: grayscale({{grey}}%); transition: filter 1.2s ease">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; color: #1C1C1C; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; position: relative; overflow: hidden; filter: grayscale({{grey}}%); transition: filter 1.2s ease">
   <div style="flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column">
     <form onSubmit="{{onSearchSubmit}}" role="search" style="padding: 16px 16px 10px; margin: 0">
       <div style="position: relative">
@@ -72,17 +77,65 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #2F4F
         </div>
 
         <sc-if value="{{viewing}}" hint-placeholder-val="{{ false }}">
-          <div role="dialog" aria-modal="true" aria-label="Post de {{view.author}}" style="position: absolute; inset: 0; overflow: hidden; background: {{view.bg}}">
-            <sc-for list="{{view.shapes}}" as="s" hint-placeholder-count="3">
-              <span style="position: absolute; left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; height: {{s.h}}%; background: {{s.c}}; border-radius: {{s.r}}"></span>
-            </sc-for>
+          <div role="dialog" aria-modal="true" aria-label="Résultats pour {{query}}" style="position: absolute; inset: 0; background: #1C1C1C">
+            <div ref="{{scrollRef}}" onWheel="{{onWheel}}" onPointerDown="{{onDragStart}}" onPointerMove="{{onDragMove}}" onPointerUp="{{onDragEnd}}" onPointerCancel="{{onDragEnd}}" onKeyDown="{{onKey}}" tabIndex="0" aria-label="Résultat {{pageNum}} sur {{total}}" style="position: absolute; inset: 0; overflow: hidden; touch-action: none; container-type: size; outline: none">
+              <div ref="{{trackRef}}" style="height: 100%; transform: translateY(calc({{negIdx}} * 100cqh)); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)">
+                <sc-for list="{{results}}" as="it" hint-placeholder-count="2">
+                  <article aria-label="Post de {{it.author}}" style="position: relative; height: 100cqh; overflow: hidden">
+                    <div role="img" aria-label="{{it.alt}}" onClick="{{it.onTap}}" style="position: absolute; inset: 0; overflow: hidden; background: {{it.bg}}; cursor: pointer">
+                      <sc-for list="{{it.shapes}}" as="s" hint-placeholder-count="4">
+                        <span style="position: absolute; left: {{s.x}}%; top: {{s.y}}%; width: {{s.w}}%; height: {{s.h}}%; background: {{s.c}}; border-radius: {{s.r}}"></span>
+                      </sc-for>
+                    </div>
+
+                    <sc-if value="{{it.showBurst}}" hint-placeholder-val="{{ false }}">
+                      <div aria-hidden="true" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none">
+                        <svg class="fs-burst" width="132" height="132" viewBox="0 0 24 24" fill="#FF5C7A" stroke="#FFFFFF" stroke-width="1.2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>
+                      </div>
+                    </sc-if>
+
+                    <div style="position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 14px; pointer-events: none">
+                      <div style="align-self: flex-end; margin-right: 8px; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: auto">
+                        <div aria-hidden="true" style="width: 46px; height: 46px; border-radius: 50%; border: 2px solid #FFFFFF; overflow: hidden; background: {{it.avatar}}">
+                          <div style="width: 100%; height: 100%; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7), transparent 60%); filter: blur(2px)"></div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+                          <button type="button" onClick="{{it.toggleLike}}" aria-pressed="{{it.liked}}" aria-label="J’aime" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="{{it.heartFill}}" stroke="{{it.heartStroke}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>
+                          </button>
+                          <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{it.likes}}</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+                          <button type="button" onClick="{{it.openComments}}" aria-label="Commentaires" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.5 7.2L4 20l1-4.2A8 8 0 1 1 20 12z"></path></svg>
+                          </button>
+                          <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{it.comments}}</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+                          <button type="button" onClick="{{it.openSave}}" aria-pressed="{{it.isSaved}}" aria-label="Enregistrer dans une collection" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+                            <svg width="29" height="29" viewBox="0 0 24 24" fill="{{it.saveFill}}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v17l-6-4-6 4z"></path></svg>
+                          </button>
+                          <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{it.saves}}</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+                          <button type="button" onClick="{{it.openShare}}" aria-label="Partager" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+                            <svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"></path><path d="M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg>
+                          </button>
+                          <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{it.shares}}</span>
+                        </div>
+                      </div>
+                      <div style="display: flex; flex-direction: column; gap: 4px; padding: 0 76px 16px 16px; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">
+                        <span style="font-weight: 600; font-size: 16px; line-height: 1.3">{{it.author}}</span>
+                        <p style="margin: 0; font-size: 15px; line-height: 1.45">{{it.captionShown}}<sc-if value="{{it.canExpand}}" hint-placeholder-val="{{ false }}"> <button type="button" onClick="{{it.toggleMore}}" aria-expanded="{{it.expanded}}" style="pointer-events: auto; min-height: 24px; padding: 0; border: 0; background: transparent; color: #FFFFFF; font: 600 15px 'IBM Plex Sans', sans-serif; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75); cursor: pointer">{{it.moreLabel}}</button></sc-if></p>
+                      </div>
+                    </div>
+                  </article>
+                </sc-for>
+              </div>
+            </div>
             <button type="button" onClick="{{closeView}}" aria-label="Retour aux résultats" style="position: absolute; top: 12px; left: 4px; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6))">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
             </button>
-            <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 4px; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">
-              <span style="font-weight: 600; font-size: 16px">{{view.author}}</span>
-              <p style="margin: 0; font-size: 15px; line-height: 1.45">{{view.caption}}</p>
-            </div>
           </div>
         </sc-if>
   </div>
@@ -110,16 +163,116 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #2F4F
       Profil
     </a>
   </nav>
+
+  <sc-if value="{{toastOn}}" hint-placeholder-val="{{ false }}">
+    <p role="status" style="position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%); margin: 0; width: max-content; max-width: 330px; padding: 10px 16px; border-radius: 999px; background: #1C1C1C; color: #FFFFFF; font-size: 14px; text-align: center; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25)">{{toast}}</p>
+  </sc-if>
+
+  <sc-if value="{{sheetOn}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0">
+      <button type="button" onClick="{{closeSheet}}" aria-label="Fermer" style="position: absolute; inset: 0; width: 100%; border: 0; padding: 0; background: rgba(28, 28, 28, 0.5); cursor: pointer"></button>
+      <div role="dialog" aria-modal="true" aria-labelledby="sheet-title" style="position: absolute; left: 0; right: 0; bottom: 0; max-height: 70%; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 10px 16px 28px; border-radius: 24px 24px 0 0; background: #FFFFFF">
+        <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #DEDEDA"></span>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+          <h2 id="sheet-title" style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 22px">{{sheetTitle}}</h2>
+          <button type="button" onClick="{{closeSheet}}" aria-label="Fermer" style="width: 44px; height: 44px; margin-right: -8px; padding: 0; border: 0; background: transparent; color: #1C1C1C; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </div>
+
+        <sc-if value="{{sheetSave}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <sc-for list="{{collections}}" as="c" hint-placeholder-count="3">
+              <button type="button" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid {{c.ring}}; background: {{c.bg}}; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+                <span aria-hidden="true" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: {{c.swatch}}; filter: blur(1px)"></span>
+                <span style="flex: 1">{{c.name}}</span>
+                <span style="font: 500 12px 'IBM Plex Mono', monospace; color: #1F6B4A">{{c.mark}}</span>
+              </button>
+            </sc-for>
+            <button type="button" onClick="{{newCollection}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px dashed #8A8A86; background: #FFFFFF; color: #1C1C1C; font: 600 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+              Nouvelle collection
+            </button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{sheetShare}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <span style="font-size: 13px; font-weight: 600; color: #5E5E5B">Envoyer à</span>
+              <div role="list" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none">
+                <sc-for list="{{shareFriends}}" as="sf" hint-placeholder-count="5">
+                  <button type="button" role="listitem" onClick="{{sf.send}}" aria-label="Envoyer à {{sf.first}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; width: 60px; flex-shrink: 0; padding: 0; border: 0; background: transparent; color: #1C1C1C; cursor: pointer">
+                    <span aria-hidden="true" style="width: 52px; height: 52px; border-radius: 50%; background: {{sf.avatar}}; filter: blur(1.5px)"></span>
+                    <span style="max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px">{{sf.first}}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <button type="button" onClick="{{copyLink}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid #DEDEDA; background: #FFFFFF; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>
+              Copier le lien
+            </button>
+            <button type="button" onClick="{{shareElsewhere}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid #DEDEDA; background: #FFFFFF; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"></path><path d="M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg>
+              Partager ailleurs
+            </button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{sheetComments}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 14px; overflow-y: auto; min-height: 0">
+            <sc-for list="{{commentList}}" as="c" hint-placeholder-count="4">
+              <div style="display: flex; gap: 10px">
+                <span aria-hidden="true" style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: {{c.avatar}}; filter: blur(1.5px)"></span>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                  <span style="font: 500 12px 'IBM Plex Mono', monospace; color: #5E5E5B">{{c.author}} · {{c.ago}}</span>
+                  <span style="font-size: 15px; line-height: 1.4">{{c.text}}</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; margin-right: -6px">
+                  <button type="button" onClick="{{c.toggle}}" aria-pressed="{{c.liked}}" aria-label="Aimer le commentaire de {{c.author}}" style="width: 36px; height: 32px; padding: 0; border: 0; background: transparent; color: {{c.stroke}}; display: flex; align-items: center; justify-content: center; cursor: pointer">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="{{c.fill}}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>
+                  </button>
+                  <span style="margin-top: -4px; font: 500 11px 'IBM Plex Mono', monospace; color: #5E5E5B">{{c.likes}}</span>
+                </div>
+              </div>
+            </sc-for>
+            <form onSubmit="{{postComment}}" style="position: sticky; bottom: 0; margin: 0; display: flex; align-items: center; gap: 8px; padding: 10px 0 2px; background: #FFFFFF; border-top: 1px solid #ECECEA">
+              <span aria-hidden="true" style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #9EE493, #2EC4B6 55%, #118AB2); filter: blur(1.5px)"></span>
+              <label for="comment-input" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Ajouter un commentaire</label>
+              <input id="comment-input" type="text" autocomplete="off" maxlength="150" value="{{commentDraft}}" onChange="{{onCommentDraft}}" placeholder="Ajouter un commentaire…" style="flex: 1; min-width: 0; height: 42px; box-sizing: border-box; border: 1px solid #DEDEDA; border-radius: 999px; padding: 0 14px; font: 400 15px 'IBM Plex Sans', sans-serif; color: #1C1C1C; background: #FFFFFF">
+              <button type="submit" disabled="{{commentEmpty}}" style="min-height: 42px; padding: 0 6px; border: 0; background: transparent; color: {{commentBtn}}; font: 600 15px 'IBM Plex Sans', sans-serif; cursor: pointer">Publier</button>
+            </form>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(...a) {
     super(...a);
-    this.state = { grey: 0, query: '', viewIdx: null };
+    this.state = {
+      grey: 0, query: '', viewIdx: null,
+      liked: {}, saved: {}, expanded: {}, burst: null, sheet: null, toast: '',
+      commentLikes: {}, myComments: {}, commentDraft: '',
+      collections: ['Pour plus tard', 'Formes calmes', 'Couleurs à garder']
+    };
+    this.lastTap = {};
+    this.timers = [];
+    this.total = 0;
   }
   componentDidMount() { this.startClock(); }
-  componentWillUnmount() { clearInterval(this.clockTimer); }
+  componentWillUnmount() { clearInterval(this.clockTimer); this.timers.forEach(clearTimeout); }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  showToast(t) {
+    this.setState({ toast: t });
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => this.setState({ toast: '' }), 2200);
+    this.timers.push(this.toastTimer);
+  }
   rng(a) {
     return function () {
       a |= 0; a = a + 0x6D2B79F5 | 0;
@@ -138,36 +291,10 @@ class Component extends DCLogic {
     }
     return out.join(' ');
   }
-  norm(q) {
-    return q.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]/g, ' ').trim().replace(/\s+/g, ' ');
-  }
-  colourFor(q) {
-    var C = {
-      rouge: '#E63946', orange: '#FB8500', jaune: '#FFD60A', vert: '#2A9D4B', bleu: '#1D6FE0', violet: '#7B2CBF',
-      rose: '#FF6FAE', marron: '#7F4F24', brun: '#6F4518', noir: '#161616', blanc: '#F7F7F5', gris: '#8D8D8A',
-      turquoise: '#1ABC9C', beige: '#E3D5B8', dore: '#D4A017', or: '#D4A017', argent: '#B8BCC2', indigo: '#3A0CA3',
-      cyan: '#00B4D8', magenta: '#D0008F', kaki: '#8A8A4F', bordeaux: '#7A1E2C', corail: '#FF7F5C', lilas: '#C8A2C8',
-      lavande: '#A79BE0', menthe: '#7DDCB2', peche: '#FFB38A', saumon: '#FA8072', ocre: '#CC7722', olive: '#708238',
-      emeraude: '#1F9D6B', marine: '#14213D', ciel: '#87CEEB', fuchsia: '#E0218A', framboise: '#C72C48', ivoire: '#FFFDE8',
-      creme: '#FFF4D6', sable: '#D8C3A5', chocolat: '#4E2A1E', prune: '#5E2750', vermillon: '#E34234', azur: '#2D8CFF'
-    };
-    var ALIAS = { verte: 'vert', vertes: 'vert', verts: 'vert', bleue: 'bleu', bleues: 'bleu', bleus: 'bleu', violette: 'violet', violettes: 'violet', violets: 'violet',
-      grise: 'gris', grises: 'gris', blanche: 'blanc', blanches: 'blanc', blancs: 'blanc', noire: 'noir', noires: 'noir', noirs: 'noir',
-      brune: 'brun', brunes: 'brun', bruns: 'brun', doree: 'dore', dorees: 'dore', dores: 'dore', argente: 'argent', argentee: 'argent',
-      rouges: 'rouge', jaunes: 'jaune', roses: 'rose', oranges: 'orange', marrons: 'marron', beiges: 'beige', turquoises: 'turquoise',
-      'bleu marine': 'marine', 'bleu ciel': 'ciel', 'vert menthe': 'menthe', 'vert olive': 'olive', 'vert emeraude': 'emeraude', 'rose pale': 'rose', 'bleu azur': 'azur' };
-    var w = this.norm(q).split(' ').filter(Boolean);
-    var hit = (k) => { var key = ALIAS[k] || k; return C[key] ? { key: key, hex: C[key] } : null; };
-    for (var i = 0; i + 1 < w.length; i++) { var two = hit(w[i] + ' ' + w[i + 1]); if (two) return two; }
-    for (var j = 0; j < w.length; j++) { var one = hit(w[j]); if (one) return one; }
-    return null;
-  }
-  mix(hex, to, amt) {
-    var a = parseInt(hex.slice(1), 16), b = parseInt(to.slice(1), 16);
-    var r = Math.round(((a >> 16) & 255) * (1 - amt) + ((b >> 16) & 255) * amt);
-    var g = Math.round(((a >> 8) & 255) * (1 - amt) + ((b >> 8) & 255) * amt);
-    var bl = Math.round((a & 255) * (1 - amt) + (b & 255) * amt);
-    return '#' + ((1 << 24) + (r << 16) + (g << 8) + bl).toString(16).slice(1);
+  hash(s) {
+    var h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0) % 100000;
   }
   palettes() {
     return [
@@ -198,36 +325,13 @@ class Component extends DCLogic {
       }
       var em = EMO[Math.floor(r() * EMO.length)];
       out.push({
+        id: 's' + k + '-' + i,
+        seed: 9000 + k * 977 + i * 31,
         bg: r() < 0.6 ? pal[4] : pal[3],
         shapes: shapes,
+        avatar: pal[i % 4],
         author: this.gib(k * 977 + i * 13, 2),
         caption: this.gib(k * 977 + i * 29, 3 + Math.floor(r() * 9)) + (em ? ' ' + em : ''),
-        likes: Math.floor(r() * 900),
-        label: 'Post ' + (i + 1)
-      });
-    }
-    return out;
-  }
-  colourPosts(col) {
-    var h = 0; for (var q = 0; q < col.key.length; q++) h = h * 31 + col.key.charCodeAt(q);
-    var r = this.rng(h + 4242);
-    var tones = [col.hex, this.mix(col.hex, '#FFFFFF', 0.35), this.mix(col.hex, '#FFFFFF', 0.65), this.mix(col.hex, '#000000', 0.3), this.mix(col.hex, '#000000', 0.55)];
-    var RAD = ['50%', '12%', '4%', '50% 50% 10% 10%'];
-    var EMO = ['', '✨', '🌿', '🫧', ''];
-    var out = [];
-    for (var i = 0; i < 18; i++) {
-      var shapes = []; var k = 3 + Math.floor(r() * 3);
-      for (var j = 0; j < k; j++) {
-        var w = Math.round(25 + r() * 55); var round = r() < 0.5;
-        var hh = round ? Math.round(w * 0.75) : Math.round(15 + r() * 50);
-        shapes.push({ x: Math.round(r() * (100 - w * 0.6) - w * 0.2), y: Math.round(r() * (100 - hh * 0.6) - hh * 0.2), w: w, h: hh, c: tones[Math.floor(r() * tones.length)], r: round ? '50%' : RAD[1 + Math.floor(r() * 3)] });
-      }
-      var em = EMO[Math.floor(r() * EMO.length)];
-      out.push({
-        bg: tones[1 + Math.floor(r() * 2)],
-        shapes: shapes,
-        author: this.gib(h + i * 13, 2),
-        caption: this.gib(h + i * 29, 3 + Math.floor(r() * 9)) + (em ? ' ' + em : ''),
         likes: Math.floor(r() * 900),
         label: 'Post ' + (i + 1)
       });
@@ -265,33 +369,6 @@ class Component extends DCLogic {
       localStorage.setItem('fs-usage', JSON.stringify(u));
     } catch (e) { this.memUsage = (this.memUsage || 0) + 1000 * sp; }
   }
-  cyclesDone(c) { return Math.max(0, Math.min(10, Math.floor((Date.now() - c.start) / this.cycleMs(c)))); }
-  trackUsage(c) {
-    var sp = Math.max(1, c.speed || 1);
-    try {
-      if (typeof document !== 'undefined' && document.hidden) return;
-      var now = Date.now();
-      var u = JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0,"last":0}');
-      var dt = now - (u.last || 0);
-      if (dt < 900) return;
-      u.ms = (u.ms || 0) + Math.min(dt, 1500) * sp;
-      u.last = now;
-      localStorage.setItem('fs-usage', JSON.stringify(u));
-    } catch (e) { this.memUsage = (this.memUsage || 0) + 1000 * sp; }
-  }
-  trackUsage(c) {
-    var sp = Math.max(1, c.speed || 1);
-    try {
-      if (typeof document !== 'undefined' && document.hidden) return;
-      var now = Date.now();
-      var u = JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0,"last":0}');
-      var dt = now - (u.last || 0);
-      if (dt < 900) return;
-      u.ms = (u.ms || 0) + Math.min(dt, 1500) * sp;
-      u.last = now;
-      localStorage.setItem('fs-usage', JSON.stringify(u));
-    } catch (e) { this.memUsage = (this.memUsage || 0) + 1000 * sp; }
-  }
   readUsage() {
     try { return JSON.parse(localStorage.getItem('fs-usage') || '{"ms":0}').ms || 0; } catch (e) { return this.memUsage || 0; }
   }
@@ -299,42 +376,260 @@ class Component extends DCLogic {
     var c = this.readClock();
     this.trackUsage(c);
     var g = this.cyclesDone(c) * 10;
-    var up = null;
-    if (g !== this.state.grey) { up = { grey: g }; if (g < 100) up.dismissed = false; }
-    if (this.wantsNow) { up = up || {}; up.now = Date.now(); }
-    if (up) this.setState(up);
+    if (g !== this.state.grey) this.setState({ grey: g });
   }
   startClock() {
     clearInterval(this.clockTimer);
     this.tickClock();
     this.clockTimer = setInterval(() => this.tickClock(), 1000);
   }
+  capFields(id, full) {
+    var LIMIT = 80;
+    var canExpand = full.length > LIMIT;
+    var open = !!this.state.expanded[id];
+    var shown = full;
+    if (canExpand && !open) shown = full.slice(0, LIMIT - 8).replace(/\s+\S*$/, '') + '…';
+    return {
+      captionShown: shown,
+      canExpand: canExpand,
+      expanded: open,
+      moreLabel: open ? 'moins' : 'plus',
+      toggleMore: () => this.setState((st) => { var ex = Object.assign({}, st.expanded); ex[id] = !ex[id]; return { expanded: ex }; })
+    };
+  }
+  like(id) {
+    this.setState((s) => { var l = Object.assign({}, s.liked); l[id] = true; return { liked: l, burst: id }; });
+    clearTimeout(this.burstTimer);
+    this.burstTimer = setTimeout(() => this.setState({ burst: null }), 900);
+    this.timers.push(this.burstTimer);
+  }
+  tap(id) {
+    if (this.justDragged) return;
+    var now = Date.now();
+    if (now - (this.lastTap[id] || 0) < 320) { this.lastTap[id] = 0; this.like(id); }
+    else this.lastTap[id] = now;
+  }
+  go(step) {
+    if (this.state.viewIdx === null) return;
+    var p = Math.max(0, Math.min(this.total - 1, this.state.viewIdx + step));
+    var tr = this.trackEl;
+    if (tr) {
+      tr.style.transition = 'transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)';
+      tr.style.transform = 'translateY(calc(' + (-p) + ' * 100cqh))';
+    }
+    if (p !== this.state.viewIdx) this.setState({ viewIdx: p });
+  }
+  decorate(p, k) {
+    var s = this.state;
+    var id = p.id;
+    var r = this.rng(p.seed + 5);
+    var liked = !!s.liked[id];
+    var isSaved = !!s.saved[id];
+    return Object.assign({}, p, {
+      alt: 'Formes colorées, ' + p.label.toLowerCase(),
+      likes: p.likes + (liked ? 1 : 0),
+      comments: 3 + Math.floor(r() * 40) + (s.myComments[id] || []).length,
+      saves: Math.floor(r() * 120) + (isSaved ? 1 : 0),
+      shares: Math.floor(r() * 60),
+      liked: liked,
+      heartFill: liked ? '#FF5C7A' : 'none',
+      heartStroke: liked ? '#FF5C7A' : '#FFFFFF',
+      isSaved: isSaved,
+      saveFill: isSaved ? '#FFFFFF' : 'none',
+      showBurst: s.burst === id,
+      open: () => this.setState({ viewIdx: k, sheet: null }),
+      onTap: () => this.tap(id),
+      toggleLike: () => this.setState((st) => { var l = Object.assign({}, st.liked); l[id] = !l[id]; return { liked: l }; }),
+      openComments: () => this.setState({ sheet: { type: 'comments', id: id, seed: p.seed } }),
+      openSave: () => this.setState({ sheet: { type: 'save', id: id, seed: p.seed } }),
+      openShare: () => this.setState({ sheet: { type: 'share', id: id, seed: p.seed } })
+    }, this.capFields(id, p.caption));
+  }
   renderVals() {
     var s = this.state;
     var q = s.query.trim();
-    var results = q ? this.palettePosts(this.paletteIndex(q)) : [];
-    var setQ = (q) => () => this.setState({ query: q, viewIdx: null });
+    var raw = q ? this.palettePosts(this.paletteIndex(q)) : [];
+    this.total = raw.length;
+    var results = raw.map((p, k) => this.decorate(p, k));
+    var setQ = (q) => () => this.setState({ query: q, viewIdx: null, sheet: null });
     var SUG = ['vralo mizé', 'lunka ré', 'koré shavo', 'pévo tiz', 'zubé arnol', 'mikla sé', 'dourin pa', 'skolé vu'];
     var TR = [['skolun bari', '24,1 k'], ['tévo lirka', '18,7 k'], ['arpé noushi', '15,2 k'], ['lomi zavé', '11,9 k'], ['kasé tumbo', '9,4 k'], ['renvo kilé', '6,8 k']];
-    var suggestions = SUG.map((l) => ({ label: l, hex: this.palettes()[this.paletteIndex(l)][0], pick: setQ(l) }));
+    var suggestions = SUG.map((l) => ({ label: l, pick: setQ(l) }));
     var trends = TR.map((x, k) => {
       var pp = this.palettes()[this.paletteIndex(x[0])];
-      var c = { hex: pp[1] };
       return { rank: k + 1, label: x[0], count: x[1], c0: pp[0], c1: pp[1], c2: pp[2], pick: setQ(x[0]) };
     });
+    var viewing = s.viewIdx !== null && !!results[s.viewIdx];
+
+    var sheet = s.sheet;
+    var SW = ['#FFD166', '#06D6A0', '#3A86FF', '#EF476F', '#8338EC', '#FB5607'];
+    var collections = s.collections.map((name, k) => {
+      var picked = !!(sheet && s.saved[sheet.id] === name);
+      return {
+        name: name, on: picked,
+        mark: picked ? 'enregistré' : '',
+        ring: picked ? '#1F6B4A' : '#DEDEDA',
+        bg: picked ? '#DDF3E9' : '#FFFFFF',
+        swatch: SW[k % SW.length],
+        pick: () => {
+          var id = sheet.id;
+          var already = this.state.saved[id] === name;
+          this.setState((st) => { var sv = Object.assign({}, st.saved); if (already) delete sv[id]; else sv[id] = name; return { saved: sv, sheet: null }; });
+          this.showToast(already ? 'Retiré de « ' + name + ' »' : 'Enregistré dans « ' + name + ' »');
+        }
+      };
+    });
+    var commentList = [];
+    if (sheet && sheet.type === 'comments') {
+      (s.myComments[sheet.id] || []).forEach((mc) => {
+        var mk = 'me-' + mc.id;
+        var ml = !!s.commentLikes[mk];
+        var g = mc.words ? this.gib(mc.seed, mc.words) : '';
+        commentList.push({
+          liked: ml, likes: ml ? 1 : 0,
+          fill: ml ? '#E11D48' : 'none',
+          stroke: ml ? '#E11D48' : '#5E5E5B',
+          toggle: () => this.setState((st) => { var m = Object.assign({}, st.commentLikes); m[mk] = !m[mk]; return { commentLikes: m }; }),
+          author: 'moi.ici', ago: 'à l’instant',
+          avatar: '#2EC4B6',
+          text: mc.morphed ? (g + (mc.emoji ? (g ? ' ' : '') + mc.emoji : '')).trim() : mc.original
+        });
+      });
+      var PAL = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF'];
+      var EMO = ['😂','🌿','✨','🫶','🙃','', '', ''];
+      var r = this.rng(sheet.seed + 99);
+      for (var c = 0; c < 6; c++) {
+        var em = EMO[Math.floor(r() * EMO.length)];
+        var ckey = sheet.seed + '-' + c;
+        var cl = !!s.commentLikes[ckey];
+        commentList.push({
+          liked: cl,
+          likes: Math.floor(r() * 40) + (cl ? 1 : 0),
+          fill: cl ? '#E11D48' : 'none',
+          stroke: cl ? '#E11D48' : '#5E5E5B',
+          toggle: ((kk) => () => this.setState((st) => { var m = Object.assign({}, st.commentLikes); m[kk] = !m[kk]; return { commentLikes: m }; }))(ckey),
+          author: this.gib(sheet.seed + 200 + c, 1).toLowerCase(),
+          ago: (1 + Math.floor(r() * 50)) + ' min',
+          avatar: PAL[Math.floor(r() * PAL.length)],
+          text: this.gib(sheet.seed + 300 + c, 1 + Math.floor(r() * 7)) + (em ? ' ' + em : '')
+        });
+      }
+    }
+    var titles = { save: 'Enregistrer dans une collection', share: 'Partager', comments: 'Commentaires' };
+
     return {
-      showIntro: !s.query.trim(),
+      showIntro: !q,
       suggestions: suggestions,
       trends: trends,
       grey: s.grey,
       query: s.query,
-      onQuery: (e) => this.setState({ query: e.target.value, viewIdx: null }),
+      onQuery: (e) => this.setState({ query: e.target.value, viewIdx: null, sheet: null }),
       onSearchSubmit: (e) => { if (e && e.preventDefault) e.preventDefault(); },
       hasResults: results.length > 0,
-      results: results.map((p, k) => Object.assign({}, p, { open: () => this.setState({ viewIdx: k }) })),
-      viewing: s.viewIdx !== null && !!results[s.viewIdx],
-      view: (s.viewIdx !== null && results[s.viewIdx]) || { shapes: [], bg: '#FFFFFF', author: '', caption: '' },
-      closeView: () => this.setState({ viewIdx: null })
+      results: results,
+      viewing: viewing,
+      total: results.length,
+      pageNum: (s.viewIdx || 0) + 1,
+      negIdx: -(s.viewIdx || 0),
+      closeView: () => this.setState({ viewIdx: null, sheet: null }),
+      scrollRef: (el) => {
+        this.scrollEl = el;
+        if (el && !this.viewFocused) { this.viewFocused = true; try { el.focus({ preventScroll: true }); } catch (x) {} }
+        if (!el) this.viewFocused = false;
+      },
+      trackRef: (el) => { this.trackEl = el; },
+      onWheel: (e) => {
+        if (this.wheelLock) return;
+        this.wheelAcc = (this.wheelAcc || 0) + e.deltaY;
+        clearTimeout(this.wheelReset);
+        this.wheelReset = setTimeout(() => { this.wheelAcc = 0; }, 200);
+        if (Math.abs(this.wheelAcc) < 40) return;
+        this.go(this.wheelAcc > 0 ? 1 : -1);
+        this.wheelAcc = 0;
+        this.wheelLock = true;
+        setTimeout(() => { this.wheelLock = false; this.wheelAcc = 0; }, 650);
+      },
+      onKey: (e) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); this.go(1); }
+        if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); this.go(-1); }
+        if (e.key === 'Escape') { e.preventDefault(); this.setState({ viewIdx: null, sheet: null }); }
+      },
+      onDragStart: (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        this.drag = { x: e.clientX, y: e.clientY, t: Date.now(), moved: false, dir: null };
+        this.justDragged = false;
+      },
+      onDragMove: (e) => {
+        var d = this.drag; var tr = this.trackEl;
+        if (!d || !tr) return;
+        var dx = e.clientX - d.x; var dy = e.clientY - d.y;
+        if (!d.dir) {
+          if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+          d.dir = Math.abs(dy) >= Math.abs(dx) ? 'v' : 'h';
+          if (d.dir === 'v') { d.moved = true; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {} }
+        }
+        if (d.dir !== 'v') return;
+        var p = this.state.viewIdx || 0;
+        var last = this.total - 1;
+        if ((p === 0 && dy > 0) || (p === last && dy < 0)) dy = dy / 3;
+        tr.style.transition = 'none';
+        tr.style.transform = 'translateY(calc(' + (-p) + ' * 100cqh + ' + Math.round(dy) + 'px))';
+      },
+      onDragEnd: (e) => {
+        var d = this.drag; this.drag = null;
+        if (!d || !d.moved) return;
+        this.justDragged = true;
+        setTimeout(() => { this.justDragged = false; }, 60);
+        var dy = (e.clientY || d.y) - d.y;
+        var fast = Math.abs(dy) / Math.max(1, Date.now() - d.t) > 0.5;
+        var h = this.scrollEl ? this.scrollEl.clientHeight : 770;
+        var step = (dy < -h * 0.18 || (fast && dy < -25)) ? 1 : (dy > h * 0.18 || (fast && dy > 25)) ? -1 : 0;
+        this.go(step);
+      },
+      toastOn: !!s.toast,
+      toast: s.toast,
+      sheetOn: !!sheet,
+      sheetTitle: sheet ? titles[sheet.type] : '',
+      sheetSave: !!(sheet && sheet.type === 'save'),
+      sheetShare: !!(sheet && sheet.type === 'share'),
+      sheetComments: !!(sheet && sheet.type === 'comments'),
+      closeSheet: () => this.setState({ sheet: null }),
+      collections: collections,
+      newCollection: () => {
+        var name = 'Collection ' + (this.state.collections.length + 1);
+        var id = sheet.id;
+        this.setState((st) => { var sv = Object.assign({}, st.saved); sv[id] = name; return { collections: st.collections.concat([name]), saved: sv, sheet: null }; });
+        this.showToast('Enregistré dans « ' + name + ' »');
+      },
+      shareFriends: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+        var PALS = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#2EC4B6'];
+        var first = this.gib(5000 + i * 131, 2).split(' ')[0];
+        return { first: first, avatar: PALS[i], send: () => { this.setState({ sheet: null }); this.showToast('Envoyé à ' + first + '.'); } };
+      }),
+      copyLink: () => { this.setState({ sheet: null }); this.showToast('Lien copié.'); },
+      shareElsewhere: () => { this.setState({ sheet: null }); this.showToast('Partagé.'); },
+      commentList: commentList,
+      commentDraft: s.commentDraft,
+      commentEmpty: !s.commentDraft.trim(),
+      commentBtn: s.commentDraft.trim() ? '#1F6B4A' : '#8A8A86',
+      onCommentDraft: (e) => this.setState({ commentDraft: e.target.value }),
+      postComment: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        var text = this.state.commentDraft.trim();
+        var sh = this.state.sheet;
+        if (!text || !sh) return;
+        var emojis = text.match(/\p{Extended_Pictographic}/gu) || [];
+        var words = text.replace(/\p{Extended_Pictographic}/gu, ' ').trim().split(/\s+/).filter(Boolean).length;
+        var cid = 'c' + Date.now();
+        var entry = { id: cid, original: text, seed: this.hash(text), words: words, emoji: emojis.join(''), morphed: false };
+        this.setState((st) => { var mc = Object.assign({}, st.myComments); mc[sh.id] = [entry].concat(mc[sh.id] || []); return { myComments: mc, commentDraft: '' }; });
+        this.later(() => this.setState((st) => {
+          var mc = Object.assign({}, st.myComments);
+          mc[sh.id] = (mc[sh.id] || []).map((x) => x.id === cid ? Object.assign({}, x, { morphed: true }) : x);
+          return { myComments: mc };
+        }), 900);
+      }
     };
   }
 }
