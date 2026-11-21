@@ -1,19 +1,13 @@
 # Next docs prompts
 
-2026-11-20 · commit 620ad29 · fingerprint 0f141510a9df
+2026-11-21 · commit dacabcb · fingerprint 2621640d9cc1
 
-Doc tests: all passed. The docs are at step 1, Design.
+The docs are not clean: fix them before running the next prompts.
 
-## Where the docs are
-| Step | Status | Evidence |
+## Doc tests
+| Doc test | Output | Result |
 | --- | --- | --- |
-| 1 Design | Not done | L1: 1 Major (#1 L1-02); B1: 1 Minor (#5) |
-| 2 Raw extraction | Not done | L2: 1 Major (#2 L2-03); B2 passed |
-| 3 Registry, 4 Check and arbitrate | Not done | L3: 1 Major (#3 L3-07); B3: 1 Major (#4 B3-02); L4, B4 not run (one platform) |
-| 5 Flows | Not done | L5, B5 not reached |
-| 6 Entities and states | Not done | L6, B6 not reached |
-| 7 NFRs | Not done | L7, B7 not reached |
-| 8 System design | Not done | L8 to L10, B8 to B10 not reached |
+| test-design-and-docs-conformity | `claude_skills_output/design_and_docs_check_output.md` | Failed: not ready, 1 blocking finding (#2) |
 
-## Next prompts
-1. **Prompt 5: flows** (step 5), one run per flow. Give it: flow FL-01 and its name, from the owner (no flow is named in the docs yet). It produces: the flow's sequence, the entities read and written, its decision points and errors, and the features or pages missing from the registry.
+## Fix first
+1. **#2 L2-01** (P-16, P-05, P-06, P-07): the redrawn P-16 opens the panels « Commentaires », « Enregistrer dans une collection » and « Partager », which have no page ID; the same panels over the feed are P-05, P-06 and P-07, whose only entry is P-03. Prompt 9 on P-16: either give P-05, P-06 and P-07 the Recherche as a second entry (same panels, same features and states, their « Accueil — » names reworded), or propose new page IDs for the three panels of P-16; the owner approves the choice in prompt 9.

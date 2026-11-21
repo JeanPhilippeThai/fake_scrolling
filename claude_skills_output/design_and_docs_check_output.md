@@ -1,19 +1,19 @@
-# Top to bottom check · Fake scrolling · 2026-11-20
+# Top to bottom check · Fake scrolling · 2026-11-21
 
-Documents: commit 620ad29 · Mode: B (database built from 620ad29, fingerprint d4cd4b57746663fa)
+Documents: commit dacabcb plus the uncommitted promotion of 2026-11-21 on branch import-design-2026-11-21 (`claude_design/fake-scrolling-app/project/Search.dc.html` redrawn; `claude_docs/` unchanged apart from import dates) · Mode: B (database built from dacabcb, fingerprint dae1c5298dfa10e3)
 Method followed: version of 2026-11-20 (method overview revision 90, describe revision 21, reference revision 26, check instruction revision 50)
 Platforms: mobile (iOS and Android share the one mobile design) (per-platform registries: none; `claude_docs/registry.md` is the only registry)
 
 ## Verdict
-Ready for the code check
+Not ready: 1 blocking finding (#2)
 
 ## Layers
 | Layer | Status | Blocking | Major | Minor |
 | --- | --- | --- | --- | --- |
 | L0 Method and inputs | passed | 0 | 0 | 0 |
-| L1 Design | findings (L1-03 passed: the 66 files of `claude_design/` match `.claude-ai.json`, so the 25 new artboards were published; L1-04 passed: no feature carries `design_a_mettre_a_jour`) | 0 | 1 | 0 |
-| L2 Raw extraction | findings (L2-01 passed: 58 state artboards, 58 page states, one each, titles and features match) | 0 | 1 | 0 |
-| L3 Registry | findings | 0 | 1 | 0 |
+| L1 Design | findings (L1-02 passed: D-043 settles the lists of P-24, P-25, P-07 and the comment-like failure; L1-03 passed: the 66 files of `claude_design/` match `.claude-ai.json`) | 0 | 0 | 1 |
+| L2 Raw extraction | findings (L2-03 passed: D-044, D-045, D-046 settle the six dropped « à confirmer » items) | 1 | 0 | 0 |
+| L3 Registry | findings (L3-07 passed: D-047 merges F-069 into F-046.a) | 0 | 1 | 0 |
 | L4 Canonical registry (platform merge) | not run: the app has one platform | 0 | 0 | 0 |
 | L5 Flows | not reached | 0 | 0 | 0 |
 | L6 Entity states and TLA+ | not reached | 0 | 0 | 0 |
@@ -32,78 +32,69 @@ Ready for the code check
 | B6 Entity states and TLA+ | not reached | 0 | 0 | 0 |
 | B5 Flows | not reached | 0 | 0 | 0 |
 | B4 Canonical registry | not run: the app has one platform | 0 | 0 | 0 |
-| B3 Per-platform registries | findings | 0 | 1 | 0 |
-| B2 Raw extraction | passed | 0 | 0 | 0 |
+| B3 Per-platform registries | passed (B3-02: D-048 removes « refusé » from E-09) | 0 | 0 | 0 |
+| B2 Raw extraction | findings | 0 | 1 | 0 |
 | B1 Design | findings | 0 | 0 | 1 |
-| G Global rules | findings | 0 | 0 | 1 |
-| T Traces from the top down | findings (T-02 and T-03 not reached) | 0 | 2 | 3 |
+| G Global rules | findings | 0 | 1 | 2 |
+| T Traces from the top down | findings (T-01 passed for E-03: « personnes identifiées » and « lieu » added; T-02 and T-03 not reached) | 0 | 0 | 3 |
 | U Traces from the bottom up | not reached | 0 | 0 | 0 |
 
-Totals: 0 blocking, 6 major, 5 minor.
+Totals: 1 blocking, 3 major, 7 minor.
 
-Registry queries (`registry_db.py check --all --no-fail`): L0-03, L0-04, L0-05, L3-01, L3-02, L3-03, L3-04, L3-08, L3-10, G-01 and G-02 passed with no rows; G-03 passed with `--since ad1922e` (the last checked docs: 25 page states and D-041, D-042 added, no ID removed). Every L4, L8, L9, L10, B10, B9, B8 and B4 query is "not reached" (one platform, no data model, no data flows, no page contract). The project is at step 4 of the method: the registry is arbitrated (D-001 to D-042), the 58 drawn states have page-state IDs (D-040, D-041). Step 5 (flows) has not started.
+Registry queries (`registry_db.py check --all --no-fail`): L0-03, L0-04, L0-05, L3-01, L3-02, L3-03, L3-04, L3-08, L3-10, G-01 and G-02 passed with no rows; G-03 passed with `--since 620ad29` (the last checked docs: F-069 removed and listed in ids_retires with D-047; F-046.a and D-043 to D-048 added). Every L4, L8, L9, L10, B10, B9, B8 and B4 query is "not reached" (one platform, no data model, no data flows, no page contract). The project is at step 4 of the method; step 5 (flows) has not started.
 
-Since the last check (ad1922e): commit 57c85f3 drew 25 state artboards (D-041, D-042), gave them the page states P-03.e to P-17.c, and updated the `pages` and `etats_ui` of the 16 features, the inventory and `canvas.json`. Old finding 1 (L1-02, the 16 features with no loading, error or failure state) is fixed: every new artboard's title, page, feature and copy matches its registry entry and inventory row. One L1-02 gap remains outside D-041's list (finding 1). Old findings 2 to 10 are unchanged, with new line numbers; finding 9 gains the two new P-17 artboards. Finding 11 is new (D-042 and F-028.a).
+Since the last check (620ad29): commits 71f7b11, 74281af and dacabcb recorded D-043 to D-048 and closed old findings 1, 2, 3, 4, 7 and 8. Then the owner redrew P-16 on claude.ai as D-046 asked, and the import of 2026-11-21 promoted it (`Search.dc.html`). Prompt 9 has not run on that redraw, so the registry and the inventory still describe the old P-16: findings 1, 2, 3, 4 and 6 are new and all come from that one gap; one prompt 9 run closes 1, 2, 3 and 4 once the owner answers question 1. Old findings 5, 6, 9, 10 and 11 are unchanged (now 5, 7, 9, 10 and 11).
 
 ## Findings
 | # | Check | Severity | Class | IDs | Evidence | Caused by | Proposed fix |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | L1-02 | Major | C | P-24, P-25, P-07, F-048, F-049, F-019.a, F-016.b | D-041 drew 16 features; these lists, which read data, still show no loading or error state, and no decision says they have none. P-24 « Identifier un ami » (inventory line 550) « 8 amis en démo ; vraie liste d'amis : à confirmer », states « Case vide ; cochée en vert » and « Aucun ami trouvé. » only; P-25 « Choisir un lieu » (line 562) « vraie recherche de lieux : à confirmer », states « Lieu choisi coché » and « Aucun lieu trouvé. » only; P-07's row of friends (F-019.a, line 178) shows no loading of the row. `Compose.dc.html` and `Main.dc.html` hold no « chargement » or « Réessayer ». F-016.b (like of a comment, P-05, line 138 « Vide gris ; plein rouge quand liké ») has no failure drawn; D-042 puts the failure message « en bas du fil », which P-05 does not have. | — | See question 1. |
-| 2 | L2-03 | Major | B | P-04, P-07, P-12, P-16; F-022, F-028, F-019.a, F-019.b, F-019.c, F-005.a, F-010.a | Unchanged: six « à confirmer » items of `claude_docs/inventaire-des-ecrans.md` have no open question and no decision in the registry. Line 113 P-04 « 3 demandes en démo (vraies demandes : à confirmer) »; line 178 P-07 « réception côté ami : à confirmer »; line 179 « copie réelle : à confirmer »; line 180 « feuille de partage du téléphone : à confirmer »; line 300 P-12 « Brouillon abandonné (sauvegarde : à confirmer) »; line 398 P-16 « Non dessinés (à confirmer : mêmes actions que P-03 ?) », which the registry states as a fact with no decision: F-010.a (`registry.md` line 545) « Résultat de recherche : aucune action (like, commentaire, enregistrement, partage) ». Every other « à confirmer » of the inventory has its open question. | — | See question 2. |
-| 3 | L3-07 | Major | B | F-046, F-069, D-033 | Unchanged: two features take a photo for the post on the same page P-12 with the same entity E-04: F-046 « Prendre une photo » (line 1081; « Bouton appareil photo », `sans effet`, question « Écran de prise de vue ») and F-069 « Prendre une photo pour un post » (line 1429; « Ouvrir l'appareil photo » from P-12.a). F-069 asks « Bouton seulement dans la galerie vide, ou aussi au-dessus de la grille ? » (line 1443), which is where F-046's button is (`Compose.dc.html`, `aria-label="Appareil photo"`). D-033's reason (line 1764) « aucune feature existante ne prend de photo » overlooks F-046. | — | See question 3. |
-| 4 | B3-02 | Major | B | E-09, F-028.a, D-015 | Unchanged: E-09 lists `statut (en attente, demandé, ami, refusé)` (`registry.md` line 1532), a status the design never shows and that F-028.a rules out (line 837): « Refuser : la demande est supprimée et la ligne disparaît ». | — | See question 4. |
-| 5 | B1-01 | Minor | C | P-03, P-10, F-036, F-052 | Unchanged: `Main.dc.html` still holds a story player (line 319 `<sc-if value="{{storyOn}}"`, line 344 « Fermer la story ») that nothing on the Accueil opens, and a search state (line 359 `searchOpen`, line 964 `searchOn`) with no entry. `Profile.dc.html` computes values it never shows (line 523 `leaves`, line 598 `usageHint`). No decision records them as unused design code. | — | See question 5. |
-| 6 | G-04 | Minor | C | F-015, F-015.a, P-03, P-03.c, P-22, P-22.a, P-22.b | Unchanged: the Premium post says « Plus d’une heure passée ici. » (`Main.dc.html` line 70, `Etat-P03-premium-echec.dc.html` line 26) where P-22 says « Une heure passée ici. » (`Profile.dc.html` line 249, `Etat-P22-paiement-echec.dc.html` and `Etat-P22-paiement-annule.dc.html` line 40). | — | See question 6. |
-| 7 | T-01 | Major | A | E-03, F-048, F-049, P-13, P-24, P-25 | Unchanged: inventory P-13 shows « Identifier des personnes · Personnes identifiées » (line 327) and « Ajouter un lieu · Lieu » (line 328); F-048 and F-049 list `entites: [E-03]` with `écriture`, but E-03 `champs` (`registry.md` lines 1470-1484) holds neither identified people nor a place. The data model (prompt 11) would miss both. | — | Add the two fields to E-03 `champs` in the registry Claude Doc (the owner confirms the names). |
-| 8 | T-04 | Major | A | D-040, P-02.b, F-008 | Unchanged. D-040's rule (line 1798): « Un état liste seulement la feature dont il montre l'état, plus celle que lance un bouton propre à l'état ». The code-expired state shows a button of its own that launches F-008: `Etat-P02-code-expire.dc.html` line 40 « Ce code a expiré. Demande-en un nouveau. » then line 43 « Renvoyer un code »; F-008 `etats_ui` (line 515) « code expiré : bouton « Renvoyer un code » à la place de « Se connecter » ». Yet P-02.b lists `features: [F-007]` only (line 55), and F-008 lists `pages: [P-02]` (line 506). The inventory's « Renvoyer le code » row (line 51) does not cite P-02.b either. The other states with such a button follow the rule (P-08.a F-034, P-12.a F-069, P-17.a F-026). | — | In the registry Claude Doc, add F-008 to P-02.b `features` and P-02.b to F-008 `pages`; in the inventory, add « code expiré (P-02.b) » to the « Renvoyer le code » row. Then import and promote. |
-| 9 | T-04 | Minor | C | D-018, F-019, F-062, P-17.a, P-17.b, P-17.c | D-018's reason (line 1689) is « L'app n'explique nulle part ailleurs le flou ni le charabia », but the design still does: `Main.dc.html` line 925 « Lien copié. Il mène à une version floutée. », line 926 « Partagé, flouté comme toujours. »; `Profile.dc.html` line 98 « Tes posts, tels que les voient tes amis », now repeated in the new `Etat-P17-posts-chargement.dc.html` line 59 and `Etat-P17-posts-erreur.dc.html` line 57; `Etat-P17-posts-vide.dc.html` line 60 « Tes posts s’affichent ici, floutés, avec leurs jours restants. » (also in F-062 `etats_ui`, line 1350). D-018's choice itself is applied. | — | See question 7. |
-| 10 | T-04 | Minor | A | D-040, P-03.b, P-03.c | Unchanged. D-040 says the states are « lettrés dans l'ordre du canvas », but P-03's are not: in `canvas.json`, row y=2364, « P-03 · F-015.a · Paiement échoué » is at x=-470 and « P-03 · F-009 · Fil : erreur de chargement » at x=1880, so canvas order gives P-03.b Paiement échoué, P-03.c Fil : erreur. The registry has P-03.b « Fil : erreur de chargement » and P-03.c « Paiement échoué » (lines 64-71). Every other page's letters follow the canvas, including the 25 new states. | — | Keep the letters (IDs are never renumbered) and reword D-040: « lettrés dans l'ordre du canvas, sauf P-03.b et P-03.c, groupés par feature », or drop the order clause. |
-| 11 | T-04 | Minor | A | D-042, F-028, F-028.a, P-04.d, P-04.e | D-042 (line 1808): « Accepter ou refuser une invitation (F-028) […] montrent l'anneau dans le bouton (D-028), puis l'erreur sur place avec « Réessayer » ». F-028 `etats_ui` (line 842) says only « réponse en cours : anneau dans « Accepter » », and the inventory's « Refuser une invitation » row (line 115) still lists « La ligne disparaît » alone, while « Accepter » (line 114) cites P-04.d and P-04.e. Only Accepter is drawn (`Etat-P04-invitation-envoi.dc.html`). D-036 is the precedent for writing such an analogy down (F-001 `etats_ui` « mêmes états pour Apple (F-001.a), par analogie (D-036) »). | — | In the registry Claude Doc, add to F-028 `etats_ui` « mêmes états pour Refuser (F-028.a), par analogie (D-042) », and in the inventory, the same note on the « Refuser une invitation » row. Then import and promote. |
+| 1 | L1-04 | Minor | A | F-010, F-016, F-017, F-018, F-019, D-046 | F-010, F-016, F-017, F-018 and F-019 still carry `design_a_mettre_a_jour: true` (`registry.md` lines 554, 651, 669, 688, 720), set by D-046 (line 1833) « jusqu'à ce que le prompt 9 constate que le design correspond ». The design now matches: `Search.dc.html` line 103 `aria-label="J’aime"`, line 109 `aria-label="Commentaires"`, line 115 `aria-label="Enregistrer dans une collection"`, line 121 `aria-label="Partager"`, the same buttons and labels as P-03 (`Main.dc.html` lines 111-129). | — | Run prompt 9 on P-16 and remove the five flags in the registry Claude Doc; then import and promote. |
+| 2 | L2-01 | Blocking | A | P-16, P-05, P-06, P-07 | The redrawn P-16 opens three panels that have no page ID. `Search.dc.html` line 174 `role="dialog" aria-labelledby="sheet-title"`, titled (line 518) `{ save: 'Enregistrer dans une collection', share: 'Partager', comments: 'Commentaires' }`. The same panels over P-03 are pages P-05 « Accueil — panneau Commentaires », P-06 « Accueil — panneau Enregistrer dans une collection » and P-07 « Accueil — panneau Partager » (`registry.md` lines 108, 128, 140), and the inventory gives them only P-03 as entry (« Bulle dans la colonne de droite, ouvre P-05 », line 78, and the next two rows). Their states (P-05.a to P-05.d, P-06.a, P-06.b, P-07.a) are not drawn over P-16 either; the inventory's P-16 row (line 398) says « mêmes états que sur P-03 (D-046) », which holds only if these are the same pages. | — | Prompt 9: either give P-05, P-06 and P-07 the Recherche as a second entry (same panels, same features and states; their « Accueil — » names then need rewording), or propose new page IDs for the three panels of P-16. The owner approves the choice in prompt 9. |
+| 3 | L3-02 | Major | A | P-16, F-009, F-016, F-016.a, F-016.b, F-017, F-018, F-019, F-019.a, F-019.b, F-019.c, F-021 | P-16 lists `features: [F-005, F-010.a, F-020.a, F-024, F-025, F-026]` (`registry.md` lines 276-279), and none of F-016, F-017, F-018, F-019 lists P-16 (`pages` at lines 630, 656, 674, 693), though D-046 gives P-16 these actions and the design now shows them (finding 1). The redraw also shows on P-16, with no feature there: the double tap that likes with a big heart (F-016.a; `Search.dc.html` line 85 `onClick="{{it.onTap}}"`, line 93 `class="fs-burst"`), « plus » / « moins » on the caption (F-021; line 129, line 387 `var LIMIT = 80`), and a vertical feed of the 18 results by swipe, wheel and keys (line 81 `aria-label="Résultat {{pageNum}} sur {{total}}"`, `onWheel`, `onKeyDown`), which is F-009's behavior on P-03 (line 521 « par glisser, molette ou clavier »). | — | Prompt 9: add F-016, F-016.a, F-017, F-018, F-019 to P-16 and P-16 to their `pages`; for F-021 and the feed of results, see question 1 (F-020.a and F-010.a must change with them). |
+| 4 | B2-01 | Major | A | P-16 | The inventory's P-16 section describes the old screen. Line 390 « Un résultat en plein écran, par-dessus la grille » (now a feed of 18 results, `Search.dc.html` line 81); line 397 « Lire la légende … Jamais tronquée » (now cut at 80 characters, line 387); line 398 « Liker, commenter, enregistrer, partager \| Absents de cet écran ; à ajouter comme sur P-03 (D-046) » (now drawn, lines 103-121); the publisher's photo (line 99 `background: {{it.avatar}}`) and the double tap have no row. | — | Rewrite P-16 in the inventory Claude Doc from the redrawn screen (prompt 9), with the rows of P-03 it now shares; then import and promote. The caption row follows the answer to question 1. |
+| 5 | B1-01 | Minor | C | P-03, P-10, F-036, F-052 | Unchanged: `Main.dc.html` still holds a story player (line 319 `<sc-if value="{{storyOn}}"`, line 344 « Fermer la story ») that nothing on the Accueil opens, and a search state (line 359 `searchOpen`, line 964 `searchOn`) with no entry, which still searches by colour name (line 820 `this.colourFor(s.query)`), the behavior the 2026-11-21 redraw removed from `Search.dc.html` to match F-052. `Profile.dc.html` computes values it never shows (line 523 `leaves`, line 598 `usageHint`). No decision records them as unused design code. | — | See question 3. |
+| 6 | G-04 | Major | C | F-020, F-020.a, F-021, P-16 | F-020.a (`registry.md` line 732): « Sans photo du publieur, légende jamais tronquée ». The redrawn P-16 shows the publisher's photo at the top of the action column (`Search.dc.html` line 99) and cuts the caption at 80 characters with « plus » / « moins » (lines 129, 387-396), exactly as P-03 does (F-020, F-021). D-046 asked only for the four actions; no decision changed F-020.a. By precedence the registry is probably right, but the redraw came from the owner. | — | See question 1. |
+| 7 | G-04 | Minor | C | F-015, F-015.a, P-03, P-03.c, P-22, P-22.a, P-22.b | Unchanged: the Premium post says « Plus d’une heure passée ici. » (`Main.dc.html` line 70, `Etat-P03-premium-echec.dc.html` line 26) where P-22 says « Une heure passée ici. » (`Profile.dc.html` line 249, `Etat-P22-paiement-echec.dc.html` and `Etat-P22-paiement-annule.dc.html` line 40). | — | See question 4. |
+| 8 | G-04 | Minor | C | F-019.b, F-019.c, P-07, P-16, D-018 | The same share actions give two texts. Over P-03: « Lien copié. Il mène à une version floutée. » and « Partagé, flouté comme toujours. » (`Main.dc.html` lines 925-926; inventory lines 179-180). Over P-16: « Lien copié. » and « Partagé. » (`Search.dc.html` lines 610-611). F-019 `etats_ui` (line 712) « « Lien copié… » ou « Partagé… » » fits both. | — | See question 2. |
+| 9 | T-04 | Minor | C | D-018, F-019, F-062, P-17.a, P-17.b, P-17.c | Unchanged: D-018's reason (line 1694) is « L'app n'explique nulle part ailleurs le flou ni le charabia », but the design still does: `Main.dc.html` lines 925-926 (finding 8); `Profile.dc.html` line 98 « Tes posts, tels que les voient tes amis », repeated in `Etat-P17-posts-chargement.dc.html` line 59, `Etat-P17-posts-erreur.dc.html` line 57 and `Etat-P17-posts-vide.dc.html` line 57; `Etat-P17-posts-vide.dc.html` line 60 « Tes posts s’affichent ici, floutés, avec leurs jours restants. » (also F-062 `etats_ui`, line 1369). D-018's choice itself is applied. | — | See question 2. |
+| 10 | T-04 | Minor | A | D-040, P-03.b, P-03.c | Unchanged. D-040 (line 1803) still says « lettré dans l'ordre du canvas », but in `canvas.json`, row y=2364, « P-03 · F-015.a · Paiement échoué » is at x=-470 and « P-03 · F-009 · Fil : erreur de chargement » at x=1880, so canvas order gives P-03.b Paiement échoué, P-03.c Fil : erreur. The registry has P-03.b « Fil : erreur de chargement » and P-03.c « Paiement échoué » (lines 64-71). Every other page's letters follow the canvas. | — | Keep the letters (IDs are never renumbered) and reword D-040: « lettrés dans l'ordre du canvas, sauf P-03.b et P-03.c, groupés par feature », or drop the order clause. |
+| 11 | T-04 | Minor | A | D-042, F-028, F-028.a, P-04.d, P-04.e | Unchanged. D-042 (line 1813): « Accepter ou refuser une invitation (F-028) […] montrent l'anneau dans le bouton (D-028), puis l'erreur sur place avec « Réessayer » ». F-028 `etats_ui` (line 850) says only « réponse en cours : anneau dans « Accepter » », and the inventory's « Refuser une invitation » row (line 115) still lists « La ligne disparaît » alone, while « Accepter » (line 114) cites P-04.d and P-04.e. | — | In the registry Claude Doc, add to F-028 `etats_ui` « mêmes états pour Refuser (F-028.a), par analogie (D-042) », and the same note on the inventory's « Refuser une invitation » row. Then import and promote. |
 
 ## Questions for the owner
 
-1. **Lists still with no loading or error state (finding 1, class C).** The friends list of P-24, the place search of P-25, the row of friends of P-07, and the failed like of a comment (F-016.b).
-   - a. Draw them as for D-041 (loading and error of P-24 and P-25, the P-07 row, the comment-like failure on P-05), then run prompt 9 and give each new artboard a page-state ID (D-040).
-   - b. Record one decision that applies D-027 and D-028 to them by analogy, as D-036 did, and say where the comment-like failure message shows on P-05; draw nothing more.
-   - c. Record that P-24 and P-25 read local or already loaded data and have no loading or error state, and settle only the comment-like failure.
-2. **Dropped « à confirmer » items (finding 2, class B).** Real invitations on P-04, reception of a shared post, real link copy, the phone's share sheet, saving an abandoned draft, actions on a search result (P-16).
-   - a. Add each as an open question on its feature (F-022 or F-028, F-019.a, F-019.b, F-019.c, F-005.a, F-010).
-   - b. Settle them now, one decision each; for P-16, confirm « no actions on a search result » or give it P-03's actions.
-   - c. Leave the « real or generated » ones to the system design, and settle only P-16 and the draft now.
-3. **Two camera features (finding 3, class B).**
-   - a. Merge F-069 into F-046 as a variant (« depuis la galerie vide »), retire F-069 in ids_retires, and reword D-033.
-   - b. Keep both, and reword F-046 or F-069 so that their behaviors differ (e.g. F-046 stays « sans effet » until a camera screen is drawn); correct D-033's reason.
-   - c. Remove the camera button above the grid from the design and retire F-046.
-4. **Refused invitation (finding 4, class B).**
-   - a. Deleted: remove « refusé » from E-09's statuses.
-   - b. Kept as « refusé » (to stop repeated requests): reword F-028.a and say what the sender sees.
-   - c. Deleted for the receiver, still « demandé » for the sender: record it as a decision.
-5. **Leftover code in the design (finding 5, class C).**
-   - a. Remove the story player and search state from `Main.dc.html`, and `leaves` and `usageHint` from `Profile.dc.html`.
+1. **P-16 now looks exactly like a post of the feed (findings 3 and 6, class C).** The redraw added the publisher's photo, the 80-character caption with « plus » / « moins », the double-tap like and a vertical feed of the 18 results, beyond the four actions D-046 asked for.
+   - a. Keep the redraw: record a decision that a search result behaves as a post of the feed in every respect; prompt 9 then drops F-020.a (retired in ids_retires), adds F-020, F-021 and F-016.a to P-16, and gives the feed of results to F-009 as a variant or to F-010.a's difference. Recommended: it follows D-046's reason « un post trouvé se traite comme un post du fil ».
+   - b. Keep F-020.a as it is: redraw P-16 without the photo and with the caption never cut; keep the feed of results and the double tap (prompt 9 registers them).
+   - c. Keep only the four actions of D-046: redraw P-16 as one post at a time, without the photo, the cut caption or the double tap.
+2. **Blur wording after D-018 (findings 8 and 9, class C).** The new P-16 share toasts already drop the blur mention; those over P-03 keep it.
+   - a. Remove every mention of blur: the two toasts over P-03 become « Lien copié. » and « Partagé. » as over P-16, plus the Profil title (P-17 and its three state artboards) and the P-17.a empty state, so that D-018's reason holds.
+   - b. Keep the explanations and reword D-018's reason (only the two long texts were removed); P-16 then uses the P-03 toasts.
+   - c. Keep both toast versions on purpose and note it on F-019 (not recommended: one feature, two texts).
+3. **Leftover code in the design (finding 5, class C).**
+   - a. Remove the story player and the search state (with its colour search) from `Main.dc.html`, and `leaves` and `usageHint` from `Profile.dc.html`.
    - b. Keep the story player and give the Accueil an entry to it (adds P-03 to F-036 through prompt 9); remove the rest.
    - c. Keep them and record a decision that they are unused design code, like the demo items of D-020.
-6. **Wording of the support offer (finding 6, class C).**
+4. **Wording of the support offer (finding 7, class C).**
    - a. « Une heure passée ici. » everywhere.
    - b. « Plus d’une heure passée ici. » everywhere.
    - c. Keep both on purpose, and note the difference on F-015.a.
-7. **Blur wording after D-018 (finding 9, class C).**
-   - a. Remove the mentions of blur from the two toasts, the Profil title (on P-17 and its three state artboards) and the P-17.a empty state, so that D-018's reason holds.
-   - b. Keep them and reword D-018's reason: only the two long explanations were removed.
+
+Finding 2 is class A but its fix has a product side, asked in prompt 9: whether the three panels over P-16 are P-05, P-06 and P-07 (recommended: same features, same states, no new ID) or new pages.
 
 ## What was sampled
-Mode B, so the query checks covered every ID and link, not a sample: 2 roles, 26 pages, 58 page states, 63 features, 20 variants, 17 entities, 42 decisions, 8 retired IDs. `newest_claude_design/` and `newest_claude_docs/` were ignored.
+Mode B, so the query checks covered every ID and link, not a sample: 2 roles, 26 pages, 58 page states, 62 features, 21 variants, 17 entities, 48 decisions, 9 retired IDs. `newest_claude_design/` and `newest_claude_docs/` were ignored.
 
-- Read: the diff of `claude_docs/` and `claude_design/` since ad1922e (25 artboards, `canvas.json`, the inventory, `registry.md`); `registry.md` and the inventory in full; the method files the check needs.
-- L2-01 and D-040: every state artboard of `canvas.json` was matched by script to its inventory row and registry page state (page, feature, name), and letter order was compared with canvas order; only P-03 differs (finding 10).
-- The 25 new artboards: visible text, `aria-label` and `role` extracted and compared with each feature's `etats_ui` and the inventory; all match.
-- L1-03: `claude_design/` was checked against `fake-scrolling-app/.claude-ai.json` (66 files, no hash differs); the live canvas on claude.ai was not opened, as the check requires.
-- L3-11: D-041 and D-042 read against D-025 to D-028, D-036 and D-040. D-042 gives like and save a 2 s message with no « Réessayer », where D-027 prefers an error in place; D-027's scope (`impacte`) holds neither F-016 nor F-018 and D-042 gives its reason, so this was not counted as a contradiction.
-- Design: older interactive screens were not re-read in full; every older finding's evidence was re-checked by grep at the lines quoted.
-- G-03: run as a query with `--since ad1922e`.
-- T-04 ran on D-040, D-041 and D-042; T-01 ran as far as entity fields only. T-02, T-03 and U-01 to U-03 need later layers.
+- Read: the diff of `claude_docs/` since 620ad29 (D-043 to D-048, F-046.a, E-03, E-09, E-11, the inventory rows they touch); `Search.dc.html` in full; the P-03, P-12, P-15 and P-16 sections of the inventory; the registry entries of P-16, F-009, F-010, F-016 to F-021, F-028, F-046 and D-018, D-033, D-040, D-042 to D-048; `claude_skills_output/compare_newest_current_claude_files.md`.
+- L1-03: `claude_design/` checked against `fake-scrolling-app/.claude-ai.json` by hash (66 files, none differs; `support.js` is not listed, as before); the live canvas on claude.ai was not opened, as the check requires.
+- P-16 against P-03: the action column, the toasts, the save, share and comments panels of `Search.dc.html` compared line by line with `Main.dc.html`; only the two share toasts differ (finding 8).
+- L3-11: D-043 to D-048 read against D-018, D-027, D-028, D-033, D-036, D-040 and D-042; D-033 now says « Remplacée en partie par D-047 », so it does not contradict D-047. No contradiction found.
+- T-04 ran on D-043 to D-048 (each change is in the registry and the inventory, except D-046, which waits for prompt 9: findings 1 to 4).
+- Design: older interactive screens and state artboards were not re-read in full (unchanged since the last check, hashes equal); every older finding's evidence was re-checked by grep at the lines quoted.
+- G-03: run as a query with `--since 620ad29`.
+- T-02, T-03 and U-01 to U-03 need later layers.
 
 ## Hand-off to the code check
-Commit checked: 620ad29. Verdict: ready for the code check, with no blocking finding.
+Commit checked: dacabcb plus the uncommitted promotion of `Search.dc.html`. Verdict: not ready, 1 blocking finding (#2).
 
 There is nothing for the code checker to verify yet: no feature is at step 10, and there is no code.
 
@@ -118,4 +109,4 @@ There is nothing for the code checker to verify yet: no feature is at step 10, a
 | One flag per feature not fully released | None: no backlog |
 | The import rules | None: no code structure or lint config yet |
 
-No document carries an open Blocking finding. The Major findings still touch P-02.b and F-008's pages (finding 8), E-03's and E-09's fields (findings 4 and 7), F-046 and F-069 (finding 3), the six « à confirmer » items (finding 2) and the lists of P-24, P-25 and P-07 (finding 1): settle them before the steps that build on them.
+Documents not to trust yet: the P-16 section of `claude_docs/inventaire-des-ecrans.md` and the P-16, P-05, P-06, P-07 entries of `claude_docs/registry.md` (finding 2), with F-010, F-016 to F-021 as they touch P-16 (findings 1, 3, 6), until prompt 9 runs on the redrawn P-16.
