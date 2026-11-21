@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 106, exported 2026-11-20 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 119, exported 2026-11-21 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -127,9 +127,9 @@ Panneau centré sous la cloche, par-dessus le fil : invitations d'amis puis like
 | P-04.d | Invitation : réponse en cours | Indicateur dans « Accepter », les deux boutons désactivés | `Etat-P04-invitation-envoi.dc.html` |
 | P-04.e | Invitation : erreur | « Ta réponse n’a pas été envoyée. » avec « Réessayer » sous l’invitation | `Etat-P04-invitation-erreur.dc.html` |
 
-## P-05 Accueil — panneau Commentaires
+## P-05 Panneau Commentaires
 
-Panneau qui monte du bas sur un post : on lit, on like et on publie des commentaires.
+Panneau qui monte du bas sur un post du fil (P-03) ou un résultat de recherche (P-16, D-050) : on lit, on like et on publie des commentaires.
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
@@ -149,9 +149,9 @@ Panneau qui monte du bas sur un post : on lit, on like et on publie des commenta
 | P-05.c | Commentaire non publié | Mon commentaire marqué « Non publié. » avec « Réessayer » | `Etat-P05-commentaire-echec.dc.html` |
 | P-05.d | Commentaires : erreur | « Les commentaires n’ont pas pu être chargés. » avec « Réessayer » | `Etat-P05-commentaires-erreur.dc.html` |
 
-## P-06 Accueil — panneau Enregistrer dans une collection
+## P-06 Panneau Enregistrer dans une collection
 
-Panneau qui monte du bas : on range le post dans une collection.
+Panneau qui monte du bas sur un post du fil (P-03) ou un résultat de recherche (P-16, D-050) : on range le post dans une collection.
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
@@ -168,16 +168,16 @@ Panneau qui monte du bas : on range le post dans une collection.
 | P-06.a | Nouvelle collection : création | Indicateur dans la ligne « Nouvelle collection », désactivée | `Etat-P06-collection-envoi.dc.html` |
 | P-06.b | Nouvelle collection : erreur | « La collection n’a pas été créée. » avec « Réessayer » | `Etat-P06-collection-erreur.dc.html` |
 
-## P-07 Accueil — panneau Partager
+## P-07 Panneau Partager
 
-Panneau qui monte du bas : trois façons de partager le post.
+Panneau qui monte du bas sur un post du fil (P-03) ou un résultat de recherche (P-16, D-050) : trois façons de partager le post.
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
 | Fermer le panneau | Croix ou tap sur le fond assombri | Aucune | — |
-| Envoyer à un ami | Rangée d'amis en tête du panneau ; un tap envoie le post à cet ami | Post envoyé en message (reçu dans la conversation de l'ami, D-044) ; message « Envoyé à … » sur P-03 | Chargement de la rangée : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) ; échec de l'envoi : « Non envoyé à … » (P-07.a) |
-| Copier le lien | Ligne qui copie le lien du post | Lien du post, copié dans le presse-papiers (D-044) | Message « Lien copié. Il mène à une version floutée. » |
-| Partager ailleurs | Ligne vers d'autres apps | Post, via la feuille de partage du téléphone (D-044) | Message « Partagé, flouté comme toujours. » |
+| Envoyer à un ami | Rangée d'amis en tête du panneau ; un tap envoie le post à cet ami | Post envoyé en message (reçu dans la conversation de l'ami, D-044) ; message « Envoyé à … » sur P-03 ou P-16 | Chargement de la rangée : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) ; échec de l'envoi : « Non envoyé à … » (P-07.a) |
+| Copier le lien | Ligne qui copie le lien du post | Lien du post, copié dans le presse-papiers (D-044) | Message « Lien copié. » sur P-16 ; « Lien copié. Il mène à une version floutée. » sur P-03, à redessiner en « Lien copié. » (D-051) |
+| Partager ailleurs | Ligne vers d'autres apps | Post, via la feuille de partage du téléphone (D-044) | Message « Partagé. » sur P-16 ; « Partagé, flouté comme toujours. » sur P-03, à redessiner en « Partagé. » (D-051) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
 **États dessinés à part**
@@ -387,15 +387,23 @@ Toute recherche non vide donne une grille de posts dans l'une des 5 palettes.
 
 ## P-16 Recherche — post ouvert
 
-Un résultat en plein écran, par-dessus la grille ; le menu du bas reste visible.
+Les 18 résultats en plein écran, un post à la fois à partir de celui qu'on a touché, par-dessus la grille ; le menu du bas reste visible. Chaque post se comporte comme un post du fil, P-03 (D-046, D-049).
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
-| Revenir aux résultats | Flèche blanche en haut à gauche, ouvre P-15 | Aucune | — |
-| Voir le post | Image plein écran aux couleurs de la palette | Formes du post | — |
-| Lire le pseudo du publieur | Nom en blanc en bas | Pseudo en charabia | — |
-| Lire la légende | Texte blanc sous le pseudo | Légende en charabia + émoji | Jamais tronquée |
-| Liker, commenter, enregistrer, partager | Absents de cet écran ; à ajouter comme sur P-03 (D-046) | Aucune | Non dessinés ; mêmes états que sur P-03 (D-046) |
+| Revenir aux résultats | Flèche blanche en haut à gauche ou touche Échap, ouvre P-15 | Aucune | — |
+| Passer au résultat suivant ou précédent | Glisser vers le haut ou le bas, molette, flèches du clavier ; un post entier à la fois | Position parmi les 18 résultats | En cours de glisser ; retour en place si glisser trop court ; résistance au premier et au dernier résultat ; pas de posts suivants à charger (D-049) |
+| Voir le post | Image plein écran aux couleurs de la palette | Formes du post | Couleur ou grisage selon les cycles |
+| Liker un post par double tap | Double tap sur l'image : grand cœur animé | Like du post (+1) | Animation du cœur, sans animation si l'appareil réduit les animations ; ne retire jamais le like |
+| Liker ou retirer son like | Cœur blanc dans la colonne de droite | Nombre de likes | Vide blanc ; plein rose quand liké ; échec : comme P-03.e, non dessiné ici (D-046) |
+| Ouvrir les commentaires | Bulle dans la colonne de droite, ouvre P-05 (D-050) | Nombre de commentaires (+ les miens) | — |
+| Enregistrer un post | Signet dans la colonne de droite, ouvre P-06 (D-050) | Nombre d'enregistrements | Vide ; plein quand enregistré ; échec : comme P-03.f, non dessiné ici (D-046) |
+| Partager un post | Flèche dans la colonne de droite, ouvre P-07 (D-050) | Nombre de partages | — |
+| Voir la photo du publieur | Rond en haut de la colonne de droite | Photo floue du publieur | Non cliquable |
+| Lire le pseudo du publieur | Nom en blanc au-dessus de la légende | Pseudo en charabia | — |
+| Lire la légende | Texte blanc en bas, sans fond | Légende en charabia + émojis | Tronquée au-delà d'environ 80 caractères (D-049) |
+| Déplier ou replier la légende | Lien « plus » ou « moins » à la fin du texte | Légende complète | Repliée ; dépliée |
+| Lire une confirmation | Message noir en bas, au-dessus du menu, après une action | Texte de l'action (enregistré, retiré, lien copié, partagé, envoyé à un ami) | Visible 2 s puis disparaît |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 | Ouvrir l'Accueil | Icône maison du menu du bas, ouvre P-03 | Aucune | Inactive (grise) |
 | Ouvrir Messages | Icône bulle du menu du bas, ouvre P-08 | Aucune | Inactive (grise) |
@@ -421,7 +429,7 @@ Son propre profil : identité, minuteur de couleur, puis ses posts.
 | Allonger le cycle | Petite flèche haut dans la case « 2 min », à droite | Durée : 1, 2, 3, 5, 10, 15, 20 ou 30 min (2 par défaut) | Flèche grisée à 30 min |
 | Raccourcir le cycle | Petite flèche bas dans la même case | Durée du cycle | Flèche grisée à 1 min |
 | Réinitialiser les cycles | Bouton « Réinitialiser » sous la case, à droite | Repart du cycle 1, couleurs revenues partout | — |
-| Voir ses posts | Titre « Tes posts, tels que les voient tes amis » et grille de 3 colonnes | 9 posts floutés, jours restants (« 7 j ») | Non cliquables ; vide (P-17.a) ; chargement (P-17.b) ; erreur (P-17.c) |
+| Voir ses posts | Titre « Tes posts, tels que les voient tes amis », à redessiner en « Tes posts » (D-051), et grille de 3 colonnes | 9 posts floutés, jours restants (« 7 j ») | Non cliquables ; vide (P-17.a) ; chargement (P-17.b) ; erreur (P-17.c) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 | Ouvrir l'Accueil | Icône maison du menu du bas, ouvre P-03 | Aucune | Inactive (grise) |
 | Ouvrir Messages | Icône bulle du menu du bas, ouvre P-08 | Aucune | Inactive (grise) |
@@ -433,7 +441,7 @@ Son propre profil : identité, minuteur de couleur, puis ses posts.
 
 | État | Nom | Ce qu'il montre | Artboard |
 | --- | --- | --- | --- |
-| P-17.a | Aucun post | « Aucun post pour l’instant » avec « Créer un post » | `Etat-P17-posts-vide.dc.html` |
+| P-17.a | Aucun post | « Aucun post pour l’instant » · « Tes posts s’affichent ici, floutés, avec leurs jours restants. », à redessiner sans « floutés, » (D-051), avec « Créer un post » | `Etat-P17-posts-vide.dc.html` |
 | P-17.b | Mes posts : chargement | Grille remplacée par un indicateur de chargement | `Etat-P17-posts-chargement.dc.html` |
 | P-17.c | Mes posts : erreur | « Tes posts n’ont pas pu être chargés. » avec « Réessayer » | `Etat-P17-posts-erreur.dc.html` |
 

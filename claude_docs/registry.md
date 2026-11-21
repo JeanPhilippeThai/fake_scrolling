@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 130, exported 2026-11-20 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 153, exported 2026-11-21 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -106,7 +106,7 @@ pages:
     plateforme: mobile
     features: [F-028]
   - id: P-05
-    nom: Accueil — panneau Commentaires
+    nom: Panneau Commentaires
     plateforme: mobile
     features: [F-016.b, F-017, F-024, F-027, F-030]
   - id: P-05.a
@@ -126,7 +126,7 @@ pages:
     plateforme: mobile
     features: [F-017]
   - id: P-06
-    nom: Accueil — panneau Enregistrer dans une collection
+    nom: Panneau Enregistrer dans une collection
     plateforme: mobile
     features: [F-018, F-024, F-027, F-031]
   - id: P-06.a
@@ -138,7 +138,7 @@ pages:
     plateforme: mobile
     features: [F-031]
   - id: P-07
-    nom: Accueil — panneau Partager
+    nom: Panneau Partager
     plateforme: mobile
     features: [F-019.a, F-019.b, F-019.c, F-024, F-027]
   - id: P-07.a
@@ -276,7 +276,7 @@ pages:
   - id: P-16
     nom: Recherche — post ouvert
     plateforme: mobile
-    features: [F-005, F-010.a, F-020.a, F-024, F-025, F-026]
+    features: [F-005, F-009.a, F-010.a, F-016, F-016.a, F-017, F-018, F-019, F-020, F-021, F-024, F-025, F-026]
   - id: P-17
     nom: Profil
     plateforme: mobile
@@ -519,10 +519,14 @@ features:
   - id: F-009
     nom: Faire défiler le fil
     description: Un post plein écran à la fois, par glisser, molette ou clavier ; 8 posts chargés près de la fin.
-    pages: [P-03, P-03.a, P-03.b]
+    pages: [P-03, P-03.a, P-03.b, P-16]
     plateformes: [mobile]
     acces: [R-02]
-    variantes: []
+    variantes:
+      - id: F-009.a
+        pages: [P-16]
+        plateforme: mobile
+        difference: 'Résultats de recherche : les 18 résultats, à partir de celui qu''on a touché ; ni chargement ni erreur de posts suivants (D-049)'
     entites: [E-03]
     operations: [lecture]
     etats_ui:
@@ -542,7 +546,7 @@ features:
       - id: F-010.a
         pages: [P-16]
         plateforme: mobile
-        difference: 'Résultat de recherche : par-dessus la grille, flèche retour vers P-15 ; mêmes actions que sur P-03 (D-046)'
+        difference: 'Résultat de recherche : par-dessus la grille, flèche retour vers P-15 ; se comporte comme un post du fil, avec les mêmes actions (D-046, D-049)'
     entites: [E-03, E-04]
     operations: [lecture]
     etats_ui:
@@ -551,7 +555,6 @@ features:
     questions_ouvertes:
       - Vrais médias à la place des formes générées
       - 'Accès supposé : les résultats de recherche montrent des posts de non-amis s''ils sont publics (audience du post, F-050)'
-    design_a_mettre_a_jour: true
 
   - id: F-011
     nom: Regarder une vidéo
@@ -627,12 +630,12 @@ features:
   - id: F-016
     nom: Liker un contenu
     description: Cœur qui ajoute ou retire un like et met à jour le compteur.
-    pages: [P-03, P-03.e, P-05]
+    pages: [P-03, P-03.e, P-05, P-16]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
       - id: F-016.a
-        pages: [P-03]
+        pages: [P-03, P-16]
         plateforme: mobile
         difference: 'Double tap sur l''image : grand cœur animé, ne retire jamais le like'
       - id: F-016.b
@@ -648,12 +651,11 @@ features:
       - 'échec du like d''un commentaire (F-016.b) : le petit cœur redevient gris, « Le like n’a pas été enregistré. » en bas du panneau pendant 2 s (D-043)'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
-    design_a_mettre_a_jour: true
 
   - id: F-017
     nom: Consulter les commentaires
     description: Bulle du post puis panneau listant les commentaires.
-    pages: [P-03, P-05, P-05.a, P-05.b, P-05.d]
+    pages: [P-03, P-05, P-05.a, P-05.b, P-05.d, P-16]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -666,12 +668,11 @@ features:
       - 'erreur : « Les commentaires n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
-    design_a_mettre_a_jour: true
 
   - id: F-018
     nom: Enregistrer un post dans une collection
     description: Signet du post puis choix d'une collection ; second tap retire.
-    pages: [P-03, P-03.f, P-06]
+    pages: [P-03, P-03.f, P-06, P-16]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -685,12 +686,11 @@ features:
       - 'échec : le signet redevient vide, « Le post n’a pas été enregistré. » en bas du fil pendant 2 s'
     questions_ouvertes:
       - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
-    design_a_mettre_a_jour: true
 
   - id: F-019
     nom: Partager un post
     description: Flèche du post puis panneau de partage.
-    pages: [P-03, P-07, P-07.a]
+    pages: [P-03, P-07, P-07.a, P-16]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -709,7 +709,7 @@ features:
     entites: [E-03, E-11, E-10]
     operations: [lecture, écriture]
     etats_ui:
-      - message « Envoyé à … », « Lien copié… » ou « Partagé… » en bas du fil pendant 2 s
+      - message « Envoyé à … », « Lien copié. » ou « Partagé. » en bas du fil ou du résultat pendant 2 s, sans mention du flou (D-051)
       - 'envoi à un ami échoué : l’ami cerclé de rouge, « Non envoyé à … » avec « Réessayer », le panneau reste ouvert'
       - 'rangée d''amis (F-019.a) en chargement : anneau centré ; en échec : message sur place avec « Réessayer » (D-043)'
     questions_ouvertes:
@@ -725,11 +725,7 @@ features:
     pages: [P-03, P-16]
     plateformes: [mobile]
     acces: [R-02]
-    variantes:
-      - id: F-020.a
-        pages: [P-16]
-        plateforme: mobile
-        difference: Sans photo du publieur, légende jamais tronquée
+    variantes: []
     entites: [E-03]
     operations: [lecture]
     etats_ui:
@@ -740,7 +736,7 @@ features:
   - id: F-021
     nom: Déplier la légende
     description: Lien « plus » ou « moins » au-delà d'environ 80 caractères.
-    pages: [P-03]
+    pages: [P-03, P-16]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1366,11 +1362,12 @@ features:
     operations: [lecture]
     etats_ui:
       - non cliquables
-      - 'vide : « Aucun post pour l’instant » · « Tes posts s’affichent ici, floutés, avec leurs jours restants. » avec « Créer un post » (F-026, D-035)'
+      - 'vide : « Aucun post pour l’instant » · « Tes posts s’affichent ici, avec leurs jours restants. » avec « Créer un post » (F-026, D-035)'
       - 'chargement : anneau centré'
       - 'erreur : « Tes posts n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
       - Ouvrir un de ses posts
+    design_a_mettre_a_jour: true
 
   - id: F-063
     nom: Supprimer son compte
@@ -1843,6 +1840,21 @@ decisions:
     choix: 'Refuser une invitation (F-028.a) supprime la demande : la relation d''amitié (E-09) n''a pas de statut « refusé », et l''expéditeur peut envoyer une nouvelle demande.'
     raison: 'Choix du propriétaire : le design ne montre jamais de statut « refusé », et F-028.a dit déjà que la demande est supprimée (B3-02).'
     impacte: [F-028]
+  - id: D-049
+    sujet: Un résultat de recherche se comporte comme un post du fil
+    choix: 'Un post ouvert depuis la recherche (P-16) se comporte en tout comme un post du fil (P-03) : photo du publieur, légende tronquée au-delà d''environ 80 caractères avec « plus » / « moins » (F-020, F-021), like par double tap (F-016.a), défilement vertical des 18 résultats à partir de celui qu''on a touché (F-009.a), en plus des actions de D-046. F-020.a « Sans photo du publieur, légende jamais tronquée » est retiré (ids_retires). Le design de P-16 correspond au registre : F-010, F-016, F-017 et F-018 ne portent plus design_a_mettre_a_jour.'
+    raison: 'Choix du propriétaire : le redessin de P-16 du 2026-11-21 va plus loin que D-046 et suit sa raison, « un post trouvé se traite comme un post du fil » (G-04).'
+    impacte: [F-009, F-010, F-016, F-020, F-021]
+  - id: D-050
+    sujet: Panneaux ouverts depuis un résultat de recherche
+    choix: 'Les panneaux Commentaires, Enregistrer dans une collection et Partager ouverts depuis P-16 sont les pages P-05, P-06 et P-07, avec les mêmes features et les mêmes états qu''ouverts depuis P-03. Leur nom perd « Accueil — ».'
+    raison: 'Choix du propriétaire : mêmes panneaux, mêmes données, mêmes états ; de nouveaux IDs les dupliqueraient (L2-01).'
+    impacte: [F-017, F-018, F-019]
+  - id: D-051
+    sujet: Plus aucune mention du flou
+    choix: 'Le flou n''est expliqué nulle part. Sur P-03 comme sur P-16, les messages du partage sont « Lien copié. » et « Partagé. » ; le titre des posts du Profil (P-17, P-17.a à P-17.c) devient « Tes posts » ; le texte de l''état vide P-17.a devient « Tes posts s’affichent ici, avec leurs jours restants. ». F-019 et F-062 portent design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
+    raison: 'Choix du propriétaire : la raison de D-018, « L''app n''explique nulle part ailleurs le flou ni le charabia », doit rester vraie (T-04, G-04).'
+    impacte: [F-019, F-062]
 
 ids_retires:
   - {id: F-013, decision: D-002}
@@ -1854,6 +1866,7 @@ ids_retires:
   - {id: F-064, decision: D-020}
   - {id: F-067.a, decision: D-021}
   - {id: F-069, decision: D-047}
+  - {id: F-020.a, decision: D-049}
 ```
 
 ## Regroupements effectués
@@ -1869,7 +1882,7 @@ ids_retires:
 | F-017 | Bulle de P-03 et liste de P-05 : un seul parcours. |
 | F-018 | Signet de P-03 et choix ou retrait sur P-06 : une seule bascule. |
 | F-019 | Flèche de P-03 en base ; les 3 options de P-07 en variantes (envoi à un ami depuis le panneau, copie du lien, autres apps). Les messages de confirmation sont des états (décision D-017). |
-| F-020 | Photo, pseudo et légende : un seul bloc d'auteur ; P-16 (sans photo, sans troncature) en variante. |
+| F-020 | Photo, pseudo et légende : un seul bloc d'auteur ; P-16 (sans photo, sans troncature) en variante, retirée par D-049. |
 | F-022 | Cloche et pastille (P-03) avec le panneau P-04 (défilement, likes, miniature). |
 | F-024 | Grisage identique sur toutes les pages sauf la connexion (P-01, P-02). |
 | F-025 | Les 4 icônes du menu sur 6 pages ; le bouton + reste à part dans F-026 car il ouvre un parcours de création. |
