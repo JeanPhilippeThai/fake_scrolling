@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 245, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 251, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -934,22 +934,24 @@ features:
 
   - id: F-036
     nom: Voir une story
-    description: Story plein écran, 2 ou 3 images de 5 s, tap à droite ou à gauche, croix pour fermer.
+    description: Story plein écran, 2 ou 3 images de 5 s, tap à droite ou à gauche, croix pour fermer. Les stories en cours d'un ami s'enchaînent, de la plus ancienne à la plus récente (D-081) ; seuls ses amis la voient (D-080).
     pages: [P-08, P-09, P-10, P-10.a, P-10.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-12]
+    entites: [E-12, E-09]
     operations: [lecture, écriture]
     etats_ui:
-      - cercle vert non vue
-      - cercle gris vue
+      - 'cercle vert : une story en cours pas encore vue (D-078, D-081)'
+      - 'cercle gris : toutes vues'
+      - 'sans cercle ni rond dans la rangée : aucune story en cours (D-079)'
+      - '« vue » enregistrée à la fermeture, renvoyée sans message tant que le serveur ne l''a pas (D-078)'
       - barres de progression
       - 'chargement : anneau blanc centré'
       - 'erreur : « La story n’a pas pu être chargée. » avec « Réessayer »'
     questions_ouvertes:
-      - Le statut « vue » n'est pas partagé entre écrans dans la maquette
-      - 'Accès supposé : stories des amis seulement (ami ou non, E-09)'
+      - 'Voir sa propre story, et qui l''a vue : « Ta story » ouvre toujours la création (F-026.a)'
+      - Ordre des ronds de la rangée de P-08 (non vues d'abord ?)
 ```
 
 ```yaml
@@ -1601,7 +1603,7 @@ entites:
       - compte (pseudo, identifiant, photo)
       - statut (en attente, demandé, ami)
       - ami proche (oui/non, D-060)
-    utilisee_par: [F-022, F-028, F-034, F-043, F-048, F-072]
+    utilisee_par: [F-022, F-028, F-034, F-036, F-043, F-048, F-072]
 
   - id: E-10
     nom: Conversation
@@ -1624,7 +1626,8 @@ entites:
       - images
       - texte
       - ancienneté
-      - vue / non vue
+      - vue par (comptes qui l'ont vue, D-078)
+      - fin, 24 h après la publication (D-079)
       - audience (D-059)
       - personnes identifiées
       - lieu
@@ -2058,6 +2061,26 @@ decisions:
     choix: 'Un changement de durée (F-060) ou une réinitialisation (F-061) s''applique tout de suite sur le téléphone, puis est renvoyé au serveur sans message jusqu''à ce qu''il soit enregistré. Pas d''état d''erreur, pas de nouvel artboard.'
     raison: 'Choix du propriétaire : le réglage ne regarde que son propriétaire ; un message d''erreur gênerait pour rien.'
     impacte: [F-060, F-061, E-14]
+  - id: D-078
+    sujet: 'FL-06 : story vue par compte'
+    choix: 'Une story est vue ou non pour chaque compte qui la regarde : E-12 remplace « vue / non vue » par « vue par » (les comptes qui l''ont vue). Elle compte comme vue quand le lecteur P-10 se ferme (croix ou fin automatique), quelle que soit l''image atteinte ; une story dont aucune image ne s''est affichée (P-10.b) reste non vue. F-036 écrit « vue par » ; si le serveur ne l''a pas, le cercle passe quand même au gris et c''est renvoyé sans message, comme D-077. Le design ne change pas.'
+    raison: 'Choix du propriétaire : c''est ce que montre la maquette, et chaque ami a ses propres cercles (question ouverte de F-036).'
+    impacte: [F-036, E-12]
+  - id: D-079
+    sujet: 'FL-06 : durée d''une story'
+    choix: 'Une story dure 24 h après sa publication (F-051) : ensuite elle disparaît de la rangée et des cercles de P-08 et P-09, et ne se rouvre plus. E-12 prend le champ « fin ». Ouverte juste après sa fin, elle montre P-10.b ; son cercle disparaît au chargement suivant. Le design ne change pas.'
+    raison: 'Choix du propriétaire : E-12 avait une ancienneté mais aucune fin, et aucune feature ne retirait une story.'
+    impacte: [F-036, F-051, E-12]
+  - id: D-080
+    sujet: 'FL-06 : qui voit une story'
+    choix: 'Une story ne se montre qu''aux amis de son auteur (E-09 « ami »). Les audiences « Tout le monde » et « Amis » (F-050) la montrent à tous ses amis ; « Amis proches », seulement aux amis cochés dans sa liste (D-060). P-08 et P-09 ne montrent que les stories qu''on peut voir. F-036 lit E-09.'
+    raison: 'Choix du propriétaire : seul Messages montre des stories, et seulement celles des amis (question ouverte de F-036).'
+    impacte: [F-036, F-050, E-09, E-12]
+  - id: D-081
+    sujet: 'FL-06 : plusieurs stories d''un ami'
+    choix: 'Un ami a un seul cercle, même avec plusieurs stories en cours : P-10 les enchaîne de la plus ancienne à la plus récente, les barres de progression repartant à chaque story, et se ferme après la dernière image de la dernière. Le cercle reste vert tant qu''une de ses stories n''est pas vue. À la fermeture, chaque story dont une image a été montrée compte comme vue (D-078). Le design ne change pas.'
+    raison: 'Choix du propriétaire : la rangée de P-08 montre un rond par ami, pas par story.'
+    impacte: [F-036, E-12]
 
 ids_retires:
   - {id: F-013, decision: D-002}
