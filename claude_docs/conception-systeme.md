@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 22, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 23, exported 2026-11-24 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -211,3 +211,65 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-050 : règle de l'audience (qui voit le post et agit dessus).
 - F-051 : ce que voient les amis (flou, charabia) ; palette et durée de vie du post.
 - F-072 : liste vide ; effet d'un changement sur les posts déjà publiés.
+
+## FL-04 Ajouter un ami
+
+Un utilisateur connecté (R-02) cherche un compte par son @ sur P-11 et lui envoie une demande ; l'autre utilisateur (R-02) l'accepte ou la refuse sur P-04. Une fois acceptée, les deux ont une conversation vide dans P-08. Mobile seulement. Décisions : D-006, D-035, D-042, D-044, D-048, D-070, D-071, D-072, D-073.
+
+### Entrées
+
+- Bouton + de P-08 (F-034) → P-11.
+- « Ajouter un ami » de l'état vide P-08.a (F-034, D-035) → P-11.
+- Pour le destinataire : la cloche de P-03 (F-022) → P-04, section « Invitations » (D-044).
+
+Hors de ce flow : écrire au nouvel ami (F-041, flow des messages) ; les listes d'amis de F-019.a, F-048 et F-072 ; le grisage F-024, qui s'applique à P-04, P-08 et P-11.
+
+### Séquence
+
+| Étape | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- |
+| 1. Ouvrir l'ajout d'un ami | P-08 ou P-08.a → P-11 | F-034 (bouton +, « Ajouter un ami ») | — | — |
+| 2. Chercher un compte | P-11 → P-11.a → P-11 | F-043 | E-01 (pseudo, identifiant, photo), E-09 (statut de chaque compte) | — |
+| 3. Envoyer la demande | P-11 → P-11.c → P-11 | F-034 | E-09 | E-09 (« demandé » chez l'expéditeur, « en attente » chez le destinataire), E-08 (notification « invitation » au destinataire, D-070) |
+| 3'. Ajouter un compte qui nous a déjà invité | P-11 → P-11.c → P-11 | F-034 | E-09 (« en attente ») | E-09 (« ami »), E-10 (conversation vide), E-08 (invitation supprimée) (D-073) |
+| 4. Voir l'invitation (destinataire) | P-03 → P-04.b → P-04 | F-022 | E-08 (pastille), E-09 (invitations en attente) | — |
+| 5a. Accepter | P-04 → P-04.d → P-04 | F-028 | — | E-09 (« ami » des deux côtés), E-10 (conversation vide, D-071), E-08 (invitation supprimée, D-070) |
+| 5b. Refuser | P-04 | F-028.a | — | E-09 (demande supprimée, D-048), E-08 (invitation supprimée, D-070) |
+| 6. Fermer le panneau | P-04 → P-03 | F-027.a | — | — |
+
+Suite simple : P-08 → F-034 → P-11 → F-043 → F-034, puis chez le destinataire P-03 → F-022 → P-04 → F-028 (ou F-028.a) → F-027.a → P-03. Les entités suivent les `operations` des features : F-022 et F-043 lisent ; F-028 écrit et supprime ; F-034 lit, écrit et supprime.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| P-11 | Champ vide | Rien n'est affiché (F-043) |
+| P-11.a | La recherche échoue | P-11.b : « Réessayer » (F-043) |
+| P-11 | Aucun compte | « Aucun compte trouvé. » |
+| P-11 | Compte déjà ami | « Ami » gris et désactivé |
+| P-11 | Demande déjà envoyée | « Demandé » gris et désactivé ; pas d'annulation (question ouverte de F-034) |
+| P-11 | Le compte nous a déjà invité | « Ajouter » accepte son invitation et devient « Ami » (D-073) |
+| P-11.c | L'envoi échoue | P-11.d : « La demande n’a pas été envoyée. » avec « Réessayer » ; le bouton redevient « Ajouter » (D-042) |
+| P-04.b | Les notifications ne chargent pas | P-04.c : « Réessayer » (F-022) |
+| P-04 | Aucune invitation | Section « Invitations » masquée ; P-04.a si rien d'autre |
+| P-04.d | La réponse échoue | P-04.e : « Ta réponse n’a pas été envoyée. » avec « Réessayer » (D-042) |
+| P-04 | Refus | La ligne disparaît ; l'expéditeur revoit « Ajouter » et peut redemander (D-048) |
+| F-028 | Acceptation | Pas de notification à l'expéditeur (D-072) : il voit la conversation dans P-08 et « Ami » dans P-11 |
+
+Fin du flow : les deux comptes sont amis (E-09 « ami »), avec une conversation vide dans P-08 qui s'ouvre sur P-09.b.
+
+### Manques du registre
+
+Réglés le 24 novembre 2026 :
+
+- Aucune feature n'écrivait la notification « invitation » : F-034 l'écrit, F-028 la supprime (D-070).
+- Aucune conversation ne s'ouvrait avec un nouvel ami : l'acceptation en crée une vide (D-071).
+- L'acceptation ne notifie pas l'expéditeur (D-072).
+- Une demande vers un compte qui nous a déjà invité accepte son invitation (D-073).
+
+Restent ouverts, dans les `questions_ouvertes` des features :
+
+- F-034 : annuler une demande envoyée ; retirer un ami ou bloquer un compte.
+- F-043 : vrai annuaire ; comptes privés ou bloqués ; son propre compte dans les résultats.
+- F-022, F-028 : accès supposé aux seules invitations reçues et en attente.
+- F-037 : peut-on écrire à un non-ami ?
