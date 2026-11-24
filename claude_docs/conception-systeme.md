@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 4, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 5, exported 2026-11-24 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -137,3 +137,77 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-019 : rangée limitée aux amis ; partage d'un post « Amis proches » ; aspect du post reçu sur P-09.
 - F-031 : saisie du nom de la collection.
 - F-011 : pause et déplacement dans la vidéo.
+
+## FL-03 Publier un post
+
+Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende et règle ses options sur P-13, puis publie dans le fil (P-03) ou en story (P-08). Rien n'est enregistré avant la publication (D-045). Mobile seulement. Décisions : D-001, D-012, D-031, D-033, D-034, D-035, D-045, D-047, D-059, D-060, D-061, D-062.
+
+### Entrées
+
+- Bouton + du menu (F-026) sur P-03, P-08, P-14, P-15, P-16 ou P-17 → P-12, destination « Fil d'actualité ».
+- « Créer un post » de l'état vide P-17.a (F-026, D-035) → P-12.
+- Rond « Ta story » de P-08 (F-026.a, D-001) → P-12, destination « Story » présélectionnée (F-068).
+
+Hors de ce flow : ce que voient les amis du post publié (flou, charabia), sa palette et ses jours restants (questions ouvertes de F-051) ; le grisage F-024, qui s'applique à toutes ces pages.
+
+### Séquence
+
+| Étape | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- |
+| 1. Choisir les photos | P-12 | F-044, F-045 | E-04 (galerie, album) | E-04, E-03 (brouillon : photos choisies, rang dans le carrousel) |
+| 1'. Prendre une photo | P-12 ou P-12.a | F-046, F-046.a | — | E-04, E-03 (brouillon : la photo prise devient celle du post, D-047) |
+| 2. Passer à la légende | P-12 → P-13 | F-044 (« Suivant ») | — | — |
+| 3. Écrire la légende | P-13 | F-047 | — | E-03 (brouillon : légende) |
+| 4. Choisir où publier | P-13 | F-068 | — | E-03 ou E-12 (destination) |
+| 5. Identifier des personnes | P-13 → P-24 | F-048 | E-09 (amis) | E-03 ou E-12 (personnes identifiées, D-059) |
+| 6. Ajouter un lieu | P-13 → P-25 | F-049 | — (aucune entité pour les lieux) | E-03 ou E-12 (lieu, D-059) ; « Retirer le lieu » le supprime |
+| 7. Choisir l'audience | P-13 → P-26 | F-050 | — | E-03 ou E-12 (audience, D-059) |
+| 7'. Modifier la liste d'amis proches | P-26 → P-28 | F-072 | E-09 (amis) | E-09 (ami proche, D-060) |
+| 8. Fermer un panneau | P-24, P-25, P-26 → P-13 ; P-28 → P-26 | F-027 | — | — |
+| 9. Publier | P-13 → P-13.a | F-051 | E-03 ou E-12 (brouillon), E-04 | E-03 et E-04 (post), ou E-12 (story) ; E-08 (une notification « identification » par personne identifiée, D-061) |
+| 10. Arrivée | P-03.d ou P-08.b | F-051 | E-03 ou E-12 | — |
+
+Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-048, P-25 F-049, P-26 F-050 → P-28 F-072) → F-051 → P-03, ou P-08 → F-026.a → P-12 → … → F-068 « Story » → F-051 → P-08. Les entités suivent les `operations` des features : F-045 lit ; F-046, F-047, F-050, F-051, F-068 écrivent ; F-044, F-048, F-072 lisent et écrivent ; F-049 lit, écrit et supprime. Avant F-051, ces écritures ne touchent que le brouillon sur l'appareil.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| P-12 | Galerie vide | P-12.a : « Ouvrir l'appareil photo » (F-046.a, D-033, D-047) |
+| P-12 | Accès aux photos refusé | P-12.b : « Ouvrir les réglages » du téléphone (F-044, D-034) |
+| P-12 | Prise de vue refusée ou annulée | Non dessinée (questions ouvertes de F-046) |
+| P-12 | Sélection simple ou multiple | Une photo, ou jusqu'à 10 numérotées (F-044) |
+| P-12 | « Suivant » | Toujours actif : une photo au moins est choisie |
+| P-12 | Croix « Fermer » (F-005.a) | Brouillon abandonné sans confirmation (D-045), retour à la page d'origine (D-062) |
+| P-13 | Flèche retour (F-005) | P-12, photos choisies gardées |
+| P-13 | Fil d'actualité ou Story (F-068) | Bouton « Partager dans le fil » ou « Partager en story » |
+| P-24, P-25 | Liste en chargement ou en échec | Anneau, puis message sur place avec « Réessayer » (D-043) |
+| P-24, P-25 | Aucun résultat | « Aucun ami trouvé. » ou « Aucun lieu trouvé. » |
+| P-25 | Un lieu est déjà choisi | « Retirer le lieu » (F-049) |
+| P-26 | « Amis proches » avec une liste vide | Non défini (question ouverte de F-072) |
+| P-28 | Liste en chargement ou en échec | Anneau, puis message sur place avec « Réessayer » (F-072) |
+| P-13.a | La publication échoue | P-13.b : photos et légende gardées, « Réessayer » relance F-051 (D-027) |
+| P-13.a | Publié dans le fil | P-03 avec le toast « Post publié. » (P-03.d, D-031) |
+| P-13.a | Publié en story | P-08 avec le toast « Story publiée. » (P-08.b, D-031) |
+
+Fin du flow : P-03 avec le post publié, ou P-08 avec la story publiée ; les personnes identifiées en sont notifiées sur P-04 (D-061).
+
+### Manques du registre
+
+Réglés le 24 novembre 2026 :
+
+- Une story n'avait ni audience, ni personnes identifiées, ni lieu : E-12 les prend, F-048, F-049 et F-050 l'écrivent (D-059).
+- Aucune liste d'« Amis proches » : E-09 prend « ami proche », F-072 la règle sur le nouveau panneau P-28, ouvert depuis P-26 (D-060). À dessiner : P-26 et P-28.
+- Une identification ne notifiait personne : E-08 a un type « identification », F-051 l'écrit (D-061). P-04 à redessiner (F-022).
+- La croix de P-12 ramenait toujours à l'Accueil : elle ramène à la page d'origine (D-062). Design à mettre à jour (F-005).
+
+Restent ouverts, dans les `questions_ouvertes` des features :
+
+- F-044, F-045 : vraie galerie, autorisation d'accès, liste des albums.
+- F-046 : écran de prise de vue, autorisation de l'appareil photo.
+- F-047 : limite de longueur de la légende.
+- F-048 : liste de démo ; seuls des amis peuvent être identifiés.
+- F-049 : vraie recherche de lieux, et donc la source des lieux.
+- F-050 : règle de l'audience (qui voit le post et agit dessus).
+- F-051 : ce que voient les amis (flou, charabia) ; palette et durée de vie du post.
+- F-072 : liste vide ; effet d'un changement sur les posts déjà publiés.
