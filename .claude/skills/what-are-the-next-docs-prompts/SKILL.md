@@ -76,7 +76,7 @@ The docs are clean: nothing to do there.
 Up to 5 items, in method order: finish the current step, then go on into the next steps, stopping before step 9.
 
 - One item per run: a prompt run per platform, per flow or per question gives one item each.
-- Open L3-14 findings (drawn in the design, missing from the registry) come first, as one prompt 9 item. Give it the elements they cite, and the features of the L1-04 findings: prompt 9 also clears their `design_a_mettre_a_jour` flags.
+- Open L1-04 findings (features flagged `design_a_mettre_a_jour`) and L3-14 findings (drawn in the design, missing from the registry) come first, as one item: redraw in `claude_design/` the flagged features that still differ from the design (step 4 of the design cycle), run prompt 9 on them and on the elements the L3-14 findings cite, then `publish-claude-design` if anything was redrawn. Prompt 9 clears the flags. Name each feature and the decision that says what to redraw.
 - The other open Major findings in the current step's layers come next, as one prompt 8 item.
 - Point to the prompt in `describe.md`; never copy its text.
 - Fill its brackets from the docs. A value that depends on an earlier item's result says "from item <n>".

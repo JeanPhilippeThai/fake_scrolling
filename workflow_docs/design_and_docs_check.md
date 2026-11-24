@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-24 (revision 53).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-24 (revision 54).
 For now the Claude Doc is the source of truth of this check and this file is a copy of it. An app's design is different: its source of truth is the app repo's `claude_design/`, not claude.ai.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the screens of the repo's design down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -77,7 +77,7 @@ Run the layers in this order. Each check has an ID; cite it in every finding. In
 | L1-01 | There is one design per platform the app targets (web, desktop, mobile); iOS and Android share the mobile design unless a decision gives each its own | Read | Blocking |
 | L1-02 | Every screen shows its empty, loading and error states, or a decision says it has none | Read | Major |
 | L1-03 | The design checked is the repo's `claude_design/`, never the canvases on claude.ai: claude.ai only drafts the next version (the method's design cycle). A screen or a copy seen only on claude.ai is not in the design until it is imported and promoted | Read | Major |
-| L1-04 | Every feature marked `design_a_mettre_a_jour: true` still differs from the design; if it now matches, the flag should be gone (prompt 9) | Read | Minor |
+| L1-04 | No feature is marked `design_a_mettre_a_jour: true`. A flagged feature is redrawn in the repo's `claude_design/` (step 4 of the design cycle), then prompt 9 clears the flag; a feature whose design already matches only has its flag cleared | Query, then read | Major |
 
 ### L2 · Raw extraction (prompt 1)
 
