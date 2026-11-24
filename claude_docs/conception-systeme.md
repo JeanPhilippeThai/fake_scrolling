@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 27, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 29, exported 2026-11-24 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -451,3 +451,63 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-042 : choix de la photo ; algorithmes de l'art généré, et vidéos (D-086).
 - F-019 : aspect du post reçu dans la conversation, non dessiné sur P-09.
 - F-034 : retirer un ami ou bloquer un compte, et donc le sort de la conversation.
+
+## FL-08 Rechercher
+
+Un utilisateur connecté (R-02) ouvre la Recherche, tape un mot ou touche une suggestion ou une tendance sur P-14, parcourt la grille de P-15, puis ouvre un résultat sur P-16, où il réagit comme dans le fil. Le texte tapé ne quitte jamais le téléphone : seule sa palette est envoyée. Mobile seulement. Décisions : D-046, D-049, D-050, D-051, D-062, D-087, D-088, D-089, D-090.
+
+### Entrées
+
+- Icône loupe du menu du bas (F-025), depuis toute page qui l'a → P-14, champ vide.
+- Fermer une création de post ouverte depuis P-14, P-15 ou P-16 (F-005.a) → P-14 (D-090).
+
+Hors de ce flow : les réactions sur P-16 et leurs panneaux P-05 à P-07 (FL-02, D-049, D-050) ; publier un post avec le bouton + (FL-03) ; chercher un compte (F-043, FL-04) ou une discussion (F-033, FL-07) ; le grisage F-024, qui s'applique à P-14, P-15 et P-16 (FL-05).
+
+### Séquence
+
+| Étape | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- |
+| 1. Ouvrir la Recherche | P-03 (ou une autre page) → P-14.a → P-14 | F-025, F-053 | E-13 (8 suggestions tirées au hasard, 6 tendances, sur le téléphone, D-089), E-03 (nombre de posts visibles par palette, D-089) | — |
+| 2. Taper une recherche | P-14 → P-15.a → P-15 | F-052 | E-13 (texte saisi → palette, sur le téléphone, D-087) ; E-03, E-09 (jusqu'à 18 posts visibles de la palette, D-088) | — |
+| 2'. Lancer une suggestion ou une tendance | P-14 → P-15.a → P-15 | F-053, F-053.a, puis F-052 | E-13 (champ rempli), E-03, E-09 | — |
+| 3. Modifier la recherche | P-15 | F-052 | E-13 (nouvelle palette à chaque frappe), E-03, E-09 | — |
+| 4. Revenir aux suggestions | P-15 → P-14 | F-052 (champ vidé) | E-13 | — |
+| 5. Ouvrir un résultat | P-15 → P-16 | F-054, F-010.a | E-03, E-04 | — |
+| 6. Passer d'un résultat à l'autre | P-16 | F-009.a, F-020, F-021 | E-03, E-04 | — |
+| 7. Réagir | P-16 → P-05, P-06, P-07 → P-16 | F-016, F-016.a, F-017, F-018, F-019, F-027 | Comme FL-02 | Comme FL-02 (E-06, E-03, E-08, E-05, E-07, E-11, E-10) |
+| 8. Revenir aux résultats | P-16 → P-15 | F-010.a | — | — |
+
+Suite simple : P-14 → F-052 (ou F-053) → P-15 → F-054 → P-16 → F-009.a → F-010.a → P-15. Les entités suivent les `operations` des features : F-052, F-053 et F-054 lisent seulement. E-13 vit sur le téléphone : rien de la recherche n'est écrit sur le serveur (D-087, D-089).
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| P-14.a | Les suggestions ne chargent pas | P-14.b : « Les suggestions n’ont pas pu être chargées. » avec « Réessayer » ; le champ reste utilisable (F-053) |
+| P-15 | Chaque frappe | La palette est recalculée sur le téléphone et la grille change (F-052, D-087) |
+| P-15 | Champ vidé | Retour à P-14 |
+| P-15.a | La recherche n'aboutit pas | P-15.c : « La recherche n’a pas abouti. » avec « Réessayer » |
+| P-15.a | Aucun post visible dans la palette | P-15.b : « Aucun résultat » · « Aucun post ne correspond à « … ». Essaie un autre mot. » (D-087) |
+| P-15 | Post hors de son audience pour l'utilisateur | Jamais dans les résultats ni dans les tendances (D-088, D-089) |
+| P-16 | Premier ou dernier résultat | Résistance, pas de posts suivants à charger (F-009.a, D-049) |
+| P-16 | Like ou enregistrement échoué | Comme P-03.e et P-03.f (FL-02, D-046) |
+| P-16 | Partage réussi | Message 2 s sur P-16 : « Envoyé à … », « Lien copié. » ou « Partagé. » (D-051) |
+| P-16 | Flèche retour ou Échap | P-15, même recherche (F-010.a) |
+| P-12 | Création ouverte depuis la Recherche, puis fermée | P-14, champ vide (D-090) |
+
+Fin du flow : retour sur P-15 avec la même recherche, ou sur P-14 champ vide.
+
+### Manques du registre
+
+Réglés le 24 novembre 2026 :
+
+- Rien ne disait si le texte cherché quittait le téléphone, ni quand s'affiche « Aucun résultat » : seule la palette part, et la grille montre jusqu'à 18 posts visibles de cette palette (D-087).
+- Qui voit un post n'était pas réglé : son audience décide, et la recherche ne montre que les posts qu'on peut voir ; F-052 lit E-09 (D-088). Les questions d'accès de F-010, F-052 et F-054 sont closes.
+- L'origine des suggestions et des tendances : du charabia tiré par l'app, sans historique ; les tendances comptent les posts visibles de leur palette ; F-053 lit E-03 (D-089).
+- D-062 ne disait pas où revient une création ouverte depuis P-15 ou P-16 : sur P-14, comme la maquette (D-090).
+
+Restent ouverts, dans les `questions_ouvertes` des features :
+
+- F-053 : choix des 6 mots des tendances et rythme de leur renouvellement.
+- F-050 : agir sur un post suit-il aussi son audience ? (accès supposés de F-016, F-017, F-018, F-019, F-020 et F-030, FL-02)
+- F-051 : qui fixe la palette d'un post à la publication, et sa durée de vie ; la recherche par palette en dépend.
