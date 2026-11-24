@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 23, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 24, exported 2026-11-24 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -273,3 +273,60 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-043 : vrai annuaire ; comptes privés ou bloqués ; son propre compte dans les résultats.
 - F-022, F-028 : accès supposé aux seules invitations reçues et en attente.
 - F-037 : peut-on écrire à un non-ami ?
+
+## FL-05 Griser l'app par cycles
+
+Tâche de fond, sans geste de l'utilisateur : tant qu'un utilisateur connecté (R-02) a l'appli ouverte, le minuteur de couleur de son compte (E-14) avance, et chaque cycle terminé retire 10 % de couleur à toutes les pages de F-024. Après 10 cycles, l'appli reste en noir et blanc jusqu'à « Réinitialiser » (F-061). Mobile seulement. Décisions : D-009, D-019, D-052, D-074, D-075, D-076, D-077.
+
+### Entrées
+
+- Fin de FL-01 : la connexion ouvre P-03 et le minuteur du compte reprend où il en était (D-074).
+- Ouverture de l'appli avec une session ouverte (D-053), ou retour de l'appli au premier plan.
+- Sur P-17 : changer la durée du cycle (F-060) ou réinitialiser (F-061).
+
+Hors de ce flow : P-01, P-02 et P-27, jamais grisées (D-009, D-019, D-052) ; le temps d'utilisation (E-15) et le post Premium (F-015, F-065).
+
+### Séquence
+
+| Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- | --- |
+| 1. Reprendre le minuteur | Appli ouverte ou revenue au premier plan, connecté | Pages de F-024 | F-024 | E-14 (durée, cycles écoulés, temps passé dans le cycle) | — |
+| 2. Avancer | Chaque seconde, appli au premier plan | Pages de F-024 | F-024 | E-14 | E-14 (temps passé dans le cycle en cours, D-075) |
+| 3. Finir un cycle | Le temps passé atteint la durée | Pages de F-024 | F-024 | E-14 | E-14 (cycles écoulés + 1, 10 % de gris en plus, temps remis à 0) |
+| 4. Noir et blanc | 10 cycles écoulés | Pages de F-024 | F-024 | E-14 | — (le minuteur s'arrête) |
+| 5. Suivre le minuteur | L'utilisateur ouvre P-17 | P-17 | F-059 | E-14 (cycle sur 10, % de gris, temps restant) | — |
+| 6. Changer la durée | Flèche haut ou bas | P-17 | F-060 | — | E-14 (durée ; cycles gardés, D-076) |
+| 7. Réinitialiser | Bouton « Réinitialiser » | P-17 | F-061 | — | E-14 (cycle 1, 0 % de gris) |
+| 8. S'arrêter | Appli fermée ou en arrière-plan, déconnexion (F-071) | — | F-024 | — | E-14 (temps passé gardé sur le serveur, D-074) |
+
+Suite simple : ouverture → F-024 (1 → 2 → 3, dix fois) → noir et blanc, et sur P-17 : F-059, F-060, F-061 → retour aux couleurs. Les entités suivent les `operations` des features : F-059 lit ; F-060 et F-061 écrivent ; F-024 lit et écrit (D-075).
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| Pages de F-024 | Appli au premier plan | Le minuteur avance (D-075) |
+| Toutes | Appli fermée ou en arrière-plan | Le minuteur s'arrête, rien ne grise (D-075) |
+| P-01, P-02, P-27 | Pas encore connecté, ou inscription | Jamais grisées (D-009, D-019, D-052) |
+| FL-01 | Reconnexion, ou autre téléphone | Le minuteur du compte reprend au même gris (D-074) |
+| Pages de F-024 | 10 cycles écoulés | Noir et blanc sans message ; sur P-17, F-059 dit « Noir et blanc. Réinitialise pour retrouver les couleurs. » |
+| P-17 | Flèche à 1 ou 30 min | Flèche grisée (F-060) |
+| P-17 | Nouvelle durée en cours de cycle | Cycles gardés, la durée vaut pour la suite (D-076) |
+| P-17 | Le serveur n'enregistre pas la durée ou la réinitialisation | Appliquée sur le téléphone, renvoyée sans message (D-077) |
+| P-17 | Réinitialiser | Cycle 1, couleurs revenues sur toutes les pages (F-061) |
+
+Fin du flow : aucune ; le minuteur s'arrête quand l'appli se ferme et reprend à l'ouverture.
+
+### Manques du registre
+
+Réglés le 24 novembre 2026 :
+
+- Le minuteur appartient au compte, pas au téléphone (D-074) : les questions ouvertes de F-059, F-060 et F-061 sont closes.
+- Seul le temps passé appli ouverte fait griser (D-075) : E-14 garde ce temps au lieu du début du cycle, et F-024 l'écrit.
+- Changer la durée garde les cycles écoulés (D-076).
+- Un réglage non enregistré est renvoyé sans message (D-077).
+
+Restent ouverts, dans les `questions_ouvertes` des features :
+
+- F-024 : deux téléphones ouverts en même temps sur le même compte.
+- F-065 : temps d'utilisation (E-15) compté par compte ou par appareil, à voir avec le flow Premium.

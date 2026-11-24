@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-24 · commit 883a083 · fingerprint d145fa030c25
+2026-11-24 · commit 883a083 · fingerprint 08f6a2ccaa9a
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -16,7 +16,6 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 5: flows** (step 5), background job. Give it: FL-05 « Griser l'app par cycles », proposed: the colour timer (E-14) that greys every page by 10 % per cycle (F-024, F-059) and is followed, set and reset on P-17 (F-060, F-061). It produces: the same, for this job.
-2. **Prompt 5: flows** (step 5). Give it: FL-06 « Voir une story », proposed: P-08 or P-09 → P-10 lecteur de story (F-036, E-12). It produces: the same, for this flow.
-3. **Prompt 5: flows** (step 5). Give it: FL-07 « Discuter avec un ami », proposed: P-08 (F-037, F-033) → P-09 (F-038, F-040, F-041, F-042, F-039), E-10, E-11. It produces: the same, for this flow.
-4. **Prompt 5: flows** (step 5). Give it: FL-08 « Rechercher », proposed: P-14 → P-15 → P-16 (E-13). It produces: the same; profile, Premium and posts' remaining days come after.
+1. **Prompt 5: flows** (step 5). Give it: FL-06 « Voir une story », proposed: P-08 or P-09 → P-10 lecteur de story (F-036, E-12). It produces: the same, for this flow.
+2. **Prompt 5: flows** (step 5). Give it: FL-07 « Discuter avec un ami », proposed: P-08 (F-037, F-033) → P-09 (F-038, F-040, F-041, F-042, F-039), E-10, E-11. It produces: the same, for this flow.
+3. **Prompt 5: flows** (step 5). Give it: FL-08 « Rechercher », proposed: P-14 → P-15 → P-16 (E-13). It produces: the same; profile, Premium and posts' remaining days come after.
