@@ -190,11 +190,11 @@ button:focus-visible,a:focus-visible{outline:2px solid #2F4F9E;outline-offset:2p
             </div>
           </sc-for>
         </sc-if>
-        <h2 style="margin: 0; padding: 14px 16px 6px; font-size: 14px; font-weight: 600; color: #5E5E5B; border-top: {{likesBorder}}">Likes</h2>
+        <h2 style="margin: 0; padding: 14px 16px 6px; font-size: 14px; font-weight: 600; color: #5E5E5B; border-top: {{likesBorder}}">Activité</h2>
         <sc-for list="{{likesList}}" as="l" hint-placeholder-count="4">
           <div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 16px">
             <span aria-hidden="true" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: {{l.avatar}}; filter: blur(1.5px)"></span>
-            <p style="flex: 1; min-width: 0; margin: 0; font-size: 14px; line-height: 1.35"><strong style="font-weight: 600">{{l.name}}</strong> a aimé ton post <span style="color: #5E5E5B">· {{l.ago}}</span></p>
+            <p style="flex: 1; min-width: 0; margin: 0; font-size: 14px; line-height: 1.35"><strong style="font-weight: 600">{{l.name}}</strong> {{l.text}} <span style="color: #5E5E5B">· {{l.ago}}</span></p>
             <span role="img" aria-label="Ton post" style="position: relative; width: 40px; height: 40px; flex-shrink: 0; border-radius: 6px; overflow: hidden; background: {{l.bg}}">
               <span style="position: absolute; left: 6px; top: 8px; width: 22px; height: 22px; border-radius: 50%; background: {{l.c1}}"></span>
               <span style="position: absolute; left: 18px; top: 18px; width: 20px; height: 16px; border-radius: 4px; background: {{l.c2}}"></span>
@@ -828,7 +828,9 @@ class Component extends DCLogic {
       return { handle: '@' + q.h, name: this.gib(q.seed, 2), avatar: NPAL[q.seed % NPAL.length], pending: st === 'pending', accepted: st === 'accepted', accept: setReq('accepted'), decline: setReq('declined') };
     });
     var AGO = ['2 min', '9 min', '24 min', '1 h', '3 h', 'hier', 'hier'];
-    var likesList = AGO.map((ago, k) => ({ name: this.gib(3000 + k * 37, 2), ago: ago, avatar: NPAL[(k * 3) % NPAL.length], bg: NBG[k % NBG.length], c1: NPAL[(k + 2) % NPAL.length], c2: NPAL[(k + 5) % NPAL.length] }));
+    var KINDS = ['identification', 'like', 'commentaire', 'like', 'like', 'commentaire', 'like'];
+    var kindText = (kind, k) => kind === 'identification' ? 't’a identifié·e dans son post' : kind === 'commentaire' ? 'a commenté ton post : « ' + this.gib(4000 + k * 13, 3) + ' »' : 'a aimé ton post';
+    var likesList = AGO.map((ago, k) => ({ name: this.gib(3000 + k * 37, 2), text: kindText(KINDS[k], k), ago: ago, avatar: NPAL[(k * 3) % NPAL.length], bg: NBG[k % NBG.length], c1: NPAL[(k + 2) % NPAL.length], c2: NPAL[(k + 5) % NPAL.length] }));
     var pendingCount = requests.filter((r) => r.pending).length;
     var badge = s.notifSeen ? pendingCount : pendingCount + 3;
     var storyView = null;
