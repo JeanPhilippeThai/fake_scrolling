@@ -29,6 +29,20 @@ WHERE content = 'registry'
                                               'claude_docs/registry-' || scope || '-archive.yaml')))
 ORDER BY 1;
 
+-- check: L1-04
+-- title: No feature is marked design_a_mettre_a_jour: true. A flagged feature is redrawn in the repo's claude_design/ (step 4 of the design cycle), then prompt 9 clears the flag; a feature whose design already matches only has its flag cleared
+-- how: Query, then read
+-- severity: Major
+-- needs: registry
+-- Each row is a redraw decided and not yet drawn. Read the design to tell a redraw from a flag to clear.
+-- Not a plain Query: an app's CI stays green between the decision and the redraw. Archives are frozen, so canonical only.
+SELECT d.id, d.name, d.path, d.line
+FROM defs d
+WHERE d.scope = 'canonical' AND d.kind = 'feature'
+  AND (json_extract(d.data, '$.design_a_mettre_a_jour') = 1
+       OR lower(CAST(json_extract(d.data, '$.design_a_mettre_a_jour') AS TEXT)) IN ('true', 'oui', 'yes'))
+ORDER BY d.id COLLATE idnum;
+
 -- check: L3-01
 -- title: Every ID has its kind's format and is unique; every page state's page exists and is on the same platform; no ID in ids_retires is defined again; no two IDs share a number (D-01 and D-001)
 -- how: Query
