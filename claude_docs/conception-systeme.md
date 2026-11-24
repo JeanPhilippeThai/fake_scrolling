@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 24, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 25, exported 2026-11-24 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -330,3 +330,58 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-024 : deux téléphones ouverts en même temps sur le même compte.
 - F-065 : temps d'utilisation (E-15) compté par compte ou par appareil, à voir avec le flow Premium.
+
+## FL-06 Voir une story
+
+Un utilisateur connecté (R-02) touche le cercle d'un ami dans P-08 ou P-09 et regarde ses stories en cours dans P-10, image par image ; à la fermeture, elles comptent comme vues pour lui seul. Mobile seulement. Décisions : D-059, D-060, D-078, D-079, D-080, D-081.
+
+### Entrées
+
+- P-08, rangée de stories : rond cerclé d'un ami (F-036) → P-10.
+- P-08, liste des discussions : photo cerclée d'une discussion (F-036) → P-10.
+- P-09 : photo cerclée du contact en haut (F-036) → P-10.
+
+Hors de ce flow : publier une story (FL-03, F-026.a, F-051) ; voir sa propre story (question ouverte de F-036) ; ouvrir une discussion (F-037) ; le grisage F-024, qui s'applique aussi à P-10 (FL-05).
+
+### Séquence
+
+| Étape | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- |
+| 1. Voir qui a une story | P-08, P-09 | F-036 (cercles vert ou gris) | E-12 (auteur, fin, audience, vue par), E-09 (ami, ami proche) | — |
+| 2. Ouvrir les stories d'un ami | P-08 ou P-09 → P-10.a → P-10 | F-036 | E-12 (images, texte, ancienneté, auteur) | — |
+| 3. Regarder | P-10 | F-036 (5 s par image, barres de progression) | E-12 | — |
+| 4. Image suivante ou précédente | P-10 | F-036 (tap sur les deux tiers droits ou le tiers gauche) | E-12 | — |
+| 5. Story suivante du même ami | P-10 | F-036 (D-081) | E-12 | — |
+| 6. Fermer | P-10 → P-08 ou P-09 | F-036 (croix, ou fin après la dernière image) | — | E-12 (vue par : le compte qui regarde, D-078) |
+
+Suite simple : P-08 (ou P-09) → F-036 → P-10.a → P-10 → F-036 (images, puis stories suivantes) → fermeture → P-08 (ou P-09), cercle gris. Les entités suivent les `operations` de F-036 : il lit E-12 et E-09, et écrit « vue par » dans E-12.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| P-08, P-09 | L'ami n'a aucune story en cours | Pas de rond dans la rangée ; photo sans cercle dans la liste et en haut de P-09 |
+| P-08, P-09 | Story « Amis proches » et je ne suis pas dans la liste de l'auteur | Elle ne m'est pas montrée (D-080) |
+| P-08, P-09 | Toutes les stories de l'ami sont vues | Cercle gris ; elles se rouvrent quand même |
+| P-10.a | Le chargement échoue | P-10.b : « La story n’a pas pu être chargée. » avec « Réessayer » ; fermer sans image montrée laisse la story non vue (D-078) |
+| P-10 | La story a atteint ses 24 h pendant qu'on est sur P-08 | P-10.b ; son cercle disparaît au chargement suivant (D-079) |
+| P-10 | Tap à gauche sur la première image | Reste sur la première image |
+| P-10 | Fin d'une story, l'ami en a une autre en cours | La suivante commence, ses barres repartent (D-081) |
+| P-10 | Fin de la dernière image de la dernière story | Le lecteur se ferme et revient à la page d'où il a été ouvert |
+| P-10 | Le serveur n'enregistre pas « vue » | Cercle gris sur le téléphone, renvoyé sans message (D-078) |
+
+Fin du flow : retour sur P-08 ou P-09 ; le cercle de l'ami est gris s'il n'a plus de story non vue.
+
+### Manques du registre
+
+Réglés le 24 novembre 2026 :
+
+- « Vue » était un seul champ de la story : E-12 garde les comptes qui l'ont vue, écrits à la fermeture (D-078).
+- Aucune story ne finissait : elle dure 24 h après la publication (D-079).
+- Accès : amis seulement, « Amis proches » filtre (D-080) ; F-036 lit E-09.
+- Plusieurs stories d'un même ami s'enchaînent sous un seul cercle (D-081).
+
+Restent ouverts, dans les `questions_ouvertes` des features :
+
+- F-036 : voir sa propre story et qui l'a vue ; ordre des ronds de la rangée de P-08.
+- F-072 : un changement de la liste d'amis proches vaut-il pour les stories déjà publiées ?
