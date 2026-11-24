@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 29, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 32, exported 2026-11-24 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -178,7 +178,7 @@ Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-
 | P-12 | Prise de vue refusée ou annulée | Non dessinée (questions ouvertes de F-046) |
 | P-12 | Sélection simple ou multiple | Une photo, ou jusqu'à 10 numérotées (F-044) |
 | P-12 | « Suivant » | Toujours actif : une photo au moins est choisie |
-| P-12 | Croix « Fermer » (F-005.a) | Brouillon abandonné sans confirmation (D-045), retour à la page d'origine (D-062) |
+| P-12 | Croix « Fermer » (F-005.a) | Brouillon abandonné sans confirmation (D-045), retour à la page d'origine (D-062) ; ouverte depuis la Recherche (P-14 à P-16), retour sur P-14 (D-090) |
 | P-13 | Flèche retour (F-005) | P-12, photos choisies gardées |
 | P-13 | Fil d'actualité ou Story (F-068) | Bouton « Partager dans le fil » ou « Partager en story » |
 | P-24, P-25 | Liste en chargement ou en échec | Anneau, puis message sur place avec « Réessayer » (D-043) |
@@ -406,7 +406,7 @@ Hors de ce flow : ajouter un ami (FL-04, F-034) ; voir une story depuis P-08 ou 
 | 2. Chercher une discussion | P-08 | F-033 | E-10 (prénom, @) | — |
 | 3. Ouvrir une conversation | P-08 → P-09.a → P-09 | F-037, F-038 | E-10, E-11 | E-10 (lu, D-085) |
 | 4. Lire et recevoir | P-09 | F-038 | E-11 (messages en direct, saisie de l'ami, D-084) | E-10 (reste lu, D-085) |
-| 5. Citer un message | P-09 | F-040 | E-11 | E-11 (message cité, écrit avec l'envoi) |
+| 5. Citer un message | P-09 | F-040 | — | E-11 (message cité, écrit avec l'envoi) |
 | 6. Envoyer un message | P-09 | F-041 | — | E-11 (charabia, D-083), E-10 (dernier message, heure, non lu chez l'ami, D-085) |
 | 7. Envoyer une photo | P-09 | F-042 | — | E-11 (photo), E-04 (graine et algorithme, D-086), E-10 (« Photo », heure, non lu chez l'ami, D-085) |
 | 8. Revenir aux discussions | P-09 → P-08 | F-005 | — | — |
@@ -473,7 +473,7 @@ Hors de ce flow : les réactions sur P-16 et leurs panneaux P-05 à P-07 (FL-02,
 | 3. Modifier la recherche | P-15 | F-052 | E-13 (nouvelle palette à chaque frappe), E-03, E-09 | — |
 | 4. Revenir aux suggestions | P-15 → P-14 | F-052 (champ vidé) | E-13 | — |
 | 5. Ouvrir un résultat | P-15 → P-16 | F-054, F-010.a | E-03, E-04 | — |
-| 6. Passer d'un résultat à l'autre | P-16 | F-009.a, F-020, F-021 | E-03, E-04 | — |
+| 6. Passer d'un résultat à l'autre | P-16 | F-009.a, F-010.a, F-020, F-021 | E-03, E-04 | — |
 | 7. Réagir | P-16 → P-05, P-06, P-07 → P-16 | F-016, F-016.a, F-017, F-018, F-019, F-027 | Comme FL-02 | Comme FL-02 (E-06, E-03, E-08, E-05, E-07, E-11, E-10) |
 | 8. Revenir aux résultats | P-16 → P-15 | F-010.a | — | — |
 
