@@ -620,7 +620,7 @@ ORDER BY 1;
 SELECT scope, id, problem, path, line FROM id_problems WHERE NOT registry ORDER BY 1, 2;
 
 -- check: G-02
--- title: Every ID cited anywhere exists or is in ids_retires (for the kinds the database reads: P, F, E, R, D, TB, N, DF, C); an ID followed by … is an example; a range cites every ID in it; archives are not checked
+-- title: Every ID cited anywhere exists or is in ids_retires (for the kinds the database reads: P, F, E, R, D, TB, N, DF, FL, C); an ID followed by … is an example; a range cites every ID in it; archives are not checked
 -- how: Query
 -- severity: Major
 -- needs:
@@ -628,7 +628,7 @@ SELECT m.scope, m.id, m.path, GROUP_CONCAT(m.line) AS lines, 'cited, but not def
 FROM mentions m
 WHERE m.scope = 'canonical'
   AND m.path NOT IN (SELECT path FROM docs WHERE archived = 1)
-  AND m.kind IN ('role','page','page_state','feature','variant','entity','decision','table','node','data_flow','component')
+  AND m.kind IN ('role','page','page_state','feature','variant','entity','decision','table','node','data_flow','flow','component')
   AND EXISTS (SELECT 1 FROM defs k WHERE k.scope = m.scope
               AND k.expected_kind = CASE m.kind WHEN 'page_state' THEN 'page' ELSE m.kind END)
   AND NOT EXISTS (SELECT 1 FROM defs d WHERE d.scope = m.scope AND d.id = m.id)
