@@ -1,11 +1,11 @@
 {
  "url": "https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT",
  "format": 2,
- "synced": "2026-11-21T16:04:25+00:00",
+ "synced": "2026-11-24T09:15:54+00:00",
  "files": {
   "project/Chat.dc.html": "ae709f0b59aa3c99621e73f1884a31a8ea671b2bff9118ac7448bfeb7a2e3267",
   "project/Code.dc.html": "9f1091e023fa3fb8c422281ee39421bafb5547210bbb29c640514489cd1ec0a5",
-  "project/Compose.dc.html": "6d5ecf2bdfa5b1cc736a4216754ac605f7cdbd54c343fb945ce0bbd2c5d34e1e",
+  "project/Compose.dc.html": "110a61c125da9c1c0a8c78c90516e0511e36e2336d6e146ea69f908be68b433c",
   "project/Etat-P01-email-envoi.dc.html": "d04998c8c011dc44f6cfebcec57662cf64795ad312c31af974e0eb0ab74a76b5",
   "project/Etat-P01-email-erreur.dc.html": "e6eade065adb0785a0f9e8f61a6bb4512cd1bdfbdc7f57e162d339e6579aec46",
   "project/Etat-P01-email-invalide.dc.html": "29fd108328b25904833377bb7296f5917fca10339169dae7a2d96cfb2027bf9c",
@@ -18,11 +18,11 @@
   "project/Etat-P03-fil-erreur.dc.html": "9d91346390ad587603f67f22b37fb3672e75b92f64902a539048d05e0b2917f6",
   "project/Etat-P03-like-echec.dc.html": "e81d8360892dd96e318d30244c0c517b26edfc128bedb4ad17bcb61d0609a9a2",
   "project/Etat-P03-premium-echec.dc.html": "d1800afa3401caceb376e1223fdb67af6ecce59b5ab5935878c9c84b49e66780",
-  "project/Etat-P04-invitation-envoi.dc.html": "4544f1f29ad119eb3e787165a90c447dfd55bd66151993b148a3debf87002b4d",
-  "project/Etat-P04-invitation-erreur.dc.html": "e8655c374ebc05dbb3b7ab09bf6e918ea00cb3bbb0e96ae4ac75e08fbe477468",
+  "project/Etat-P04-invitation-envoi.dc.html": "1da89cbc153428a7a063e030ecd5660d8339cb4c8565e079c60ee6f80bb400c4",
+  "project/Etat-P04-invitation-erreur.dc.html": "4ac5f5fbca5c7de55b1f2ad4903ea5105d4a86f042b9683b224fa0a0153f8d60",
   "project/Etat-P04-notifications-chargement.dc.html": "d338383e79ee568076a02e7bd894d3361852e709da964ea6a339ddf44bbfe20f",
   "project/Etat-P04-notifications-erreur.dc.html": "96d7123af67bba1693776a2718bf0481c4c5ad2d9b201e1fb99995eb268af4e3",
-  "project/Etat-P04-notifications-vide.dc.html": "ab0f166b2d04b5d371780aea3f9bd89ff9907c23647a98e7795851078052e933",
+  "project/Etat-P04-notifications-vide.dc.html": "2b58295fab2327a1663f57fdd48813228c0eaff47f6b6a38a1d023446e1cc066",
   "project/Etat-P05-commentaire-echec.dc.html": "d247060b255ea73f1b09266474b2f5f39500ac7da27b6331e921c0a94beb95a9",
   "project/Etat-P05-commentaires-chargement.dc.html": "d08ce523cc22a77f734114760ffa63f723544059b29363f2082a3d019e7268df",
   "project/Etat-P05-commentaires-erreur.dc.html": "dea37add4c3e99a15142903e39f9bac2e6f4ef2c2aa230452f5a8294a2daf764",
@@ -65,9 +65,16 @@
   "project/Etat-P22-paiement-annule.dc.html": "2cf50a8d0ebe37a222fbe9822079672b2bd02ae6232d6e1c0513351a74f14dc4",
   "project/Etat-P22-paiement-echec.dc.html": "45fd525c5f2521dca7282351c11d31830648cb7dd05f06da873e71c8d9623d91",
   "project/Login.dc.html": "bfa757905395a1ead79f89104cfad50a1a3f9bdcc96abc80d16dd4bd122292a3",
-  "project/Main.dc.html": "72909e957e981102dad7babecb4f83705b29a198acff4b24ed5cd96bab2ed3f7",
+  "project/Main.dc.html": "b4ff725d9e3a5c0e4a934c397d5a9d85d3c37cf41c99a33e512a1a98c0b25bdd",
   "project/Profile.dc.html": "301314cd8944646b3d275536a719c2c287ad5959100e2e022aa56de7c45f525f",
   "project/Search.dc.html": "4f1ce31d0658b6b30a4df1806c7cb3d39f45d730cfb7751d613287f7fc693c2a",
   "project/canvas.json": "cc436320abdf98aebde833e2f7bd7f7687b2741c8f628ff7f599229201c66541"
+ },
+ "round": {
+  "project/Compose.dc.html": "changed",
+  "project/Etat-P04-invitation-envoi.dc.html": "changed",
+  "project/Etat-P04-invitation-erreur.dc.html": "changed",
+  "project/Etat-P04-notifications-vide.dc.html": "changed",
+  "project/Main.dc.html": "changed"
  }
 }

@@ -19,7 +19,7 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid #2
 
   <sc-if value="{{stepSelect}}" hint-placeholder-val="{{ true }}">
     <header style="display: flex; align-items: center; gap: 4px; padding: 12px 8px 8px 4px">
-      <a href="Main.dc.html" aria-label="Fermer" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #1C1C1C">
+      <a href="{{closeHref}}" aria-label="Fermer" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #1C1C1C">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
       </a>
       <h1 style="margin: 0; flex: 1; font-size: 18px; font-weight: 600">Nouveau post</h1>
@@ -126,7 +126,7 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid #2
     </div>
 
     <sc-if value="{{sheetOn}}" hint-placeholder-val="{{ false }}">
-      <button type="button" onClick="{{closeSheet}}" aria-label="Fermer" style="position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: rgba(28, 28, 28, 0.45); cursor: pointer"></button>
+      <button type="button" onClick="{{backdropTap}}" aria-label="Fermer" style="position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: rgba(28, 28, 28, 0.45); cursor: pointer"></button>
     </sc-if>
 
     <sc-if value="{{sheetTag}}" hint-placeholder-val="{{ false }}">
@@ -212,6 +212,42 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid #2
           </button>
         </sc-for>
       </div>
+      <button type="button" onClick="{{openClose}}" style="display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 2px; border: 0; background: transparent; color: #1F6B4A; font: 600 15px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
+        <span style="flex: 1">Modifier la liste</span>
+        <span style="font-weight: 400; font-size: 14px; color: #5E5E5B">{{closeCount}}</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A8A86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+      </button>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{sheetClose}}" hint-placeholder-val="{{ false }}">
+      <div role="dialog" aria-modal="true" aria-labelledby="close-title" style="position: absolute; left: 0; right: 0; bottom: 0; max-height: 78%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 10px 16px 24px; border-radius: 24px 24px 0 0; background: #FFFFFF">
+      <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #DEDEDA"></span>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+        <h2 id="close-title" style="margin: 0; font-size: 18px; font-weight: 600">Amis proches</h2>
+        <button type="button" onClick="{{backToAudience}}" style="min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: #1F6B4A; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">OK</button>
+      </div>
+      <p style="margin: -4px 0 0; font-size: 13px; line-height: 1.4; color: #5E5E5B">Coche les amis qui voient ce que tu publies pour « Amis proches ».</p>
+      <div style="position: relative">
+        <label for="close-search" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Rechercher un ami</label>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E5E5B" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="position: absolute; left: 14px; top: 13px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <input id="close-search" type="search" autocomplete="off" value="{{sheetQuery}}" onChange="{{onSheetQuery}}" placeholder="Rechercher" style="width: 100%; height: 44px; box-sizing: border-box; border: 0; border-radius: 12px; padding: 0 14px 0 40px; background: #F1F1EF; font: 400 16px 'IBM Plex Sans', sans-serif; color: #1C1C1C">
+      </div>
+      <div style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
+        <sc-for list="{{closeList}}" as="u" hint-placeholder-count="6">
+          <button type="button" role="checkbox" aria-checked="{{u.on}}" onClick="{{u.toggle}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 2px; border: 0; background: transparent; color: #1C1C1C; text-align: left; cursor: pointer">
+            <span aria-hidden="true" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: {{u.avatar}}; filter: blur(1.5px)"></span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+              <span style="font-weight: 600; font-size: 15px">{{u.name}}</span>
+              <span style="font: 400 13px 'IBM Plex Mono', monospace; color: #5E5E5B">{{u.handle}}</span>
+            </span>
+            <span aria-hidden="true" style="width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 2px solid {{u.ring}}; background: {{u.fill}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>
+          </button>
+        </sc-for>
+        <sc-if value="{{closeNone}}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; padding: 20px 0; text-align: center; font-size: 15px; color: #5E5E5B">Aucun ami trouvé.</p>
+        </sc-if>
+      </div>
     </div>
     </sc-if>
   </sc-if>
@@ -223,7 +259,12 @@ class Component extends DCLogic {
     super(...a);
     var startDest = 'feed';
     try { if (localStorage.getItem('fs-compose-dest') === 'story') startDest = 'story'; localStorage.removeItem('fs-compose-dest'); } catch (e) {}
-    this.state = { grey: 0, sheet: null, sheetQuery: '', tagged: [], place: null, dest: startDest, step: 'select', selected: [0], current: 0, multi: false, caption: '', audience: 0 };
+    var from = 'Main.dc.html';
+    try { var ref = typeof document !== 'undefined' ? document.referrer || '' : ''; var m = ref.match(/(Main|Chat|Search|Profile)\.dc\.html/); if (m) from = m[0]; } catch (e) {}
+    this.from = from;
+    var close = ['@lea.k', '@ines.m', '@jade.r'];
+    try { var cf = JSON.parse(localStorage.getItem('fs-close-friends') || 'null'); if (Array.isArray(cf)) close = cf; } catch (e) {}
+    this.state = { grey: 0, sheet: null, sheetQuery: '', tagged: [], place: null, dest: startDest, step: 'select', selected: [0], current: 0, multi: false, caption: '', audience: 0, closeFriends: close };
     this.gallery = this.makeGallery();
   }
   componentDidMount() { this.startClock(); }
@@ -302,6 +343,13 @@ class Component extends DCLogic {
     }
     return out;
   }
+  toggleClose(h) {
+    this.setState((st) => {
+      var next = st.closeFriends.indexOf(h) !== -1 ? st.closeFriends.filter((x) => x !== h) : st.closeFriends.concat([h]);
+      try { localStorage.setItem('fs-close-friends', JSON.stringify(next)); } catch (e) {}
+      return { closeFriends: next };
+    });
+  }
   pick(i) {
     var s = this.state;
     if (!s.multi) { this.setState({ selected: [i], current: i }); return; }
@@ -327,6 +375,11 @@ class Component extends DCLogic {
       return { name: f[0], handle: f[1], avatar: f[2], on: on, ring: on ? '#1F6B4A' : '#C9C9C6', fill: on ? '#1F6B4A' : '#FFFFFF',
         toggle: () => this.setState((st) => ({ tagged: st.tagged.indexOf(f[1]) !== -1 ? st.tagged.filter((x) => x !== f[1]) : st.tagged.concat([f[1]]) })) };
     });
+    var closeList = FRIENDS.filter((f) => !q || f[0].toLowerCase().indexOf(q) !== -1 || f[1].indexOf(q.replace(/^@/, '')) !== -1).map((f) => {
+      var on = s.closeFriends.indexOf(f[1]) !== -1;
+      return { name: f[0], handle: f[1], avatar: f[2], on: on, ring: on ? '#1F6B4A' : '#C9C9C6', fill: on ? '#1F6B4A' : '#FFFFFF', toggle: () => this.toggleClose(f[1]) };
+    });
+    var nClose = s.closeFriends.length;
     var PLACES = [['Canal Saint-Martin', 'Paris 10e'], ['Parc des Buttes-Chaumont', 'Paris 19e'], ['Jardin du Luxembourg', 'Paris 6e'], ['Vieux-Port', 'Marseille'], ['Parc de la Tête d’Or', 'Lyon'], ['Miroir d’eau', 'Bordeaux'], ['Place Stanislas', 'Nancy'], ['Plage du Prado', 'Marseille']];
     var places = PLACES.filter((pl) => !q || (pl[0] + ' ' + pl[1]).toLowerCase().indexOf(q) !== -1).map((pl) => {
       var on = s.place === pl[0];
@@ -345,6 +398,7 @@ class Component extends DCLogic {
     });
     return {
       grey: s.grey,
+      closeHref: this.from,
       dests: [{ key: 'feed', label: 'Fil d’actualité' }, { key: 'story', label: 'Story' }].map((d) => ({
         label: d.label,
         on: s.dest === d.key,
@@ -377,6 +431,13 @@ class Component extends DCLogic {
       sheetTag: s.sheet === 'tag',
       sheetPlace: s.sheet === 'place',
       sheetAudience: s.sheet === 'audience',
+      sheetClose: s.sheet === 'close',
+      openClose: () => this.setState({ sheet: 'close', sheetQuery: '' }),
+      backToAudience: () => this.setState({ sheet: 'audience', sheetQuery: '' }),
+      backdropTap: () => this.setState({ sheet: s.sheet === 'close' ? 'audience' : null, sheetQuery: '' }),
+      closeList: closeList,
+      closeNone: closeList.length === 0,
+      closeCount: nClose === 0 ? 'Aucun ami proche' : nClose === 1 ? '1 ami proche' : nClose + ' amis proches',
       openTag: () => this.setState({ sheet: 'tag', sheetQuery: '' }),
       openPlace: () => this.setState({ sheet: 'place', sheetQuery: '' }),
       openAudience: () => this.setState({ sheet: 'audience' }),
