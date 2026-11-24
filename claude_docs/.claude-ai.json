@@ -1,9 +1,9 @@
 {
  "format": 2,
- "synced": "2026-11-24T09:56:11+00:00",
+ "synced": "2026-11-24T11:00:55+00:00",
  "files": {
-  "conception-systeme.md": "2f811ad9005fdc9b2a7bdc2ffad0eae55a61cd648951f6b385218046887b99b5",
-  "inventaire-des-ecrans.md": "ae675e87c47e3444d203b1de13e1449e4105dc6cf09e7202fbaef9a03b876fc3",
-  "registry.md": "31ff167b4ccbcda41ec432062a6d50b49161d67d1d49ac7b22fdfc8b36d2b2a9"
+  "conception-systeme.md": "88aca82499a5c5e355a210497979b527adfc63ec01192b138125ccbc6eff3330",
+  "inventaire-des-ecrans.md": "2d96ccc2188bc5081da02669f2812f962865cc85b6aef6c9a6f7ed0eae20ab23",
+  "registry.md": "b52ec81e5aef3b33f4fead9e26c2a25c521bc944fdb424c125a19feca78f40ce"
  }
 }
