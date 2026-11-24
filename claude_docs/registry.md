@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 175, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 195, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -352,11 +352,15 @@ pages:
   - id: P-26
     nom: Nouveau post — panneau Audience
     plateforme: mobile
-    features: [F-024, F-027, F-050]
+    features: [F-024, F-027, F-050, F-072]
   - id: P-27
     nom: Inscription
     plateforme: mobile
     features: [F-005, F-070]
+  - id: P-28
+    nom: Nouveau post — panneau Amis proches
+    plateforme: mobile
+    features: [F-024, F-027, F-072]
 ```
 
 ```yaml
@@ -454,7 +458,7 @@ features:
       - id: F-005.a
         pages: [P-12]
         plateforme: mobile
-        difference: Croix « Fermer » qui abandonne la création du post et revient à l'Accueil
+        difference: Croix « Fermer » qui abandonne la création du post et revient à la page d'où elle a été ouverte (D-062)
         acces: [R-02]
       - id: F-005.b
         pages: [P-19]
@@ -465,6 +469,7 @@ features:
     operations: [lecture]
     etats_ui: []
     questions_ouvertes: []
+    design_a_mettre_a_jour: true
 
   - id: F-006
     nom: Lire la consigne du code
@@ -751,7 +756,7 @@ features:
 
   - id: F-022
     nom: Consulter ses notifications
-    description: Cloche avec pastille puis panneau des invitations, des likes et des commentaires reçus (D-056).
+    description: Cloche avec pastille puis panneau des invitations, des likes, des commentaires et des identifications reçus (D-056, D-061).
     pages: [P-03, P-04, P-04.a, P-04.b, P-04.c]
     plateformes: [mobile]
     acces: [R-02]
@@ -773,7 +778,7 @@ features:
   - id: F-024
     nom: Voir l'app se griser
     description: Toute l'interface perd 10 % de couleur par cycle, noir et blanc après 10 cycles, sans message.
-    pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26]
+    pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -816,7 +821,7 @@ features:
   - id: F-027
     nom: Fermer un panneau
     description: Croix, « OK » ou tap sur le fond assombri autour du panneau.
-    pages: [P-04, P-05, P-06, P-07, P-18, P-20, P-24, P-25, P-26]
+    pages: [P-04, P-05, P-06, P-07, P-18, P-20, P-24, P-25, P-26, P-28]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -1125,12 +1130,12 @@ features:
 
   - id: F-048
     nom: Identifier des personnes
-    description: 'Ligne de la légende qui ouvre un panneau : recherche et amis à cocher.'
+    description: 'Ligne de la légende qui ouvre un panneau : recherche et amis à cocher, pour un post ou une story (D-059) ; chaque personne identifiée est notifiée à la publication (D-061).'
     pages: [P-13, P-24]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-03, E-09]
+    entites: [E-03, E-12, E-09]
     operations: [lecture, écriture]
     etats_ui:
       - aucune personne
@@ -1145,12 +1150,12 @@ features:
 
   - id: F-049
     nom: Ajouter un lieu
-    description: 'Ligne de la légende qui ouvre un panneau : recherche et choix d''un seul lieu.'
+    description: 'Ligne de la légende qui ouvre un panneau : recherche et choix d''un seul lieu, pour un post ou une story (D-059).'
     pages: [P-13, P-25]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-03]
+    entites: [E-03, E-12]
     operations: [lecture, écriture, suppression]
     etats_ui:
       - aucun lieu
@@ -1164,18 +1169,19 @@ features:
 
   - id: F-050
     nom: Choisir l'audience
-    description: 'Ligne « Audience » qui ouvre un panneau : Tout le monde, Amis ou Amis proches, avec une phrase par choix.'
+    description: 'Ligne « Audience » qui ouvre un panneau : Tout le monde, Amis ou Amis proches, avec une phrase par choix, pour un post ou une story (D-059). Sous « Amis proches », « Modifier la liste » ouvre P-28 (F-072, D-060).'
     pages: [P-13, P-26]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-03]
+    entites: [E-03, E-12]
     operations: [écriture]
     etats_ui:
       - choix coché
       - valeur affichée sur la ligne
     questions_ouvertes:
       - 'Règle : l''audience choisie décide qui peut voir le post et agir dessus'
+    design_a_mettre_a_jour: true
 
   - id: F-051
     nom: Publier le post
@@ -1184,7 +1190,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-03, E-04, E-12]
+    entites: [E-03, E-04, E-12, E-08]
     operations: [écriture]
     etats_ui:
       - libellé selon la destination choisie
@@ -1194,6 +1200,7 @@ features:
       - 'succès story : Messages affiche le toast « Story publiée. » (D-031)'
     questions_ouvertes:
       - Envoi, flou et charabia côté amis
+      - 'Palette et durée de vie du post (E-03) : qui les fixe à la publication, et combien de jours ?'
 
   - id: F-052
     nom: Rechercher des posts
@@ -1476,6 +1483,26 @@ features:
     questions_ouvertes:
       - Confirmation avant de se déconnecter ?
     design_a_mettre_a_jour: true
+
+  - id: F-072
+    nom: Choisir ses amis proches
+    description: 'Lien « Modifier la liste » sous « Amis proches » du panneau Audience : panneau de ses amis avec recherche et cases rondes à cocher, comme P-24 (D-060).'
+    pages: [P-26, P-28]
+    plateformes: [mobile]
+    acces: [R-02]
+    variantes: []
+    entites: [E-09]
+    operations: [lecture, écriture]
+    etats_ui:
+      - case vide
+      - cochée en vert
+      - « Aucun ami trouvé. »
+      - 'chargement : anneau centré dans la liste (comme D-043)'
+      - 'échec du chargement : message sur place avec « Réessayer » (comme D-043)'
+    questions_ouvertes:
+      - 'Liste vide quand on choisit « Amis proches » : P-28 s''ouvre-t-il, ou le choix est-il refusé ?'
+      - Un changement de la liste vaut-il pour les posts et stories déjà publiés en « Amis proches » ?
+    design_a_mettre_a_jour: true
 ```
 
 ```yaml
@@ -1557,18 +1584,19 @@ entites:
   - id: E-08
     nom: Notification
     champs:
-      - type (like, commentaire, invitation)
+      - type (like, commentaire, invitation, identification)
       - auteur
       - ancienneté
       - post concerné (miniature)
-    utilisee_par: [F-016, F-022, F-030]
+    utilisee_par: [F-016, F-022, F-030, F-051]
 
   - id: E-09
     nom: Relation d'amitié
     champs:
       - compte (pseudo, identifiant, photo)
       - statut (en attente, demandé, ami)
-    utilisee_par: [F-022, F-028, F-034, F-043, F-048]
+      - ami proche (oui/non, D-060)
+    utilisee_par: [F-022, F-028, F-034, F-043, F-048, F-072]
 
   - id: E-10
     nom: Conversation
@@ -1592,7 +1620,10 @@ entites:
       - texte
       - ancienneté
       - vue / non vue
-    utilisee_par: [F-036, F-051, F-068]
+      - audience (D-059)
+      - personnes identifiées
+      - lieu
+    utilisee_par: [F-036, F-048, F-049, F-050, F-051, F-068]
 
   - id: E-13
     nom: Recherche
@@ -1926,6 +1957,26 @@ decisions:
     choix: 'Chaque partage compte une fois dans le nombre de partages du post (E-03) : envoi à un ami (F-019.a), copie du lien (F-019.b) et feuille de partage du téléphone (F-019.c).'
     raison: 'Choix du propriétaire : les trois façons de partager se valent.'
     impacte: [F-019, E-03]
+  - id: D-059
+    sujet: 'FL-03 : options d''une story'
+    choix: 'Identifier des personnes (F-048), le lieu (F-049) et l''audience (F-050) valent aussi pour une story : E-12 prend les champs audience, personnes identifiées et lieu. Le design ne change pas.'
+    raison: 'Choix du propriétaire : P-13 offre les mêmes lignes quelle que soit la destination (F-068).'
+    impacte: [F-048, F-049, F-050, F-051, E-12]
+  - id: D-060
+    sujet: 'FL-03 : liste d''amis proches'
+    choix: 'L''audience « Amis proches » s''appuie sur une liste que l''utilisateur tient : E-09 prend le champ « ami proche (oui/non) ». Un lien « Modifier la liste » sous « Amis proches » dans P-26 ouvre le nouveau panneau P-28 : ses amis, une recherche et des cases rondes à cocher, comme P-24 (nouvelle feature F-072). F-050 et F-072 portent design_a_mettre_a_jour: true jusqu''à ce que P-26 et P-28 soient dessinés.'
+    raison: 'Choix du propriétaire : la liste se règle là où elle sert.'
+    impacte: [F-050, F-072, P-26, P-28, E-09]
+  - id: D-061
+    sujet: 'FL-03 : notification d''une identification'
+    choix: 'Publier un post ou une story (F-051) où des personnes sont identifiées (F-048) crée pour chacune une notification de type « identification » (E-08). P-04 la montre ; F-022 garde design_a_mettre_a_jour: true jusqu''à ce que P-04 soit redessiné.'
+    raison: 'Choix du propriétaire : comme pour un like (D-055) ou un commentaire (D-056), la personne apprend qu''on l''a identifiée.'
+    impacte: [F-022, F-048, F-051, E-08]
+  - id: D-062
+    sujet: 'FL-03 : fermer la création d''un post'
+    choix: 'La croix « Fermer » de P-12 (F-005.a) revient à la page d''où la création a été ouverte (P-03, P-08, P-14 à P-17), et non plus toujours à l''Accueil. Le brouillon reste abandonné (D-045). F-005 porte design_a_mettre_a_jour: true jusqu''à ce que le design le fasse.'
+    raison: 'Choix du propriétaire : depuis « Ta story » ou le Profil, revenir à l''Accueil fait perdre sa place.'
+    impacte: [F-005, F-026]
 
 ids_retires:
   - {id: F-013, decision: D-002}

@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-21 · commit 880a138 · fingerprint 78d4be4f91aa
+2026-11-21 · commit 880a138 · fingerprint c5bdd1fa919b
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -16,6 +16,5 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 5: flows** (step 5). Give it: FL-03 « Publier un post », proposed: P-12 Nouveau post — choix des photos → P-13 légende, with P-24 to P-26 → P-03. It produces: the same, for this flow.
-2. **Prompt 5: flows** (step 5). Give it: FL-04 « Ajouter un ami », proposed: P-08 → P-11 Messages — Ajouter un ami → the invitation answered on P-04 by the other user. It produces: the same, for this flow.
-3. **Prompt 5: flows** (step 5), background job. Give it: FL-05 « Griser l'app par cycles », proposed: the colour timer (E-14) that greys every page by 10 % per cycle (F-024) and resets from P-17. It produces: the same, for this job; the other flows (messages and stories, search, profile, Premium, posts' remaining days) come after.
+1. **Prompt 5: flows** (step 5). Give it: FL-04 « Ajouter un ami », proposed: P-08 → P-11 Messages — Ajouter un ami → the invitation answered on P-04 by the other user. It produces: the same, for this flow.
+2. **Prompt 5: flows** (step 5), background job. Give it: FL-05 « Griser l'app par cycles », proposed: the colour timer (E-14) that greys every page by 10 % per cycle (F-024) and resets from P-17. It produces: the same, for this job; the other flows (messages and stories, search, profile, Premium, posts' remaining days) come after.
