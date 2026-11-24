@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 281, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 284, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -466,7 +466,7 @@ features:
       - id: F-005.a
         pages: [P-12]
         plateforme: mobile
-        difference: Croix « Fermer » qui abandonne la création du post et revient à la page d'où elle a été ouverte (D-062)
+        difference: Croix « Fermer » qui abandonne la création du post et revient à la page d'où elle a été ouverte (D-062) ; ouverte depuis la Recherche (P-14 à P-16), sur P-14 (D-090)
         acces: [R-02]
       - id: F-005.b
         pages: [P-19]
@@ -1317,7 +1317,7 @@ features:
     entites: [E-01, E-04]
     operations: [écriture]
     etats_ui:
-      - nette environ 1 s
+      - nette environ 1 s, sur son seul téléphone, puis art généré (D-091)
       - floutée
       - 'erreur de fichier : « Cette image n’a pas pu être utilisée. Choisis-en une autre. » (P-18)'
     questions_ouvertes:
@@ -2119,6 +2119,11 @@ decisions:
     choix: 'Ouverte depuis P-14, P-15 ou P-16, la création d''un post se ferme (F-005.a) sur P-14 : la recherche repart de zéro, comme le fait la maquette. D-062 vaut pour les autres pages. Le design ne change pas.'
     raison: 'Choix du propriétaire : la maquette le fait déjà, et une recherche se relance en une saisie.'
     impacte: [F-005, F-026, P-14]
+  - id: D-091
+    sujet: 'Photo de profil nette environ 1 s'
+    choix: 'Après un changement de photo de profil (F-058), la photo choisie se montre telle quelle environ 1 s, sur le téléphone de son propriétaire seulement, puis laisse place à son art généré (D-086), comme le texte tapé avant le charabia (D-083). Seuls la graine et l''algorithme quittent le téléphone. Le design ne change pas.'
+    raison: 'Choix du propriétaire : c''est ce que dessine la maquette, et la vraie photo ne quitte jamais le téléphone (T-04).'
+    impacte: [F-058, E-04]
 
 ids_retires:
   - {id: F-013, decision: D-002}
