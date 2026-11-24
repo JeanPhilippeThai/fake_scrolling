@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 153, exported 2026-11-21 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 163, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -320,7 +320,7 @@ pages:
   - id: P-21
     nom: Mon compte
     plateforme: mobile
-    features: [F-005, F-024, F-057.a, F-063]
+    features: [F-005, F-024, F-057.a, F-063, F-071]
   - id: P-21.a
     nom: Suppression échouée
     plateforme: mobile
@@ -353,6 +353,10 @@ pages:
     nom: Nouveau post — panneau Audience
     plateforme: mobile
     features: [F-024, F-027, F-050]
+  - id: P-27
+    nom: Inscription
+    plateforme: mobile
+    features: [F-005, F-070]
 ```
 
 ```yaml
@@ -379,7 +383,6 @@ features:
     questions_ouvertes:
       - Écran d'autorisation du fournisseur non dessiné
       - Logos officiels Google et Apple à intégrer
-      - Le backend détecte si le compte existe ; l'écran d'inscription qui suit n'est pas dessiné
 
   - id: F-002
     nom: Afficher l'icône de l'appli
@@ -444,7 +447,7 @@ features:
   - id: F-005
     nom: Revenir à l'écran précédent
     description: Flèche retour en haut à gauche.
-    pages: [P-02, P-09, P-11, P-12, P-13, P-16, P-19, P-21, P-22, P-23]
+    pages: [P-02, P-09, P-11, P-12, P-13, P-16, P-19, P-21, P-22, P-23, P-27]
     plateformes: [mobile]
     acces: [R-01, R-02]
     variantes:
@@ -498,7 +501,7 @@ features:
     questions_ouvertes:
       - Vérification réelle du code (la maquette accepte tout code)
       - Remplissage automatique depuis l'e-mail selon le téléphone
-      - Le backend détecte si le compte existe ; l'écran d'inscription qui suit n'est pas dessiné
+      - Durée de validité du code et nombre d'essais faux avant blocage
 
   - id: F-008
     nom: Renvoyer le code
@@ -534,7 +537,8 @@ features:
       - retour en place si glisser trop court
       - 'chargement : anneau et « Chargement des posts suivants… » en bas du fil'
       - 'erreur : « Les posts suivants n’ont pas pu être chargés. » avec « Réessayer » (D-032)'
-    questions_ouvertes: []
+    questions_ouvertes:
+      - 'Post du lien partagé expiré, supprimé ou hors de son audience après la connexion (D-054)'
 
   - id: F-010
     nom: Voir un post en plein écran
@@ -1441,6 +1445,36 @@ features:
       - Fil d'actualité par défaut
       - Story présélectionnée depuis « Ta story »
     questions_ouvertes: []
+
+  - id: F-070
+    nom: Créer son compte
+    description: 'À la première connexion, choix du pseudo et de l''identifiant (@), puis ouverture de l''Accueil (D-052).'
+    pages: [P-27]
+    plateformes: [mobile]
+    acces: [R-01]
+    variantes: []
+    entites: [E-02, E-01]
+    operations: [lecture, écriture]
+    etats_ui: []
+    questions_ouvertes:
+      - 'Règles de l''identifiant : longueur, caractères permis, unicité, message s''il est déjà pris'
+      - 'Photo de profil et description à l''inscription, ou plus tard sur P-19 (F-056) ?'
+      - États de chargement et d'erreur à dessiner
+    design_a_mettre_a_jour: true
+
+  - id: F-071
+    nom: Se déconnecter
+    description: Bouton « Se déconnecter » sur Mon compte, qui ferme la session de l'appareil et ramène à la Connexion (D-053).
+    pages: [P-21]
+    plateformes: [mobile]
+    acces: [R-02]
+    variantes: []
+    entites: [E-02]
+    operations: [suppression]
+    etats_ui: []
+    questions_ouvertes:
+      - Confirmation avant de se déconnecter ?
+    design_a_mettre_a_jour: true
 ```
 
 ```yaml
@@ -1456,7 +1490,7 @@ entites:
       - nombre de posts
       - nombre d'amis
       - nombre de likes reçus
-    utilisee_par: [F-001, F-007, F-043, F-056, F-057, F-058, F-063]
+    utilisee_par: [F-001, F-007, F-043, F-056, F-057, F-058, F-063, F-070]
 
   - id: E-02
     nom: Connexion
@@ -1465,7 +1499,8 @@ entites:
       - adresse e-mail
       - code à 6 chiffres
       - délai avant renvoi (30 s)
-    utilisee_par: [F-001, F-003, F-006, F-007, F-008]
+      - session ouverte sur l'appareil (D-053)
+    utilisee_par: [F-001, F-003, F-006, F-007, F-008, F-070, F-071]
 
   - id: E-03
     nom: Post
@@ -1855,6 +1890,21 @@ decisions:
     choix: 'Le flou n''est expliqué nulle part. Sur P-03 comme sur P-16, les messages du partage sont « Lien copié. » et « Partagé. » ; le titre des posts du Profil (P-17, P-17.a à P-17.c) devient « Tes posts » ; le texte de l''état vide P-17.a devient « Tes posts s’affichent ici, avec leurs jours restants. ». F-019 et F-062 portent design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
     raison: 'Choix du propriétaire : la raison de D-018, « L''app n''explique nulle part ailleurs le flou ni le charabia », doit rester vraie (T-04, G-04).'
     impacte: [F-019, F-062]
+  - id: D-052
+    sujet: 'FL-01 : aucun compte à la connexion'
+    choix: 'Quand le backend ne trouve aucun compte pour la connexion (F-001, F-001.a ou F-007), l''appli ouvre P-27 Inscription : F-070 fait choisir le pseudo (16 caractères au plus, comme F-056) et l''identifiant (@), puis ouvre P-03. P-27 relève de R-01 comme P-01 et P-02 (D-024), n''est pas grisé (D-009, D-019) et permet de revenir à P-01 (F-005). F-070 porte design_a_mettre_a_jour: true jusqu''à ce que P-27 soit dessinée.'
+    raison: 'Choix du propriétaire : E-01 a besoin d''un pseudo et d''un identifiant, et aucun écran ne les faisait choisir (questions ouvertes de F-001 et F-007).'
+    impacte: [F-001, F-005, F-007, F-070, P-27, E-01]
+  - id: D-053
+    sujet: 'FL-01 : session gardée et déconnexion'
+    choix: 'La session reste ouverte sur l''appareil (E-02) : l''appli s''ouvre sur P-03 tant qu''on ne se déconnecte pas. F-071 « Se déconnecter », sur P-21 Mon compte, ferme la session et ramène à P-01 ; la suppression du compte (F-063) y ramène aussi. F-071 porte design_a_mettre_a_jour: true.'
+    raison: 'Choix du propriétaire : seule la suppression du compte permettait de sortir.'
+    impacte: [F-063, F-071, P-21, E-02]
+  - id: D-054
+    sujet: 'FL-01 : lien de post ouvert sans connexion'
+    choix: 'Après la connexion qu''un lien de post a demandée (D-024), P-03 s''ouvre sur le post partagé, puis le fil continue comme d''habitude (F-009).'
+    raison: 'Choix du propriétaire : le lien ne se perd pas à la connexion.'
+    impacte: [F-009, F-019]
 
 ids_retires:
   - {id: F-013, decision: D-002}

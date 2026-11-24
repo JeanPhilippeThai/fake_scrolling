@@ -11,6 +11,7 @@ Fake scrolling: a mobile social-feed app, specified with the method in [workflow
 - Design canvas: [Fake scrolling — app](https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT).
 - Claude Doc [Registre canonique – Fake scrolling](https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV): the registry in force (D-038).
 - Claude Doc [Fake scrolling — inventaire des écrans](https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz).
+- Claude Doc [Conception système – Fake scrolling](https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg): the flows (FL-xx) and, later, the rest of the system design.
 
 ## Where things are
 
