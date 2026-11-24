@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 135, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 137, exported 2026-11-24 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -504,9 +504,9 @@ La page permet de se déconnecter ou de supprimer son compte.
 | Voir son identifiant | « Compte » puis @moi.ici | @ en clair | — |
 | Se déconnecter | Bouton encadré gris « Se déconnecter », au-dessus de « Supprimer mon compte » ; ouvre P-01 sans confirmation (D-065) | Session de l'appareil fermée (D-053) | — |
 | Supprimer son compte | Bouton rouge encadré « Supprimer mon compte » | Aucune | Ouvre une confirmation |
-| Confirmer la suppression | Fenêtre « Supprimer ton compte ? » : posts, messages et amis effacés, définitif ; bouton rouge « Supprimer définitivement » | Compte, posts, messages, amis ; session de l'appareil fermée (D-053) ; effacement réel : à confirmer | Puis état « Compte supprimé » + « Merci d'être passé·e. », 2 s, puis P-01 s'ouvre (D-069, non dessiné) ; échec (P-21.a) |
+| Confirmer la suppression | Fenêtre « Supprimer ton compte ? » : posts, messages et amis effacés, définitif ; bouton rouge « Supprimer définitivement » | Compte, posts, messages, amis ; session de l'appareil fermée (D-053) ; effacement réel : à confirmer | Puis état « Compte supprimé » + « Merci d'être passé·e. », 2 s, puis P-01 s'ouvre (D-069) ; échec (P-21.a) |
 | Annuler la suppression | Bouton « Annuler » dans la fenêtre | Aucune | La fenêtre se ferme |
-| Recommencer la démo | Lien souligné après la suppression | Compte rétabli | Propre à la maquette, hors registre (décision D-020) |
+| Recommencer la démo | Lien souligné après la suppression | Compte rétabli | Propre à la maquette, hors registre (décision D-020) ; touché dans les 2 s, il annule l'ouverture de P-01 |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
 **États dessinés à part**

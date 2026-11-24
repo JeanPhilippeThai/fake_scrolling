@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-24 · commit bb0c70c · fingerprint 7013d05b88b1
+2026-11-24 · commit bb0c70c · fingerprint a92ff8600eb5
 
 Doc tests: all passed. The docs are at step 1, Design.
 
