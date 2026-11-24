@@ -22,7 +22,7 @@ The repo's `claude_design/` is the design's source of truth, not claude.ai: clau
 1. The owner draws on claude.ai.
 2. `import-design-and-docs-artifact`, `compare-newest-current-claude-files`, then `promote-newest-claude-files`. When the owner removed or changed on claude.ai what the repo drew, or removed an ID, the comparison asks them whether it was on purpose: never guess, and never promote before they answer.
 3. The doc tests (`what-are-the-next-docs-prompts`) list what is missing.
-4. Claude draws what is missing in `claude_design/`.
+4. Claude draws what is missing in `claude_design/`, then runs prompt 9 (`workflow_docs/method/describe.md`) on what it drew, so that the registry has everything drawn: new IDs, flags cleared.
 5. `publish-claude-design` sends it back to claude.ai. Never skip it: the next import would undo the drawing, and promotion refuses it.
 
 The docs are edited in their Claude Doc first (one edit call takes at most 64 operations), then imported and promoted. Never edit `claude_docs/` by hand. Before landing a docs change, `python3 .claude/skills/registry-db/registry_db.py check` must exit 0; the CI runs it too.

@@ -1,6 +1,6 @@
 # Describe the app
 
-Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 21, taken on 2026-11-19.
+Part of [the method](../method.md). Snapshot of the "Describe" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 23, taken on 2026-11-24.
 
 Steps 1 to 8 of the pipeline, wide and shallow: from the Claude Design mock-up to a checked registry, flows, entity states and a system design. Read this part before starting an app, and whenever the registry, a flow or a design decision changes. How the code is laid out is in [Code structure](code-structure.md); how the design is checked is in [Verification](verification.md).
 
@@ -10,8 +10,8 @@ The repo holds the official design, the one the method has checked. Claude Desig
 
 1. **Draw** the next version on claude.ai.
 2. **Import** it into the repo (`import-design-and-docs-artifact`), **compare** it with the current version (`compare-newest-current-claude-files`) and **promote** it (`promote-newest-claude-files`).
-3. **Check** it with the method: the doc tests list the missing screens, states and edge cases.
-4. **Fix** it in the repo: Claude draws what is missing in `claude_design/`. The repo is now ahead of claude.ai.
+3. **Check** it with the method: the doc tests list the missing screens, states and edge cases, and what is drawn but missing from the registry.
+4. **Fix** it in the repo: Claude draws what is missing in `claude_design/`, then runs prompt 9 so that the registry has everything drawn. The repo is now ahead of claude.ai.
 5. **Publish** the repo's design back to claude.ai (`publish-claude-design`) before drawing there again.
 
 Each import records what claude.ai held, file by file. Promotion refuses to replace a repo change that was never published, and publishing refuses to overwrite what was drawn on claude.ai since the last import: when both sides changed, they are merged by hand. Docs are not part of this cycle: a doc is always edited in its Claude Doc first, then imported.

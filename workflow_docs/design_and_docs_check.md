@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-20 (revision 50).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-24 (revision 51).
 For now the Claude Doc is the source of truth of this check and this file is a copy of it. An app's design is different: its source of truth is the app repo's `claude_design/`, not claude.ai.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the screens of the repo's design down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -108,6 +108,7 @@ Run this layer on each per-platform registry, then once more on the canonical re
 | L3-11 | No two decisions contradict each other, and no document contradicts a decision | Read | Blocking |
 | L3-12 | Every ambiguous case raised by prompts 2, 8 or 10 is settled by a decision or still open as a question; none was dropped | Read | Major |
 | L3-13 | Every access condition finer than a role ("only their own expenses") is in `questions_ouvertes` or a rule in the feature's spec | Read | Major |
+| L3-14 | Every element drawn on a screen of the design is in that screen's raw extraction, or in a feature or a variant of its page. An element drawn after the extraction (a new section on an existing screen) fails until prompt 9 adds it to the registry | Read | Major |
 
 ### L4 · Canonical registry: the platform merge (prompt 10)
 
