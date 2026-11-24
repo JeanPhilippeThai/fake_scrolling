@@ -12,6 +12,7 @@ Copied from workflow_claude by its sync: change it there, never here. The app's 
 
 - Product choices are the owner's: anything that changes what the app is or does (the registry, a decision, the design, a rule of a feature). Propose it with your recommendation first, and ask. Everything else (tooling, file layout, wording of a report, the order of the work): decide, act, and say what you did. This rule wins over any older rule or memory that says to apply your own recommendation without asking.
 - One fact in one place, with its ID; link to it instead of copying it.
+- Nothing about the app lives only in the chat. Before a task ends, every point raised about the app and not settled (a question, a small problem noticed in the design or the docs, a choice left for later) is written down as an open question: in its feature's `questions_ouvertes`, or in `docs/questions.md` for the whole app, in its Claude Doc when the app keeps it in one. Say in the last message what was written where.
 - IDs are never renumbered. An ID is a number: `D-01` and `D-001` are the same ID.
 - Repo, code, commits and pull requests are in English. The docs and the app's copy are in the app's language.
 
@@ -35,4 +36,4 @@ The docs are edited in their Claude Doc first (one edit call takes at most 64 op
 
 ## Messages
 
-Short and clear. Blockers and surprises first. End every task with, skipping the empty parts: **Done** (with links) · **Verified** (what was tested, what was not) · **Needs a decision** (with your recommendation) · **Next steps** (who does what).
+Short and clear. Blockers and surprises first. End every task with, skipping the empty parts: **Done** (with links) · **Verified** (what was tested, what was not) · **Needs a decision** (with your recommendation, and where it is written down) · **Next steps** (who does what).
