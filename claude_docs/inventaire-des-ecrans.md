@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 132, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 133, exported 2026-11-24 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -613,6 +613,6 @@ Panneau qui monte du bas sur P-13, ouvert par « Modifier la liste » de P-26 : 
 | Fermer le panneau | Lien « OK » en haut à droite ou tap sur le fond assombri, rouvre P-26 | Aucune | — |
 | Lire l'explication | « Coche les amis qui voient ce que tu publies pour « Amis proches ». » | Aucune | — |
 | Rechercher un ami | Champ « Rechercher », filtre par pseudo ou @ | Texte saisi | Vide ; liste filtrée |
-| Choisir un ami proche | Ligne avec photo floue, pseudo, @ et case ronde à cocher | Amis proches (8 amis en démo, 3 cochés au départ, gardés d'une visite à l'autre) | Case vide ; cochée en vert ; second tap décoche ; chargement : anneau centré ; erreur : message sur place avec « Réessayer » (F-072, non dessinés) |
+| Choisir un ami proche | Ligne avec photo floue, pseudo, @ et case ronde à cocher | Amis proches (8 amis en démo, 3 cochés au départ, gardés d'une visite à l'autre) | Case vide ; cochée en vert ; second tap décoche ; chargement : anneau centré ; erreur : message sur place avec « Réessayer » (F-072, D-067, non dessinés) |
 | Lire l'absence de résultat | Texte « Aucun ami trouvé. » | Aucune | Affiché si rien ne correspond |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |

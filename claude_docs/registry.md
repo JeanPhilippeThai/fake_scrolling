@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 208, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 211, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -1499,8 +1499,8 @@ features:
       - case vide
       - cochée en vert
       - « Aucun ami trouvé. »
-      - 'chargement : anneau centré dans la liste (comme D-043)'
-      - 'échec du chargement : message sur place avec « Réessayer » (comme D-043)'
+      - 'chargement : anneau centré dans la liste (D-067)'
+      - 'échec du chargement : message sur place avec « Réessayer » (D-067)'
       - 'sur P-26 : nombre d''amis proches à droite de « Modifier la liste » (« Aucun ami proche », « 1 ami proche », « N amis proches »)'
     questions_ouvertes:
       - 'Liste vide quand on choisit « Amis proches » : P-28 s''ouvre-t-il, ou le choix est-il refusé ?'
@@ -1999,6 +1999,11 @@ decisions:
     choix: 'P-04.a dit « Les invitations, les likes, les commentaires et les identifications reçus s’affichent ici. », avec les identifications de D-061.'
     raison: 'Choix du propriétaire : le texte nomme tout ce que le panneau peut montrer.'
     impacte: [F-022]
+  - id: D-067
+    sujet: 'États de chargement et d''erreur du panneau Amis proches'
+    choix: 'La liste d''amis de P-28 (F-072) suit D-043, comme celle de P-24 : un anneau centré dans la liste pendant le chargement, puis un message sur place avec « Réessayer » si elle échoue. Pas de nouvel artboard.'
+    raison: 'Choix du propriétaire : P-28 copie P-24 (D-060), seul l''emplacement change, comme pour D-036 (L1-02).'
+    impacte: [F-072, P-28]
 
 ids_retires:
   - {id: F-013, decision: D-002}
