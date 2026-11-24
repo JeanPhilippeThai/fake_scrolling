@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 224, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 226, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -1399,7 +1399,6 @@ features:
       - 'échec : « Ton compte n’a pas pu être supprimé. Rien n’a été effacé. » avec « Réessayer »'
     questions_ouvertes:
       - 'Effacement réel des données (la fermeture de la session est réglée par D-053)'
-    design_a_mettre_a_jour: true
 
   - id: F-065
     nom: Voir son temps passé

@@ -199,6 +199,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #2F4F9E;outline-offset:2p
             <h3 style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 26px">Compte supprimé</h3>
             <p style="margin: 0; font-size: 15px; color: #5E5E5B">Merci d’être passé·e.</p>
             <button type="button" onClick="{{undoDelete}}" style="min-height: 44px; padding: 0 16px; border: 0; background: transparent; color: #1F6B4A; font: 600 15px 'IBM Plex Sans', sans-serif; text-decoration: underline; cursor: pointer">Recommencer la démo</button>
+            <a href="Login.dc.html" data-fs-after-delete="" aria-hidden="true" style="display: none"></a>
           </div>
         </sc-if>
       </div>
@@ -589,8 +590,19 @@ class Component extends DCLogic {
       onInterface: s.page === 'interface',
       askDelete: () => this.setState({ confirmDelete: true }),
       cancelDelete: () => this.setState({ confirmDelete: false }),
-      confirmDelete: () => this.setState({ confirmDelete: false, deleted: true }),
-      undoDelete: () => this.setState({ deleted: false }),
+      confirmDelete: () => {
+        this.setState({ confirmDelete: false, deleted: true });
+        clearTimeout(this.leaveTimer);
+        this.leaveTimer = setTimeout(() => {
+          var link = document.querySelector('[data-fs-after-delete]');
+          if (link) link.click();
+        }, 2000);
+        this.timers.push(this.leaveTimer);
+      },
+      undoDelete: () => {
+        clearTimeout(this.leaveTimer);
+        this.setState({ deleted: false });
+      },
       confirmOn: s.confirmDelete,
       deleted: s.deleted,
       notDeleted: !s.deleted,
