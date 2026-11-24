@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 237, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 245, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -782,16 +782,17 @@ features:
 
   - id: F-024
     nom: Voir l'app se griser
-    description: Toute l'interface perd 10 % de couleur par cycle, noir et blanc après 10 cycles, sans message.
+    description: Toute l'interface perd 10 % de couleur par cycle, noir et blanc après 10 cycles, sans message. Seul le temps passé dans l'appli ouverte compte (D-075).
     pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
     entites: [E-14]
-    operations: [lecture]
+    operations: [lecture, écriture]
     etats_ui:
       - de 0 à 100 % de gris
-    questions_ouvertes: []
+    questions_ouvertes:
+      - 'Deux téléphones ouverts en même temps sur le même compte : le temps compte-t-il deux fois ?'
 
   - id: F-025
     nom: Naviguer entre les sections
@@ -1340,12 +1341,11 @@ features:
       - segments gris foncé passés ou en cours
       - gris clair à venir
       - message noir et blanc après 10 cycles
-    questions_ouvertes:
-      - Minuteur lié au compte ou à l'appareil ?
+    questions_ouvertes: []
 
   - id: F-060
     nom: Régler la durée du cycle
-    description: 'Petites flèches haut et bas : 1, 2, 3, 5, 10, 15, 20 ou 30 min.'
+    description: 'Petites flèches haut et bas : 1, 2, 3, 5, 10, 15, 20 ou 30 min. Les cycles déjà écoulés restent ; la nouvelle durée vaut à partir du cycle en cours (D-076).'
     pages: [P-17]
     plateformes: [mobile]
     acces: [R-02]
@@ -1354,8 +1354,8 @@ features:
     operations: [écriture]
     etats_ui:
       - flèche grisée aux bornes
-    questions_ouvertes:
-      - Réglage lié au compte ou à l'appareil ?
+      - 'enregistrement : appliqué tout de suite, renvoyé sans message tant que le serveur ne l''a pas (D-077)'
+    questions_ouvertes: []
 
   - id: F-061
     nom: Réinitialiser les cycles
@@ -1366,9 +1366,9 @@ features:
     variantes: []
     entites: [E-14]
     operations: [écriture]
-    etats_ui: []
-    questions_ouvertes:
-      - Réinitialisation liée au compte ou à l'appareil ?
+    etats_ui:
+      - 'enregistrement : appliqué tout de suite, renvoyé sans message tant que le serveur ne l''a pas (D-077)'
+    questions_ouvertes: []
 
   - id: F-062
     nom: Voir ses posts
@@ -1642,8 +1642,9 @@ entites:
   - id: E-14
     nom: Minuteur de couleur
     champs:
+      - compte (D-074)
       - durée du cycle
-      - début du cycle
+      - temps passé appli ouverte dans le cycle en cours (D-075)
       - cycles écoulés
       - pourcentage de gris
       - temps restant
@@ -2037,6 +2038,26 @@ decisions:
     choix: 'Sur P-11, un compte qui a déjà envoyé une invitation à l''utilisateur (E-09 « en attente ») s''affiche avec « Ajouter » ; le toucher (F-034) accepte cette invitation comme F-028 : le bouton devient « Ami », la conversation est créée (D-071) et la notification supprimée (D-070). Le design ne change pas.'
     raison: 'Choix du propriétaire : les deux veulent être amis ; un quatrième statut demanderait de redessiner P-11.'
     impacte: [F-034, F-043, E-09]
+  - id: D-074
+    sujet: 'FL-05 : minuteur lié au compte'
+    choix: 'Le minuteur de couleur (E-14) appartient au compte (E-01) et est gardé sur le serveur : même gris et même durée sur chaque téléphone. Ni la déconnexion (F-071) ni une réinstallation ne le remettent à zéro ; seul « Réinitialiser » (F-061) le fait.'
+    raison: 'Choix du propriétaire : D-019 lie déjà le minuteur au compte (questions ouvertes de F-059, F-060 et F-061).'
+    impacte: [F-024, F-059, F-060, F-061, E-14]
+  - id: D-075
+    sujet: 'FL-05 : temps qui fait griser'
+    choix: 'Les cycles n''avancent que pendant que l''appli est ouverte et au premier plan, comme le temps d''utilisation (E-15) ; appli fermée ou en arrière-plan, le minuteur s''arrête. E-14 garde le temps passé dans le cycle en cours au lieu du début du cycle, et F-024 l''écrit. La maquette, qui compte le temps réel, ne change pas.'
+    raison: 'Choix du propriétaire : on grise le temps passé à faire défiler, pas le temps loin de l''appli.'
+    impacte: [F-024, F-059, E-14]
+  - id: D-076
+    sujet: 'FL-05 : changer la durée du cycle'
+    choix: 'Changer la durée (F-060) garde les cycles déjà écoulés : la nouvelle durée vaut à partir du cycle en cours, et le gris ne saute jamais.'
+    raison: 'Choix du propriétaire : la maquette recalculait tout avec la nouvelle durée, ce qui pouvait passer l''appli en noir et blanc d''un coup.'
+    impacte: [F-060, E-14]
+  - id: D-077
+    sujet: 'FL-05 : enregistrement du minuteur'
+    choix: 'Un changement de durée (F-060) ou une réinitialisation (F-061) s''applique tout de suite sur le téléphone, puis est renvoyé au serveur sans message jusqu''à ce qu''il soit enregistré. Pas d''état d''erreur, pas de nouvel artboard.'
+    raison: 'Choix du propriétaire : le réglage ne regarde que son propriétaire ; un message d''erreur gênerait pour rien.'
+    impacte: [F-060, F-061, E-14]
 
 ids_retires:
   - {id: F-013, decision: D-002}
