@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 5, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 14, exported 2026-11-24 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -45,7 +45,7 @@ Suite simple : P-01 → F-001 / F-001.a → (P-27 → F-070) → P-03, ou P-01 �
 | F-001, F-007 | Compte trouvé (lecture E-01) | P-03 |
 | F-001, F-007 | Aucun compte | P-27, F-070 (D-052) |
 | P-27 | Abandon | F-005 : retour à P-01, sans compte créé |
-| P-27 | Identifiant pris, erreur d'enregistrement | Non dessinés (questions ouvertes de F-070) |
+| P-27 | Identifiant pris, erreur d'enregistrement | Erreur : P-27.b, « Réessayer », saisies gardées (D-064) ; identifiant pris : question ouverte de F-070 |
 | P-03.a | Le fil ne charge pas | P-03.b : « Réessayer » (F-009) |
 | P-03 | Post du lien expiré, supprimé ou hors audience | Non défini (question ouverte de F-009) |
 
@@ -55,16 +55,16 @@ Fin du flow : P-03, en R-02, session ouverte (D-053).
 
 Ajoutés le 24 novembre 2026 :
 
-- P-27 Inscription et F-070 Créer son compte : aucun écran ne faisait choisir le pseudo et l'identifiant d'un nouveau compte (D-052). À dessiner.
-- F-071 Se déconnecter sur P-21, et la session dans E-02 : la seule sortie était la suppression du compte (D-053). À dessiner.
+- P-27 Inscription et F-070 Créer son compte : aucun écran ne faisait choisir le pseudo et l'identifiant d'un nouveau compte (D-052). Dessinés depuis, avec P-27.a et P-27.b (D-063, D-064).
+- F-071 Se déconnecter sur P-21, et la session dans E-02 : la seule sortie était la suppression du compte (D-053). Dessiné depuis, sans confirmation (D-065).
 - La suite d'un lien de post après la connexion (D-054).
 
 Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-001 : l'écran d'autorisation du fournisseur et son annulation.
 - F-007 : durée de validité du code et nombre d'essais faux avant blocage.
-- F-070 : règles de l'identifiant ; photo et description à l'inscription ou plus tard ; états de chargement et d'erreur.
-- F-071 : confirmation avant la déconnexion.
+- F-070 : règles de l'identifiant (photo et description viennent plus tard, D-063 ; états dessinés, D-064).
+- F-071 : réglé depuis, pas de confirmation (D-065).
 - F-009 : post du lien devenu invisible.
 
 ## FL-02 Parcourir le fil et réagir à un post
@@ -127,7 +127,7 @@ Fin du flow : retour au fil, P-03 (ou P-16), avec les compteurs du post à jour.
 Réglés le 24 novembre 2026 :
 
 - Aucune feature n'écrivait les notifications de like : F-016 écrit E-08 (D-055).
-- Un commentaire notifie l'auteur du post : E-08 a un type « commentaire », F-030 l'écrit, P-04 est à redessiner (F-022, D-056).
+- Un commentaire notifie l'auteur du post : E-08 a un type « commentaire », F-030 l'écrit, P-04 redessiné depuis (F-022, D-056).
 - Le signet plein et le nombre de collections par post (F-018, D-057).
 - Les partages qui comptent (F-019, D-058).
 
@@ -197,9 +197,9 @@ Fin du flow : P-03 avec le post publié, ou P-08 avec la story publiée ; les pe
 Réglés le 24 novembre 2026 :
 
 - Une story n'avait ni audience, ni personnes identifiées, ni lieu : E-12 les prend, F-048, F-049 et F-050 l'écrivent (D-059).
-- Aucune liste d'« Amis proches » : E-09 prend « ami proche », F-072 la règle sur le nouveau panneau P-28, ouvert depuis P-26 (D-060). À dessiner : P-26 et P-28.
-- Une identification ne notifiait personne : E-08 a un type « identification », F-051 l'écrit (D-061). P-04 à redessiner (F-022).
-- La croix de P-12 ramenait toujours à l'Accueil : elle ramène à la page d'origine (D-062). Design à mettre à jour (F-005).
+- Aucune liste d'« Amis proches » : E-09 prend « ami proche », F-072 la règle sur le nouveau panneau P-28, ouvert depuis P-26 (D-060). P-26 et P-28 dessinés depuis.
+- Une identification ne notifiait personne : E-08 a un type « identification », F-051 l'écrit (D-061). P-04 redessiné depuis (F-022).
+- La croix de P-12 ramenait toujours à l'Accueil : elle ramène à la page d'origine (D-062). Design mis à jour depuis (F-005).
 
 Restent ouverts, dans les `questions_ouvertes` des features :
 

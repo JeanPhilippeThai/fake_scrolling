@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 195, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 208, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -357,6 +357,14 @@ pages:
     nom: Inscription
     plateforme: mobile
     features: [F-005, F-070]
+  - id: P-27.a
+    nom: Création du compte
+    plateforme: mobile
+    features: [F-070]
+  - id: P-27.b
+    nom: 'Création : erreur'
+    plateforme: mobile
+    features: [F-070]
   - id: P-28
     nom: Nouveau post — panneau Amis proches
     plateforme: mobile
@@ -469,7 +477,6 @@ features:
     operations: [lecture]
     etats_ui: []
     questions_ouvertes: []
-    design_a_mettre_a_jour: true
 
   - id: F-006
     nom: Lire la consigne du code
@@ -726,7 +733,6 @@ features:
       - 'Envoyer à un ami (F-019.a) : amis seulement (ami ou non, E-09)'
       - Un lien de post ouvert sans connexion mène à la connexion (P-01)
       - 'Aspect du post reçu dans la conversation de l''ami (F-019.a, D-044) : non dessiné sur P-09'
-    design_a_mettre_a_jour: true
 
   - id: F-020
     nom: Lire l'auteur et la légende d'un post
@@ -767,13 +773,12 @@ features:
       - pastille avec nombre
       - sans pastille
       - section Invitations masquée si vide
-      - 'vide : « Aucune notification » · « Les invitations, les likes et les commentaires reçus s’affichent ici. »'
+      - 'vide : « Aucune notification » · « Les invitations, les likes, les commentaires et les identifications reçus s’affichent ici. » (D-066)'
       - 'chargement : anneau centré'
       - 'erreur : « Les notifications n’ont pas pu être chargées. » avec « Réessayer »'
     questions_ouvertes:
       - Ouvrir le post liké depuis sa miniature
       - 'Accès supposé : seulement les invitations reçues et en attente (statut de la demande, E-09)'
-    design_a_mettre_a_jour: true
 
   - id: F-024
     nom: Voir l'app se griser
@@ -1181,7 +1186,6 @@ features:
       - valeur affichée sur la ligne
     questions_ouvertes:
       - 'Règle : l''audience choisie décide qui peut voir le post et agir dessus'
-    design_a_mettre_a_jour: true
 
   - id: F-051
     nom: Publier le post
@@ -1379,7 +1383,6 @@ features:
       - 'erreur : « Tes posts n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
       - Ouvrir un de ses posts
-    design_a_mettre_a_jour: true
 
   - id: F-063
     nom: Supprimer son compte
@@ -1456,19 +1459,19 @@ features:
 
   - id: F-070
     nom: Créer son compte
-    description: 'À la première connexion, choix du pseudo et de l''identifiant (@), puis ouverture de l''Accueil (D-052).'
-    pages: [P-27]
+    description: 'À la première connexion, choix du pseudo et de l''identifiant (@), puis ouverture de l''Accueil (D-052). Seulement ces deux champs : photo et description plus tard sur P-19 (D-063).'
+    pages: [P-27, P-27.a, P-27.b]
     plateformes: [mobile]
     acces: [R-01]
     variantes: []
     entites: [E-02, E-01]
     operations: [lecture, écriture]
-    etats_ui: []
+    etats_ui:
+      - « Créer mon compte » gris tant qu'un champ est vide
+      - 'envoi : champs grisés, anneau et « Création du compte… » dans le bouton (D-064)'
+      - 'erreur : « Ton compte n’a pas été créé. Vérifie ta connexion et réessaie. » avec « Réessayer », saisies gardées (D-064)'
     questions_ouvertes:
       - 'Règles de l''identifiant : longueur, caractères permis, unicité, message s''il est déjà pris'
-      - 'Photo de profil et description à l''inscription, ou plus tard sur P-19 (F-056) ?'
-      - États de chargement et d'erreur à dessiner
-    design_a_mettre_a_jour: true
 
   - id: F-071
     nom: Se déconnecter
@@ -1479,10 +1482,9 @@ features:
     variantes: []
     entites: [E-02]
     operations: [suppression]
-    etats_ui: []
-    questions_ouvertes:
-      - Confirmation avant de se déconnecter ?
-    design_a_mettre_a_jour: true
+    etats_ui:
+      - 'sans confirmation : un tap ouvre P-01 (D-065)'
+    questions_ouvertes: []
 
   - id: F-072
     nom: Choisir ses amis proches
@@ -1499,10 +1501,10 @@ features:
       - « Aucun ami trouvé. »
       - 'chargement : anneau centré dans la liste (comme D-043)'
       - 'échec du chargement : message sur place avec « Réessayer » (comme D-043)'
+      - 'sur P-26 : nombre d''amis proches à droite de « Modifier la liste » (« Aucun ami proche », « 1 ami proche », « N amis proches »)'
     questions_ouvertes:
       - 'Liste vide quand on choisit « Amis proches » : P-28 s''ouvre-t-il, ou le choix est-il refusé ?'
       - Un changement de la liste vaut-il pour les posts et stories déjà publiés en « Amis proches » ?
-    design_a_mettre_a_jour: true
 ```
 
 ```yaml
@@ -1977,6 +1979,26 @@ decisions:
     choix: 'La croix « Fermer » de P-12 (F-005.a) revient à la page d''où la création a été ouverte (P-03, P-08, P-14 à P-17), et non plus toujours à l''Accueil. Le brouillon reste abandonné (D-045). F-005 porte design_a_mettre_a_jour: true jusqu''à ce que le design le fasse.'
     raison: 'Choix du propriétaire : depuis « Ta story » ou le Profil, revenir à l''Accueil fait perdre sa place.'
     impacte: [F-005, F-026]
+  - id: D-063
+    sujet: 'Inscription : champs demandés'
+    choix: 'P-27 demande seulement le pseudo et l''identifiant (@). La photo de profil et la description se règlent plus tard sur P-19 (F-056).'
+    raison: 'Choix du propriétaire : le chemin le plus court jusqu''au fil.'
+    impacte: [F-070, P-27]
+  - id: D-064
+    sujet: 'Inscription : états de chargement et d''erreur'
+    choix: 'P-27 a deux états dessinés, selon D-027 et D-028 : P-27.a « Création du compte » (anneau dans le bouton, champs grisés) et P-27.b « Création : erreur » (message rouge avec « Réessayer », saisies gardées). Le cas « identifiant déjà pris » attend les règles de l''identifiant (question ouverte de F-070).'
+    raison: 'Choix du propriétaire : mêmes états que le reste de l''appli.'
+    impacte: [F-070, P-27]
+  - id: D-065
+    sujet: 'Déconnexion sans confirmation'
+    choix: '« Se déconnecter » (F-071) sur P-21 ferme la session dès le premier tap et ouvre P-01, sans fenêtre de confirmation.'
+    raison: 'Choix du propriétaire : se reconnecter est facile et rien n''est perdu.'
+    impacte: [F-071]
+  - id: D-066
+    sujet: 'Texte du panneau Notifications vide'
+    choix: 'P-04.a dit « Les invitations, les likes, les commentaires et les identifications reçus s’affichent ici. », avec les identifications de D-061.'
+    raison: 'Choix du propriétaire : le texte nomme tout ce que le panneau peut montrer.'
+    impacte: [F-022]
 
 ids_retires:
   - {id: F-013, decision: D-002}

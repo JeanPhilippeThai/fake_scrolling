@@ -1,9 +1,9 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 119, exported 2026-11-21 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 132, exported 2026-11-24 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
 
-Le design compte 26 écrans, de P-01 à P-26, plus 58 états de page dessinés à part (D-040, D-041). Ils suivent l'ordre du parcours : connexion, Accueil, Messages, Nouveau post, Recherche, Profil. Les panneaux de la création d'un post, ajoutés ensuite, sont à la fin (P-24 à P-26).
+Le design compte 28 écrans, de P-01 à P-28, plus 60 états de page dessinés à part (D-040, D-041). Ils suivent l'ordre du parcours : connexion, Accueil, Messages, Nouveau post, Recherche, Profil. Les panneaux de la création d'un post, ajoutés ensuite, sont à la fin (P-24 à P-26), suivis de l'inscription (P-27) et du panneau Amis proches (P-28).
 
 - **Écran** : toute vue distincte, y compris un panneau qui se superpose à une autre page (notifications, commentaires, options…).
 - **Pas de regroupement** : un même élément présent sur plusieurs pages (menu du bas, grisage) est relisté sur chacune.
@@ -104,7 +104,7 @@ Fil plein écran, un post à la fois, avec actions en colonne à droite et cloch
 
 ## P-04 Accueil — panneau Notifications
 
-Panneau centré sous la cloche, par-dessus le fil : invitations d'amis puis likes reçus.
+Panneau centré sous la cloche, par-dessus le fil : invitations d'amis puis activité : likes, commentaires et identifications reçus (D-056, D-061).
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
@@ -113,7 +113,7 @@ Panneau centré sous la cloche, par-dessus le fil : invitations d'amis puis like
 | Voir les invitations d'amis | Section « Invitations » : photo floue, pseudo, @ | 3 demandes en démo (hors démo : vraies demandes reçues et en attente, D-044) | Section masquée quand toutes sont refusées |
 | Accepter une invitation | Bouton vert « Accepter » | Statut de la demande | Devient « Ami » en vert ; réponse en cours (P-04.d) ; erreur (P-04.e) |
 | Refuser une invitation | Bouton « Refuser » | Statut de la demande | La ligne disparaît |
-| Voir les likes reçus | Section « Likes » : photo floue, « X a aimé ton post · 9 min » | 7 likes en démo, pseudo, ancienneté | Chargement (P-04.b) ; erreur (P-04.c) ; panneau vide : « Aucune notification » (P-04.a) |
+| Voir l'activité reçue | Section « Activité » : photo floue, « X a aimé ton post », « X a commenté ton post : « … » » ou « X t’a identifié·e dans son post », puis l'ancienneté (« · 9 min ») et la miniature du post | 7 notifications en démo (4 likes, 2 commentaires, 1 identification), pseudo, ancienneté | Chargement (P-04.b) ; erreur (P-04.c) ; panneau vide : « Aucune notification » (P-04.a) |
 | Voir le post liké | Miniature carrée à droite de chaque like | Aperçu du post | Non cliquable (ouverture du post : à confirmer) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
@@ -121,7 +121,7 @@ Panneau centré sous la cloche, par-dessus le fil : invitations d'amis puis like
 
 | État | Nom | Ce qu'il montre | Artboard |
 | --- | --- | --- | --- |
-| P-04.a | Aucune notification | « Aucune notification » · « Les invitations et les likes reçus s’affichent ici. » | `Etat-P04-notifications-vide.dc.html` |
+| P-04.a | Aucune notification | « Aucune notification » · « Les invitations, les likes, les commentaires et les identifications reçus s’affichent ici. » (D-066) | `Etat-P04-notifications-vide.dc.html` |
 | P-04.b | Notifications : chargement | Panneau avec indicateur de chargement | `Etat-P04-notifications-chargement.dc.html` |
 | P-04.c | Notifications : erreur | « Les notifications n’ont pas pu être chargées. » avec « Réessayer » | `Etat-P04-notifications-erreur.dc.html` |
 | P-04.d | Invitation : réponse en cours | Indicateur dans « Accepter », les deux boutons désactivés | `Etat-P04-invitation-envoi.dc.html` |
@@ -176,8 +176,8 @@ Panneau qui monte du bas sur un post du fil (P-03) ou un résultat de recherche 
 | --- | --- | --- | --- |
 | Fermer le panneau | Croix ou tap sur le fond assombri | Aucune | — |
 | Envoyer à un ami | Rangée d'amis en tête du panneau ; un tap envoie le post à cet ami | Post envoyé en message (reçu dans la conversation de l'ami, D-044) ; message « Envoyé à … » sur P-03 ou P-16 | Chargement de la rangée : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) ; échec de l'envoi : « Non envoyé à … » (P-07.a) |
-| Copier le lien | Ligne qui copie le lien du post | Lien du post, copié dans le presse-papiers (D-044) | Message « Lien copié. » sur P-16 ; « Lien copié. Il mène à une version floutée. » sur P-03, à redessiner en « Lien copié. » (D-051) |
-| Partager ailleurs | Ligne vers d'autres apps | Post, via la feuille de partage du téléphone (D-044) | Message « Partagé. » sur P-16 ; « Partagé, flouté comme toujours. » sur P-03, à redessiner en « Partagé. » (D-051) |
+| Copier le lien | Ligne qui copie le lien du post | Lien du post, copié dans le presse-papiers (D-044) | Message « Lien copié. » sur P-03 et P-16 (D-051) |
+| Partager ailleurs | Ligne vers d'autres apps | Post, via la feuille de partage du téléphone (D-044) | Message « Partagé. » sur P-03 et P-16 (D-051) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
 **États dessinés à part**
@@ -297,7 +297,7 @@ Première étape de publication : aperçu carré en haut, galerie en dessous ; l
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
-| Fermer la création | Croix en haut à gauche, ouvre P-03 | Brouillon abandonné, sans confirmation ni sauvegarde (D-045) | — |
+| Fermer la création | Croix en haut à gauche, revient à la page d'où la création a été ouverte (D-062) ; depuis la Recherche, la maquette rouvre P-14 | Brouillon abandonné, sans confirmation ni sauvegarde (D-045) | — |
 | Voir l'aperçu de la photo | Grand carré sous le titre | Photo affichée | — |
 | Voir sa position dans la sélection | Pastille « 2/4 » sur l'aperçu | Rang de la photo, nombre choisi | Visible seulement en sélection multiple |
 | Choisir un album | Bouton « Récents » avec chevron | Album (liste des albums : à confirmer) | Sans effet dans la maquette |
@@ -429,7 +429,7 @@ Son propre profil : identité, minuteur de couleur, puis ses posts.
 | Allonger le cycle | Petite flèche haut dans la case « 2 min », à droite | Durée : 1, 2, 3, 5, 10, 15, 20 ou 30 min (2 par défaut) | Flèche grisée à 30 min |
 | Raccourcir le cycle | Petite flèche bas dans la même case | Durée du cycle | Flèche grisée à 1 min |
 | Réinitialiser les cycles | Bouton « Réinitialiser » sous la case, à droite | Repart du cycle 1, couleurs revenues partout | — |
-| Voir ses posts | Titre « Tes posts, tels que les voient tes amis », à redessiner en « Tes posts » (D-051), et grille de 3 colonnes | 9 posts floutés, jours restants (« 7 j ») | Non cliquables ; vide (P-17.a) ; chargement (P-17.b) ; erreur (P-17.c) |
+| Voir ses posts | Titre « Tes posts » (D-051) et grille de 3 colonnes | 9 posts floutés, jours restants (« 7 j ») | Non cliquables ; vide (P-17.a) ; chargement (P-17.b) ; erreur (P-17.c) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 | Ouvrir l'Accueil | Icône maison du menu du bas, ouvre P-03 | Aucune | Inactive (grise) |
 | Ouvrir Messages | Icône bulle du menu du bas, ouvre P-08 | Aucune | Inactive (grise) |
@@ -441,7 +441,7 @@ Son propre profil : identité, minuteur de couleur, puis ses posts.
 
 | État | Nom | Ce qu'il montre | Artboard |
 | --- | --- | --- | --- |
-| P-17.a | Aucun post | « Aucun post pour l’instant » · « Tes posts s’affichent ici, floutés, avec leurs jours restants. », à redessiner sans « floutés, » (D-051), avec « Créer un post » | `Etat-P17-posts-vide.dc.html` |
+| P-17.a | Aucun post | « Aucun post pour l’instant » · « Tes posts s’affichent ici, avec leurs jours restants. » (D-051), avec « Créer un post » | `Etat-P17-posts-vide.dc.html` |
 | P-17.b | Mes posts : chargement | Grille remplacée par un indicateur de chargement | `Etat-P17-posts-chargement.dc.html` |
 | P-17.c | Mes posts : erreur | « Tes posts n’ont pas pu être chargés. » avec « Réessayer » | `Etat-P17-posts-erreur.dc.html` |
 
@@ -496,12 +496,13 @@ Panneau qui glisse depuis la gauche et couvre la moitié de l'écran du Profil.
 
 ## P-21 Mon compte
 
-Pour l'instant, la page ne permet que de supprimer son compte.
+La page permet de se déconnecter ou de supprimer son compte.
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
 | Revenir aux options | Flèche en haut à gauche, rouvre le panneau Options (P-20) | Aucune | — |
 | Voir son identifiant | « Compte » puis @moi.ici | @ en clair | — |
+| Se déconnecter | Bouton encadré gris « Se déconnecter », au-dessus de « Supprimer mon compte » ; ouvre P-01 sans confirmation (D-065) | Session de l'appareil fermée (D-053) | — |
 | Supprimer son compte | Bouton rouge encadré « Supprimer mon compte » | Aucune | Ouvre une confirmation |
 | Confirmer la suppression | Fenêtre « Supprimer ton compte ? » : posts, messages et amis effacés, définitif ; bouton rouge « Supprimer définitivement » | Compte, posts, messages, amis (effacement réel et déconnexion : à confirmer) | Puis état « Compte supprimé » + « Merci d'être passé·e. » ; échec (P-21.a) |
 | Annuler la suppression | Bouton « Annuler » dans la fenêtre | Aucune | La fenêtre se ferme |
@@ -580,4 +581,38 @@ Panneau qui monte du bas sur P-13 : qui peut voir le post.
 | --- | --- | --- | --- |
 | Fermer le panneau | Lien « OK » en haut à droite ou tap sur le fond assombri | Aucune | — |
 | Choisir l'audience | Titre « Qui peut voir ce post ? » et trois lignes : Tout le monde, Amis, Amis proches, chacune avec une phrase | Audience du post | Choix coché en vert ; le panneau se ferme |
+| Modifier la liste d'amis proches | Lien vert « Modifier la liste » sous les trois choix, avec le nombre d'amis proches à droite ; ouvre P-28 (D-060) | Liste d'amis proches | « Aucun ami proche », « 1 ami proche » ou « N amis proches » |
+| Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
+
+## P-27 Inscription
+
+À la première connexion, après P-01 ou P-02, si aucun compte n'existe : on choisit son pseudo et son identifiant (D-052, D-063). Jamais grisée (D-052). Dans la maquette, P-27 est un artboard à part : P-02 mène toujours à P-03.
+
+| Élément | Description | Données | États visibles |
+| --- | --- | --- | --- |
+| Revenir à la connexion | Flèche en haut à gauche, ouvre P-01 sans créer de compte | Aucune | — |
+| Lire l'invitation | Titre « Crée ton compte » et phrase « Choisis comment les autres te verront. » | Aucune | — |
+| Saisir son pseudo | Champ « Pseudo » | Pseudo, 16 caractères au plus | Vide ; rempli |
+| Saisir son identifiant | Champ « Identifiant » précédé d'un @, avec « Minuscules, sans espace. Tes amis te trouvent avec. » | Identifiant (lettres minuscules, chiffres, point et tiret bas en démo ; longueur, unicité et message s'il est pris : à confirmer) | Vide ; rempli |
+| Créer son compte | Bouton vert « Créer mon compte », ouvre P-03 | Compte : pseudo et identifiant | Gris tant qu'un champ est vide ; envoi (P-27.a) ; erreur (P-27.b) |
+| Lire la suite | « Photo et description : plus tard, depuis ton profil. » (D-063) | Aucune | — |
+
+**États dessinés à part**
+
+| État | Nom | Ce qu'il montre | Artboard |
+| --- | --- | --- | --- |
+| P-27.a | Création du compte | Champs grisés, anneau et « Création du compte… » dans le bouton (D-064) | `Etat-P27-inscription-envoi.dc.html` |
+| P-27.b | Création : erreur | « Ton compte n’a pas été créé. Vérifie ta connexion et réessaie. » avec « Réessayer », saisies gardées (D-064) | `Etat-P27-inscription-erreur.dc.html` |
+
+## P-28 Nouveau post — panneau Amis proches
+
+Panneau qui monte du bas sur P-13, ouvert par « Modifier la liste » de P-26 : la liste des amis proches (D-060).
+
+| Élément | Description | Données | États visibles |
+| --- | --- | --- | --- |
+| Fermer le panneau | Lien « OK » en haut à droite ou tap sur le fond assombri, rouvre P-26 | Aucune | — |
+| Lire l'explication | « Coche les amis qui voient ce que tu publies pour « Amis proches ». » | Aucune | — |
+| Rechercher un ami | Champ « Rechercher », filtre par pseudo ou @ | Texte saisi | Vide ; liste filtrée |
+| Choisir un ami proche | Ligne avec photo floue, pseudo, @ et case ronde à cocher | Amis proches (8 amis en démo, 3 cochés au départ, gardés d'une visite à l'autre) | Case vide ; cochée en vert ; second tap décoche ; chargement : anneau centré ; erreur : message sur place avec « Réessayer » (F-072, non dessinés) |
+| Lire l'absence de résultat | Texte « Aucun ami trouvé. » | Aucune | Affiché si rien ne correspond |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
