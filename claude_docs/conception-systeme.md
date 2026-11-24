@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 14, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 22, exported 2026-11-24 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -7,13 +7,13 @@ Les flows de l'appli (prompt 5 de la méthode), un par section, écrits uniqueme
 
 ## FL-01 Se connecter
 
-Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-02) sur P-03, par un compte tiers ou par un code reçu par e-mail. Mobile seulement. Décisions : D-024, D-052, D-053, D-054.
+Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-02) sur P-03, par un compte tiers ou par un code reçu par e-mail. Mobile seulement. Décisions : D-024, D-052, D-053, D-054, D-069.
 
 ### Entrées
 
 - Ouverture de l'appli sans session sur l'appareil → P-01. Avec une session ouverte, l'appli s'ouvre sur P-03 sans passer par ce flow (D-053).
 - Lien de post ouvert sans connexion → P-01 ; le post attend la fin du flow (D-024, D-054).
-- Déconnexion F-071 sur P-21, ou suppression du compte F-063 → P-01 (D-053).
+- Déconnexion F-071 sur P-21, ou suppression du compte F-063 → P-01 (D-053) ; après la suppression, « Compte supprimé » reste 2 s avant P-01 (D-069).
 
 ### Séquence
 
@@ -27,7 +27,7 @@ Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-0
 | 4. Inscription, si aucun compte | P-27 | F-070 | E-02 (fournisseur ou adresse) | E-01 (pseudo, identifiant), E-02 (session) |
 | 5. Arrivée sur le fil | P-03.a → P-03 | F-009 | E-03 (posts ; d'abord le post du lien, D-054) | — |
 
-Suite simple : P-01 → F-001 / F-001.a → (P-27 → F-070) → P-03, ou P-01 → F-003 → P-02 → F-007 → (P-27 → F-070) → P-03. Les entités suivent les `operations` des features : F-003, F-008 écrivent E-02 ; F-006 la lit ; F-001, F-007, F-070 lisent et écrivent. À partir de P-03, le grisage F-024 s'applique ; P-01, P-02 et P-27 ne sont jamais grisées (D-009, D-019, D-052).
+Suite simple : P-01 → F-001 / F-001.a → (P-27 → F-070) → P-03, ou P-01 → F-003 → P-02 → F-007 → (P-27 → F-070) → P-03. Les entités suivent les `operations` des features : F-003 écrit E-02 ; F-006 la lit ; F-001, F-007, F-008, F-070 lisent et écrivent. À partir de P-03, le grisage F-024 s'applique ; P-01, P-02 et P-27 ne sont jamais grisées (D-009, D-019, D-052).
 
 ### Points de décision et erreurs
 
@@ -140,7 +140,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-03 Publier un post
 
-Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende et règle ses options sur P-13, puis publie dans le fil (P-03) ou en story (P-08). Rien n'est enregistré avant la publication (D-045). Mobile seulement. Décisions : D-001, D-012, D-031, D-033, D-034, D-035, D-045, D-047, D-059, D-060, D-061, D-062.
+Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende et règle ses options sur P-13, puis publie dans le fil (P-03) ou en story (P-08). Rien n'est enregistré avant la publication (D-045). Mobile seulement. Décisions : D-001, D-012, D-031, D-033, D-034, D-035, D-045, D-047, D-059, D-060, D-061, D-062, D-068.
 
 ### Entrées
 
@@ -154,10 +154,10 @@ Hors de ce flow : ce que voient les amis du post publié (flou, charabia), sa pa
 
 | Étape | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- |
-| 1. Choisir les photos | P-12 | F-044, F-045 | E-04 (galerie, album) | E-04, E-03 (brouillon : photos choisies, rang dans le carrousel) |
-| 1'. Prendre une photo | P-12 ou P-12.a | F-046, F-046.a | — | E-04, E-03 (brouillon : la photo prise devient celle du post, D-047) |
+| 1. Choisir les photos | P-12 | F-044, F-045 | E-04 (galerie, album) | E-04, E-03 ou E-12 (brouillon : photos choisies, rang dans le carrousel, D-068) |
+| 1'. Prendre une photo | P-12 ou P-12.a | F-046, F-046.a | — | E-04, E-03 ou E-12 (brouillon : la photo prise devient celle du post ou de la story, D-047, D-068) |
 | 2. Passer à la légende | P-12 → P-13 | F-044 (« Suivant ») | — | — |
-| 3. Écrire la légende | P-13 | F-047 | — | E-03 (brouillon : légende) |
+| 3. Écrire la légende | P-13 | F-047 | — | E-03 ou E-12 (brouillon : légende, D-068) |
 | 4. Choisir où publier | P-13 | F-068 | — | E-03 ou E-12 (destination) |
 | 5. Identifier des personnes | P-13 → P-24 | F-048 | E-09 (amis) | E-03 ou E-12 (personnes identifiées, D-059) |
 | 6. Ajouter un lieu | P-13 → P-25 | F-049 | — (aucune entité pour les lieux) | E-03 ou E-12 (lieu, D-059) ; « Retirer le lieu » le supprime |
@@ -167,7 +167,7 @@ Hors de ce flow : ce que voient les amis du post publié (flou, charabia), sa pa
 | 9. Publier | P-13 → P-13.a | F-051 | E-03 ou E-12 (brouillon), E-04 | E-03 et E-04 (post), ou E-12 (story) ; E-08 (une notification « identification » par personne identifiée, D-061) |
 | 10. Arrivée | P-03.d ou P-08.b | F-051 | E-03 ou E-12 | — |
 
-Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-048, P-25 F-049, P-26 F-050 → P-28 F-072) → F-051 → P-03, ou P-08 → F-026.a → P-12 → … → F-068 « Story » → F-051 → P-08. Les entités suivent les `operations` des features : F-045 lit ; F-046, F-047, F-050, F-051, F-068 écrivent ; F-044, F-048, F-072 lisent et écrivent ; F-049 lit, écrit et supprime. Avant F-051, ces écritures ne touchent que le brouillon sur l'appareil.
+Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-048, P-25 F-049, P-26 F-050 → P-28 F-072) → F-051 → P-03, ou P-08 → F-026.a → P-12 → … → F-068 « Story » → F-051 → P-08. Les entités suivent les `operations` des features : F-045 lit ; F-046, F-047, F-050, F-068 écrivent ; F-044, F-048, F-051, F-072 lisent et écrivent ; F-049 lit, écrit et supprime. Avant F-051, ces écritures ne touchent que le brouillon sur l'appareil.
 
 ### Points de décision et erreurs
 

@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 211, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 224, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -523,7 +523,7 @@ features:
     acces: [R-01]
     variantes: []
     entites: [E-02]
-    operations: [écriture]
+    operations: [lecture, écriture]
     etats_ui:
       - décompte 30 → 0
       - lien visible à 0 s
@@ -1068,12 +1068,12 @@ features:
 
   - id: F-044
     nom: Choisir les photos d'un post
-    description: Aperçu carré, grille de photos, sélection multiple jusqu'à 10, « Suivant ».
+    description: Aperçu carré, grille de photos, sélection multiple jusqu'à 10, « Suivant », pour un post ou une story (D-068).
     pages: [P-12, P-12.a, P-12.b]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-04, E-03]
+    entites: [E-04, E-03, E-12]
     operations: [lecture, écriture]
     etats_ui:
       - photo affichée voilée
@@ -1099,7 +1099,7 @@ features:
 
   - id: F-046
     nom: Prendre une photo
-    description: 'Bouton appareil photo au-dessus de la grille : la photo prise devient la photo du post.'
+    description: 'Bouton appareil photo au-dessus de la grille : la photo prise devient la photo du post ou de la story (D-068).'
     pages: [P-12]
     plateformes: [mobile]
     acces: [R-02]
@@ -1108,7 +1108,7 @@ features:
         pages: [P-12, P-12.a]
         plateforme: mobile
         difference: '« Ouvrir l''appareil photo » depuis la galerie vide (D-047)'
-    entites: [E-04, E-03]
+    entites: [E-04, E-03, E-12]
     operations: [écriture]
     etats_ui:
       - sans effet
@@ -1119,12 +1119,12 @@ features:
 
   - id: F-047
     nom: Rédiger la légende
-    description: Champ « Écris une légende… » à côté de la miniature du post.
+    description: Champ « Écris une légende… » à côté de la miniature, pour un post ou une story (D-068).
     pages: [P-13]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-03]
+    entites: [E-03, E-12]
     operations: [écriture]
     etats_ui:
       - vide
@@ -1195,7 +1195,7 @@ features:
     acces: [R-02]
     variantes: []
     entites: [E-03, E-04, E-12, E-08]
-    operations: [écriture]
+    operations: [lecture, écriture]
     etats_ui:
       - libellé selon la destination choisie
       - 'envoi : anneau et « Publication… » dans le bouton'
@@ -1391,14 +1391,15 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-01]
+    entites: [E-01, E-02]
     operations: [suppression]
     etats_ui:
       - confirmation
-      - compte supprimé
+      - 'compte supprimé : « Compte supprimé » et « Merci d’être passé·e. » 2 s, puis P-01 s''ouvre (D-069)'
       - 'échec : « Ton compte n’a pas pu être supprimé. Rien n’a été effacé. » avec « Réessayer »'
     questions_ouvertes:
-      - Effacement réel et déconnexion
+      - 'Effacement réel des données (la fermeture de la session est réglée par D-053)'
+    design_a_mettre_a_jour: true
 
   - id: F-065
     nom: Voir son temps passé
@@ -1530,7 +1531,7 @@ entites:
       - code à 6 chiffres
       - délai avant renvoi (30 s)
       - session ouverte sur l'appareil (D-053)
-    utilisee_par: [F-001, F-003, F-006, F-007, F-008, F-070, F-071]
+    utilisee_par: [F-001, F-003, F-006, F-007, F-008, F-063, F-070, F-071]
 
   - id: E-03
     nom: Post
@@ -1625,7 +1626,7 @@ entites:
       - audience (D-059)
       - personnes identifiées
       - lieu
-    utilisee_par: [F-036, F-048, F-049, F-050, F-051, F-068]
+    utilisee_par: [F-036, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-068]
 
   - id: E-13
     nom: Recherche
@@ -2004,6 +2005,16 @@ decisions:
     choix: 'La liste d''amis de P-28 (F-072) suit D-043, comme celle de P-24 : un anneau centré dans la liste pendant le chargement, puis un message sur place avec « Réessayer » si elle échoue. Pas de nouvel artboard.'
     raison: 'Choix du propriétaire : P-28 copie P-24 (D-060), seul l''emplacement change, comme pour D-036 (L1-02).'
     impacte: [F-072, P-28]
+  - id: D-068
+    sujet: 'FL-03 : photos et légende d''une story'
+    choix: 'Une story garde les photos choisies (F-044, F-046) et la légende (F-047) : ces features écrivent aussi E-12 (« images », « texte »), comme D-059 pour les autres options. Le design ne change pas.'
+    raison: 'Choix du propriétaire : P-12 et P-13 sont les mêmes pour les deux destinations (F-068) (L5-02).'
+    impacte: [F-044, F-046, F-047, E-12]
+  - id: D-069
+    sujet: 'FL-01 : du compte supprimé à la Connexion'
+    choix: 'Après « Supprimer définitivement » (F-063), « Compte supprimé » et « Merci d’être passé·e. » restent 2 s, puis P-01 s''ouvre ; la session de l''appareil est fermée (D-053). F-063 porte design_a_mettre_a_jour: true.'
+    raison: 'Choix du propriétaire : l''au revoir reste visible et il n''y a plus rien à faire sur la page (T-04).'
+    impacte: [F-063, P-21, P-01, E-02]
 
 ids_retires:
   - {id: F-013, decision: D-002}
