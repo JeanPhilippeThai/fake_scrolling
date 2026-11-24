@@ -924,8 +924,8 @@ class Component extends DCLogic {
         var first = this.gib(5000 + i * 131, 2).split(' ')[0];
         return { first: first, avatar: PALS[i], send: () => { this.setState({ sheet: null }); this.showToast('Envoyé à ' + first + '.'); } };
       }),
-      copyLink: () => { this.setState({ sheet: null }); this.showToast('Lien copié. Il mène à une version floutée.'); },
-      shareElsewhere: () => { this.setState({ sheet: null }); this.showToast('Partagé, flouté comme toujours.'); },
+      copyLink: () => { this.setState({ sheet: null }); this.showToast('Lien copié.'); },
+      shareElsewhere: () => { this.setState({ sheet: null }); this.showToast('Partagé.'); },
       commentList: commentList,
       commentDraft: s.commentDraft,
       commentEmpty: !s.commentDraft.trim(),
