@@ -76,7 +76,8 @@ The docs are clean: nothing to do there.
 Up to 5 items, in method order: finish the current step, then go on into the next steps, stopping before step 9.
 
 - One item per run: a prompt run per platform, per flow or per question gives one item each.
-- Open Major findings in the current step's layers come first, as one prompt 8 item.
+- Open L3-14 findings (drawn in the design, missing from the registry) come first, as one prompt 9 item. Give it the elements they cite, and the features of the L1-04 findings: prompt 9 also clears their `design_a_mettre_a_jour` flags.
+- The other open Major findings in the current step's layers come next, as one prompt 8 item.
 - Point to the prompt in `describe.md`; never copy its text.
 - Fill its brackets from the docs. A value that depends on an earlier item's result says "from item <n>".
 - Steps 1, 6 and 7 have no prompt: the item says what to write and where.

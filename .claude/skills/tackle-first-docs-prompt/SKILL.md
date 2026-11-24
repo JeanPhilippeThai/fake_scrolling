@@ -33,7 +33,7 @@ Take the first item of "Fix first", or of "Next prompts". Tell the owner in one 
 
 1. Read its text in `workflow_docs/method/describe.md`. Fill its brackets as the list says; a value still open is a question for the owner.
 2. Read its inputs and carry it out. Its own rules override this skill. To find what an ID touches, query the registry database (`.claude/skills/registry-db/SKILL.md`) instead of reading every doc: `where <ID>` for where it is defined and cited, `impact <ID>` for everything a change to it can reach (this is the impact query of prompt 7), `check <check IDs>` for the mechanical checks of prompts 3 and 14. Then read only the lines they point to.
-3. Ask the owner, with AskUserQuestion, everything the prompt leaves to them: ambiguous cases, inconsistencies to correct, prompt 8's B and C cases, prompt 4's decisions, a store's engine, registry changes proposed by prompt 6.
+3. Ask the owner, with AskUserQuestion, everything the prompt leaves to them: ambiguous cases, inconsistencies to correct, prompt 8's B and C cases, prompt 4's decisions, a store's engine, registry changes proposed by prompt 6, new IDs proposed by prompt 9.
    - At most 4 questions per call, each with 2 or 3 options, your recommendation first.
    - Before asking, show what the question is about: the IDs and the quoted lines.
    - Ask until each question is answered, or the owner leaves it open. An open question goes in the feature's `questions_ouvertes`, or in `docs/questions.md` for the whole app.
