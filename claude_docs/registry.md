@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 163, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 175, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -646,7 +646,7 @@ features:
         pages: [P-05]
         plateforme: mobile
         difference: 'Like d''un commentaire : petit cœur rouge et compteur sous le cœur'
-    entites: [E-06, E-03, E-05]
+    entites: [E-06, E-03, E-05, E-08]
     operations: [lecture, écriture, suppression]
     etats_ui:
       - vide
@@ -675,7 +675,7 @@ features:
 
   - id: F-018
     nom: Enregistrer un post dans une collection
-    description: Signet du post puis choix d'une collection ; second tap retire.
+    description: 'Signet du post puis choix d''une collection, une seule par post ; signet plein : P-06 se rouvre sur la collection choisie, un tap la retire, un tap sur une autre y déplace le post (D-057).'
     pages: [P-03, P-03.f, P-06, P-16]
     plateformes: [mobile]
     acces: [R-02]
@@ -751,23 +751,24 @@ features:
 
   - id: F-022
     nom: Consulter ses notifications
-    description: Cloche avec pastille puis panneau des invitations et des likes reçus.
+    description: Cloche avec pastille puis panneau des invitations, des likes et des commentaires reçus (D-056).
     pages: [P-03, P-04, P-04.a, P-04.b, P-04.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-08, E-09, E-06]
+    entites: [E-08, E-09, E-06, E-05]
     operations: [lecture]
     etats_ui:
       - pastille avec nombre
       - sans pastille
       - section Invitations masquée si vide
-      - 'vide : « Aucune notification » · « Les invitations et les likes reçus s’affichent ici. »'
+      - 'vide : « Aucune notification » · « Les invitations, les likes et les commentaires reçus s’affichent ici. »'
       - 'chargement : anneau centré'
       - 'erreur : « Les notifications n’ont pas pu être chargées. » avec « Réessayer »'
     questions_ouvertes:
       - Ouvrir le post liké depuis sa miniature
       - 'Accès supposé : seulement les invitations reçues et en attente (statut de la demande, E-09)'
+    design_a_mettre_a_jour: true
 
   - id: F-024
     nom: Voir l'app se griser
@@ -859,7 +860,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-05, E-03]
+    entites: [E-05, E-03, E-08]
     operations: [écriture]
     etats_ui:
       - bouton gris si vide
@@ -1536,7 +1537,7 @@ entites:
       - texte
       - ancienneté
       - nombre de likes
-    utilisee_par: [F-016, F-017, F-030]
+    utilisee_par: [F-016, F-017, F-022, F-030]
 
   - id: E-06
     nom: Like
@@ -1556,11 +1557,11 @@ entites:
   - id: E-08
     nom: Notification
     champs:
-      - type (like, invitation)
+      - type (like, commentaire, invitation)
       - auteur
       - ancienneté
       - post concerné (miniature)
-    utilisee_par: [F-022]
+    utilisee_par: [F-016, F-022, F-030]
 
   - id: E-09
     nom: Relation d'amitié
@@ -1905,6 +1906,26 @@ decisions:
     choix: 'Après la connexion qu''un lien de post a demandée (D-024), P-03 s''ouvre sur le post partagé, puis le fil continue comme d''habitude (F-009).'
     raison: 'Choix du propriétaire : le lien ne se perd pas à la connexion.'
     impacte: [F-009, F-019]
+  - id: D-055
+    sujet: 'FL-02 : notification d''un like'
+    choix: 'Liker un post (F-016, F-016.a) crée une notification (E-08) pour son auteur ; retirer le like la supprime. Liker un commentaire (F-016.b) ne notifie personne. F-016 écrit E-08.'
+    raison: 'Choix du propriétaire : P-04 montre les likes reçus (F-022), mais aucune feature n''écrivait E-08.'
+    impacte: [F-016, F-022, E-08]
+  - id: D-056
+    sujet: 'FL-02 : notification d''un commentaire'
+    choix: 'Publier un commentaire (F-030) crée une notification de type « commentaire » (E-08) pour l''auteur du post. P-04 montre aussi les commentaires reçus ; son état vide devient « Les invitations, les likes et les commentaires reçus s’affichent ici. ». F-022 porte design_a_mettre_a_jour: true jusqu''à ce que P-04 soit redessiné.'
+    raison: 'Choix du propriétaire : l''auteur d''un post apprend qu''on l''a commenté.'
+    impacte: [F-022, F-030, E-05, E-08]
+  - id: D-057
+    sujet: 'FL-02 : enregistrer un post'
+    choix: 'Un post est dans une collection au plus (E-07). Un signet plein rouvre P-06, la collection choisie encadrée : un tap dessus retire le post (« Retiré de … »), un tap sur une autre, ou sur « Nouvelle collection » (F-031), l''y déplace (« Enregistré dans … »).'
+    raison: 'Choix du propriétaire, conforme au design de P-06 : une seule collection encadrée, le panneau se ferme au choix.'
+    impacte: [F-018, F-031, E-07]
+  - id: D-058
+    sujet: 'FL-02 : compteur de partages'
+    choix: 'Chaque partage compte une fois dans le nombre de partages du post (E-03) : envoi à un ami (F-019.a), copie du lien (F-019.b) et feuille de partage du téléphone (F-019.c).'
+    raison: 'Choix du propriétaire : les trois façons de partager se valent.'
+    impacte: [F-019, E-03]
 
 ids_retires:
   - {id: F-013, decision: D-002}
