@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 269, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 281, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -570,7 +570,6 @@ features:
       - grisé selon les cycles
     questions_ouvertes:
       - Vrais médias à la place des formes générées
-      - 'Accès supposé : les résultats de recherche montrent des posts de non-amis s''ils sont publics (audience du post, F-050)'
 
   - id: F-011
     nom: Regarder une vidéo
@@ -1187,7 +1186,7 @@ features:
       - choix coché
       - valeur affichée sur la ligne
     questions_ouvertes:
-      - 'Règle : l''audience choisie décide qui peut voir le post et agir dessus'
+      - 'Règle : agir sur un post (liker, commenter, enregistrer, partager) suit-il aussi son audience ? Qui peut le voir est réglé (D-088)'
 
   - id: F-051
     nom: Publier le post
@@ -1210,12 +1209,12 @@ features:
 
   - id: F-052
     nom: Rechercher des posts
-    description: Toute saisie donne 18 posts dans l'une des 5 palettes (somme des codes modulo 5).
+    description: Le téléphone change la saisie en l'une des 5 palettes (somme des codes modulo 5) et n'envoie que la palette ; jusqu'à 18 posts visibles de cette palette s'affichent (D-087, D-088).
     pages: [P-14, P-15, P-15.a, P-15.b, P-15.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-13, E-03]
+    entites: [E-13, E-03, E-09]
     operations: [lecture]
     etats_ui:
       - 'champ vide : suggestions'
@@ -1223,8 +1222,7 @@ features:
       - 'chargement : anneau centré (P-15)'
       - 'aucun résultat : « Aucun résultat » · « Aucun post ne correspond à « … ». Essaie un autre mot. »'
       - 'erreur : « La recherche n’a pas abouti. » avec « Réessayer » (P-15)'
-    questions_ouvertes:
-      - 'Accès supposé : les résultats incluent des posts de non-amis s''ils sont publics (audience du post, F-050)'
+    questions_ouvertes: []
 ```
 
 ```yaml
@@ -1239,13 +1237,13 @@ features:
         pages: [P-14]
         plateforme: mobile
         difference: 'Tendance : rang, nombre de posts et 3 bandes de la palette d''arrivée'
-    entites: [E-13]
+    entites: [E-13, E-03]
     operations: [lecture]
     etats_ui:
       - 'chargement : anneau centré'
       - 'erreur : « Les suggestions n’ont pas pu être chargées. » avec « Réessayer » ; le champ reste utilisable'
     questions_ouvertes:
-      - Origine des suggestions et des tendances
+      - 'Tendances : choix des 6 mots et rythme de leur renouvellement ; deux tendances de même palette auraient le même nombre de posts (D-089)'
 
   - id: F-054
     nom: Ouvrir un résultat de recherche
@@ -1257,8 +1255,7 @@ features:
     entites: [E-03]
     operations: [lecture]
     etats_ui: []
-    questions_ouvertes:
-      - 'Accès supposé : ouvrir un post dépend de son audience (F-050)'
+    questions_ouvertes: []
 
   - id: F-055
     nom: Ouvrir les options
@@ -1549,7 +1546,7 @@ entites:
       - lien
       - personnes identifiées
       - lieu
-    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-054, F-062, F-068]
+    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-053, F-054, F-062, F-068]
 
   - id: E-04
     nom: Média
@@ -1599,7 +1596,7 @@ entites:
       - compte (pseudo, identifiant, photo)
       - statut (en attente, demandé, ami)
       - ami proche (oui/non, D-060)
-    utilisee_par: [F-022, F-028, F-034, F-036, F-043, F-048, F-072]
+    utilisee_par: [F-022, F-028, F-034, F-036, F-043, F-048, F-052, F-072]
 
   - id: E-10
     nom: Conversation
@@ -1632,10 +1629,10 @@ entites:
   - id: E-13
     nom: Recherche
     champs:
-      - texte saisi
-      - palette obtenue
-      - suggestions
-      - tendances (rang, nombre de posts)
+      - texte saisi (sur le téléphone seulement, D-087)
+      - palette obtenue (seule envoyée, D-087)
+      - suggestions (tirées au hasard, sans historique, D-089)
+      - tendances (rang, nombre de posts visibles de la palette, D-089)
     utilisee_par: [F-052, F-053]
 
   - id: E-14
@@ -2102,6 +2099,26 @@ decisions:
     choix: 'Dans toute l''app, une photo ou une vidéo n''est jamais montrée telle quelle : le téléphone en tire une graine (son empreinte), et des algorithmes simples dessinent à partir d''elle une image ou une vidéo générée, propre à chaque photo. Seuls la graine et le choix de l''algorithme quittent le téléphone, jamais la vraie photo. E-04 garde la graine et l''algorithme au lieu de l''image et de sa version floutée. Le flou du design tient lieu de cet art jusqu''au développement : le design ne change pas et aucune feature ne porte design_a_mettre_a_jour.'
     raison: 'Choix du propriétaire : un art qui naît de la photo remplace le flou, et, comme le charabia (D-083), rien de la vraie photo n''est envoyé.'
     impacte: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, E-04, E-11]
+  - id: D-087
+    sujet: 'FL-08 : ce que trouve une recherche'
+    choix: 'Le téléphone change le texte saisi en l''une des 5 palettes (soleil, océan, forêt, lavande, terre), par la somme des codes des caractères modulo 5 ; seule la palette est envoyée, jamais le texte. Les résultats (F-052) sont jusqu''à 18 posts de cette palette qu''on peut voir (D-088), les plus récents d''abord ; P-15.b « Aucun résultat » ne s''affiche que si aucun ne reste. E-13 reste sur le téléphone. Le design ne change pas.'
+    raison: 'Choix du propriétaire : comme le charabia (D-083), le texte tapé ne quitte pas le téléphone ; la grille par palette est déjà dessinée (question ouverte de F-052).'
+    impacte: [F-052, P-15, E-03, E-13]
+  - id: D-088
+    sujet: 'FL-08 : qui voit un post'
+    choix: 'L''audience d''un post (F-050) décide qui peut le voir : « Tout le monde », tout utilisateur connecté (R-02) ; « Amis », les amis de l''auteur (E-09 « ami ») ; « Amis proches », les amis cochés dans sa liste (D-060). L''auteur voit toujours les siens. Les résultats de recherche (F-052) et le post ouvert depuis eux (F-054, P-16) ne montrent que les posts qu''on peut voir. F-052 lit E-09.'
+    raison: 'Choix du propriétaire : la recherche est le seul écran qui peut montrer des posts de non-amis, et « Tout le monde » n''aurait sinon aucun sens (questions ouvertes de F-010, F-050, F-052 et F-054).'
+    impacte: [F-010, F-050, F-052, F-054, E-03, E-09]
+  - id: D-089
+    sujet: 'FL-08 : suggestions et tendances'
+    choix: 'Suggestions et tendances (F-053, F-053.a) sont des mots de charabia que l''app tire elle-même. À chaque ouverture de P-14, 8 suggestions sont tirées au hasard ; aucun historique des recherches n''est gardé. Les 6 tendances sont classées par le nombre de posts qu''on peut voir dans leur palette d''arrivée (D-087, D-088), et ce nombre est celui affiché. Rien des recherches n''est envoyé ni gardé : E-13 reste sur le téléphone. F-053 lit E-03. Le design ne change pas.'
+    raison: 'Choix du propriétaire : sans texte envoyé (D-087), le serveur ne peut ni garder d''historique ni compter les recherches (question ouverte de F-053).'
+    impacte: [F-053, E-03, E-13]
+  - id: D-090
+    sujet: 'FL-08 : fermer une création ouverte depuis la Recherche'
+    choix: 'Ouverte depuis P-14, P-15 ou P-16, la création d''un post se ferme (F-005.a) sur P-14 : la recherche repart de zéro, comme le fait la maquette. D-062 vaut pour les autres pages. Le design ne change pas.'
+    raison: 'Choix du propriétaire : la maquette le fait déjà, et une recherche se relance en une saisie.'
+    impacte: [F-005, F-026, P-14]
 
 ids_retires:
   - {id: F-013, decision: D-002}
