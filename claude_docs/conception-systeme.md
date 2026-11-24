@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 25, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 27, exported 2026-11-24 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -209,7 +209,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-048 : liste de démo ; seuls des amis peuvent être identifiés.
 - F-049 : vraie recherche de lieux, et donc la source des lieux.
 - F-050 : règle de l'audience (qui voit le post et agit dessus).
-- F-051 : ce que voient les amis (flou, charabia) ; palette et durée de vie du post.
+- F-051 : ce que voient les amis (charabia de la légende ; les photos deviennent un art généré, D-086) ; palette et durée de vie du post.
 - F-072 : liste vide ; effet d'un changement sur les posts déjà publiés.
 
 ## FL-04 Ajouter un ami
@@ -272,7 +272,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-034 : annuler une demande envoyée ; retirer un ami ou bloquer un compte.
 - F-043 : vrai annuaire ; comptes privés ou bloqués ; son propre compte dans les résultats.
 - F-022, F-028 : accès supposé aux seules invitations reçues et en attente.
-- F-037 : peut-on écrire à un non-ami ?
+- F-037 : peut-on écrire à un non-ami ? Réglé depuis par FL-07 : amis seulement (D-082).
 
 ## FL-05 Griser l'app par cycles
 
@@ -385,3 +385,69 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-036 : voir sa propre story et qui l'a vue ; ordre des ronds de la rangée de P-08.
 - F-072 : un changement de la liste d'amis proches vaut-il pour les stories déjà publiées ?
+
+## FL-07 Discuter avec un ami
+
+Un utilisateur connecté (R-02) ouvre Messages, choisit la conversation d'un ami dans P-08 et échange avec lui dans P-09 : messages en charabia, photos en art généré, réponses citées. Les messages de l'ami arrivent en direct. Mobile seulement. Décisions : D-027, D-030, D-042, D-044, D-071, D-082, D-083, D-084, D-085, D-086.
+
+### Entrées
+
+- Icône bulle du menu du bas (F-025) → P-08.
+- Fin de FL-04 : la conversation vide avec le nouvel ami apparaît dans P-08 (D-071).
+- Un post envoyé à un ami (F-019.a, FL-02) arrive en message dans sa conversation (D-044).
+
+Hors de ce flow : ajouter un ami (FL-04, F-034) ; voir une story depuis P-08 ou P-09 (FL-06, F-036) ; publier une story depuis « Ta story » (FL-03) ; le grisage F-024, qui s'applique à P-08 et P-09 (FL-05).
+
+### Séquence
+
+| Étape | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- |
+| 1. Ouvrir Messages | P-03 → P-08.c → P-08 | F-025, F-037 | E-10 (contact, dernier message, heure, lu / non lu) | — |
+| 2. Chercher une discussion | P-08 | F-033 | E-10 (prénom, @) | — |
+| 3. Ouvrir une conversation | P-08 → P-09.a → P-09 | F-037, F-038 | E-10, E-11 | E-10 (lu, D-085) |
+| 4. Lire et recevoir | P-09 | F-038 | E-11 (messages en direct, saisie de l'ami, D-084) | E-10 (reste lu, D-085) |
+| 5. Citer un message | P-09 | F-040 | E-11 | E-11 (message cité, écrit avec l'envoi) |
+| 6. Envoyer un message | P-09 | F-041 | — | E-11 (charabia, D-083), E-10 (dernier message, heure, non lu chez l'ami, D-085) |
+| 7. Envoyer une photo | P-09 | F-042 | — | E-11 (photo), E-04 (graine et algorithme, D-086), E-10 (« Photo », heure, non lu chez l'ami, D-085) |
+| 8. Revenir aux discussions | P-09 → P-08 | F-005 | — | — |
+
+Suite simple : P-03 → F-025 → P-08 → F-037 → P-09 → F-040 (au besoin) → F-041 ou F-042 → F-005 → P-08. Les entités suivent les `operations` des features : F-033 et F-039 lisent ; F-040, F-041 et F-042 écrivent ; F-037 et F-038 lisent et écrivent (lu, D-085).
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| P-08.c | Les discussions ne chargent pas | P-08.d : « Les discussions n’ont pas pu être chargées. » avec « Réessayer » |
+| P-08 | Aucune discussion | P-08.a : « Ajouter un ami » ouvre P-11 (FL-04, D-035) |
+| P-08 | La recherche ne trouve rien | Liste vide sans message (F-033) |
+| P-08 | Écrire à un non-ami | Impossible : une conversation n'existe qu'entre amis (D-082) |
+| P-08 | Message reçu hors de sa conversation | La discussion passe en gras avec le point bleu ; ni notification ni pastille (D-084) |
+| P-09.a | Les messages ne chargent pas | P-09.d : « Les messages n’ont pas pu être chargés. » avec « Réessayer » |
+| P-09 | Conversation vide (nouvel ami) | P-09.b : « Aucun message » · « Écris le premier message à … » |
+| P-09 | L'ami écrit | Bulle grise à trois points (F-038, D-084) |
+| P-09 | Message reçu, P-09 ouverte | Il s'ajoute en bas ; la conversation reste lue (D-085) |
+| P-09 | Champ vide | L'icône image tient la place d'« Envoyer » (F-042) |
+| P-09 | Croix du bandeau « Réponse à … » | La citation est annulée (F-040) |
+| P-09.c | L'envoi d'un message échoue | Le message reste, « Non envoyé. » avec « Réessayer » seulement (D-027, D-030) |
+| P-09.e | L'envoi d'une photo échoue | Photo cerclée de rouge, « Non envoyée. » avec « Réessayer » (D-042) |
+| P-09 | Icône téléphone | Sans effet (question ouverte de F-039) |
+
+Fin du flow : retour sur P-08 ; la conversation montre le dernier message et l'heure, et passe en non lu chez l'ami.
+
+### Manques du registre
+
+Réglés le 24 novembre 2026 :
+
+- On ne savait pas si l'on pouvait écrire à un non-ami : amis seulement (D-082) ; les questions d'accès de F-037 à F-042 sont closes.
+- Rien ne disait ce que contient un message : seul le charabia quitte le téléphone (D-083).
+- La réception n'était que simulée : messages et saisie de l'ami en direct, sans notification (D-084).
+- Aucune feature ne mettait la conversation à jour à l'envoi : F-041 et F-042 écrivent E-10, et « lu / non lu » est gardé pour chacun des deux amis (D-085).
+- Dans toute l'app, photos et vidéos deviennent un art généré à partir d'une graine, seule envoyée ; le flou du design en tient lieu (D-086).
+
+Restent ouverts, dans les `questions_ouvertes` des features :
+
+- F-038 : jusqu'où remonte une conversation, et chargement des anciens messages.
+- F-039 : appel à concevoir ou à retirer.
+- F-042 : choix de la photo ; algorithmes de l'art généré, et vidéos (D-086).
+- F-019 : aspect du post reçu dans la conversation, non dessiné sur P-09.
+- F-034 : retirer un ami ou bloquer un compte, et donc le sort de la conversation.

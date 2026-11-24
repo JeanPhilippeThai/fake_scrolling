@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-24 · commit 883a083 · fingerprint ed75333001bb
+2026-11-24 · commit 883a083 · fingerprint 7993dbe8a4fa
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -16,5 +16,4 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 5: flows** (step 5). Give it: FL-07 « Discuter avec un ami », proposed: P-08 (F-037, F-033) → P-09 (F-038, F-040, F-041, F-042, F-039), E-10, E-11. It produces: the same, for this flow.
-2. **Prompt 5: flows** (step 5). Give it: FL-08 « Rechercher », proposed: P-14 → P-15 → P-16 (E-13). It produces: the same; profile, Premium and posts' remaining days come after.
+1. **Prompt 5: flows** (step 5). Give it: FL-08 « Rechercher », proposed: P-14 → P-15 → P-16 (E-13). It produces: the same; profile, Premium and posts' remaining days come after.

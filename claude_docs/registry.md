@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 251, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 269, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -957,7 +957,7 @@ features:
 ```yaml
   - id: F-037
     nom: Consulter ses discussions
-    description: Liste des discussions avec dernier message et heure ; tap pour ouvrir.
+    description: Liste des discussions avec dernier message et heure, mis à jour en direct (D-084, D-085) ; tap pour ouvrir et passer en lu. Seulement entre amis (D-082).
     pages: [P-08, P-08.a, P-08.c, P-08.d]
     plateformes: [mobile]
     acces: [R-02]
@@ -970,26 +970,25 @@ features:
       - 'vide : « Aucune discussion » · « Ajoute un ami pour commencer à discuter. » avec « Ajouter un ami » (F-034, D-035)'
       - 'chargement : anneau centré'
       - 'erreur : « Les discussions n’ont pas pu être chargées. » avec « Réessayer »'
-    questions_ouvertes:
-      - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09) ; peut-on écrire à un non-ami ?'
+    questions_ouvertes: []
 
   - id: F-038
     nom: Lire une conversation
-    description: Bulles vertes à droite, grises à gauche, photos et saisie du contact.
+    description: Bulles vertes à droite, grises à gauche, photos et saisie du contact, en direct (D-084). Texte en charabia (D-083), photos en art généré (D-086).
     pages: [P-09, P-09.a, P-09.b, P-09.d]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
     entites: [E-11, E-10]
-    operations: [lecture]
+    operations: [lecture, écriture]
     etats_ui:
-      - contact en train d'écrire
+      - contact en train d'écrire (D-084)
+      - 'message reçu pendant que P-09 est ouverte : la conversation reste lue (D-085)'
       - 'chargement : anneau centré'
       - 'vide : « Aucun message » · « Écris le premier message à Léa. »'
       - 'erreur : « Les messages n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
-      - Réponses automatiques de démo
-      - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09)'
+      - 'Historique : jusqu''où remonte une conversation, et chargement des messages plus anciens'
 
   - id: F-039
     nom: Appeler un contact
@@ -1003,7 +1002,6 @@ features:
     etats_ui: [sans effet]
     questions_ouvertes:
       - Appel à concevoir ou à retirer
-      - 'Accès supposé : amis seulement (ami ou non, E-09)'
 
   - id: F-040
     nom: Répondre à un message
@@ -1018,39 +1016,37 @@ features:
       - flèche qui apparaît
       - bandeau « Réponse à … »
       - bandeau annulé
-    questions_ouvertes:
-      - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09)'
+    questions_ouvertes: []
 
   - id: F-041
     nom: Envoyer un message
-    description: Champ « Message… » et « Envoyer » dans la bulle.
+    description: Champ « Message… » et « Envoyer » dans la bulle. Le téléphone change le texte en charabia avant l'envoi (D-083) ; l'envoi met à jour la conversation (D-085).
     pages: [P-09, P-09.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-11]
+    entites: [E-11, E-10]
     operations: [écriture]
     etats_ui:
-      - texte tapé visible moins d'1 s puis charabia
+      - texte tapé visible moins d'1 s puis charabia ; seul le charabia part (D-083)
       - 'échec : le message reste affiché, marqué « Non envoyé. » avec « Réessayer » (D-030)'
-    questions_ouvertes:
-      - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09) ; peut-on écrire à un non-ami ?'
+    questions_ouvertes: []
 
   - id: F-042
     nom: Envoyer une photo dans une conversation
-    description: Icône image à droite dans la bulle de saisie.
+    description: Icône image à droite dans la bulle de saisie. Seule la graine de la photo part, l'image montrée est un art généré (D-086) ; l'envoi met à jour la conversation (D-085).
     pages: [P-09, P-09.e]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-11, E-04]
+    entites: [E-11, E-04, E-10]
     operations: [écriture]
     etats_ui:
       - visible quand le champ est vide
       - 'échec : la photo cerclée de rouge, « Non envoyée. » avec « Réessayer »'
     questions_ouvertes:
       - Choix de la photo (la maquette envoie une image de démo)
-      - 'Accès supposé : conversations entre amis seulement (ami ou non, E-09)'
+      - 'Art généré (D-086) : quels algorithmes, et comment pour une vidéo ?'
 
   - id: F-043
     nom: Rechercher un compte par identifiant
@@ -1209,7 +1205,7 @@ features:
       - 'succès fil : l''Accueil affiche le toast « Post publié. » (D-031)'
       - 'succès story : Messages affiche le toast « Story publiée. » (D-031)'
     questions_ouvertes:
-      - Envoi, flou et charabia côté amis
+      - 'Envoi et charabia de la légende côté amis ; photos : art généré (D-086)'
       - 'Palette et durée de vie du post (E-03) : qui les fixe à la publication, et combien de jours ?'
 
   - id: F-052
@@ -1558,10 +1554,10 @@ entites:
   - id: E-04
     nom: Média
     champs:
-      - image
+      - graine (empreinte de la photo ou de la vidéo, seule à quitter le téléphone, D-086)
+      - algorithme qui dessine l'art généré (D-086)
       - durée de la vidéo
       - rang dans le carrousel
-      - version floutée
     utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058]
 
   - id: E-05
@@ -1611,12 +1607,12 @@ entites:
       - contact (pseudo, identifiant, photo)
       - dernier message
       - heure
-      - lu / non lu
-    utilisee_par: [F-019, F-028, F-033, F-034, F-037, F-038, F-039]
+      - lu / non lu, pour chacun des deux amis (D-085)
+    utilisee_par: [F-019, F-028, F-033, F-034, F-037, F-038, F-039, F-041, F-042]
 
   - id: E-11
     nom: Message
-    champs: [expéditeur, texte, photo, message cité, post partagé, date]
+    champs: [expéditeur, texte en charabia (D-083), photo en graine (D-086), message cité, post partagé, date]
     utilisee_par: [F-019, F-038, F-040, F-041, F-042]
 
   - id: E-12
@@ -2081,6 +2077,31 @@ decisions:
     choix: 'Un ami a un seul cercle, même avec plusieurs stories en cours : P-10 les enchaîne de la plus ancienne à la plus récente, les barres de progression repartant à chaque story, et se ferme après la dernière image de la dernière. Le cercle reste vert tant qu''une de ses stories n''est pas vue. À la fermeture, chaque story dont une image a été montrée compte comme vue (D-078). Le design ne change pas.'
     raison: 'Choix du propriétaire : la rangée de P-08 montre un rond par ami, pas par story.'
     impacte: [F-036, E-12]
+  - id: D-082
+    sujet: 'FL-07 : discuter seulement entre amis'
+    choix: 'Une conversation (E-10) n''existe qu''entre deux amis (E-09 « ami ») : elle naît quand une invitation est acceptée (D-071), et rien ne permet d''écrire à un autre compte. F-037 à F-042 ne portent que sur ces conversations. Le design ne change pas.'
+    raison: 'Choix du propriétaire : P-08.a dit déjà « Ajoute un ami pour commencer à discuter. » (questions ouvertes de F-037 à F-042).'
+    impacte: [F-037, F-038, F-039, F-040, F-041, F-042, E-09, E-10]
+  - id: D-083
+    sujet: 'FL-07 : un message part en charabia'
+    choix: 'Le téléphone change le texte d''un message en charabia, émojis gardés, avant de l''envoyer (F-041) : le vrai texte ne quitte jamais le téléphone, et personne, l''expéditeur compris, ne peut le relire. Un message cité (F-040) l''est en charabia. E-11 ne garde que le charabia. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le texte tapé n''est visible que moins d''1 s ; le garder ailleurs ne servirait à rien.'
+    impacte: [F-040, F-041, E-11]
+  - id: D-084
+    sujet: 'FL-07 : recevoir un message'
+    choix: 'Hors démo, les messages d''un ami arrivent en direct (D-044) : ils s''ajoutent à P-09 si elle est ouverte, et la conversation passe en gras avec le point bleu dans P-08 (F-037). « En train d''écrire » (F-038) montre la vraie saisie de l''ami ; les réponses automatiques de démo disparaissent. Aucune notification (E-08), aucune pastille sur l''icône Messages. Le design ne change pas.'
+    raison: 'Choix du propriétaire : ce que simule la maquette, sans nouvel écran ni nouveau type de notification (question ouverte de F-038).'
+    impacte: [F-037, F-038, E-08, E-10, E-11]
+  - id: D-085
+    sujet: 'FL-07 : la conversation suit les messages'
+    choix: 'Envoyer un message (F-041) ou une photo (F-042) met à jour la conversation (E-10) : dernier message (« Toi : … » ou « Photo »), heure, et « non lu » chez l''ami. « Lu / non lu » est gardé pour chacun des deux amis : ouvrir la conversation (F-037) la passe en lu, et un message reçu pendant que P-09 est ouverte (F-038) la laisse lue. F-038, F-041 et F-042 écrivent E-10. Le design ne change pas.'
+    raison: 'Choix du propriétaire : sans cela, P-08 ne montrerait jamais le dernier message ni le non-lu (L5-02).'
+    impacte: [F-037, F-038, F-041, F-042, E-10]
+  - id: D-086
+    sujet: 'Photos et vidéos en art généré'
+    choix: 'Dans toute l''app, une photo ou une vidéo n''est jamais montrée telle quelle : le téléphone en tire une graine (son empreinte), et des algorithmes simples dessinent à partir d''elle une image ou une vidéo générée, propre à chaque photo. Seuls la graine et le choix de l''algorithme quittent le téléphone, jamais la vraie photo. E-04 garde la graine et l''algorithme au lieu de l''image et de sa version floutée. Le flou du design tient lieu de cet art jusqu''au développement : le design ne change pas et aucune feature ne porte design_a_mettre_a_jour.'
+    raison: 'Choix du propriétaire : un art qui naît de la photo remplace le flou, et, comme le charabia (D-083), rien de la vraie photo n''est envoyé.'
+    impacte: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, E-04, E-11]
 
 ids_retires:
   - {id: F-013, decision: D-002}
