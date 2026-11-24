@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 226, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 237, exported 2026-11-24 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -845,7 +845,7 @@ features:
 
   - id: F-028
     nom: Répondre à une invitation d'ami
-    description: Boutons « Accepter » et « Refuser » sur une invitation du panneau Notifications.
+    description: 'Boutons « Accepter » et « Refuser » sur une invitation du panneau Notifications. Accepter crée une conversation vide entre les deux amis (D-071), sans notifier l''expéditeur (D-072) ; répondre supprime la notification « invitation » (D-070).'
     pages: [P-04, P-04.d, P-04.e]
     plateformes: [mobile]
     acces: [R-02]
@@ -854,8 +854,8 @@ features:
         pages: [P-04]
         plateforme: mobile
         difference: 'Refuser : la demande est supprimée et la ligne disparaît'
-    entites: [E-09]
-    operations: [écriture]
+    entites: [E-09, E-08, E-10]
+    operations: [écriture, suppression]
     etats_ui:
       - 'Accepter : devient « Ami » en vert'
       - 'réponse en cours : anneau dans « Accepter », les deux boutons désactivés'
@@ -914,20 +914,22 @@ features:
 
   - id: F-034
     nom: Ajouter un ami
-    description: 'Bouton + des Messages puis « Ajouter » sur un compte trouvé : la demande part. Aussi depuis « Ajouter un ami » de l''état vide de P-08 (D-035).'
+    description: 'Bouton + des Messages puis « Ajouter » sur un compte trouvé : la demande part et notifie le destinataire (D-070). Aussi depuis « Ajouter un ami » de l''état vide de P-08 (D-035). Sur un compte qui a déjà envoyé une invitation, « Ajouter » l''accepte (D-073).'
     pages: [P-08, P-11, P-08.a, P-11.c, P-11.d]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-09]
-    operations: [écriture]
+    entites: [E-09, E-08, E-10]
+    operations: [lecture, écriture, suppression]
     etats_ui:
       - Ajouter
       - devient Demandé (désactivé)
       - 'envoi : anneau dans « Ajouter », désactivé'
       - 'erreur : « La demande n’a pas été envoyée. » avec « Réessayer » ; le bouton redevient « Ajouter »'
+      - 'invitation déjà reçue de ce compte : « Ajouter » l''accepte et devient « Ami » (D-073)'
     questions_ouvertes:
-      - Notification côté destinataire
+      - 'Annuler une demande envoyée : « Demandé » reste désactivé'
+      - 'Retirer un ami ou bloquer un compte : aucune feature'
 
   - id: F-036
     nom: Voir une story
@@ -1058,13 +1060,14 @@ features:
     operations: [lecture]
     etats_ui:
       - rien tant que vide
-      - résultats avec le statut de chaque compte (Ajouter, Demandé, Ami)
+      - résultats avec le statut de chaque compte (Ajouter, Demandé, Ami) ; une invitation reçue s'affiche « Ajouter » (D-073)
       - « Aucun compte trouvé. »
       - 'chargement : anneau centré'
       - 'erreur : « La recherche n’a pas abouti. » avec « Réessayer »'
     questions_ouvertes:
       - Vrai annuaire (20 comptes de démo)
       - 'Accès supposé : tous les comptes sont trouvables ; existe-t-il des comptes privés ou bloqués ?'
+      - Son propre compte apparaît-il dans les résultats ?
 
   - id: F-044
     nom: Choisir les photos d'un post
@@ -1590,7 +1593,7 @@ entites:
       - auteur
       - ancienneté
       - post concerné (miniature)
-    utilisee_par: [F-016, F-022, F-030, F-051]
+    utilisee_par: [F-016, F-022, F-028, F-030, F-034, F-051]
 
   - id: E-09
     nom: Relation d'amitié
@@ -1607,7 +1610,7 @@ entites:
       - dernier message
       - heure
       - lu / non lu
-    utilisee_par: [F-019, F-033, F-037, F-038, F-039]
+    utilisee_par: [F-019, F-028, F-033, F-034, F-037, F-038, F-039]
 
   - id: E-11
     nom: Message
@@ -2014,6 +2017,26 @@ decisions:
     choix: 'Après « Supprimer définitivement » (F-063), « Compte supprimé » et « Merci d’être passé·e. » restent 2 s, puis P-01 s''ouvre ; la session de l''appareil est fermée (D-053). F-063 porte design_a_mettre_a_jour: true.'
     raison: 'Choix du propriétaire : l''au revoir reste visible et il n''y a plus rien à faire sur la page (T-04).'
     impacte: [F-063, P-21, P-01, E-02]
+  - id: D-070
+    sujet: 'FL-04 : notification d''une demande d''ami'
+    choix: 'Envoyer une demande d''ami (F-034) crée une notification de type « invitation » (E-08) pour le destinataire ; elle compte dans la pastille de la cloche (F-022). Accepter ou refuser l''invitation (F-028, F-028.a) la supprime. Le design ne change pas.'
+    raison: 'Choix du propriétaire : E-08 avait un type « invitation » qu''aucune feature n''écrivait, comme avant D-055 et D-061 (question ouverte de F-034).'
+    impacte: [F-022, F-028, F-034, E-08]
+  - id: D-071
+    sujet: 'FL-04 : première conversation entre amis'
+    choix: 'Accepter une invitation (F-028) crée une conversation vide (E-10) entre les deux amis : elle apparaît dans P-08 (F-037) chez l''un et l''autre et s''ouvre sur P-09.b « Aucun message ». Le design ne change pas.'
+    raison: 'Choix du propriétaire : P-08.a dit « Ajoute un ami pour commencer à discuter. », mais aucune feature n''ouvrait de conversation avec un nouvel ami.'
+    impacte: [F-028, F-034, F-037, F-038, E-10]
+  - id: D-072
+    sujet: 'FL-04 : invitation acceptée'
+    choix: 'L''expéditeur n''est pas notifié quand sa demande est acceptée : il voit le nouvel ami dans P-08 (D-071) et « Ami » dans P-11 (F-043). E-08 ne prend pas de nouveau type.'
+    raison: 'Choix du propriétaire : la nouvelle conversation suffit, sans redessiner P-04.'
+    impacte: [F-028, F-043, E-08]
+  - id: D-073
+    sujet: 'FL-04 : demandes croisées'
+    choix: 'Sur P-11, un compte qui a déjà envoyé une invitation à l''utilisateur (E-09 « en attente ») s''affiche avec « Ajouter » ; le toucher (F-034) accepte cette invitation comme F-028 : le bouton devient « Ami », la conversation est créée (D-071) et la notification supprimée (D-070). Le design ne change pas.'
+    raison: 'Choix du propriétaire : les deux veulent être amis ; un quatrième statut demanderait de redessiner P-11.'
+    impacte: [F-034, F-043, E-09]
 
 ids_retires:
   - {id: F-013, decision: D-002}
