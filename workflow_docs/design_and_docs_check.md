@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-24 (revision 51).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-24 (revision 53).
 For now the Claude Doc is the source of truth of this check and this file is a copy of it. An app's design is different: its source of truth is the app repo's `claude_design/`, not claude.ai.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the screens of the repo's design down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -129,6 +129,7 @@ Only when the app has more than one version (web and mobile, desktop and mobile,
 | L4-11 | Every ambiguous case and open question from every platform is carried over once, with its aliases | Read | Major |
 | L4-12 | Prompts 3 and 8 ran on the canonical registry after the merge | Read | Major |
 | L4-13 | No later document (flows, state models, data model, data flows, page contracts, specs, backlog, and screen inventories still kept up to date) still uses a per-platform ID instead of the canonical one | Query | Major |
+| L4-14 | Every difference between platforms is known. A feature on several platforms shows the same data, steps and states on each platform's pages, except where a variant says otherwise; and every variant with a `plateforme` is wanted: a decision says why, or an open question asks. A difference that is not wanted sets `design_a_mettre_a_jour: true` on the feature, with a decision naming the platform to redraw | Read | Major |
 
 ### L5 · Flows (prompt 5)
 
