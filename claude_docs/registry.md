@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 367, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 376, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -944,13 +944,14 @@ features:
       - 'cercle gris : toutes vues'
       - 'sans cercle ni rond dans la rangée : aucune story en cours (D-079)'
       - '« vue » enregistrée à la fermeture, renvoyée sans message tant que le serveur ne l''a pas (D-078)'
+      - 'fin : 24 h après la publication, une tâche de fond la passe à Finie et l''efface du serveur, images et « vue par » (D-079, D-110, FL-13)'
       - barres de progression
       - 'chargement : anneau blanc centré'
       - 'erreur : « La story n’a pas pu être chargée. » avec « Réessayer »'
     questions_ouvertes:
       - 'Voir sa propre story, et qui l''a vue : « Ta story » ouvre toujours la création (F-026.a)'
       - Ordre des ronds de la rangée de P-08 (non vues d'abord ?)
-      - 'Une story finie (D-079) est-elle effacée du serveur, ou gardée jusqu''à la suppression du compte (SM-E-12) ?'
+      - 'Une story en cours de lecture sur P-10 quand sa fin arrive (FL-13) : la lecture va-t-elle jusqu''au bout ?'
 ```
 
 ```yaml
@@ -1351,12 +1352,12 @@ features:
     etats_ui:
       - flèche grisée aux bornes
       - 'enregistrement : appliqué tout de suite, renvoyé sans message tant que le serveur ne l''a pas (D-077)'
-    questions_ouvertes:
-      - 'Deux téléphones règlent le minuteur hors connexion (F-060, F-061), puis leurs réglages arrivent au serveur : lequel garder ? (SM-E-14, D-077, D-105)'
+      - 'deux téléphones hors connexion : le serveur garde le changement fait le plus tard (D-111)'
+    questions_ouvertes: []
 
   - id: F-061
     nom: Réinitialiser les cycles
-    description: Bouton « Réinitialiser » qui rend les couleurs partout.
+    description: Bouton « Réinitialiser » qui rend les couleurs partout. Entre deux téléphones hors connexion, le changement fait le plus tard gagne (D-111).
     pages: [P-17]
     plateformes: [mobile]
     acces: [R-02]
@@ -2196,7 +2197,7 @@ decisions:
 
   - id: D-101
     sujet: 'FL-11 : ce qu''efface la suppression du compte'
-    choix: '« Supprimer définitivement » (F-063) efface tout de suite et pour de bon, sans délai de grâce, tout ce qui vient du compte : E-01 ; ses sessions sur tous les téléphones (E-02), un autre téléphone ouvrant P-01 à son prochain échange avec le serveur ; ses posts (E-03) et leurs médias (E-04) ; ses stories (E-12) ; ses commentaires (E-05) et ses likes (E-06) ; ses collections (E-07) ; les notifications qu''il a reçues ou causées (E-08) ; ses relations d''amitié et invitations (E-09) ; ses conversations et leurs messages (E-10, E-11), qui disparaissent aussi du P-08 de ses amis ; son minuteur (E-14), son temps d''utilisation (E-15) et son soutien (E-16), si bien qu''un nouveau compte de la même personne repart non soutenu. Les compteurs des autres comptes baissent d''autant. Ce qui attendait d''être renvoyé pour ce compte (D-077, D-095, D-100) est abandonné. L''effacement est tout ou rien : s''il échoue, P-21.a dit que rien n''a été effacé. Le design ne change pas.'
+    choix: '« Supprimer définitivement » (F-063) efface tout de suite et pour de bon, sans délai de grâce, tout ce qui vient du compte : E-01 ; ses sessions sur tous les téléphones (E-02), un autre téléphone ouvrant P-01 à son prochain échange avec le serveur ; ses posts (E-03) et leurs médias (E-04) ; ses stories (E-12) ; ses commentaires (E-05) et ses likes (E-06) ; ses collections (E-07) ; les notifications qu''il a reçues ou causées (E-08) ; ses relations d''amitié et invitations (E-09) ; ses conversations et leurs messages (E-10, E-11), qui disparaissent aussi du P-08 de ses amis ; son minuteur (E-14), son temps d''utilisation (E-15) et son soutien (E-16), si bien qu''un nouveau compte de la même personne repart non soutenu. Les compteurs des autres comptes baissent d''autant. Ce qui attendait d''être renvoyé pour ce compte (D-077, D-078, D-095, D-100 ; D-109) est abandonné. L''effacement est tout ou rien : s''il échoue, P-21.a dit que rien n''a été effacé. Le design ne change pas.'
     raison: 'Choix du propriétaire : la fenêtre de confirmation dit déjà que posts, messages et amis sont effacés, et que c''est définitif (question ouverte de F-063).'
     impacte: [F-063, E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16]
 
@@ -2214,7 +2215,7 @@ decisions:
 
   - id: D-104
     sujet: 'FL-11 : envois en attente à la déconnexion'
-    choix: 'À la déconnexion (F-071), ce qui attend encore d''être renvoyé au serveur (minuteur, D-077 ; soutien, D-095 ; photo de profil, D-100) reste sur le téléphone, rattaché au compte, et part à sa prochaine connexion sur ce téléphone. Rien n''est jamais envoyé pour un autre compte qui se connecte sur le même téléphone. Le design ne change pas.'
+    choix: 'À la déconnexion (F-071), ce qui attend encore d''être renvoyé au serveur (minuteur, D-077 ; « vue » d''une story, D-078, D-109 ; soutien, D-095 ; photo de profil, D-100) reste sur le téléphone, rattaché au compte, et part à sa prochaine connexion sur ce téléphone. Rien n''est jamais envoyé pour un autre compte qui se connecte sur le même téléphone. Le design ne change pas.'
     raison: 'Choix du propriétaire : se déconnecter ne fait rien perdre (D-065).'
     impacte: [F-071, F-015, F-058, F-060, F-061, E-02]
 
@@ -2235,6 +2236,42 @@ decisions:
     choix: 'Huit entités ont un diagramme d''états dans la Conception système : SM-E-02 Connexion, SM-E-03 Post, SM-E-08 Notification, SM-E-09 Relation d''amitié, SM-E-10 Conversation, SM-E-12 Story, SM-E-14 Minuteur de couleur, SM-E-16 Soutien. Les autres entités ne font qu''exister puis être effacées. Auront un modèle TLA+ : SM-E-09, SM-E-12, SM-E-14, SM-E-16, et un modèle de synchronisation des envois en attente et des téléphones ouverts ensemble (D-104, D-105).'
     raison: 'Choix du propriétaire : ce sont les entités où deux comptes, deux téléphones, le store ou un renvoi peuvent se croiser.'
     impacte: [E-02, E-03, E-08, E-09, E-10, E-12, E-14, E-16]
+
+  - id: D-108
+    sujet: 'Étape 5 : renvoi des envois en attente'
+    choix: 'Le renvoi au serveur de ce qui attend d''être enregistré (minuteur, D-077 ; « vue » d''une story, D-078 ; soutien, D-095 ; photo de profil, D-100) est une tâche de fond décrite par un flow à elle, FL-12 : quand elle part, dans quel ordre, et ce qui se passe si le serveur refuse un envoi pour de bon. Les lignes « renvoyé sans message » de FL-05, FL-06, FL-09 et FL-11 y renvoient. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le modèle TLA+ de synchronisation (D-107) a besoin de ces règles, éparpillées dans quatre flows.'
+    impacte: [F-015, F-036, F-058, F-060, F-061, E-12, E-14, E-16]
+
+  - id: D-109
+    sujet: 'Étape 5 : « vue » d''une story en attente'
+    choix: 'Une « vue » de story pas encore enregistrée (D-078) suit les mêmes règles que les trois autres envois en attente : gardée à la déconnexion pour le même compte sur ce téléphone (D-104), abandonnée avec le compte (D-101). D-101, D-104 et FL-11 la nomment avec les autres. Le design ne change pas.'
+    raison: 'Choix du propriétaire : une seule règle pour tous les envois en attente.'
+    impacte: [F-036, F-063, F-071, E-12]
+
+  - id: D-110
+    sujet: 'Étape 5 : fin d''une story'
+    choix: 'Quand la fin d''une story est atteinte (champ « fin » de E-12, 24 h après la publication, D-079), une tâche de fond du serveur la passe à Finie et l''efface du serveur : ses images et sa liste « vue par ». Le flow FL-13 la décrit. La question ouverte de F-036 sur une story finie est close. Le design ne change pas.'
+    raison: 'Choix du propriétaire : rien dans l''appli ne rouvre une story finie, donc rien n''a besoin de la garder.'
+    impacte: [F-036, E-12]
+
+  - id: D-111
+    sujet: 'Étape 5 : réglages du minuteur venus de deux téléphones'
+    choix: 'Quand deux téléphones du même compte ont changé le minuteur hors connexion (durée, F-060 ; réinitialisation, F-061), le serveur garde le changement fait le plus tard selon l''heure des téléphones, quel que soit l''ordre où ils arrivent. La question ouverte de F-060 est close. Le design ne change pas.'
+    raison: 'Choix du propriétaire : c''est le dernier choix de la personne qui compte.'
+    impacte: [F-060, F-061, E-14]
+
+  - id: D-112
+    sujet: 'FL-12 : quand partent les envois en attente'
+    choix: 'Les envois en attente (D-108) partent à chaque ouverture de l''appli ou retour au premier plan, et dès que le réseau revient pendant que l''appli est ouverte, toujours pour le compte connecté (D-104). Cela élargit le « à chaque ouverture » de D-095. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le serveur, et donc les autres téléphones du compte, rattrapent plus tôt.'
+    impacte: [F-015, F-036, F-058, F-060, F-061]
+
+  - id: D-113
+    sujet: 'FL-12 : envoi refusé pour de bon'
+    choix: 'Quand le serveur refuse pour de bon un envoi en attente (compte supprimé, story déjà effacée par D-110, données invalides), et non parce qu''il est injoignable, l''envoi est abandonné sans message, et au chargement suivant le téléphone montre ce que le serveur a. Un soutien (D-095) n''est jamais abandonné ainsi : il est renvoyé jusqu''à ce qu''il soit enregistré. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le serveur fait foi, sauf pour un achat déjà débité.'
+    impacte: [F-036, F-058, F-060, F-061, E-01, E-04, E-12, E-14]
 
 ids_retires:
   - {id: F-013, decision: D-002}

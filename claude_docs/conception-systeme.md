@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 49, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 60, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -312,7 +312,7 @@ Suite simple : ouverture → F-024 (1 → 2 → 3, dix fois) → noir et blanc, 
 | Pages de F-024 | 10 cycles écoulés | Noir et blanc sans message ; sur P-17, F-059 dit « Noir et blanc. Réinitialise pour retrouver les couleurs. » |
 | P-17 | Flèche à 1 ou 30 min | Flèche grisée (F-060) |
 | P-17 | Nouvelle durée en cours de cycle | Cycles gardés, la durée vaut pour la suite (D-076) |
-| P-17 | Le serveur n'enregistre pas la durée ou la réinitialisation | Appliquée sur le téléphone, renvoyée sans message (D-077) |
+| P-17 | Le serveur n'enregistre pas la durée ou la réinitialisation | Appliquée sur le téléphone, renvoyée sans message (D-077, FL-12) |
 | P-17 | Réinitialiser | Cycle 1, couleurs revenues sur toutes les pages (F-061) |
 
 Fin du flow : aucune ; le minuteur s'arrête quand l'appli se ferme et reprend à l'ouverture.
@@ -368,7 +368,7 @@ Suite simple : P-08 (ou P-09) → F-036 → P-10.a → P-10 → F-036 (images, p
 | P-10 | Tap à gauche sur la première image | Reste sur la première image |
 | P-10 | Fin d'une story, l'ami en a une autre en cours | La suivante commence, ses barres repartent (D-081) |
 | P-10 | Fin de la dernière image de la dernière story | Le lecteur se ferme et revient à la page d'où il a été ouvert |
-| P-10 | Le serveur n'enregistre pas « vue » | Cercle gris sur le téléphone, renvoyé sans message (D-078) |
+| P-10 | Le serveur n'enregistre pas « vue » | Cercle gris sur le téléphone, renvoyé sans message (D-078, FL-12) |
 
 Fin du flow : retour sur P-08 ou P-09 ; le cercle de l'ami est gris s'il n'a plus de story non vue.
 
@@ -548,7 +548,7 @@ Suite simple : F-073 (jusqu'à 1 h) → P-20 → P-22 (F-065) → F-015 → stor
 | P-03 | Moins de 1 h, ou compte soutenu avant ce chargement du fil | Aucun post Premium (F-015.a, D-094) |
 | Store | Paiement échoué, rien débité | P-22.a ou P-03.c : « Le paiement n’a pas abouti. Tu n’as pas été débité. » avec « Réessayer » (D-027) |
 | Store | Paiement annulé | P-22.b : « Paiement annulé. Tu n’as pas été débité. » et de nouveau « Soutenir le projet » ; même état sur F-015.a (D-036) |
-| Serveur | Le store a débité, le serveur n'enregistre pas | « Merci pour ton soutien. » quand même ; l'achat est renvoyé sans message à chaque ouverture (D-095, comme D-077) |
+| Serveur | Le store a débité, le serveur n'enregistre pas | « Merci pour ton soutien. » quand même ; l'achat est renvoyé sans message par FL-12 (D-095, D-112) |
 | P-22 | Compte déjà soutenu | Anneau et offre gardés, « Merci pour ton soutien. » à la place du bouton (D-094) |
 | FL-01 | Autre téléphone, réinstallation ou déconnexion | Même temps et même soutien : ils appartiennent au compte (D-092, D-093) |
 | Toutes | Deux téléphones ouverts en même temps sur le compte | Le temps ne compte qu'une fois (D-105) |
@@ -611,12 +611,12 @@ Suite simple : P-17 → F-056 → P-19 → P-17 ; P-17 → F-058 → P-18 → P-
 | P-19 | Frappe au-delà de 16 ou 80 caractères | Bloquée |
 | P-19.a | L'enregistrement échoue | P-19.b : « Tes modifications n’ont pas été enregistrées. Vérifie ta connexion et réessaie. » avec « Réessayer », saisies gardées (D-027) |
 | P-18 | Fichier inutilisable | P-18.a : « Cette image n’a pas pu être utilisée. Choisis-en une autre. » |
-| P-18 | Pas de réseau | Photo appliquée sur le téléphone, renvoyée sans message (D-100) |
+| P-18 | Pas de réseau | Photo appliquée sur le téléphone, renvoyée sans message (D-100, FL-12) |
 | P-18 | Accès à la galerie refusé | Ouvert : F-058 |
 | P-23 | Nouveau téléphone ou réinstallation | Thème Noir, carrousels de pause activés (D-103) |
 | P-21 | « Annuler » dans la fenêtre | La fenêtre se ferme, rien n'est effacé |
 | P-21 | La suppression échoue | P-21.a : « Ton compte n’a pas pu être supprimé. Rien n’a été effacé. » avec « Réessayer » : tout ou rien (D-101) |
-| F-071 | Envois en attente (D-077, D-095, D-100) | Gardés pour la prochaine connexion du compte sur ce téléphone, jamais pour un autre compte (D-104) |
+| F-071 | Envois en attente (D-077, D-078, D-095, D-100 ; D-109) | Gardés pour la prochaine connexion du compte sur ce téléphone, jamais pour un autre compte (D-104) |
 | F-063 | Envois en attente | Abandonnés avec le compte (D-101) |
 | Autre téléphone | Compte supprimé ailleurs | P-01 à son prochain échange avec le serveur (D-101) |
 | F-070 | Quelqu'un prend le @ d'un compte supprimé | Permis tout de suite (D-102) |
@@ -642,6 +642,94 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-062 : ouvrir un de ses posts ; nombre de posts de la grille.
 - F-066 : changement réel de l'icône du téléphone.
 - F-070 : règles de l'identifiant (longueur, caractères permis, message s'il est pris).
+
+## FL-12 Renvoyer les envois en attente
+
+Tâche de fond, sans geste de l'utilisateur : ce qu'un utilisateur connecté (R-02) a changé sur son téléphone sans que le serveur l'enregistre attend sur ce téléphone, rattaché à son compte, puis repart sans message jusqu'à ce que le serveur l'enregistre ou le refuse pour de bon. Mobile seulement. Décisions : D-077, D-078, D-095, D-100, D-101, D-104, D-108, D-109, D-111, D-112, D-113.
+
+### Entrées
+
+- FL-05 : une durée (F-060) ou une réinitialisation (F-061) que le serveur n'a pas enregistrée (D-077).
+- FL-06 : une « vue » de story (F-036) que le serveur n'a pas enregistrée (D-078).
+- FL-09 : un soutien débité par le store que le serveur n'a pas enregistré (F-015, D-095).
+- FL-11 : une photo de profil (F-058) dont la graine et l'algorithme ne sont pas enregistrés (D-100).
+
+Hors de ce flow : les envois qui montrent une erreur avec « Réessayer » (publier, commenter, envoyer un message…), que l'utilisateur relance lui-même.
+
+### Séquence
+
+| Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- | --- |
+| 1. Garder l'envoi | Le serveur n'enregistre pas un changement de FL-05, FL-06, FL-09 ou FL-11 | — | F-060, F-061, F-036, F-015, F-058 | — | Sur le téléphone : l'envoi, son compte et l'heure où il a été fait |
+| 2. Partir | Ouverture de l'appli ou retour au premier plan, ou retour du réseau appli ouverte, connecté au compte de l'envoi (D-112) | — | Celle de l'envoi | — | — |
+| 3. Envoyer | Un envoi après l'autre, du plus ancien au plus récent | — | Celle de l'envoi | — | E-14 (durée ou cycles, D-077), E-12 (vue par, D-078), E-16 (soutien, D-095), E-04 et E-01 (photo, D-100) |
+| 4. Enregistré | Le serveur l'enregistre | — | — | — | L'envoi quitte le téléphone |
+| 5. Attendre | Réseau ou serveur injoignable | — | — | — | — (l'envoi repart au prochain départ, étape 2) |
+
+Suite simple : changement non enregistré → 1 → 2 → 3 → 4, ou 5 puis de nouveau 2. Le téléphone montre déjà le changement pendant toute l'attente ; rien n'est affiché par ce flow.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| Serveur | Réseau ou serveur injoignable | L'envoi reste sur le téléphone et repart au prochain départ (D-112) ; aucun message |
+| Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones, est gardé (D-111) |
+| Serveur | Refus pour de bon : données invalides, story déjà effacée (FL-13) | Envoi abandonné sans message ; au chargement suivant, le téléphone montre ce que le serveur a (D-113) |
+| Serveur | Soutien refusé | Jamais abandonné : renvoyé jusqu'à ce qu'il soit enregistré (D-095, D-113) |
+| F-071 | Déconnexion | Les envois restent sur le téléphone, rattachés au compte, et repartent à sa prochaine connexion sur ce téléphone ; jamais pour un autre compte (D-104, D-109) |
+| F-063 | Compte supprimé sur ce téléphone | Envois abandonnés avec le compte (D-101, D-109) |
+| Autre téléphone | Compte supprimé ailleurs | Le serveur refuse ses envois pour de bon : abandonnés (D-101, D-113) |
+
+Fin du flow : chaque envoi finit enregistré ou abandonné, sans rien montrer à l'utilisateur.
+
+### Manques du registre
+
+Réglés le 25 novembre 2026 :
+
+- Le renvoi a son propre flow (D-108) ; une « vue » en attente suit les mêmes règles que les autres envois (D-109).
+- Deux téléphones qui changent le minuteur : le changement fait le plus tard gagne (D-111) ; la question ouverte de F-060 est close.
+- Les envois partent à l'ouverture, au retour au premier plan et au retour du réseau (D-112).
+- Un refus pour de bon abandonne l'envoi, sauf un soutien (D-113).
+
+Aucune feature ni page ne manque : la tâche n'a rien à l'écran.
+
+## FL-13 Finir une story
+
+Tâche de fond du serveur, sans geste de l'utilisateur : 24 h après sa publication, une story passe à Finie et le serveur l'efface. Mobile seulement. Décisions : D-079, D-101, D-110, D-113.
+
+### Entrées
+
+- Une story enregistrée (F-051, destination Story, F-068) prend sa fin : publication + 24 h (D-079, SM-E-12).
+
+Hors de ce flow : regarder une story, dans FL-06 ; l'effacement de toutes les stories d'un compte supprimé (F-063, D-101), dans FL-11.
+
+### Séquence
+
+| Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- | --- |
+| 1. Finir | La fin (E-12) est atteinte | — | — | E-12 (fin) | E-12 (Finie) |
+| 2. Effacer | Tout de suite après | — | — | — | E-12 effacée du serveur, avec ses images et sa liste « vue par » (D-110) |
+| 3. Disparaître des téléphones | Chargement suivant de P-08 ou de P-09 | P-08, P-09 | F-036 | E-12 | — (plus de rond ni de cercle, D-079) |
+
+Suite simple : fin atteinte → 1 → 2 → 3. F-036 lit E-12 ; la tâche du serveur n'est portée par aucune feature.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| P-10 | Story ouverte après sa fin, avant le chargement suivant | P-10.b ; son cercle disparaît au chargement suivant (D-079) |
+| Serveur | « Vue » renvoyée après la fin (FL-12) | Refus pour de bon : abandonnée sans message (D-110, D-113) |
+| F-063 | L'auteur supprime son compte avant la fin | La story est effacée avec le compte (D-101) |
+
+Fin du flow : la story n'existe plus nulle part et ne se rouvre jamais (D-079).
+
+### Manques du registre
+
+Réglé le 25 novembre 2026 : une story finie est effacée du serveur dès sa fin (D-110) ; la question ouverte de F-036 est close.
+
+Reste ouvert, dans les `questions_ouvertes` de F-036 : une story en cours de lecture sur P-10 quand sa fin arrive va-t-elle jusqu'au bout ?
+
+Aucune feature ni page ne manque.
 
 ## États des entités
 
@@ -816,9 +904,9 @@ stateDiagram-v2
         [*] --> non_vue
         non_vue --> vue : P-10 fermé, F-036
     }
-    en_cours --> finie : 24 h écoulées
+    en_cours --> finie : 24 h écoulées, FL-13
     en_cours --> [*] : F-063 de l'auteur
-    finie --> [*] : F-063 de l'auteur
+    finie --> [*] : effacée tout de suite, FL-13
 ```
 
 | Passage | Déclencheur | Effet et décisions |
@@ -827,8 +915,8 @@ stateDiagram-v2
 | En publication → En cours | Le serveur enregistre | P-08.b (D-031) ; fin = publication + 24 h (D-079) |
 | En publication → Échec, et retour | Comme SM-E-03 | P-13.b, « Réessayer » (D-027) |
 | Non vue → Vue, pour un ami | Il ferme P-10 (croix ou fin) après au moins une image affichée (F-036) | Cercle gris tout de suite sur son téléphone, renvoyé sans message au serveur (D-078) ; P-10.b sans image la laisse non vue |
-| En cours → Finie | 24 h écoulées (tâche de fond) | Plus de rond ni de cercle, ne se rouvre plus ; ouverte juste après, P-10.b (D-079) |
-| En cours ou Finie → (effacée) | F-063 de l'auteur | D-101 ; ce que devient une story finie avant cela reste ouvert (F-036) |
+| En cours → Finie | 24 h écoulées (tâche de fond, FL-13) | Plus de rond ni de cercle, ne se rouvre plus ; ouverte juste après, P-10.b (D-079) |
+| En cours ou Finie → (effacée) | F-063 de l'auteur | D-101 ; une story finie n'attend pas : la tâche de FL-13 l'efface dès sa fin, images et « vue par » (D-110) |
 
 ### SM-E-14 Minuteur de couleur
 
@@ -900,6 +988,6 @@ Choisis par D-107. Chaque règle qu'un modèle vérifie portera le nom d'une rè
 | --- | --- |
 | SM-E-09 | Jamais deux demandes en attente dans les deux sens (D-073) ; une conversation existe si et seulement si les deux comptes sont amis (D-071, D-082) ; un ami proche est toujours un ami (D-060) |
 | SM-E-12 | Une story finie ne se rouvre jamais, même si « vue » arrive après (D-078, D-079) ; seuls les amis, et les amis proches pour « Amis proches », la voient (D-080) |
-| SM-E-14 | Le gris vaut toujours 10 % par cycle écoulé, 10 cycles au plus ; deux téléphones ne font jamais compter une seconde deux fois (D-105) ; un réglage renvoyé (D-077) finit enregistré |
+| SM-E-14 | Le gris vaut toujours 10 % par cycle écoulé, 10 cycles au plus ; deux téléphones ne font jamais compter une seconde deux fois (D-105) ; un réglage renvoyé (D-077) finit enregistré ; entre deux téléphones, le changement fait le plus tard gagne (D-111) |
 | SM-E-16 | Aucune erreur n'est montrée après un débit (D-095) ; un achat confirmé finit enregistré, pour le compte qui l'a fait seulement (D-104) ; un compte ne paie qu'une fois (D-092) |
 | Synchronisation | Les envois en attente (D-077, D-078, D-095, D-100) partent tous, ne partent jamais pour un autre compte (D-104), et jamais après la suppression du compte (D-101) ; le temps d'un compte avance d'une seconde par seconde où au moins un téléphone est au premier plan (D-105) |
