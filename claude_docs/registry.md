@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 376, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 387, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -638,6 +638,7 @@ features:
     questions_ouvertes:
       - 'Remboursement par le store : le compte redevient-il « non soutenu » ?'
       - 'Achat en attente (à approuver par un parent, paiement différé) : quel état montrer ?'
+      - 'Second achat fait sur un autre téléphone du compte avant que le serveur ait enregistré le premier (D-115) : remboursé par le store, et comment ?'
 ```
 
 ```yaml
@@ -1353,7 +1354,8 @@ features:
       - flèche grisée aux bornes
       - 'enregistrement : appliqué tout de suite, renvoyé sans message tant que le serveur ne l''a pas (D-077)'
       - 'deux téléphones hors connexion : le serveur garde le changement fait le plus tard (D-111)'
-    questions_ouvertes: []
+    questions_ouvertes:
+      - 'Un téléphone dont l''horloge est fausse peut faire gagner un réglage plus ancien (D-111) : corriger l''heure des téléphones par celle du serveur ?'
 
   - id: F-061
     nom: Réinitialiser les cycles
@@ -1457,12 +1459,12 @@ features:
 
   - id: F-070
     nom: Créer son compte
-    description: 'À la première connexion, choix du pseudo et de l''identifiant (@), puis ouverture de l''Accueil (D-052). Seulement ces deux champs : photo et description plus tard sur P-19 (D-063).'
+    description: 'À la première connexion, choix du pseudo et de l''identifiant (@), puis ouverture de l''Accueil (D-052). Seulement ces deux champs : photo et description plus tard sur P-19 (D-063). Crée aussi le minuteur, le temps d''utilisation et le soutien du compte (D-114).'
     pages: [P-27, P-27.a, P-27.b]
     plateformes: [mobile]
     acces: [R-01]
     variantes: []
-    entites: [E-02, E-01]
+    entites: [E-02, E-01, E-14, E-15, E-16]
     operations: [lecture, écriture]
     etats_ui:
       - « Créer mon compte » gris tant qu'un champ est vide
@@ -1652,18 +1654,18 @@ entites:
     champs:
       - compte (D-074) ; deux téléphones ouverts ensemble ne comptent qu'une fois (D-105)
       - durée du cycle
-      - temps passé appli ouverte dans le cycle en cours (D-075)
+      - temps passé appli ouverte dans le cycle en cours (D-075), y compris sans réseau (D-117)
       - cycles écoulés
       - pourcentage de gris
       - temps restant
-    utilisee_par: [F-024, F-059, F-060, F-061, F-063]
+    utilisee_par: [F-024, F-059, F-060, F-061, F-063, F-070]
 
   - id: E-15
     nom: Temps d'utilisation
     champs:
       - compte (D-093)
-      - durée cumulée, appli ouverte et au premier plan sur au moins un téléphone, comptée une fois (D-093, D-105)
-    utilisee_par: [F-015, F-063, F-065, F-073]
+      - durée cumulée, appli ouverte et au premier plan sur au moins un téléphone, comptée une fois (D-093, D-105), y compris sans réseau, renvoyée par FL-12 (D-117)
+    utilisee_par: [F-015, F-063, F-065, F-070, F-073]
 
   - id: E-16
     nom: Soutien
@@ -1671,8 +1673,8 @@ entites:
       - prix (1,99 €)
       - compte (D-092)
       - statut (non soutenu, soutenu)
-      - achat du store, renvoyé à chaque ouverture tant que le serveur ne l'a pas enregistré (D-095)
-    utilisee_par: [F-015, F-063]
+      - achat du store, renvoyé à chaque ouverture tant que le serveur ne l'a pas enregistré (D-095), abandonné si le compte est supprimé (D-116) ; un seul enregistré par compte (D-115)
+    utilisee_par: [F-015, F-063, F-070]
 
   - id: E-17
     nom: Préférences d'interface
@@ -2272,6 +2274,30 @@ decisions:
     choix: 'Quand le serveur refuse pour de bon un envoi en attente (compte supprimé, story déjà effacée par D-110, données invalides), et non parce qu''il est injoignable, l''envoi est abandonné sans message, et au chargement suivant le téléphone montre ce que le serveur a. Un soutien (D-095) n''est jamais abandonné ainsi : il est renvoyé jusqu''à ce qu''il soit enregistré. Le design ne change pas.'
     raison: 'Choix du propriétaire : le serveur fait foi, sauf pour un achat déjà débité.'
     impacte: [F-036, F-058, F-060, F-061, E-01, E-04, E-12, E-14]
+
+  - id: D-114
+    sujet: 'Étape 6 : ce que crée la création du compte'
+    choix: 'Créer son compte (F-070) crée aussi, à leurs valeurs de départ, le minuteur de couleur (E-14 : arrêté, aucun cycle écoulé), le temps d''utilisation (E-15 : 0 s) et le soutien (E-16 : non soutenu) du compte. F-070 les ajoute à ses entités. Le design ne change pas.'
+    raison: 'Choix du propriétaire : SM-E-14 et SM-E-16 partent déjà de F-070 ; un compte a ses compteurs dès sa création.'
+    impacte: [F-070, E-14, E-15, E-16]
+
+  - id: D-115
+    sujet: 'Étape 6 : un seul soutien par compte'
+    choix: 'Le serveur n''enregistre qu''un soutien par compte (D-092) : E-16 ne passe à Soutenu qu''une fois. Un second achat fait sur un autre téléphone du compte avant que le serveur ait enregistré le premier (D-095) n''y change rien ; ce qu''il devient chez le store est une question ouverte de F-015. La règle « un compte ne paie qu''une fois » du modèle SM-E-16 devient « le serveur n''enregistre qu''un soutien par compte ». Le design ne change pas.'
+    raison: 'Choix du propriétaire : l''appli ne peut pas empêcher deux achats faits sur deux téléphones dans cette fenêtre, et le cas est rare.'
+    impacte: [F-015, E-16]
+
+  - id: D-116
+    sujet: 'Étape 6 : soutien en attente d''un compte supprimé'
+    choix: 'Précise D-113 : un soutien en attente (D-095) est abandonné quand son compte est supprimé, sur ce téléphone ou sur un autre (D-101), comme les autres envois en attente. Hors suppression du compte, il est toujours renvoyé jusqu''à ce qu''il soit enregistré. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le compte n''existe plus et rien ne peut enregistrer le soutien ; sinon il attendrait pour toujours sur le téléphone.'
+    impacte: [F-015, F-063, E-16]
+
+  - id: D-117
+    sujet: 'Étape 6 : temps passé sans réseau'
+    choix: 'Les secondes passées appli ouverte et au premier plan sans réseau comptent pour le minuteur (E-14, F-024) et le temps d''utilisation (E-15, F-073). Le téléphone note chaque période (début et fin, à l''heure du téléphone) et la renvoie comme un envoi en attente de FL-12 (D-108, D-112), avec les mêmes règles (D-101, D-104, D-109). Le serveur la fusionne avec les périodes des autres téléphones du compte : une seconde où deux téléphones sont ouverts ne compte qu''une fois (D-105). Comme pour D-111, l''heure des téléphones ordonne périodes et réglages : seules les secondes après la dernière réinitialisation (F-061) comptent pour le minuteur. Pendant l''attente, le téléphone grise déjà selon son propre compte. Le design ne change pas.'
+    raison: 'Choix du propriétaire : sinon le mode avion arrêterait le gris et le compte vers 1 h.'
+    impacte: [F-024, F-061, F-073, E-14, E-15]
 
 ids_retires:
   - {id: F-013, decision: D-002}
