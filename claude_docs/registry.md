@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 412, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 414, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -2240,7 +2240,7 @@ decisions:
 
   - id: D-107
     sujet: 'Étape 6 : diagrammes d''états et modèles TLA+'
-    choix: 'Huit entités ont un diagramme d''états dans la Conception système : SM-E-02 Connexion, SM-E-03 Post, SM-E-08 Notification, SM-E-09 Relation d''amitié, SM-E-10 Conversation, SM-E-12 Story, SM-E-14 Minuteur de couleur, SM-E-16 Soutien. Les autres entités ne font qu''exister puis être effacées. Auront un modèle TLA+ : SM-E-09, SM-E-12, SM-E-14, SM-E-16, et un modèle de synchronisation des envois en attente et des téléphones ouverts ensemble (D-104, D-105).'
+    choix: 'Huit entités ont un diagramme d''états dans la Conception système : SM-E-02 Connexion, SM-E-03 Post, SM-E-08 Notification, SM-E-09 Relation d''amitié, SM-E-10 Conversation, SM-E-12 Story, SM-E-14 Minuteur de couleur, SM-E-16 Soutien. Les autres entités ne font qu''exister puis être effacées. Auront un modèle TLA+ : SM-E-09, SM-E-12, SM-E-14, SM-E-16, et un modèle de synchronisation des envois en attente et des téléphones ouverts ensemble (D-104, D-105). Complété par D-124 : SM-E-04 Média et son modèle.'
     raison: 'Choix du propriétaire : ce sont les entités où deux comptes, deux téléphones, le store ou un renvoi peuvent se croiser.'
     impacte: [E-02, E-03, E-08, E-09, E-10, E-12, E-14, E-16]
 
@@ -2339,6 +2339,18 @@ decisions:
     choix: 'Une tâche de fond du serveur efface, 24 h après son arrivée, toute graine rattachée à rien (ni post, ni story, ni message, ni photo de profil), avec son algorithme (E-04). Elle couvre le brouillon perdu sans « Fermer » (appli fermée de force, téléphone éteint) et l''effacement qui n''arrive jamais (D-121, D-122). Le flow FL-14 la décrit. Une publication faite plus tard renvoie les graines que le serveur n''a plus (F-051). La question ouverte de F-044 est close. Le design ne change pas.'
     raison: 'Choix du propriétaire : la même durée qu''une story (D-079) ; rien ne survit longtemps d''un post qui n''est pas publié (D-121).'
     impacte: [F-044, F-051, E-04]
+
+  - id: D-124
+    sujet: 'Étape 6 : diagramme d''états et modèle TLA+ du média'
+    choix: 'Complète D-107 : E-04 Média a son diagramme d''états, SM-E-04, dans la Conception système : en attente sur le téléphone (FL-12, D-122), graine d''un brouillon sur le serveur (D-120), rattachée à un post, une story, un message ou une photo de profil, puis effacée (D-121, D-123, D-125, F-063). Il a aussi un modèle TLA+, SM_E_04.tla, où se croisent la publication, le retrait d''une photo, le brouillon perdu, l''effacement en attente et le ménage des 24 h (FL-14). Le design ne change pas.'
+    raison: 'Choix du propriétaire : depuis D-120 et D-121, ce que devient une graine dépend de son état, et le téléphone, FL-12 et FL-14 peuvent se croiser.'
+    impacte: [E-04, F-005, F-044, F-046, F-051, F-058]
+
+  - id: D-125
+    sujet: 'Graine de l''ancienne photo de profil'
+    choix: 'Quand le serveur enregistre une nouvelle photo de profil (F-058, D-100), il efface aussitôt la graine de l''ancienne et son algorithme (E-04) : il ne garde qu''une graine de photo de profil par compte. Le design ne change pas.'
+    raison: 'Choix du propriétaire : rien ne reste d''une photo qu''on n''affiche plus, comme pour un brouillon abandonné (D-121).'
+    impacte: [F-058, E-04]
 
 ids_retires:
   - {id: F-013, decision: D-002}

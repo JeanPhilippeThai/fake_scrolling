@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-25 · commit ba98a99 · fingerprint 630f7bafb2f8
+2026-11-25 · commit ba98a99 · fingerprint 87cfeb50fc1f
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -21,7 +21,6 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 8: sort the check's findings** (step 6), on finding 2 (L6-01, class B). Give it: D-107, D-120, D-121, E-04, SM-E-03, SM-E-12, the 24 h cleanup of D-123 (FL-14), and the report's question 2 (a: amend D-107 and add SM-E-04 Média, graine d'un brouillon → rattachée → effacée, recommended; b: no diagram, reword D-107 and the « États des entités » intro). If a diagram is added, keep in step with `docs/system-design/sync.tla` or add `SM_E_04.tla`. It produces: a decision, SM-E-04 or the reworded D-107.
-2. **Step 7: non-functional requirements** (no prompt). Write the app-wide NFRs once (privacy, speed, security, accessibility), each with a number or a test, as `NFR-X-<n>` in the Conception système Claude Doc (the app has no `docs/cross-cutting.md`; its docs live in Claude Docs), with feature-level ones (`NFR-<feature>-<n>`) only where they are specific. D-074, D-086, D-101 and D-119 already constrain privacy; accessible names are required by `verification.md`. It produces: NFRs.
-3. **Prompt 6: system design** (step 8), question « choisis la stack : langage et framework de l'app mobile, du serveur, et le moteur de chaque stockage (SQL ou NoSQL) ». Give it: the registry, FL-01 to FL-13, the NFRs from item 2. It produces: stack decisions.
-4. **Prompt 6: system design** (step 8), question « qu'est-ce qui doit être côté serveur vs client, et quel découpage en API ». Give it: the registry, FL-01 to FL-13, the stack from item 3. It produces: decisions on the API split.
+1. **Step 7: non-functional requirements** (no prompt). Write the app-wide NFRs once (privacy, speed, security, accessibility), each with a number or a test, as `NFR-X-<n>` in the Conception système Claude Doc (the app has no `docs/cross-cutting.md`; its docs live in Claude Docs), with feature-level ones (`NFR-<feature>-<n>`) only where they are specific. D-074, D-086, D-101 and D-119 already constrain privacy; accessible names are required by `verification.md`. It produces: NFRs.
+2. **Prompt 6: system design** (step 8), question « choisis la stack : langage et framework de l'app mobile, du serveur, et le moteur de chaque stockage (SQL ou NoSQL) ». Give it: the registry, FL-01 to FL-13, the NFRs from item 1. It produces: stack decisions.
+3. **Prompt 6: system design** (step 8), question « qu'est-ce qui doit être côté serveur vs client, et quel découpage en API ». Give it: the registry, FL-01 to FL-13, the stack from item 2. It produces: decisions on the API split.
