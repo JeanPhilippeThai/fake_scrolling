@@ -1,0 +1,74 @@
+name: TLA+ models
+
+# Runs the TLC model checker on every model of docs/system-design/ (step 6 of the method,
+# workflow_docs/method/verification.md). Each Model.tla is checked with its Model.cfg; a broken
+# rule fails the run and TLC prints the steps that break it.
+on:
+  pull_request:
+    paths:
+      - "docs/system-design/**"
+      - ".github/workflows/tla-models.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/system-design/**"
+      - ".github/workflows/tla-models.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TLA_TOOLS_VERSION: v1.8.0
+  TLA_TOOLS_SHA256: fdffef247f563ef6edbfd44958d2a82db79e7564e07cb673262d896353fa6713
+
+jobs:
+  tlc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Download the TLA+ tools
+        run: |
+          curl -sSL -o "$RUNNER_TEMP/tla2tools.jar" \
+            "https://github.com/tlaplus/tlaplus/releases/download/$TLA_TOOLS_VERSION/tla2tools.jar"
+          echo "$TLA_TOOLS_SHA256  $RUNNER_TEMP/tla2tools.jar" | sha256sum -c -
+
+      - name: Check every model
+        shell: bash
+        working-directory: docs/system-design
+        run: |
+          status=0
+          for tla in *.tla; do
+            model="${tla%.tla}"
+            if [ ! -f "$model.cfg" ]; then
+              echo "::error file=docs/system-design/$tla::$model.cfg is missing"
+              status=1
+              continue
+            fi
+            echo "::group::$model"
+            # -deadlock: the models are bounded, so a final state is expected, not a deadlock.
+            if java -XX:+UseParallelGC -cp "$RUNNER_TEMP/tla2tools.jar" tlc2.TLC \
+                 -deadlock -workers auto -cleanup -metadir "$RUNNER_TEMP/tlc-$model" \
+                 -config "$model.cfg" "$tla" | tee "$RUNNER_TEMP/$model.out"; then
+              result="passed"
+            else
+              result="FAILED"
+              status=1
+            fi
+            echo "::endgroup::"
+            states=$(grep -Eo '[0-9,]+ distinct states found' "$RUNNER_TEMP/$model.out" | tail -1 || true)
+            echo "| $model | $result | ${states:-—} |" >> "$RUNNER_TEMP/summary.md"
+          done
+          {
+            echo "| Model | Result | States |"
+            echo "| --- | --- | --- |"
+            cat "$RUNNER_TEMP/summary.md"
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit $status
