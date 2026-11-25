@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 387, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 399, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -865,7 +865,7 @@ features:
 
   - id: F-030
     nom: Publier un commentaire
-    description: Champ « Ajouter un commentaire… » et bouton « Publier ».
+    description: Champ « Ajouter un commentaire… » et bouton « Publier ». Le téléphone change le texte en charabia avant l'envoi (D-118).
     pages: [P-05, P-05.c]
     plateformes: [mobile]
     acces: [R-02]
@@ -1047,7 +1047,7 @@ features:
       - 'échec : la photo cerclée de rouge, « Non envoyée. » avec « Réessayer »'
     questions_ouvertes:
       - Choix de la photo (la maquette envoie une image de démo)
-      - 'Art généré (D-086) : quels algorithmes, et comment pour une vidéo ?'
+      - 'Art généré (D-086, D-119) : quelles briques au départ, et comment pour une vidéo ?'
 
   - id: F-043
     nom: Rechercher un compte par identifiant
@@ -1122,7 +1122,7 @@ features:
 
   - id: F-047
     nom: Rédiger la légende
-    description: Champ « Écris une légende… » à côté de la miniature, pour un post ou une story (D-068).
+    description: Champ « Écris une légende… » à côté de la miniature, pour un post ou une story (D-068). Part en charabia à la publication (D-118).
     pages: [P-13]
     plateformes: [mobile]
     acces: [R-02]
@@ -1206,7 +1206,6 @@ features:
       - 'succès fil : l''Accueil affiche le toast « Post publié. » (D-031)'
       - 'succès story : Messages affiche le toast « Story publiée. » (D-031)'
     questions_ouvertes:
-      - 'Envoi et charabia de la légende côté amis ; photos : art généré (D-086)'
       - 'Palette du post (E-03) : qui la fixe à la publication ? Le post n’expire pas (D-097)'
 
   - id: F-052
@@ -1549,7 +1548,7 @@ entites:
     champs:
       - auteur (pseudo, photo)
       - type (photo, vidéo, carrousel, pause, inspire-expire, premium)
-      - légende
+      - légende, en charabia (D-118)
       - nombre de likes
       - nombre de commentaires
       - nombre d'enregistrements
@@ -1565,7 +1564,7 @@ entites:
     nom: Média
     champs:
       - graine (empreinte de la photo ou de la vidéo, seule à quitter le téléphone, D-086)
-      - algorithme qui dessine l'art généré (D-086)
+      - algorithme qui dessine l'art généré, choisi par le serveur et décrit en données (D-086, D-119)
       - durée de la vidéo
       - rang dans le carrousel
     utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, F-063]
@@ -1574,7 +1573,7 @@ entites:
     nom: Commentaire
     champs:
       - auteur
-      - texte
+      - texte, en charabia (D-118)
       - ancienneté
       - nombre de likes
     utilisee_par: [F-016, F-017, F-022, F-030, F-063]
@@ -1631,7 +1630,7 @@ entites:
     champs:
       - auteur
       - images
-      - texte
+      - texte, en charabia (D-118)
       - ancienneté
       - vue par (comptes qui l'ont vue, D-078)
       - fin, 24 h après la publication (D-079)
@@ -2114,7 +2113,7 @@ decisions:
     impacte: [F-037, F-038, F-041, F-042, E-10]
   - id: D-086
     sujet: 'Photos et vidéos en art généré'
-    choix: 'Dans toute l''app, une photo ou une vidéo n''est jamais montrée telle quelle : le téléphone en tire une graine (son empreinte), et des algorithmes simples dessinent à partir d''elle une image ou une vidéo générée, propre à chaque photo. Seuls la graine et le choix de l''algorithme quittent le téléphone, jamais la vraie photo. E-04 garde la graine et l''algorithme au lieu de l''image et de sa version floutée. Le flou du design tient lieu de cet art jusqu''au développement : le design ne change pas et aucune feature ne porte design_a_mettre_a_jour.'
+    choix: 'Dans toute l''app, une photo ou une vidéo n''est jamais montrée telle quelle : le téléphone en tire une graine (son empreinte), et des algorithmes simples dessinent à partir d''elle une image ou une vidéo générée, propre à chaque photo. Seuls la graine et le choix de l''algorithme quittent le téléphone, jamais la vraie photo. E-04 garde la graine et l''algorithme au lieu de l''image et de sa version floutée. Le flou du design tient lieu de cet art jusqu''au développement : le design ne change pas et aucune feature ne porte design_a_mettre_a_jour. Remplacée en partie par D-119 : seule la graine quitte le téléphone ; le serveur choisit l''algorithme et le téléphone dessine.'
     raison: 'Choix du propriétaire : un art qui naît de la photo remplace le flou, et, comme le charabia (D-083), rien de la vraie photo n''est envoyé.'
     impacte: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, E-04, E-11]
   - id: D-087
@@ -2139,7 +2138,7 @@ decisions:
     impacte: [F-005, F-026, P-14]
   - id: D-091
     sujet: 'Photo de profil nette environ 1 s'
-    choix: 'Après un changement de photo de profil (F-058), la photo choisie se montre telle quelle environ 1 s, sur le téléphone de son propriétaire seulement, puis laisse place à son art généré (D-086), comme le texte tapé avant le charabia (D-083). Seuls la graine et l''algorithme quittent le téléphone. Le design ne change pas.'
+    choix: 'Après un changement de photo de profil (F-058), la photo choisie se montre telle quelle environ 1 s, sur le téléphone de son propriétaire seulement, puis laisse place à son art généré (D-086), comme le texte tapé avant le charabia (D-083). Seuls la graine et l''algorithme quittent le téléphone. Le design ne change pas. Remplacée en partie par D-119 : seule la graine quitte le téléphone.'
     raison: 'Choix du propriétaire : c''est ce que dessine la maquette, et la vraie photo ne quitte jamais le téléphone (T-04).'
     impacte: [F-058, E-04]
 
@@ -2193,7 +2192,7 @@ decisions:
 
   - id: D-100
     sujet: 'FL-11 : enregistrement de la photo de profil'
-    choix: 'Une nouvelle photo de profil (F-058) s''applique tout de suite sur le téléphone, puis sa graine et son algorithme (D-086) sont renvoyés au serveur sans message jusqu''à ce qu''ils soient enregistrés, comme D-077. Pas d''état d''erreur réseau : P-18.a ne sert qu''à un fichier inutilisable. Pas de nouvel artboard.'
+    choix: 'Une nouvelle photo de profil (F-058) s''applique tout de suite sur le téléphone, puis sa graine et son algorithme (D-086) sont renvoyés au serveur sans message jusqu''à ce qu''ils soient enregistrés, comme D-077. Pas d''état d''erreur réseau : P-18.a ne sert qu''à un fichier inutilisable. Pas de nouvel artboard. Remplacée en partie par D-119 : seule la graine est renvoyée, le serveur choisit l''algorithme.'
     raison: 'Choix du propriétaire : comme le minuteur, la photo se renvoie d''elle-même ; un message gênerait pour rien.'
     impacte: [F-058, E-01, E-04]
 
@@ -2298,6 +2297,18 @@ decisions:
     choix: 'Les secondes passées appli ouverte et au premier plan sans réseau comptent pour le minuteur (E-14, F-024) et le temps d''utilisation (E-15, F-073). Le téléphone note chaque période (début et fin, à l''heure du téléphone) et la renvoie comme un envoi en attente de FL-12 (D-108, D-112), avec les mêmes règles (D-101, D-104, D-109). Le serveur la fusionne avec les périodes des autres téléphones du compte : une seconde où deux téléphones sont ouverts ne compte qu''une fois (D-105). Comme pour D-111, l''heure des téléphones ordonne périodes et réglages : seules les secondes après la dernière réinitialisation (F-061) comptent pour le minuteur. Pendant l''attente, le téléphone grise déjà selon son propre compte. Le design ne change pas.'
     raison: 'Choix du propriétaire : sinon le mode avion arrêterait le gris et le compte vers 1 h.'
     impacte: [F-024, F-061, F-073, E-14, E-15]
+
+  - id: D-118
+    sujet: 'Tout texte écrit part en charabia'
+    choix: 'Dans toute l''app, le téléphone change en charabia, émojis gardés, tout texte qu''un utilisateur écrit, avant de l''envoyer : légende d''un post ou d''une story (F-047, F-051), commentaire (F-030), message (D-083), pseudo et description (D-098). Le vrai texte ne quitte jamais le téléphone, et personne, l''auteur compris, ne peut le relire : E-03, E-05 et E-12 ne gardent que le charabia. Le charabia est fait de faux mots qu''on peut prononcer, comme le dessine le design (« vralo mizé »). Seuls restent lisibles l''identifiant (@) que chacun choisit (F-043, F-057) et les textes de l''app elle-même. La légende reste lisible dans le brouillon, sur ce téléphone seulement (D-068), et part en charabia à la publication. Le design ne change pas.'
+    raison: 'Choix du propriétaire : une seule règle pour tout texte écrit, au lieu de la redire feature par feature (D-083, D-098) ; elle clôt la question ouverte de F-051 sur la légende.'
+    impacte: [F-030, F-047, F-051, E-03, E-05, E-12]
+
+  - id: D-119
+    sujet: 'Art généré : le serveur choisit, le téléphone dessine'
+    choix: 'Précise D-086 : seule la graine quitte le téléphone. Le serveur choisit l''algorithme de chaque photo ou vidéo et le garde avec elle (E-04) : le même média montre le même art à tous et le garde quand d''autres algorithmes s''ajoutent, et le serveur peut lui en donner un autre quand il veut. Il envoie au téléphone la graine et l''algorithme, décrit en données (des briques et leurs réglages : palette, formes, bruit, mouvement…), et le téléphone dessine l''art. Un nouvel algorithme fait de briques existantes ne demande pas de mise à jour de l''app ; une nouvelle brique, si. Le design ne change pas.'
+    raison: 'Choix du propriétaire : créer de nouveaux algorithmes côté serveur sans mise à jour de l''app. Un art simple se dessine en quelques millisecondes sur un téléphone, et des graines et des données pèsent bien moins que des images ou des vidéos.'
+    impacte: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, E-04]
 
 ids_retires:
   - {id: F-013, decision: D-002}
