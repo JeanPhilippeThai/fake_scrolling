@@ -29,6 +29,8 @@ Take the first item of "Fix first", or of "Next prompts". Tell the owner in one 
 
 ## 3. Do it with the owner
 
+Whatever the item, first read the open questions it can settle: those the item lists, the `questions_ouvertes` of the IDs it touches (`where <ID>` finds them), and the questions in `docs/questions.md` on its subject. Ask them along with the item's own questions. A settled one becomes a decision in `decisions`, and the question links to it (`workflow_docs/method/reference.md`).
+
 **A prompt**
 
 1. Read its text in `workflow_docs/method/describe.md`. Fill its brackets as the list says; a value still open is a question for the owner.
@@ -38,7 +40,7 @@ Take the first item of "Fix first", or of "Next prompts". Tell the owner in one 
    - Before asking, show what the question is about: the IDs and the quoted lines.
    - Ask until each question is answered, or the owner leaves it open. An open question goes in the feature's `questions_ouvertes`, or in `docs/questions.md` for the whole app.
 4. Write each result where the "Sources of truth" table of `workflow_docs/method/reference.md` puts it. If the app's `CLAUDE.md` says a document lives in a Claude Doc, edit that doc, not a local copy. One Claude Docs edit call takes at most 64 operations: split a large change (renaming IDs across a whole doc, for example) into several calls, then search the doc to check that nothing was left. Record each owner choice in `decisions` with its ID, subject, choice and reason. Never renumber an ID.
-5. Run `python3 .claude/skills/registry-db/registry_db.py check`. A row your change caused is fixed before you go on; a row that was already there before you started is not yours, so leave it and mention it.
+5. Run `python3 .claude/skills/registry-db/registry_db.py check`. A row your change caused is fixed before you go on, except an L1-04 row for a feature you flagged `design_a_mettre_a_jour` on purpose (a class C choice, or a change the design must now show): its redraw is an item of its own, put first in the list in step 4. A row that was already there before you started is not yours, so leave it and mention it.
 6. Show the files and IDs you changed, and revise until the owner confirms.
 
 **A finding**: read it with its evidence in `claude_skills_output/design_and_docs_check_output.md`. If its check has a query in `.claude/skills/registry-db/checks.sql`, run `registry_db.py check <its check ID>` before and after the fix: the fix is done when its rows are gone.
@@ -55,10 +57,11 @@ The item is done when its result is written, each question is answered or record
 In the list file:
 
 1. Delete the item and renumber the rest.
-2. Replace the header's fingerprint with the script's new output, so that your own changes do not make the list look outdated.
+2. If your work flagged a feature `design_a_mettre_a_jour` (`registry_db.py check L1-04` lists it) or added to `claude_design/` something the registry lacks (an L3-14 finding), put first the redraw item that `.claude/skills/what-are-the-next-docs-prompts/SKILL.md` puts first for them (section 5), naming each feature and the decision that says what to redraw. If the list already starts with one, add them to it. Renumber, and drop the last item if there are more than 5.
+3. Replace the header's fingerprint with the script's new output, so that your own changes do not make the list look outdated.
 
 Change nothing else.
 
 ## 5. Report
 
-Two or three lines: what was done, the files and IDs changed, and the next item.
+Two or three lines: what was done, the files and IDs changed, the open questions settled or left open, and the next item (say so when step 4 put it first).
