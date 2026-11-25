@@ -17,6 +17,13 @@ Fake scrolling: a mobile social-feed app, specified with the method in [workflow
 
 - `claude_design/`: the official design. View it with the `preview-live-designs` skill. `fake-scrolling-app/.claude-ai.json` records what claude.ai held at the last import.
 - `claude_docs/`: the docs. Read `INDEX.md` first. Decisions (D-xxx), features (F-xxx) and retired IDs (`ids_retires`) live in `registry.md`, the import of the registry Claude Doc.
+- `docs/system-design/`: the TLA+ models (a `.tla` and its `.cfg` per model), chosen by D-107 and listed in the table "Modèles TLA+" of "Conception système". Unlike `claude_docs/`, they are written in the repo: edit them here, citing the flow and decisions they check. To check one locally: `java -cp tla2tools.jar tlc2.TLC -deadlock -config <Model>.cfg <Model>.tla` in that folder.
+- `docs/questions.md`: the open questions about the whole app (`Q-NN`); questions about one feature go in its `questions_ouvertes`. Create the file with the first question.
 - `claude_skills_output/`: skill reports. `what_are_the_next_docs_prompts_output.md` says what to do next.
 - `newest_claude_*/`: gitignored scratch imports from claude.ai.
 - `.claude/import-exclude.txt`: artifacts the import leaves out, such as the archived HTML registry page.
+
+## CI
+
+- `registry_db.py check` on the docs, and a check that this file includes the shared rules, on every pull request ([workflow-claude-registry-db.yml](.github/workflows/workflow-claude-registry-db.yml)).
+- TLC on every model of `docs/system-design/`, on pull requests that touch that folder ([tla-models.yml](.github/workflows/tla-models.yml)).
