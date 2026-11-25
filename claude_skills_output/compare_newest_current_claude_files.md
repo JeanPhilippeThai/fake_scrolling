@@ -1,26 +1,24 @@
 # Design and docs: newest vs current
 
-Compared on 2026-11-25. Four new decisions (D-114 to D-117) from step 6: account creation creates the timer, usage time and support record; the server records one support per account; a waiting support goes with a deleted account; time spent offline counts. The "Modèles TLA+" table now points to the five checked models.
+Compared on 2026-11-25. Two new decisions: every text a user writes is sent as charabia (D-118), and the server chooses each photo's art algorithm while the phone draws it (D-119). The design is unchanged.
 
 ## Docs
 
-### Registre canonique – Fake scrolling (`registry.md`, rev 376 -> 387)
-- **D-114** added: creating an account (F-070) also creates E-14 (stopped, no cycle elapsed), E-15 (0 s) and E-16 (non soutenu). F-070's `entites` become `[E-02, E-01, E-14, E-15, E-16]`, its description says so, and E-14, E-15 and E-16 list F-070 in `utilisee_par`.
-- **D-115** added: the server records only one support per account; a second purchase made on another phone before the first is recorded changes nothing. F-015 gets the open question « Second achat fait sur un autre téléphone du compte avant que le serveur ait enregistré le premier (D-115) : remboursé par le store, et comment ? ».
-- **D-116** added (refines D-113): a waiting support is dropped when its account is deleted, on this phone or another.
-- **D-117** added: seconds in the foreground without network count for E-14 and E-15. The phone sends each period through FL-12. The server merges periods across phones, counting a shared second once, and only seconds after the last reset count for the timer.
-- **E-14, E-15, E-16** fields: « y compris sans réseau (D-117) » on the time fields; E-16's purchase field adds « abandonné si le compte est supprimé (D-116) ; un seul enregistré par compte (D-115) ».
-- **F-060** gets the open question « Un téléphone dont l'horloge est fausse peut faire gagner un réglage plus ancien (D-111) : corriger l'heure des téléphones par celle du serveur ? ».
+### Registre canonique – Fake scrolling (`registry.md`, rev 387 -> 399)
+- **D-118 added, "Tout texte écrit part en charabia"**: the phone turns every text a user writes into charabia (made-up words you can pronounce), keeping emojis, before sending it. This covers captions of posts and stories, comments, messages, pseudo and description. Only the @ handle and the app's own text stay readable. A caption stays readable in the draft on the phone and goes out as charabia when it is published.
+- **D-119 added, "Art généré : le serveur choisit, le téléphone dessine"**: only the seed leaves the phone. The server chooses each media's algorithm and stores it (E-04), and can reassign it. It sends the phone the seed plus the algorithm as data (building blocks and their settings), and the phone draws the art. A new block needs an app update; a new combination of existing blocks does not.
+- **D-086, D-091, D-100**: each ends with "Remplacée en partie par D-119", since the phone no longer sends an algorithm.
+- **F-030**: the description now says the comment is sent as charabia (D-118).
+- **F-047**: the description now says the caption is sent as charabia when it is published (D-118).
+- **F-051**: the open question "Envoi et charabia de la légende côté amis ; photos : art généré (D-086)" is closed by D-118, D-086 and D-119.
+- **F-042**: the open question becomes "Art généré (D-086, D-119) : quelles briques au départ, et comment pour une vidéo ?".
+- **E-03** `légende`, **E-05** `texte` and **E-12** `texte` are marked "en charabia (D-118)". **E-04** `algorithme` is now "choisi par le serveur et décrit en données (D-086, D-119)".
 
-### Conception système – Fake scrolling (`conception-systeme.md`, rev 60 -> 84)
-- **FL-01**: step 4 (F-070) also writes E-14, E-15 and E-16 with their starting values (D-114).
-- **FL-05**: the timer advances even without network; the phone greys by itself and sends its seconds through FL-12 (D-117).
-- **FL-09**: E-15 counts offline seconds sent through FL-12 (D-117); the server records one support per account even if another phone paid meanwhile (D-115).
-- **FL-11**: waiting sends are dropped with the account, support included (D-116).
-- **FL-12**: a new input, offline foreground periods (F-024, F-073). E-15 joins what step 3 writes. Two phones' offline seconds merge (D-105, D-117). A refused support is dropped only with its account (D-116). A phone no longer connected to a deleted account drops that account's sends at its next exchange with the server.
-- **SM-E-02, SM-E-14, SM-E-16**: tables updated for D-114, D-115, D-116 and D-117; F-015's open list adds the second purchase (D-115).
-- **Modèles TLA+** (was « Modèles TLA+ à écrire »): the models live in `docs/system-design/`, checked by TLC in CI. The table lists each model's file and the rules it checks, named after their decisions until their BR exist. A note records what TLC found: a support confirmed by the store after the account was deleted on another phone is debited, then dropped (D-116).
+### Conception système – Fake scrolling (`conception-systeme.md`, rev 84 -> 88)
+- **FL-03**: "Hors de ce flow" now names the caption in charabia (D-118) and the photos as generated art (D-086, D-119). F-051's list of open points keeps only the post's palette.
+- **FL-07**: F-042's open point becomes "briques de l'art généré au départ, et vidéos (D-086, D-119)".
+- **FL-12**: the pending profile photo is now "dont la graine n'est pas enregistrée (D-100, D-119)".
 
 ## Unchanged
 
-Design canvas « Fake scrolling — app » (69 files); « Fake scrolling — inventaire des écrans » (rev 147).
+Design canvas `fake-scrolling-app` (69 files) · `inventaire-des-ecrans.md`

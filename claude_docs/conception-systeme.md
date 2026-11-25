@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 84, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 88, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -148,7 +148,7 @@ Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende 
 - « Créer un post » de l'état vide P-17.a (F-026, D-035) → P-12.
 - Rond « Ta story » de P-08 (F-026.a, D-001) → P-12, destination « Story » présélectionnée (F-068).
 
-Hors de ce flow : ce que voient les amis du post publié (flou, charabia), sa palette (questions ouvertes de F-051) ; un post n’expire jamais (D-097) ; le grisage F-024, qui s'applique à toutes ces pages.
+Hors de ce flow : la palette du post publié (question ouverte de F-051), sa légende en charabia (D-118) et ses photos en art généré (D-086, D-119) ; un post n’expire jamais (D-097) ; le grisage F-024, qui s'applique à toutes ces pages.
 
 ### Séquence
 
@@ -209,7 +209,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-048 : liste de démo ; seuls des amis peuvent être identifiés.
 - F-049 : vraie recherche de lieux, et donc la source des lieux.
 - F-050 : règle de l'audience (qui voit le post et agit dessus).
-- F-051 : ce que voient les amis (charabia de la légende ; les photos deviennent un art généré, D-086) ; palette du post (il n’expire pas, D-097).
+- F-051 : palette du post (il n’expire pas, D-097).
 - F-072 : liste vide ; effet d'un changement sur les posts déjà publiés.
 
 ## FL-04 Ajouter un ami
@@ -448,7 +448,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-038 : jusqu'où remonte une conversation, et chargement des anciens messages.
 - F-039 : appel à concevoir ou à retirer.
-- F-042 : choix de la photo ; algorithmes de l'art généré, et vidéos (D-086).
+- F-042 : choix de la photo ; briques de l'art généré au départ, et vidéos (D-086, D-119).
 - F-019 : aspect du post reçu dans la conversation, non dessiné sur P-09.
 - F-034 : retirer un ami ou bloquer un compte, et donc le sort de la conversation.
 
@@ -652,7 +652,7 @@ Tâche de fond, sans geste de l'utilisateur : ce qu'un utilisateur connecté (R-
 - FL-05 : une durée (F-060) ou une réinitialisation (F-061) que le serveur n'a pas enregistrée (D-077) ; une période passée appli ouverte au premier plan sans réseau (F-024, F-073, D-117).
 - FL-06 : une « vue » de story (F-036) que le serveur n'a pas enregistrée (D-078).
 - FL-09 : un soutien débité par le store que le serveur n'a pas enregistré (F-015, D-095).
-- FL-11 : une photo de profil (F-058) dont la graine et l'algorithme ne sont pas enregistrés (D-100).
+- FL-11 : une photo de profil (F-058) dont la graine n'est pas enregistrée (D-100, D-119).
 
 Hors de ce flow : les envois qui montrent une erreur avec « Réessayer » (publier, commenter, envoyer un message…), que l'utilisateur relance lui-même.
 
