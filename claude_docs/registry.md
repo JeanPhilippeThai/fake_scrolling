@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 399, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 407, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -243,6 +243,10 @@ pages:
     features: [F-051]
   - id: P-13.b
     nom: 'Publication : erreur'
+    plateforme: mobile
+    features: [F-051]
+  - id: P-13.c
+    nom: Transformation avant publication
     plateforme: mobile
     features: [F-051]
   - id: P-14
@@ -1071,7 +1075,7 @@ features:
 
   - id: F-044
     nom: Choisir les photos d'un post
-    description: Aperçu carré, grille de photos, sélection multiple jusqu'à 10, « Suivant », pour un post ou une story (D-068).
+    description: Aperçu carré, grille de photos, sélection multiple jusqu'à 10, « Suivant », pour un post ou une story (D-068). Dès qu'une photo est choisie, sa graine part au serveur et l'art se prépare en arrière-plan (D-120).
     pages: [P-12, P-12.a, P-12.b]
     plateformes: [mobile]
     acces: [R-02]
@@ -1086,6 +1090,7 @@ features:
       - 'accès refusé : « Accès aux photos refusé » avec « Ouvrir les réglages » du téléphone (D-034)'
     questions_ouvertes:
       - Vraie galerie et autorisation d'accès
+      - 'Graines déjà envoyées d''une photo retirée de la sélection ou d''un brouillon abandonné (D-045, D-120) : le serveur les oublie-t-il, et quand ?'
 
   - id: F-045
     nom: Choisir un album
@@ -1102,7 +1107,7 @@ features:
 
   - id: F-046
     nom: Prendre une photo
-    description: 'Bouton appareil photo au-dessus de la grille : la photo prise devient la photo du post ou de la story (D-068).'
+    description: 'Bouton appareil photo au-dessus de la grille : la photo prise devient la photo du post ou de la story (D-068). Sa graine part aussitôt au serveur (D-120).'
     pages: [P-12]
     plateformes: [mobile]
     acces: [R-02]
@@ -1192,8 +1197,8 @@ features:
 
   - id: F-051
     nom: Publier le post
-    description: Bouton vert « Partager dans le fil » (ouvre l'Accueil) ou « Partager en story » (ouvre Messages).
-    pages: [P-13, P-03.d, P-08.b, P-13.a, P-13.b]
+    description: Bouton vert « Partager dans le fil » (ouvre l'Accueil) ou « Partager en story » (ouvre Messages). Une fois le post enregistré, la vraie photo et la vraie légende se changent en fondu en art généré et en charabia (D-120).
+    pages: [P-13, P-03.d, P-08.b, P-13.a, P-13.b, P-13.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1201,7 +1206,8 @@ features:
     operations: [lecture, écriture]
     etats_ui:
       - libellé selon la destination choisie
-      - 'envoi : anneau et « Publication… » dans le bouton'
+      - 'envoi : anneau et « Publication… » dans le bouton, jusqu''à ce que le post soit enregistré et l''art prêt (D-120)'
+      - 'transformation : la vraie photo et la vraie légende s''effacent en fondu pour l''art généré et le charabia (P-13.c, D-120)'
       - 'erreur : « Le post n’a pas été publié. Tes photos et ta légende sont gardées. » avec « Réessayer »'
       - 'succès fil : l''Accueil affiche le toast « Post publié. » (D-031)'
       - 'succès story : Messages affiche le toast « Story publiée. » (D-031)'
@@ -2309,6 +2315,12 @@ decisions:
     choix: 'Précise D-086 : seule la graine quitte le téléphone. Le serveur choisit l''algorithme de chaque photo ou vidéo et le garde avec elle (E-04) : le même média montre le même art à tous et le garde quand d''autres algorithmes s''ajoutent, et le serveur peut lui en donner un autre quand il veut. Il envoie au téléphone la graine et l''algorithme, décrit en données (des briques et leurs réglages : palette, formes, bruit, mouvement…), et le téléphone dessine l''art. Un nouvel algorithme fait de briques existantes ne demande pas de mise à jour de l''app ; une nouvelle brique, si. Le design ne change pas.'
     raison: 'Choix du propriétaire : créer de nouveaux algorithmes côté serveur sans mise à jour de l''app. Un art simple se dessine en quelques millisecondes sur un téléphone, et des graines et des données pèsent bien moins que des images ou des vidéos.'
     impacte: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, E-04]
+
+  - id: D-120
+    sujet: 'Publier : la graine part tôt, le post se transforme en fondu'
+    choix: 'Dès qu''une photo ou une vidéo est choisie ou prise (F-044, F-046), le téléphone envoie sa graine au serveur, qui choisit l''algorithme (D-119), et dessine l''art généré en arrière-plan pendant que l''utilisateur écrit la légende. Sans réseau, la graine part dès qu''il revient, au plus tard avec la publication. Jusqu''à la publication, P-12 et P-13 montrent la vraie photo et la vraie légende, sur ce téléphone seulement. Après « Partager dans le fil » ou « Partager en story » (F-051), P-13.a « Publication… » reste affiché jusqu''à ce que le serveur ait enregistré le post et que l''art soit prêt. Puis P-13.c : la vraie photo et la vraie légende s''effacent en fondu et laissent place à l''art généré et au charabia (D-118), et l''Accueil affiche « Post publié. » ou Messages « Story publiée. » (D-031). En cas d''échec (P-13.b), pas de fondu : la vraie photo et la vraie légende restent. Pareil pour un post et une story. P-13.c est dessiné.'
+    raison: 'Choix du propriétaire : l''utilisateur voit son post devenir ce que verront les autres, et l''art est prêt sans attente au moment de publier.'
+    impacte: [F-044, F-046, F-051, P-13.c, E-04]
 
 ids_retires:
   - {id: F-013, decision: D-002}
