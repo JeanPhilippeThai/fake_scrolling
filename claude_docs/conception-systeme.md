@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 100, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 103, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -140,7 +140,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-03 Publier un post
 
-Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende et règle ses options sur P-13, puis publie dans le fil (P-03) ou en story (P-08). Avant la publication, seule la graine de chaque photo part au serveur, pour préparer l'art généré ; le reste n'est enregistré qu'à la publication (D-045, D-120). Mobile seulement. Décisions : D-001, D-012, D-031, D-033, D-034, D-035, D-045, D-047, D-059, D-060, D-061, D-062, D-068, D-120.
+Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende et règle ses options sur P-13, puis publie dans le fil (P-03) ou en story (P-08). Avant la publication, seule la graine de chaque photo part au serveur, pour préparer l'art généré ; le reste n'est enregistré qu'à la publication (D-045, D-120). Mobile seulement. Décisions : D-001, D-012, D-031, D-033, D-034, D-035, D-045, D-047, D-059, D-060, D-061, D-062, D-068, D-120, D-121.
 
 ### Entrées
 
@@ -178,7 +178,7 @@ Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-
 | P-12 | Prise de vue refusée ou annulée | Non dessinée (questions ouvertes de F-046) |
 | P-12 | Sélection simple ou multiple | Une photo, ou jusqu'à 10 numérotées (F-044) |
 | P-12 | « Suivant » | Toujours actif : une photo au moins est choisie |
-| P-12 | Croix « Fermer » (F-005.a) | Brouillon abandonné sans confirmation (D-045), retour à la page d'origine (D-062) ; ouverte depuis la Recherche (P-14 à P-16), retour sur P-14 (D-090) |
+| P-12 | Croix « Fermer » (F-005.a) | Brouillon abandonné sans confirmation (D-045), ses graines effacées du serveur (D-121), retour à la page d'origine (D-062) ; ouverte depuis la Recherche (P-14 à P-16), retour sur P-14 (D-090) |
 | P-13 | Flèche retour (F-005) | P-12, photos choisies gardées |
 | P-13 | Fil d'actualité ou Story (F-068) | Bouton « Partager dans le fil » ou « Partager en story » |
 | P-24, P-25 | Liste en chargement ou en échec | Anneau, puis message sur place avec « Réessayer » (D-043) |
@@ -805,7 +805,7 @@ stateDiagram-v2
 | Passage | Déclencheur | Effet et décisions |
 | --- | --- | --- |
 | → Brouillon | F-026 ou F-026.a, puis F-044, F-045, F-046 | Seule la graine de chaque photo part au serveur avant F-051 (D-120) ; le reste ne quitte pas le téléphone (D-045, D-068) ; F-047 à F-050 et F-068 le complètent |
-| Brouillon → (abandonné) | F-005.a | Sans confirmation ni sauvegarde (D-045), retour à la page d'origine (D-062, D-090) |
+| Brouillon → (abandonné) | F-005.a | Sans confirmation ni sauvegarde (D-045), retour à la page d'origine (D-062, D-090) ; le serveur efface aussitôt les graines déjà envoyées (D-121) |
 | Brouillon → En publication | F-051, destination « Fil d'actualité » (F-068) | Avec « Story », voir SM-E-12 |
 | En publication → Publié | Le serveur enregistre | Fondu P-13.c (D-120), puis P-03.d (D-031) ; une notification « identification » par personne identifiée (D-061, SM-E-08) |
 | En publication → Échec | Le serveur ou le réseau échoue | P-13.b, photos et légende gardées (D-027) |

@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 407, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 409, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -1090,7 +1090,7 @@ features:
       - 'accès refusé : « Accès aux photos refusé » avec « Ouvrir les réglages » du téléphone (D-034)'
     questions_ouvertes:
       - Vraie galerie et autorisation d'accès
-      - 'Graines déjà envoyées d''une photo retirée de la sélection ou d''un brouillon abandonné (D-045, D-120) : le serveur les oublie-t-il, et quand ?'
+      - 'Brouillon perdu sans « Fermer » (appli fermée de force, téléphone éteint) : quand le serveur efface-t-il ses graines (D-121) ?'
 
   - id: F-045
     nom: Choisir un album
@@ -2321,6 +2321,12 @@ decisions:
     choix: 'Dès qu''une photo ou une vidéo est choisie ou prise (F-044, F-046), le téléphone envoie sa graine au serveur, qui choisit l''algorithme (D-119), et dessine l''art généré en arrière-plan pendant que l''utilisateur écrit la légende. Sans réseau, la graine part dès qu''il revient, au plus tard avec la publication. Jusqu''à la publication, P-12 et P-13 montrent la vraie photo et la vraie légende, sur ce téléphone seulement. Après « Partager dans le fil » ou « Partager en story » (F-051), P-13.a « Publication… » reste affiché jusqu''à ce que le serveur ait enregistré le post et que l''art soit prêt. Puis P-13.c : la vraie photo et la vraie légende s''effacent en fondu et laissent place à l''art généré et au charabia (D-118), et l''Accueil affiche « Post publié. » ou Messages « Story publiée. » (D-031). En cas d''échec (P-13.b), pas de fondu : la vraie photo et la vraie légende restent. Pareil pour un post et une story. P-13.c est dessiné.'
     raison: 'Choix du propriétaire : l''utilisateur voit son post devenir ce que verront les autres, et l''art est prêt sans attente au moment de publier.'
     impacte: [F-044, F-046, F-051, P-13.c, E-04]
+
+  - id: D-121
+    sujet: 'Graines d''une photo qui ne sera pas publiée'
+    choix: 'Quand une photo choisie est retirée de la sélection (F-044) ou que le brouillon est abandonné par la croix « Fermer » (F-005.a, D-045), le serveur efface aussitôt les graines déjà envoyées (D-120) et leur algorithme (E-04). Une graine pas encore envoyée ne l''est jamais. Le design ne change pas.'
+    raison: 'Choix du propriétaire : rien ne doit survivre d''un post qui n''est pas publié.'
+    impacte: [F-044, F-046, F-005, E-04]
 
 ids_retires:
   - {id: F-013, decision: D-002}
