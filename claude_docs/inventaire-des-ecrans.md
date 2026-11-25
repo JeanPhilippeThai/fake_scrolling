@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 151, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 152, exported 2026-11-25 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -303,7 +303,7 @@ Première étape de publication : aperçu carré en haut, galerie en dessous ; l
 | Choisir un album | Bouton « Récents » avec chevron | Album (liste des albums : à confirmer) | Sans effet dans la maquette |
 | Activer la sélection multiple | Rond à deux carrés à droite de « Récents » | Mode simple ou multiple | Fond noir quand actif ; repasse à une seule photo quand on désactive |
 | Ouvrir l'appareil photo | Rond avec appareil photo | Aucune (prise de photo : à confirmer) | Sans effet dans la maquette |
-| Choisir une photo | Tap dans la grille de 4 colonnes | 24 photos de démo (vraie galerie et autorisation : à confirmer) ; la graine de la photo part au serveur dès le choix (D-120) | Photo affichée voilée de blanc ; en multiple : numéro de 1 à 10, second tap retire ; galerie vide (P-12.a) ; accès refusé (P-12.b) |
+| Choisir une photo | Tap dans la grille de 4 colonnes | 24 photos de démo (vraie galerie et autorisation : à confirmer) ; la graine de la photo part au serveur dès le choix (D-120) | Photo affichée voilée de blanc ; en multiple : numéro de 1 à 10, second tap retire, et le serveur efface sa graine (D-121) ; galerie vide (P-12.a) ; accès refusé (P-12.b) |
 | Passer à la légende | Lien « Suivant » en haut à droite, ouvre P-13 | Photos choisies | Toujours actif (au moins une photo choisie) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
