@@ -37,7 +37,7 @@ Whatever the item, first read the open questions it can settle: those the item l
 2. Read its inputs and carry it out. Its own rules override this skill. To find what an ID touches, query the registry database (`.claude/skills/registry-db/SKILL.md`) instead of reading every doc: `where <ID>` for where it is defined and cited, `impact <ID>` for everything a change to it can reach (this is the impact query of prompt 7), `check <check IDs>` for the mechanical checks of prompts 3 and 14. Then read only the lines they point to.
 3. Ask the owner, with AskUserQuestion, everything the prompt leaves to them: ambiguous cases, inconsistencies to correct, prompt 8's B and C cases, prompt 4's decisions, a store's engine, registry changes proposed by prompt 6, new IDs proposed by prompt 9.
    - At most 4 questions per call, each with 2 or 3 options, your recommendation first.
-   - Before asking, show what the question is about: the IDs and the quoted lines.
+   - Talk to the owner as to a five-year-old who knows the app but not the docs. Before asking, say in one or two short sentences of everyday words what the question is about: what a person using the app sees or does, with a concrete example. The question, its options and their descriptions say only what each choice changes for that person: no IDs, file or field names, code, quoted doc lines, prompt or check numbers, or method words (class B, registry, variant…). Keep that mapping to yourself, and translate the answer into the docs afterwards.
    - Ask until each question is answered, or the owner leaves it open. An open question goes in the feature's `questions_ouvertes`, or in `docs/questions.md` for the whole app.
 4. Write each result where the "Sources of truth" table of `workflow_docs/method/reference.md` puts it. If the app's `CLAUDE.md` says a document lives in a Claude Doc, edit that doc, not a local copy. One Claude Docs edit call takes at most 64 operations: split a large change (renaming IDs across a whole doc, for example) into several calls, then search the doc to check that nothing was left. Record each owner choice in `decisions` with its ID, subject, choice and reason. Never renumber an ID.
 5. Run `python3 .claude/skills/registry-db/registry_db.py check`. A row your change caused is fixed before you go on, except an L1-04 row for a feature you flagged `design_a_mettre_a_jour` on purpose (a class C choice, or a change the design must now show): its redraw is an item of its own, put first in the list in step 4. A row that was already there before you started is not yours, so leave it and mention it.
@@ -46,7 +46,7 @@ Whatever the item, first read the open questions it can settle: those the item l
 **A finding**: read it with its evidence in `claude_skills_output/design_and_docs_check_output.md`. If its check has a query in `.claude/skills/registry-db/checks.sql`, run `registry_db.py check <its check ID>` before and after the fix: the fix is done when its rows are gone.
 
 - Class A: show the fix, apply it once the owner agrees, and fix the findings it caused ("Caused by").
-- Class B or C: ask its question, apply the choice and record it in `decisions`. For C, also set `design_a_mettre_a_jour: true` on the features it concerns.
+- Class B or C: ask its question as step 3 of a prompt says, apply the choice and record it in `decisions`. For C, also set `design_a_mettre_a_jour: true` on the features it concerns.
 
 **A step with no prompt** (1, 6, 7): the same loop: propose, ask, write, confirm.
 
