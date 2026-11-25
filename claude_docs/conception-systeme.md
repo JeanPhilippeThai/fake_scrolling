@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 39, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 49, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -214,7 +214,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-04 Ajouter un ami
 
-Un utilisateur connecté (R-02) cherche un compte par son @ sur P-11 et lui envoie une demande ; l'autre utilisateur (R-02) l'accepte ou la refuse sur P-04. Une fois acceptée, les deux ont une conversation vide dans P-08. Mobile seulement. Décisions : D-006, D-035, D-042, D-044, D-048, D-070, D-071, D-072, D-073.
+Un utilisateur connecté (R-02) cherche un compte par son @ sur P-11 et lui envoie une demande ; l'autre utilisateur (R-02) l'accepte ou la refuse sur P-04. Une fois acceptée, les deux ont une conversation vide dans P-08. Mobile seulement. Décisions : D-006, D-035, D-042, D-044, D-048, D-070, D-071, D-072, D-073, D-106.
 
 ### Entrées
 
@@ -232,12 +232,12 @@ Hors de ce flow : écrire au nouvel ami (F-041, flow des messages) ; les listes 
 | 2. Chercher un compte | P-11 → P-11.a → P-11 | F-043 | E-01 (pseudo, identifiant, photo), E-09 (statut de chaque compte) | — |
 | 3. Envoyer la demande | P-11 → P-11.c → P-11 | F-034 | E-09 | E-09 (« demandé » chez l'expéditeur, « en attente » chez le destinataire), E-08 (notification « invitation » au destinataire, D-070) |
 | 3'. Ajouter un compte qui nous a déjà invité | P-11 → P-11.c → P-11 | F-034 | E-09 (« en attente ») | E-09 (« ami »), E-10 (conversation vide), E-08 (invitation supprimée) (D-073) |
-| 4. Voir l'invitation (destinataire) | P-03 → P-04.b → P-04 | F-022 | E-08 (pastille), E-09 (invitations en attente) | — |
+| 4. Voir l'invitation (destinataire) | P-03 → P-04.b → P-04 | F-022 | E-08 (pastille), E-09 (invitations en attente) | E-08 (toutes vues, la pastille disparaît, D-106) |
 | 5a. Accepter | P-04 → P-04.d → P-04 | F-028 | — | E-09 (« ami » des deux côtés), E-10 (conversation vide, D-071), E-08 (invitation supprimée, D-070) |
 | 5b. Refuser | P-04 | F-028.a | — | E-09 (demande supprimée, D-048), E-08 (invitation supprimée, D-070) |
 | 6. Fermer le panneau | P-04 → P-03 | F-027.a | — | — |
 
-Suite simple : P-08 → F-034 → P-11 → F-043 → F-034, puis chez le destinataire P-03 → F-022 → P-04 → F-028 (ou F-028.a) → F-027.a → P-03. Les entités suivent les `operations` des features : F-022 et F-043 lisent ; F-028 écrit et supprime ; F-034 lit, écrit et supprime.
+Suite simple : P-08 → F-034 → P-11 → F-043 → F-034, puis chez le destinataire P-03 → F-022 → P-04 → F-028 (ou F-028.a) → F-027.a → P-03. Les entités suivent les `operations` des features : F-043 lit ; F-022 lit et marque les notifications vues (D-106) ; F-028 écrit et supprime ; F-034 lit, écrit et supprime.
 
 ### Points de décision et erreurs
 
@@ -276,7 +276,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-05 Griser l'app par cycles
 
-Tâche de fond, sans geste de l'utilisateur : tant qu'un utilisateur connecté (R-02) a l'appli ouverte, le minuteur de couleur de son compte (E-14) avance, et chaque cycle terminé retire 10 % de couleur à toutes les pages de F-024. Après 10 cycles, l'appli reste en noir et blanc jusqu'à « Réinitialiser » (F-061). Mobile seulement. Décisions : D-009, D-019, D-052, D-074, D-075, D-076, D-077.
+Tâche de fond, sans geste de l'utilisateur : tant qu'un utilisateur connecté (R-02) a l'appli ouverte, le minuteur de couleur de son compte (E-14) avance, et chaque cycle terminé retire 10 % de couleur à toutes les pages de F-024. Après 10 cycles, l'appli reste en noir et blanc jusqu'à « Réinitialiser » (F-061). Mobile seulement. Décisions : D-009, D-019, D-052, D-074, D-075, D-076, D-077, D-105.
 
 ### Entrées
 
@@ -328,7 +328,7 @@ Réglés le 24 novembre 2026 :
 
 Restent ouverts, dans les `questions_ouvertes` des features :
 
-- F-024 : deux téléphones ouverts en même temps sur le même compte.
+- F-024 : deux téléphones ouverts en même temps sur le même compte ; réglé depuis par D-105 (le temps ne compte qu'une fois).
 - F-065 : temps d'utilisation (E-15) compté par compte ou par appareil ; réglé depuis par D-093 (FL-09).
 
 ## FL-06 Voir une story
@@ -514,7 +514,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-09 Soutenir le projet
 
-Un utilisateur connecté (R-02) cumule du temps d'utilisation sur son compte (E-15) ; à 1 h, P-22 et un post sur 20 du fil (F-015.a) lui proposent de soutenir le projet pour 1,99 €, payés une seule fois dans l'App Store ou Google Play. Mobile seulement. Décisions : D-005, D-022, D-027, D-036, D-075, D-077, D-092, D-093, D-094, D-095, D-096.
+Un utilisateur connecté (R-02) cumule du temps d'utilisation sur son compte (E-15) ; à 1 h, P-22 et un post sur 20 du fil (F-015.a) lui proposent de soutenir le projet pour 1,99 €, payés une seule fois dans l'App Store ou Google Play. Mobile seulement. Décisions : D-005, D-022, D-027, D-036, D-075, D-077, D-092, D-093, D-094, D-095, D-096, D-105.
 
 ### Entrées
 
@@ -551,7 +551,7 @@ Suite simple : F-073 (jusqu'à 1 h) → P-20 → P-22 (F-065) → F-015 → stor
 | Serveur | Le store a débité, le serveur n'enregistre pas | « Merci pour ton soutien. » quand même ; l'achat est renvoyé sans message à chaque ouverture (D-095, comme D-077) |
 | P-22 | Compte déjà soutenu | Anneau et offre gardés, « Merci pour ton soutien. » à la place du bouton (D-094) |
 | FL-01 | Autre téléphone, réinstallation ou déconnexion | Même temps et même soutien : ils appartiennent au compte (D-092, D-093) |
-| Toutes | Deux téléphones ouverts en même temps sur le compte | Ouvert : F-073 |
+| Toutes | Deux téléphones ouverts en même temps sur le compte | Le temps ne compte qu'une fois (D-105) |
 | Store | Remboursement, ou achat en attente | Ouvert : F-015 |
 
 Fin du flow : « Merci pour ton soutien. » sur P-22 ou dans le post Premium ; le compte reste « soutenu » pour de bon.
@@ -569,7 +569,7 @@ Réglés le 25 novembre 2026 :
 Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-015 : remboursement par le store ; achat en attente (à approuver par un parent, paiement différé).
-- F-073 : deux téléphones ouverts en même temps sur le même compte, comme F-024.
+- F-073 : deux téléphones ouverts en même temps sur le même compte, comme F-024 ; réglé depuis par D-105.
 
 ## FL-11 Gérer son profil et son compte
 
@@ -642,3 +642,264 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-062 : ouvrir un de ses posts ; nombre de posts de la grille.
 - F-066 : changement réel de l'icône du téléphone.
 - F-070 : règles de l'identifiant (longueur, caractères permis, message s'il est pris).
+
+## États des entités
+
+Étape 6 de la méthode : un diagramme d'états `SM-E-xx` par entité aux états non triviaux (D-107), tiré des flows FL-01 à FL-09 et FL-11 et des décisions du registre. Chaque passage cite la feature ou la tâche de fond qui le déclenche. Les autres entités (E-01, E-04 à E-07, E-11, E-13, E-15, E-17) ne font qu'exister puis être effacées ; leurs échecs d'envoi (« Non envoyé. », « Non publié. ») restent sur le téléphone et sont décrits dans les flows. Le seuil d'1 h de E-15 est une garde de SM-E-16. Partout, la suppression du compte (F-063) efface tout, tout de suite (D-101).
+
+### SM-E-02 Connexion
+
+Une par téléphone (D-053). Pas de modèle TLA+ : un seul téléphone, une suite linéaire.
+
+```mermaid
+stateDiagram-v2
+    state "Déconnecté (P-01)" as deconnecte
+    state "Code envoyé (P-02)" as code_envoye
+    state "Code renvoyable (P-02)" as code_renvoyable
+    state "Code expiré (P-02.b)" as code_expire
+    state "Inscription (P-27)" as inscription
+    state "Session ouverte (P-03)" as session
+    [*] --> deconnecte
+    deconnecte --> code_envoye : F-003
+    code_envoye --> code_renvoyable : 30 s
+    code_renvoyable --> code_envoye : F-008
+    code_envoye --> code_expire : validité écoulée
+    code_renvoyable --> code_expire : validité écoulée
+    code_expire --> code_envoye : F-008
+    code_envoye --> deconnecte : F-005
+    code_renvoyable --> deconnecte : F-005
+    code_envoye --> session : F-007, compte trouvé
+    code_envoye --> inscription : F-007, aucun compte
+    code_renvoyable --> session : F-007, compte trouvé
+    code_renvoyable --> inscription : F-007, aucun compte
+    deconnecte --> session : F-001, compte trouvé
+    deconnecte --> inscription : F-001, aucun compte
+    inscription --> session : F-070
+    inscription --> deconnecte : F-005
+    session --> deconnecte : F-071, F-063, suppression ailleurs
+```
+
+| Passage | Déclencheur | Effet et décisions |
+| --- | --- | --- |
+| Déconnecté → Code envoyé | F-003 | Code à 6 chiffres envoyé ; si l'envoi échoue, P-01.e et on reste Déconnecté |
+| Code envoyé → Code renvoyable | 30 s écoulées | F-008 devient possible |
+| Code renvoyable → Code envoyé | F-008 | Nouveau code, nouveau décompte de 30 s |
+| Code envoyé ou renvoyable → Code expiré | Durée de validité écoulée | P-02.b ; la durée reste ouverte (F-007) |
+| Code expiré → Code envoyé | F-008 | Nouveau code |
+| Code envoyé ou renvoyable → Code envoyé ou renvoyable | F-007, code faux | P-02.a ; nombre d'essais avant blocage ouvert (F-007) |
+| Code envoyé ou renvoyable → Déconnecté | F-005 | Mauvaise adresse, retour à P-01 |
+| Code envoyé ou renvoyable, ou Déconnecté → Session ouverte | F-007 bon code, ou F-001 / F-001.a, compte trouvé | P-03 |
+| Code envoyé ou renvoyable, ou Déconnecté → Inscription | Même déclencheur, aucun compte | P-27 (D-052) |
+| Inscription → Session ouverte | F-070 | Compte créé (D-052, D-064) |
+| Inscription → Déconnecté | F-005 | Abandon, aucun compte créé |
+| Session ouverte → Déconnecté | F-071 ; F-063 ; compte supprimé sur un autre téléphone, au prochain échange avec le serveur | P-01 (D-053, D-065, D-069, D-101) ; les envois en attente restent rattachés au compte après F-071 (D-104) |
+
+### SM-E-03 Post
+
+Le brouillon est commun avec la story (SM-E-12) : F-068 choisit la destination juste avant F-051. Pas de modèle TLA+ : une suite linéaire, sans expiration (D-097).
+
+```mermaid
+stateDiagram-v2
+    state "Brouillon, sur le téléphone" as brouillon
+    state "En publication (P-13.a)" as en_publication
+    state "Échec (P-13.b)" as echec
+    state "Publié" as publie
+    [*] --> brouillon : F-026, F-044, F-046
+    brouillon --> [*] : F-005.a
+    brouillon --> en_publication : F-051, Fil d'actualité
+    en_publication --> publie : enregistré
+    en_publication --> echec : refusé ou réseau
+    echec --> en_publication : Réessayer, F-051
+    publie --> [*] : F-063 de l'auteur
+```
+
+| Passage | Déclencheur | Effet et décisions |
+| --- | --- | --- |
+| → Brouillon | F-026 ou F-026.a, puis F-044, F-045, F-046 | Rien ne quitte le téléphone avant F-051 (D-045, D-068) ; F-047 à F-050 et F-068 le complètent |
+| Brouillon → (abandonné) | F-005.a | Sans confirmation ni sauvegarde (D-045), retour à la page d'origine (D-062, D-090) |
+| Brouillon → En publication | F-051, destination « Fil d'actualité » (F-068) | Avec « Story », voir SM-E-12 |
+| En publication → Publié | Le serveur enregistre | P-03.d (D-031) ; une notification « identification » par personne identifiée (D-061, SM-E-08) |
+| En publication → Échec | Le serveur ou le réseau échoue | P-13.b, photos et légende gardées (D-027) |
+| Échec → En publication | « Réessayer » (F-051) | — |
+| Publié → (effacé) | F-063 de l'auteur | Seule fin d'un post : il n'expire jamais (D-097) et aucune feature n'efface un post seul (D-101) |
+
+### SM-E-08 Notification
+
+Pas de modèle TLA+.
+
+```mermaid
+stateDiagram-v2
+    state "Non vue" as non_vue
+    state "Vue" as vue
+    [*] --> non_vue : F-016, F-030, F-034, F-051
+    non_vue --> vue : P-04 ouvert, F-022
+    non_vue --> [*] : like retiré, invitation répondue, F-063
+    vue --> [*] : like retiré, invitation répondue, F-063
+```
+
+| Passage | Déclencheur | Effet et décisions |
+| --- | --- | --- |
+| → Non vue | Like d'un post (F-016, D-055), commentaire (F-030, D-056), demande d'ami (F-034, D-070), identification (F-051, D-061) | Compte dans la pastille de la cloche (F-022, D-106) |
+| Non vue → Vue | Ouverture du panneau P-04 (F-022) | Toutes les notifications du compte passent en vue ; la pastille disparaît (D-106) |
+| Non vue ou Vue → (supprimée) | Like retiré (F-016) ; invitation acceptée ou refusée (F-028, F-028.a, D-070) ou demande croisée (F-034, D-073) ; F-063 de l'auteur ou du destinataire (D-101) | La ligne disparaît de P-04 |
+
+### SM-E-09 Relation d'amitié
+
+Entre deux comptes A et B. Modèle TLA+ : deux comptes agissent en même temps (demandes croisées, D-073).
+
+```mermaid
+stateDiagram-v2
+    state "Aucune" as aucune
+    state "Demandée : A demandé, B en attente" as demandee
+    state "Amis" as amis
+    [*] --> aucune
+    aucune --> demandee : F-034 par A
+    demandee --> amis : F-028 par B, ou F-034 par B
+    demandee --> aucune : F-028.a par B
+    amis --> amis : F-072, ami proche
+    aucune --> [*] : F-063 de A ou B
+    demandee --> [*] : F-063 de A ou B
+    amis --> [*] : F-063 de A ou B
+```
+
+| Passage | Déclencheur | Effet et décisions |
+| --- | --- | --- |
+| Aucune → Demandée | F-034 par A | « Demandé » chez A, « en attente » chez B ; notification « invitation » à B (D-070) |
+| Demandée → Amis | F-028 par B, ou F-034 par B (demande croisée, D-073) | Conversation vide créée (D-071, SM-E-10) ; invitation supprimée (D-070) ; A n'est pas notifié (D-072) |
+| Demandée → Aucune | F-028.a par B | Demande et invitation supprimées ; A revoit « Ajouter » et peut redemander (D-048) |
+| Amis → Amis | F-072 | « Ami proche » oui ou non, chacun dans sa propre liste (D-060) |
+| Tout état → (effacée) | F-063 de A ou de B | Relation, invitation et conversation effacées (D-101) |
+
+Impossible aujourd'hui : annuler une demande, retirer un ami, bloquer un compte (question ouverte de F-034).
+
+### SM-E-10 Conversation
+
+Une par paire d'amis, avec « lu / non lu » pour chacun des deux (D-085). Pas de modèle TLA+.
+
+```mermaid
+stateDiagram-v2
+    state "Lu, chez B" as lu
+    state "Non lu, chez B" as non_lu
+    [*] --> lu : amis, F-028 ou F-034
+    lu --> non_lu : A envoie, F-041 ou F-042
+    non_lu --> lu : B ouvre, F-037
+    lu --> lu : reçu avec P-09 ouverte, F-038
+    lu --> [*] : F-063 de A ou B
+    non_lu --> [*] : F-063 de A ou B
+```
+
+| Passage | Déclencheur | Effet et décisions |
+| --- | --- | --- |
+| → Lu des deux côtés | Les deux deviennent amis (SM-E-09) | Conversation vide, P-09.b (D-071) ; elle n'existe qu'entre amis (D-082) |
+| Lu → Non lu, chez B | A envoie un message (F-041) ou une photo (F-042), P-09 de B fermée sur cette conversation | Dernier message et heure mis à jour ; gras et point bleu dans P-08 de B, sans notification (D-084, D-085) |
+| Non lu → Lu, chez B | B ouvre la conversation (F-037) | D-085 |
+| Lu → Lu, chez B | Message reçu pendant que B a P-09 ouverte (F-038) | Le message s'ajoute en bas (D-085) |
+| Tout état → (effacée) | F-063 de A ou de B | Disparaît aussi de P-08 de l'autre (D-101) |
+
+### SM-E-12 Story
+
+Même brouillon que SM-E-03 jusqu'à F-051. Dans « En cours », chaque ami qui peut la voir (D-080) a son propre « vue / non vue » (D-078). Modèle TLA+ : la fin à 24 h croise « vue par », renvoyé plus tard sans message.
+
+```mermaid
+stateDiagram-v2
+    state "Brouillon, sur le téléphone" as brouillon
+    state "En publication (P-13.a)" as en_publication
+    state "Échec (P-13.b)" as echec
+    state "Finie" as finie
+    brouillon --> en_publication : F-051, Story
+    en_publication --> echec : refusé ou réseau
+    echec --> en_publication : Réessayer, F-051
+    en_publication --> en_cours : enregistrée
+    state "En cours, 24 h" as en_cours {
+        state "Non vue, pour un ami" as non_vue
+        state "Vue, pour cet ami" as vue
+        [*] --> non_vue
+        non_vue --> vue : P-10 fermé, F-036
+    }
+    en_cours --> finie : 24 h écoulées
+    en_cours --> [*] : F-063 de l'auteur
+    finie --> [*] : F-063 de l'auteur
+```
+
+| Passage | Déclencheur | Effet et décisions |
+| --- | --- | --- |
+| Brouillon → En publication | F-051, destination « Story » (F-068) | Images, texte, audience, personnes identifiées et lieu viennent du brouillon (D-059, D-068) |
+| En publication → En cours | Le serveur enregistre | P-08.b (D-031) ; fin = publication + 24 h (D-079) |
+| En publication → Échec, et retour | Comme SM-E-03 | P-13.b, « Réessayer » (D-027) |
+| Non vue → Vue, pour un ami | Il ferme P-10 (croix ou fin) après au moins une image affichée (F-036) | Cercle gris tout de suite sur son téléphone, renvoyé sans message au serveur (D-078) ; P-10.b sans image la laisse non vue |
+| En cours → Finie | 24 h écoulées (tâche de fond) | Plus de rond ni de cercle, ne se rouvre plus ; ouverte juste après, P-10.b (D-079) |
+| En cours ou Finie → (effacée) | F-063 de l'auteur | D-101 ; ce que devient une story finie avant cela reste ouvert (F-036) |
+
+### SM-E-14 Minuteur de couleur
+
+Un par compte (D-074). Il garde les cycles écoulés (0 à 10), le temps passé dans le cycle en cours et la durée du cycle ; le gris vaut 10 % par cycle écoulé. Modèle TLA+ : plusieurs téléphones (D-105) et réglages renvoyés (D-077).
+
+```mermaid
+stateDiagram-v2
+    state "Arrêté" as arrete
+    state "En marche" as en_marche
+    state "Noir et blanc" as noir_blanc
+    [*] --> arrete : F-070
+    arrete --> en_marche : appli au premier plan
+    en_marche --> arrete : plus aucun téléphone au premier plan
+    en_marche --> en_marche : cycle fini, F-024
+    en_marche --> noir_blanc : 10e cycle fini
+    noir_blanc --> en_marche : F-061
+    en_marche --> en_marche : F-060, F-061
+    arrete --> [*] : F-063
+    en_marche --> [*] : F-063
+    noir_blanc --> [*] : F-063
+```
+
+| Passage | Déclencheur | Effet et décisions |
+| --- | --- | --- |
+| Arrêté → En marche | Un téléphone connecté a l'appli ouverte et au premier plan (F-024) | Reprend où il en était, au même gris, sur tout téléphone (D-074) |
+| En marche → Arrêté | Plus aucun téléphone au premier plan : appli fermée, en arrière-plan ou déconnectée (F-071) | Temps passé gardé sur le serveur (D-074, D-075) |
+| En marche → En marche | Chaque seconde où au moins un téléphone est au premier plan | Temps passé + 1 s, une seule fois même avec deux téléphones (D-075, D-105) |
+| En marche → En marche, cycle fini | Le temps passé atteint la durée, moins de 9 cycles écoulés | Cycles + 1, 10 % de gris en plus, temps remis à 0 (F-024) |
+| En marche → Noir et blanc | Le 10e cycle finit | Le minuteur s'arrête ; F-059 dit « Noir et blanc. Réinitialise pour retrouver les couleurs. » |
+| Tout état → En marche, cycle 1 | F-061 « Réinitialiser » (sur P-17, donc appli ouverte) | 0 cycle écoulé, 0 % de gris ; appliqué sur le téléphone, renvoyé sans message (D-077) |
+| Même état | F-060, nouvelle durée | Cycles gardés, la durée vaut pour la suite (D-076, D-077) |
+| Tout état → (effacé) | F-063 | D-101 |
+
+### SM-E-16 Soutien
+
+Un par compte (D-092). Modèle TLA+ : le store, le serveur, le renvoi sans message (D-095) et plusieurs téléphones se croisent.
+
+```mermaid
+stateDiagram-v2
+    state "Non soutenu" as non_soutenu
+    state "Paiement en cours, store" as paiement
+    state "Soutenu, pas encore enregistré" as a_enregistrer
+    state "Soutenu" as soutenu
+    [*] --> non_soutenu : F-070
+    non_soutenu --> paiement : F-015 ou F-015.a, 1 h atteinte
+    paiement --> non_soutenu : échec ou annulation
+    paiement --> a_enregistrer : le store confirme
+    a_enregistrer --> soutenu : le serveur enregistre
+    non_soutenu --> [*] : F-063
+    a_enregistrer --> [*] : F-063
+    soutenu --> [*] : F-063
+```
+
+| Passage | Déclencheur | Effet et décisions |
+| --- | --- | --- |
+| Non soutenu → Paiement en cours | « Soutenir le projet » (F-015 sur P-22, F-015.a dans le fil) | Seulement quand E-15 atteint 1 h (D-005, D-093, D-105) |
+| Paiement en cours → Non soutenu | Paiement échoué ou annulé, rien débité | P-22.a ou P-03.c (D-027) ; P-22.b (D-036) |
+| Paiement en cours → Soutenu, pas encore enregistré | Le store confirme l'achat | « Merci pour ton soutien. » tout de suite (D-094, D-095) |
+| Soutenu, pas encore enregistré → Soutenu | Le serveur enregistre l'achat | Renvoyé sans message à chaque ouverture jusque-là (D-095), pour ce compte seulement, même après F-071 (D-104) |
+| Tout état → (effacé) | F-063 | Un achat pas encore enregistré est abandonné ; un nouveau compte repart non soutenu (D-101) |
+
+Ouverts dans F-015 : remboursement, achat en attente.
+
+### Modèles TLA+ à écrire
+
+Choisis par D-107. Chaque règle qu'un modèle vérifie portera le nom d'une règle métier (`BR-xxx`) écrite dans la spec de sa feature (étape 10) ; d'ici là, ce qu'il doit vérifier est noté ici.
+
+| Modèle | Ce qu'il doit vérifier |
+| --- | --- |
+| SM-E-09 | Jamais deux demandes en attente dans les deux sens (D-073) ; une conversation existe si et seulement si les deux comptes sont amis (D-071, D-082) ; un ami proche est toujours un ami (D-060) |
+| SM-E-12 | Une story finie ne se rouvre jamais, même si « vue » arrive après (D-078, D-079) ; seuls les amis, et les amis proches pour « Amis proches », la voient (D-080) |
+| SM-E-14 | Le gris vaut toujours 10 % par cycle écoulé, 10 cycles au plus ; deux téléphones ne font jamais compter une seconde deux fois (D-105) ; un réglage renvoyé (D-077) finit enregistré |
+| SM-E-16 | Aucune erreur n'est montrée après un débit (D-095) ; un achat confirmé finit enregistré, pour le compte qui l'a fait seulement (D-104) ; un compte ne paie qu'une fois (D-092) |
+| Synchronisation | Les envois en attente (D-077, D-078, D-095, D-100) partent tous, ne partent jamais pour un autre compte (D-104), et jamais après la suppression du compte (D-101) ; le temps d'un compte avance d'une seconde par seconde où au moins un téléphone est au premier plan (D-105) |
