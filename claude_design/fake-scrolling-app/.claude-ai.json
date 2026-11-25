@@ -1,7 +1,7 @@
 {
  "url": "https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT",
  "format": 2,
- "synced": "2026-11-25T15:01:49+00:00",
+ "synced": "2026-11-25T15:29:32+00:00",
  "files": {
   "project/Chat.dc.html": "ae709f0b59aa3c99621e73f1884a31a8ea671b2bff9118ac7448bfeb7a2e3267",
   "project/Code.dc.html": "9f1091e023fa3fb8c422281ee39421bafb5547210bbb29c640514489cd1ec0a5",
@@ -50,6 +50,7 @@
   "project/Etat-P13-publication-erreur.dc.html": "c5e588acfe844024012ef27b9b9b70fa31b4cd80a79d45cd515f11bfb4f21aa5",
   "project/Etat-P13-publication-succes.dc.html": "32f2378506e4557ab6f63d0f9069662ee5aa05fe809426c2bf97ce18100e6bbb",
   "project/Etat-P13-story-succes.dc.html": "c3e98b96678e441b9efa75af0f2e0089c9786adca3bc174de2a0d8cca408a5bd",
+  "project/Etat-P13-transformation.dc.html": "632cb24539adfe31174cd3b31173bb3cca3150f6efdf7d7610835f2490f9a86d",
   "project/Etat-P14-suggestions-chargement.dc.html": "e28cb8e6d7d0b28850ff77816dd8973500e0fdd456d7483b9fa90fe1a59c8526",
   "project/Etat-P14-suggestions-erreur.dc.html": "6d9fac9a66979e3d6341aedc129805ad7ec45fa0c71efc15a41a4c5d383944b5",
   "project/Etat-P15-recherche-chargement.dc.html": "f9b33b2387cdab231e5e98887bbcc219860ecd884cac79476818e69e596b04b5",
@@ -71,6 +72,10 @@
   "project/Main.dc.html": "8601de9493787bdeca839c8296fc90aa3b36cc415a7ad02786dd13b225971183",
   "project/Profile.dc.html": "a74d96b18e7913c65716c5110dcb5f49c3f3fbf59d52fb864e8023c523b53fe5",
   "project/Search.dc.html": "4f1ce31d0658b6b30a4df1806c7cb3d39f45d730cfb7751d613287f7fc693c2a",
-  "project/canvas.json": "ee1bc7318ab75b8f88071bd4ad3816c52014a92166594c4d730858eaaa81e7be"
+  "project/canvas.json": "8a0850bcc350381a4e01decd32dfa96695b77372c698289ccd2fa91f8f547667"
+ },
+ "round": {
+  "project/Etat-P13-transformation.dc.html": "added",
+  "project/canvas.json": "changed"
  }
 }

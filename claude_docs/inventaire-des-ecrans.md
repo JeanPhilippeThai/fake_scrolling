@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 147, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 151, exported 2026-11-25 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -303,7 +303,7 @@ Première étape de publication : aperçu carré en haut, galerie en dessous ; l
 | Choisir un album | Bouton « Récents » avec chevron | Album (liste des albums : à confirmer) | Sans effet dans la maquette |
 | Activer la sélection multiple | Rond à deux carrés à droite de « Récents » | Mode simple ou multiple | Fond noir quand actif ; repasse à une seule photo quand on désactive |
 | Ouvrir l'appareil photo | Rond avec appareil photo | Aucune (prise de photo : à confirmer) | Sans effet dans la maquette |
-| Choisir une photo | Tap dans la grille de 4 colonnes | 24 photos de démo (vraie galerie et autorisation : à confirmer) | Photo affichée voilée de blanc ; en multiple : numéro de 1 à 10, second tap retire ; galerie vide (P-12.a) ; accès refusé (P-12.b) |
+| Choisir une photo | Tap dans la grille de 4 colonnes | 24 photos de démo (vraie galerie et autorisation : à confirmer) ; la graine de la photo part au serveur dès le choix (D-120) | Photo affichée voilée de blanc ; en multiple : numéro de 1 à 10, second tap retire ; galerie vide (P-12.a) ; accès refusé (P-12.b) |
 | Passer à la légende | Lien « Suivant » en haut à droite, ouvre P-13 | Photos choisies | Toujours actif (au moins une photo choisie) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
@@ -327,7 +327,7 @@ Deuxième étape : légende, destination (fil ou story), options, puis publicati
 | Identifier des personnes | Ligne avec chevron, ouvre P-24 | Personnes identifiées | Vide ; @ de la personne ; « N personnes » |
 | Ajouter un lieu | Ligne avec chevron, ouvre P-25 | Lieu | Vide ; nom du lieu choisi |
 | Choisir l'audience | Ligne « Audience » avec la valeur à droite, ouvre P-26 | Tout le monde, Amis ou Amis proches | Valeur choisie affichée |
-| Partager le post | Bouton vert « Partager dans le fil » (ouvre P-03) ou « Partager en story » (ouvre P-08) | Post publié (envoi, flou et charabia côté amis : à confirmer) | Libellé selon la destination ; envoi en cours (P-13.a) ; erreur (P-13.b) ; succès : toast sur l'Accueil (P-03.d) ou dans Messages (P-08.b) |
+| Partager le post | Bouton vert « Partager dans le fil » (ouvre P-03) ou « Partager en story » (ouvre P-08) | Post publié : légende en charabia (D-118), photos en art généré (D-086, D-119) | Libellé selon la destination ; envoi en cours (P-13.a) ; fondu vers l'art généré et le charabia (P-13.c, D-120) ; erreur (P-13.b), sans fondu ; succès : toast sur l'Accueil (P-03.d) ou dans Messages (P-08.b) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
 **États dessinés à part**
@@ -336,6 +336,7 @@ Deuxième étape : légende, destination (fil ou story), options, puis publicati
 | --- | --- | --- | --- |
 | P-13.a | Publication en cours | « Publication… » à la place du bouton de partage | `Etat-P13-publication-envoi.dc.html` |
 | P-13.b | Publication : erreur | « Le post n’a pas été publié. Tes photos et ta légende sont gardées. » avec « Réessayer » | `Etat-P13-publication-erreur.dc.html` |
+| P-13.c | Transformation avant publication | Une fois le post enregistré, la vraie photo et la vraie légende s’effacent en fondu pour l’art généré et le charabia (émojis gardés), puis le toast de succès (D-120) | `Etat-P13-transformation.dc.html` |
 
 ## P-14 Recherche — suggestions et tendances
 

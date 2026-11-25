@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 88, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 100, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -140,7 +140,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-03 Publier un post
 
-Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende et règle ses options sur P-13, puis publie dans le fil (P-03) ou en story (P-08). Rien n'est enregistré avant la publication (D-045). Mobile seulement. Décisions : D-001, D-012, D-031, D-033, D-034, D-035, D-045, D-047, D-059, D-060, D-061, D-062, D-068.
+Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende et règle ses options sur P-13, puis publie dans le fil (P-03) ou en story (P-08). Avant la publication, seule la graine de chaque photo part au serveur, pour préparer l'art généré ; le reste n'est enregistré qu'à la publication (D-045, D-120). Mobile seulement. Décisions : D-001, D-012, D-031, D-033, D-034, D-035, D-045, D-047, D-059, D-060, D-061, D-062, D-068, D-120.
 
 ### Entrées
 
@@ -154,8 +154,8 @@ Hors de ce flow : la palette du post publié (question ouverte de F-051), sa lé
 
 | Étape | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- |
-| 1. Choisir les photos | P-12 | F-044, F-045 | E-04 (galerie, album) | E-04, E-03 ou E-12 (brouillon : photos choisies, rang dans le carrousel, D-068) |
-| 1'. Prendre une photo | P-12 ou P-12.a | F-046, F-046.a | — | E-04, E-03 ou E-12 (brouillon : la photo prise devient celle du post ou de la story, D-047, D-068) |
+| 1. Choisir les photos | P-12 | F-044, F-045 | E-04 (galerie, album) | E-04 (graine, envoyée au serveur dès le choix, D-120), E-03 ou E-12 (brouillon : photos choisies, rang dans le carrousel, D-068) |
+| 1'. Prendre une photo | P-12 ou P-12.a | F-046, F-046.a | — | E-04 (graine, envoyée au serveur, D-120), E-03 ou E-12 (brouillon : la photo prise devient celle du post ou de la story, D-047, D-068) |
 | 2. Passer à la légende | P-12 → P-13 | F-044 (« Suivant ») | — | — |
 | 3. Écrire la légende | P-13 | F-047 | — | E-03 ou E-12 (brouillon : légende, D-068) |
 | 4. Choisir où publier | P-13 | F-068 | — | E-03 ou E-12 (destination) |
@@ -164,10 +164,10 @@ Hors de ce flow : la palette du post publié (question ouverte de F-051), sa lé
 | 7. Choisir l'audience | P-13 → P-26 | F-050 | — | E-03 ou E-12 (audience, D-059) |
 | 7'. Modifier la liste d'amis proches | P-26 → P-28 | F-072 | E-09 (amis) | E-09 (ami proche, D-060) |
 | 8. Fermer un panneau | P-24, P-25, P-26 → P-13 ; P-28 → P-26 | F-027 | — | — |
-| 9. Publier | P-13 → P-13.a | F-051 | E-03 ou E-12 (brouillon), E-04 | E-03 et E-04 (post), ou E-12 (story) ; E-08 (une notification « identification » par personne identifiée, D-061) |
+| 9. Publier | P-13 → P-13.a → P-13.c | F-051 | E-03 ou E-12 (brouillon), E-04 | E-03 et E-04 (post), ou E-12 (story) ; E-08 (une notification « identification » par personne identifiée, D-061) |
 | 10. Arrivée | P-03.d ou P-08.b | F-051 | E-03 ou E-12 | — |
 
-Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-048, P-25 F-049, P-26 F-050 → P-28 F-072) → F-051 → P-03, ou P-08 → F-026.a → P-12 → … → F-068 « Story » → F-051 → P-08. Les entités suivent les `operations` des features : F-045 lit ; F-046, F-047, F-050, F-068 écrivent ; F-044, F-048, F-051, F-072 lisent et écrivent ; F-049 lit, écrit et supprime. Avant F-051, ces écritures ne touchent que le brouillon sur l'appareil.
+Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-048, P-25 F-049, P-26 F-050 → P-28 F-072) → F-051 → P-03, ou P-08 → F-026.a → P-12 → … → F-068 « Story » → F-051 → P-08. Les entités suivent les `operations` des features : F-045 lit ; F-046, F-047, F-050, F-068 écrivent ; F-044, F-048, F-051, F-072 lisent et écrivent ; F-049 lit, écrit et supprime. Avant F-051, ces écritures ne touchent que le brouillon sur l'appareil, sauf la graine de chaque photo, envoyée dès le choix (D-120).
 
 ### Points de décision et erreurs
 
@@ -186,9 +186,9 @@ Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-
 | P-25 | Un lieu est déjà choisi | « Retirer le lieu » (F-049) |
 | P-26 | « Amis proches » avec une liste vide | Non défini (question ouverte de F-072) |
 | P-28 | Liste en chargement ou en échec | Anneau, puis message sur place avec « Réessayer » (F-072) |
-| P-13.a | La publication échoue | P-13.b : photos et légende gardées, « Réessayer » relance F-051 (D-027) |
-| P-13.a | Publié dans le fil | P-03 avec le toast « Post publié. » (P-03.d, D-031) |
-| P-13.a | Publié en story | P-08 avec le toast « Story publiée. » (P-08.b, D-031) |
+| P-13.a | La publication échoue | P-13.b : pas de fondu, photos et légende gardées (D-120), « Réessayer » relance F-051 (D-027) |
+| P-13.a | Publié dans le fil | Fondu vers l'art généré et le charabia (P-13.c, D-120), puis P-03 avec le toast « Post publié. » (P-03.d, D-031) |
+| P-13.a | Publié en story | Fondu vers l'art généré et le charabia (P-13.c, D-120), puis P-08 avec le toast « Story publiée. » (P-08.b, D-031) |
 
 Fin du flow : P-03 avec le post publié, ou P-08 avec la story publiée ; les personnes identifiées en sont notifiées sur P-04 (D-061).
 
@@ -804,10 +804,10 @@ stateDiagram-v2
 
 | Passage | Déclencheur | Effet et décisions |
 | --- | --- | --- |
-| → Brouillon | F-026 ou F-026.a, puis F-044, F-045, F-046 | Rien ne quitte le téléphone avant F-051 (D-045, D-068) ; F-047 à F-050 et F-068 le complètent |
+| → Brouillon | F-026 ou F-026.a, puis F-044, F-045, F-046 | Seule la graine de chaque photo part au serveur avant F-051 (D-120) ; le reste ne quitte pas le téléphone (D-045, D-068) ; F-047 à F-050 et F-068 le complètent |
 | Brouillon → (abandonné) | F-005.a | Sans confirmation ni sauvegarde (D-045), retour à la page d'origine (D-062, D-090) |
 | Brouillon → En publication | F-051, destination « Fil d'actualité » (F-068) | Avec « Story », voir SM-E-12 |
-| En publication → Publié | Le serveur enregistre | P-03.d (D-031) ; une notification « identification » par personne identifiée (D-061, SM-E-08) |
+| En publication → Publié | Le serveur enregistre | Fondu P-13.c (D-120), puis P-03.d (D-031) ; une notification « identification » par personne identifiée (D-061, SM-E-08) |
 | En publication → Échec | Le serveur ou le réseau échoue | P-13.b, photos et légende gardées (D-027) |
 | Échec → En publication | « Réessayer » (F-051) | — |
 | Publié → (effacé) | F-063 de l'auteur | Seule fin d'un post : il n'expire jamais (D-097) et aucune feature n'efface un post seul (D-101) |
@@ -913,7 +913,7 @@ stateDiagram-v2
 | Passage | Déclencheur | Effet et décisions |
 | --- | --- | --- |
 | Brouillon → En publication | F-051, destination « Story » (F-068) | Images, texte, audience, personnes identifiées et lieu viennent du brouillon (D-059, D-068) |
-| En publication → En cours | Le serveur enregistre | P-08.b (D-031) ; fin = publication + 24 h (D-079) |
+| En publication → En cours | Le serveur enregistre | Fondu P-13.c (D-120), puis P-08.b (D-031) ; fin = publication + 24 h (D-079) |
 | En publication → Échec, et retour | Comme SM-E-03 | P-13.b, « Réessayer » (D-027) |
 | Non vue → Vue, pour un ami | Il ferme P-10 (croix ou fin) après au moins une image affichée (F-036) | Cercle gris tout de suite sur son téléphone, renvoyé sans message au serveur (D-078) ; P-10.b sans image la laisse non vue |
 | En cours → Finie | 24 h écoulées (tâche de fond, FL-13) | Plus de rond ni de cercle, ne se rouvre plus ; ouverte juste après, P-10.b (D-079) |
