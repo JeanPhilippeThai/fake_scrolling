@@ -81,11 +81,12 @@ StoreConfirms(p) ==
     /\ UNCHANGED <<alive, server, view, records, errorAfterDebit>>
 
 \* FL-12: the support reaches the server, which records one per account (D-092, D-115).
+\* For a deleted account the server refuses it for good: dropped (D-116). This covers a
+\* store that confirms after the account was deleted on another phone, found by TLC.
 Send(p) ==
-    /\ alive
     /\ pending[p]
     /\ pending' = [pending EXCEPT ![p] = FALSE]
-    /\ IF server = "non"
+    /\ IF alive /\ server = "non"
          THEN /\ server' = "soutenu"
               /\ records' = records + 1
          ELSE UNCHANGED <<server, records>>
