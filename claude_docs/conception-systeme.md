@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 32, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 34, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -284,7 +284,7 @@ Tâche de fond, sans geste de l'utilisateur : tant qu'un utilisateur connecté (
 - Ouverture de l'appli avec une session ouverte (D-053), ou retour de l'appli au premier plan.
 - Sur P-17 : changer la durée du cycle (F-060) ou réinitialiser (F-061).
 
-Hors de ce flow : P-01, P-02 et P-27, jamais grisées (D-009, D-019, D-052) ; le temps d'utilisation (E-15) et le post Premium (F-015, F-065).
+Hors de ce flow : P-01, P-02 et P-27, jamais grisées (D-009, D-019, D-052) ; le temps d'utilisation (E-15) et le post Premium (F-015, F-065), dans FL-09.
 
 ### Séquence
 
@@ -329,7 +329,7 @@ Réglés le 24 novembre 2026 :
 Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-024 : deux téléphones ouverts en même temps sur le même compte.
-- F-065 : temps d'utilisation (E-15) compté par compte ou par appareil, à voir avec le flow Premium.
+- F-065 : temps d'utilisation (E-15) compté par compte ou par appareil ; réglé depuis par D-093 (FL-09).
 
 ## FL-06 Voir une story
 
@@ -511,3 +511,62 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-053 : choix des 6 mots des tendances et rythme de leur renouvellement.
 - F-050 : agir sur un post suit-il aussi son audience ? (accès supposés de F-016, F-017, F-018, F-019, F-020 et F-030, FL-02)
 - F-051 : qui fixe la palette d'un post à la publication, et sa durée de vie ; la recherche par palette en dépend.
+
+## FL-09 Soutenir le projet
+
+Un utilisateur connecté (R-02) cumule du temps d'utilisation sur son compte (E-15) ; à 1 h, P-22 et un post sur 20 du fil (F-015.a) lui proposent de soutenir le projet pour 1,99 €, payés une seule fois dans l'App Store ou Google Play. Mobile seulement. Décisions : D-005, D-022, D-027, D-036, D-075, D-077, D-092, D-093, D-094, D-095, D-096.
+
+### Entrées
+
+- Fin de FL-01 : dès la connexion, F-073 ajoute à E-15 chaque seconde passée appli ouverte et au premier plan (D-093, D-096).
+- Panneau Options (P-20), ligne « Premium » → P-22.
+- Le fil P-03, après 1 h : le post Premium (F-015.a), 1 post sur 20.
+
+Hors de ce flow : le minuteur de couleur (E-14) et le grisage F-024, qui s'appliquent aussi à P-22 (FL-05) ; l'icône du thème en tête de P-22 (F-002.a).
+
+### Séquence
+
+| Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- | --- |
+| 1. Compter le temps | Chaque seconde, appli au premier plan, connecté | Pages de F-073 | F-073 | E-15 | E-15 (durée cumulée, D-093) |
+| 2. Suivre son temps | Ligne « Premium » de P-20 | P-20 → P-22 | F-065 | E-15 (temps passé, minutes restantes avant 1 h) | — |
+| 3. Voir l'offre | E-15 atteint 1 h | P-22 ; P-03 (1 post sur 20) | F-015, F-015.a | E-15, E-16 (non soutenu) | — |
+| 4. Payer | Bouton « Soutenir le projet » | P-22 ou P-03 → paiement du store | F-015 ou F-015.a | E-16 | — |
+| 5. Être remercié | Le store confirme l'achat | P-22 ou P-03 | F-015 ou F-015.a | — | E-16 (soutenu, achat du store, D-092, D-095) |
+| 6. Après le soutien | Revenir sur P-22, ou recharger le fil | P-22 ; P-03 | F-015, F-015.a | E-16 (soutenu) | — |
+| 7. Changer de téléphone | Connexion (FL-01) sur un autre téléphone, ou après réinstallation | P-22 | F-015, F-065 | E-15, E-16 du compte | — |
+
+Suite simple : F-073 (jusqu'à 1 h) → P-20 → P-22 (F-065) → F-015 → store → « Merci pour ton soutien. » ; ou P-03 → F-015.a → store → même merci. Les entités suivent les `operations` des features : F-073 lit et écrit E-15 ; F-065 lit E-15 ; F-015 lit E-15 et E-16, et écrit E-16.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| Toutes | Appli fermée ou en arrière-plan | Le temps ne compte pas (D-075, D-093) |
+| P-22 | Moins de 1 h | Anneau, « Après une heure dans l'appli, tu pourras soutenir le projet. » et « encore X min » ; pas d'offre (F-065, D-005) |
+| P-22 | 1 h atteinte sur la page | L'offre apparaît : « Une heure passée ici. Soutiens un projet indépendant. », 1,99 €, « Soutenir le projet » |
+| P-03 | Moins de 1 h, ou compte soutenu avant ce chargement du fil | Aucun post Premium (F-015.a, D-094) |
+| Store | Paiement échoué, rien débité | P-22.a ou P-03.c : « Le paiement n’a pas abouti. Tu n’as pas été débité. » avec « Réessayer » (D-027) |
+| Store | Paiement annulé | P-22.b : « Paiement annulé. Tu n’as pas été débité. » et de nouveau « Soutenir le projet » ; même état sur F-015.a (D-036) |
+| Serveur | Le store a débité, le serveur n'enregistre pas | « Merci pour ton soutien. » quand même ; l'achat est renvoyé sans message à chaque ouverture (D-095, comme D-077) |
+| P-22 | Compte déjà soutenu | Anneau et offre gardés, « Merci pour ton soutien. » à la place du bouton (D-094) |
+| FL-01 | Autre téléphone, réinstallation ou déconnexion | Même temps et même soutien : ils appartiennent au compte (D-092, D-093) |
+| Toutes | Deux téléphones ouverts en même temps sur le compte | Ouvert : F-073 |
+| Store | Remboursement, ou achat en attente | Ouvert : F-015 |
+
+Fin du flow : « Merci pour ton soutien. » sur P-22 ou dans le post Premium ; le compte reste « soutenu » pour de bon.
+
+### Manques du registre
+
+Réglés le 25 novembre 2026 :
+
+- Le moyen de paiement : un achat unique dans l'App Store ou Google Play, une fois par compte (D-092). La question ouverte de F-015 est close.
+- Le temps d'utilisation appartient au compte, comme le minuteur de couleur (D-093) : la question de F-065, laissée par FL-05, est close.
+- Ce qui reste visible après le soutien : comme la maquette (D-094). La règle « masquée si le compte a déjà soutenu » de F-015 est close.
+- Un achat débité mais pas enregistré n'affiche jamais d'erreur (D-095).
+- Aucune feature n'écrivait E-15 : nouvelle feature F-073 « Compter le temps d'utilisation », sur les pages de F-024 (D-096).
+
+Restent ouverts, dans les `questions_ouvertes` des features :
+
+- F-015 : remboursement par le store ; achat en attente (à approuver par un parent, paiement différé).
+- F-073 : deux téléphones ouverts en même temps sur le même compte, comme F-024.

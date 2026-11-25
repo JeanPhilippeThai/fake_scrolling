@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 284, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 318, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -56,7 +56,7 @@ pages:
   - id: P-03
     nom: Accueil — fil
     plateforme: mobile
-    features: [F-009, F-010, F-011, F-012, F-012.a, F-014, F-015.a, F-016, F-016.a, F-017, F-018, F-019, F-020, F-021, F-022, F-024, F-025, F-026]
+    features: [F-009, F-010, F-011, F-012, F-012.a, F-014, F-015.a, F-016, F-016.a, F-017, F-018, F-019, F-020, F-021, F-022, F-024, F-025, F-026, F-073]
   - id: P-03.a
     nom: 'Fil : chargement'
     plateforme: mobile
@@ -84,7 +84,7 @@ pages:
   - id: P-04
     nom: Accueil — panneau Notifications
     plateforme: mobile
-    features: [F-022, F-024, F-027.a, F-028, F-028.a]
+    features: [F-022, F-024, F-027.a, F-028, F-028.a, F-073]
   - id: P-04.a
     nom: Aucune notification
     plateforme: mobile
@@ -108,7 +108,7 @@ pages:
   - id: P-05
     nom: Panneau Commentaires
     plateforme: mobile
-    features: [F-016.b, F-017, F-024, F-027, F-030]
+    features: [F-016.b, F-017, F-024, F-027, F-030, F-073]
   - id: P-05.a
     nom: 'Commentaires : chargement'
     plateforme: mobile
@@ -128,7 +128,7 @@ pages:
   - id: P-06
     nom: Panneau Enregistrer dans une collection
     plateforme: mobile
-    features: [F-018, F-024, F-027, F-031]
+    features: [F-018, F-024, F-027, F-031, F-073]
   - id: P-06.a
     nom: 'Nouvelle collection : création'
     plateforme: mobile
@@ -140,7 +140,7 @@ pages:
   - id: P-07
     nom: Panneau Partager
     plateforme: mobile
-    features: [F-019.a, F-019.b, F-019.c, F-024, F-027]
+    features: [F-019.a, F-019.b, F-019.c, F-024, F-027, F-073]
   - id: P-07.a
     nom: 'Envoi à un ami : échec'
     plateforme: mobile
@@ -148,7 +148,7 @@ pages:
   - id: P-08
     nom: Messages — liste des discussions
     plateforme: mobile
-    features: [F-024, F-025, F-026, F-026.a, F-033, F-034, F-036, F-037]
+    features: [F-024, F-025, F-026, F-026.a, F-033, F-034, F-036, F-037, F-073]
   - id: P-08.a
     nom: Aucune discussion
     plateforme: mobile
@@ -168,7 +168,7 @@ pages:
   - id: P-09
     nom: Messages — conversation
     plateforme: mobile
-    features: [F-005, F-024, F-036, F-038, F-039, F-040, F-041, F-042]
+    features: [F-005, F-024, F-036, F-038, F-039, F-040, F-041, F-042, F-073]
   - id: P-09.a
     nom: 'Conversation : chargement'
     plateforme: mobile
@@ -192,7 +192,7 @@ pages:
   - id: P-10
     nom: Messages — lecteur de story
     plateforme: mobile
-    features: [F-024, F-036]
+    features: [F-024, F-036, F-073]
   - id: P-10.a
     nom: 'Story : chargement'
     plateforme: mobile
@@ -204,7 +204,7 @@ pages:
   - id: P-11
     nom: Messages — Ajouter un ami
     plateforme: mobile
-    features: [F-005, F-024, F-034, F-043]
+    features: [F-005, F-024, F-034, F-043, F-073]
   - id: P-11.a
     nom: 'Recherche de comptes : chargement'
     plateforme: mobile
@@ -224,7 +224,7 @@ pages:
   - id: P-12
     nom: Nouveau post — choix des photos
     plateforme: mobile
-    features: [F-005.a, F-024, F-044, F-045, F-046, F-046.a]
+    features: [F-005.a, F-024, F-044, F-045, F-046, F-046.a, F-073]
   - id: P-12.a
     nom: Galerie vide
     plateforme: mobile
@@ -236,7 +236,7 @@ pages:
   - id: P-13
     nom: Nouveau post — légende
     plateforme: mobile
-    features: [F-005, F-024, F-047, F-048, F-049, F-050, F-051, F-068]
+    features: [F-005, F-024, F-047, F-048, F-049, F-050, F-051, F-068, F-073]
   - id: P-13.a
     nom: Publication en cours
     plateforme: mobile
@@ -248,7 +248,7 @@ pages:
   - id: P-14
     nom: Recherche — suggestions et tendances
     plateforme: mobile
-    features: [F-024, F-025, F-026, F-052, F-053, F-053.a]
+    features: [F-024, F-025, F-026, F-052, F-053, F-053.a, F-073]
   - id: P-14.a
     nom: 'Suggestions : chargement'
     plateforme: mobile
@@ -260,7 +260,7 @@ pages:
   - id: P-15
     nom: Recherche — résultats
     plateforme: mobile
-    features: [F-024, F-025, F-026, F-052, F-054]
+    features: [F-024, F-025, F-026, F-052, F-054, F-073]
   - id: P-15.a
     nom: 'Recherche : chargement'
     plateforme: mobile
@@ -276,11 +276,11 @@ pages:
   - id: P-16
     nom: Recherche — post ouvert
     plateforme: mobile
-    features: [F-005, F-009.a, F-010.a, F-016, F-016.a, F-017, F-018, F-019, F-020, F-021, F-024, F-025, F-026]
+    features: [F-005, F-009.a, F-010.a, F-016, F-016.a, F-017, F-018, F-019, F-020, F-021, F-024, F-025, F-026, F-073]
   - id: P-17
     nom: Profil
     plateforme: mobile
-    features: [F-024, F-025, F-026, F-055, F-056, F-057, F-058, F-059, F-060, F-061, F-062]
+    features: [F-024, F-025, F-026, F-055, F-056, F-057, F-058, F-059, F-060, F-061, F-062, F-073]
   - id: P-17.a
     nom: Aucun post
     plateforme: mobile
@@ -296,7 +296,7 @@ pages:
   - id: P-18
     nom: Profil — panneau Photo de profil
     plateforme: mobile
-    features: [F-024, F-027, F-058]
+    features: [F-024, F-027, F-058, F-073]
   - id: P-18.a
     nom: 'Photo : erreur de fichier'
     plateforme: mobile
@@ -304,7 +304,7 @@ pages:
   - id: P-19
     nom: Modifier le profil
     plateforme: mobile
-    features: [F-005.b, F-024, F-056]
+    features: [F-005.b, F-024, F-056, F-073]
   - id: P-19.a
     nom: 'Profil : enregistrement'
     plateforme: mobile
@@ -316,11 +316,11 @@ pages:
   - id: P-20
     nom: Panneau Options
     plateforme: mobile
-    features: [F-024, F-027.b, F-055]
+    features: [F-024, F-027.b, F-055, F-073]
   - id: P-21
     nom: Mon compte
     plateforme: mobile
-    features: [F-005, F-024, F-057.a, F-063, F-071]
+    features: [F-005, F-024, F-057.a, F-063, F-071, F-073]
   - id: P-21.a
     nom: Suppression échouée
     plateforme: mobile
@@ -328,7 +328,7 @@ pages:
   - id: P-22
     nom: Premium
     plateforme: mobile
-    features: [F-002.a, F-005, F-015, F-024, F-065]
+    features: [F-002.a, F-005, F-015, F-024, F-065, F-073]
   - id: P-22.a
     nom: Paiement échoué
     plateforme: mobile
@@ -340,19 +340,19 @@ pages:
   - id: P-23
     nom: Interface de l'appli
     plateforme: mobile
-    features: [F-002.b, F-005, F-024, F-066, F-067]
+    features: [F-002.b, F-005, F-024, F-066, F-067, F-073]
   - id: P-24
     nom: Nouveau post — panneau Identifier des personnes
     plateforme: mobile
-    features: [F-024, F-027, F-048]
+    features: [F-024, F-027, F-048, F-073]
   - id: P-25
     nom: Nouveau post — panneau Ajouter un lieu
     plateforme: mobile
-    features: [F-024, F-027, F-049]
+    features: [F-024, F-027, F-049, F-073]
   - id: P-26
     nom: Nouveau post — panneau Audience
     plateforme: mobile
-    features: [F-024, F-027, F-050, F-072]
+    features: [F-024, F-027, F-050, F-072, F-073]
   - id: P-27
     nom: Inscription
     plateforme: mobile
@@ -368,7 +368,7 @@ pages:
   - id: P-28
     nom: Nouveau post — panneau Amis proches
     plateforme: mobile
-    features: [F-024, F-027, F-072]
+    features: [F-024, F-027, F-072, F-073]
 ```
 
 ```yaml
@@ -620,7 +620,7 @@ features:
 
   - id: F-015
     nom: Soutenir le projet
-    description: Offre à 1,99 € en un seul paiement, proposée à partir de 1 h d'utilisation.
+    description: Offre à 1,99 € en un seul achat dans l'App Store ou Google Play (D-092), proposée à partir de 1 h d'utilisation du compte (E-15, D-093).
     pages: [P-03, P-22, P-22.a, P-22.b]
     plateformes: [mobile]
     acces: [R-02]
@@ -628,17 +628,17 @@ features:
       - id: F-015.a
         pages: [P-03, P-03.c]
         plateforme: mobile
-        difference: Post du fil, 1 sur 20 après 1 h, retiré une fois le soutien donné
+        difference: 'Post du fil, 1 sur 20 après 1 h ; une fois le soutien donné, il montre « Merci pour ton soutien. » jusqu''au prochain chargement du fil, puis n''est plus proposé (D-094)'
     entites: [E-16, E-15]
     operations: [lecture, écriture]
     etats_ui:
       - offre et bouton visibles à partir de 1 h
-      - 'soutenu : « Merci pour ton soutien. »'
+      - 'soutenu : « Merci pour ton soutien. » à la place du bouton dès que le store confirme l''achat (D-095) ; sur P-22, l''anneau et l''offre restent (D-094)'
       - 'paiement échoué : « Le paiement n’a pas abouti. Tu n’as pas été débité. » avec « Réessayer » (P-03 et P-22)'
       - 'paiement annulé : « Paiement annulé. Tu n’as pas été débité. » et de nouveau « Soutenir le projet » (P-22 ; même état sur F-015.a par analogie, D-036)'
     questions_ouvertes:
-      - Paiement via l'App Store ou Google Play
-      - 'Règle : offre visible à partir de 1 h d''utilisation ; masquée si le compte a déjà soutenu (E-16)'
+      - 'Remboursement par le store : le compte redevient-il « non soutenu » ?'
+      - 'Achat en attente (à approuver par un parent, paiement différé) : quel état montrer ?'
 ```
 
 ```yaml
@@ -1410,8 +1410,7 @@ features:
     etats_ui:
       - anneau qui se remplit jusqu'à 1 h
       - « encore X min » avant 1 h
-    questions_ouvertes:
-      - Temps compté par compte ou par appareil ?
+    questions_ouvertes: []
 
   - id: F-066
     nom: Choisir le thème de l'icône
@@ -1503,6 +1502,19 @@ features:
     questions_ouvertes:
       - 'Liste vide quand on choisit « Amis proches » : P-28 s''ouvre-t-il, ou le choix est-il refusé ?'
       - Un changement de la liste vaut-il pour les posts et stories déjà publiés en « Amis proches » ?
+
+  - id: F-073
+    nom: Compter le temps d'utilisation
+    description: 'Tâche de fond sans élément visible : chaque seconde passée appli ouverte et au premier plan s''ajoute au temps d''utilisation du compte, même après les 10 cycles de F-024 (D-093, D-096).'
+    pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28]
+    plateformes: [mobile]
+    acces: [R-02]
+    variantes: []
+    entites: [E-15]
+    operations: [lecture, écriture]
+    etats_ui: []
+    questions_ouvertes:
+      - 'Deux téléphones ouverts en même temps sur le même compte : le temps compte-t-il deux fois ?'
 ```
 
 ```yaml
@@ -1649,14 +1661,17 @@ entites:
   - id: E-15
     nom: Temps d'utilisation
     champs:
-      - durée cumulée
-    utilisee_par: [F-015, F-065]
+      - compte (D-093)
+      - durée cumulée, appli ouverte et au premier plan (D-093)
+    utilisee_par: [F-015, F-065, F-073]
 
   - id: E-16
     nom: Soutien
     champs:
       - prix (1,99 €)
+      - compte (D-092)
       - statut (non soutenu, soutenu)
+      - achat du store, renvoyé à chaque ouverture tant que le serveur ne l'a pas enregistré (D-095)
     utilisee_par: [F-015]
 
   - id: E-17
@@ -2124,6 +2139,36 @@ decisions:
     choix: 'Après un changement de photo de profil (F-058), la photo choisie se montre telle quelle environ 1 s, sur le téléphone de son propriétaire seulement, puis laisse place à son art généré (D-086), comme le texte tapé avant le charabia (D-083). Seuls la graine et l''algorithme quittent le téléphone. Le design ne change pas.'
     raison: 'Choix du propriétaire : c''est ce que dessine la maquette, et la vraie photo ne quitte jamais le téléphone (T-04).'
     impacte: [F-058, E-04]
+
+  - id: D-092
+    sujet: 'FL-09 : paiement du soutien'
+    choix: 'Le soutien (F-015, F-015.a) est un achat unique dans l''App Store ou Google Play, à 1,99 €, une seule fois par compte : le serveur garde le statut dans E-16, rendu sur un autre téléphone ou après une réinstallation.'
+    raison: 'Choix du propriétaire : les stores imposent leur paiement pour un achat numérique dans une appli.'
+    impacte: [F-015, E-16]
+
+  - id: D-093
+    sujet: 'FL-09 : temps d''utilisation lié au compte'
+    choix: 'Le temps d''utilisation (E-15) appartient au compte (E-01) et est gardé sur le serveur, comme le minuteur de couleur (D-074) : même temps sur chaque téléphone, gardé après une déconnexion ou une réinstallation. Il ne compte que pendant que l''appli est ouverte et au premier plan, connecté (D-075).'
+    raison: 'Choix du propriétaire : l''heure qui ouvre l''offre est celle passée sur le compte, pas sur un téléphone.'
+    impacte: [E-15, F-065, F-015, F-073]
+
+  - id: D-094
+    sujet: 'FL-09 : après le soutien'
+    choix: 'Comme la maquette : sur P-22, l''anneau et l''offre restent, et « Merci pour ton soutien. » remplace le bouton pour de bon. Le post Premium (F-015.a) montre le même merci jusqu''au prochain chargement du fil, puis n''est plus jamais proposé.'
+    raison: 'Choix du propriétaire : c''est ce que dessine la maquette ; le design ne change pas.'
+    impacte: [F-015, E-16]
+
+  - id: D-095
+    sujet: 'FL-09 : soutien payé mais pas enregistré'
+    choix: '« Merci pour ton soutien. » s''affiche dès que le store confirme l''achat. Si le serveur ne l''enregistre pas dans E-16, l''appli le renvoie sans message à chaque ouverture jusqu''à ce qu''il le soit, comme D-077. P-22.a et P-03.c ne s''affichent que si le store n''a pas débité.'
+    raison: 'Choix du propriétaire : on n''affiche jamais une erreur à quelqu''un qui a payé.'
+    impacte: [F-015, E-16]
+
+  - id: D-096
+    sujet: 'FL-09 : qui compte le temps d''utilisation'
+    choix: 'Nouvelle feature F-073 « Compter le temps d''utilisation », tâche de fond sans élément visible, sur les mêmes pages que F-024 : chaque seconde passée appli ouverte et au premier plan s''ajoute à E-15 (D-093). Elle continue après les 10 cycles de F-024. F-065 ne fait que lire E-15.'
+    raison: 'Choix du propriétaire : aucune feature n''écrivait E-15, et F-024 grise et s''arrête après 10 cycles.'
+    impacte: [F-073, E-15, F-065]
 
 ids_retires:
   - {id: F-013, decision: D-002}
