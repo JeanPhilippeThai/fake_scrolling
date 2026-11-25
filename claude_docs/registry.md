@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 326, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 355, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -398,7 +398,7 @@ features:
 
   - id: F-002
     nom: Afficher l'icône de l'appli
-    description: Carré arrondi avec un F blanc dont la couleur suit le thème choisi.
+    description: Carré arrondi avec un F blanc dont la couleur suit le thème choisi sur ce téléphone (D-103).
     pages: [P-01, P-22, P-23]
     plateformes: [mobile]
     acces: [R-01, R-02]
@@ -419,8 +419,7 @@ features:
       - thème Noir
       - thème Orange (dégradé)
       - thème Rouge
-    questions_ouvertes:
-      - 'Accès R-01 supposé : avant connexion, l''icône suit le thème choisi auparavant ; thème lié à l''appareil ou au compte ?'
+    questions_ouvertes: []
 
   - id: F-003
     nom: Demander un code par e-mail
@@ -1273,7 +1272,7 @@ features:
 
   - id: F-056
     nom: Modifier son profil
-    description: Lien « Modifier » puis page avec pseudo (16 max) et description (80 max).
+    description: Lien « Modifier » puis page avec pseudo (16 max) et description (80 max), envoyés en charabia (D-098).
     pages: [P-17, P-19, P-19.a, P-19.b]
     plateformes: [mobile]
     acces: [R-02]
@@ -1281,13 +1280,13 @@ features:
     entites: [E-01]
     operations: [lecture, écriture]
     etats_ui:
-      - prérempli
+      - prérempli avec le charabia actuel (D-098)
       - compteurs 0/16 et 0/80
-      - texte tapé visible moins d'1 s puis charabia
+      - texte tapé visible moins d'1 s, sur ce téléphone seulement, puis charabia (D-098)
+      - 'pseudo vide : l''ancien est gardé, sans message ; description vidable (D-099)'
       - 'enregistrement : anneau, champs gardés'
       - 'erreur : « Tes modifications n’ont pas été enregistrées. Vérifie ta connexion et réessaie. » avec « Réessayer »'
-    questions_ouvertes:
-      - 'Pseudo vide : l''ancien est gardé'
+    questions_ouvertes: []
 
   - id: F-057
     nom: Voir son profil
@@ -1320,6 +1319,7 @@ features:
       - nette environ 1 s, sur son seul téléphone, puis art généré (D-091)
       - floutée
       - 'erreur de fichier : « Cette image n’a pas pu être utilisée. Choisis-en une autre. » (P-18)'
+      - 'enregistrement : appliqué tout de suite, renvoyé sans message tant que le serveur ne l''a pas (D-100)'
     questions_ouvertes:
       - Autorisation d'accès à la galerie ; si elle est refusée, même état que F-044 (D-034) ?
 
@@ -1385,19 +1385,18 @@ features:
 
   - id: F-063
     nom: Supprimer son compte
-    description: Bouton rouge puis confirmation « Supprimer définitivement » ou « Annuler ».
+    description: Bouton rouge puis confirmation « Supprimer définitivement » ou « Annuler » ; efface tout le compte, tout de suite et pour de bon (D-101), et libère son @ (D-102).
     pages: [P-21, P-21.a]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-01, E-02]
+    entites: [E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16]
     operations: [suppression]
     etats_ui:
       - confirmation
       - 'compte supprimé : « Compte supprimé » et « Merci d’être passé·e. » 2 s, puis P-01 s''ouvre (D-069)'
       - 'échec : « Ton compte n’a pas pu être supprimé. Rien n’a été effacé. » avec « Réessayer »'
-    questions_ouvertes:
-      - 'Effacement réel des données (la fermeture de la session est réglée par D-053)'
+    questions_ouvertes: []
 
   - id: F-065
     nom: Voir son temps passé
@@ -1426,7 +1425,6 @@ features:
       - case choisie cerclée
     questions_ouvertes:
       - Changement réel de l'icône du téléphone
-      - Thème lié au compte ou à l'appareil ?
 
   - id: F-067
     nom: Activer ou désactiver les carrousels de pause
@@ -1438,8 +1436,7 @@ features:
     entites: [E-17]
     operations: [écriture]
     etats_ui: [vert actif, gris inactif]
-    questions_ouvertes:
-      - Réglage lié au compte ou à l'appareil ?
+    questions_ouvertes: []
 
   - id: F-068
     nom: Choisir où publier
@@ -1473,7 +1470,7 @@ features:
 
   - id: F-071
     nom: Se déconnecter
-    description: Bouton « Se déconnecter » sur Mon compte, qui ferme la session de l'appareil et ramène à la Connexion (D-053).
+    description: Bouton « Se déconnecter » sur Mon compte, qui ferme la session de l'appareil et ramène à la Connexion (D-053). Ce qui attend d'être renvoyé au serveur part à la prochaine connexion du compte sur ce téléphone (D-104).
     pages: [P-21]
     plateformes: [mobile]
     acces: [R-02]
@@ -1524,9 +1521,9 @@ entites:
   - id: E-01
     nom: Compte utilisateur
     champs:
-      - pseudo
+      - pseudo, en charabia (D-098)
       - identifiant (@)
-      - description
+      - description, en charabia (D-098)
       - photo de profil
       - nombre de posts
       - nombre d'amis
@@ -1558,7 +1555,7 @@ entites:
       - lien
       - personnes identifiées
       - lieu
-    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-053, F-054, F-062, F-068]
+    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-053, F-054, F-062, F-063, F-068]
 
   - id: E-04
     nom: Média
@@ -1567,7 +1564,7 @@ entites:
       - algorithme qui dessine l'art généré (D-086)
       - durée de la vidéo
       - rang dans le carrousel
-    utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058]
+    utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, F-063]
 
   - id: E-05
     nom: Commentaire
@@ -1576,7 +1573,7 @@ entites:
       - texte
       - ancienneté
       - nombre de likes
-    utilisee_par: [F-016, F-017, F-022, F-030]
+    utilisee_par: [F-016, F-017, F-022, F-030, F-063]
 
   - id: E-06
     nom: Like
@@ -1584,14 +1581,14 @@ entites:
       - cible (post ou commentaire)
       - auteur
       - date
-    utilisee_par: [F-016, F-022]
+    utilisee_par: [F-016, F-022, F-063]
 
   - id: E-07
     nom: Collection
     champs:
       - nom
       - posts enregistrés
-    utilisee_par: [F-018, F-031]
+    utilisee_par: [F-018, F-031, F-063]
 
   - id: E-08
     nom: Notification
@@ -1600,7 +1597,7 @@ entites:
       - auteur
       - ancienneté
       - post concerné (miniature)
-    utilisee_par: [F-016, F-022, F-028, F-030, F-034, F-051]
+    utilisee_par: [F-016, F-022, F-028, F-030, F-034, F-051, F-063]
 
   - id: E-09
     nom: Relation d'amitié
@@ -1608,7 +1605,7 @@ entites:
       - compte (pseudo, identifiant, photo)
       - statut (en attente, demandé, ami)
       - ami proche (oui/non, D-060)
-    utilisee_par: [F-022, F-028, F-034, F-036, F-043, F-048, F-052, F-072]
+    utilisee_par: [F-022, F-028, F-034, F-036, F-043, F-048, F-052, F-063, F-072]
 
   - id: E-10
     nom: Conversation
@@ -1617,12 +1614,12 @@ entites:
       - dernier message
       - heure
       - lu / non lu, pour chacun des deux amis (D-085)
-    utilisee_par: [F-019, F-028, F-033, F-034, F-037, F-038, F-039, F-041, F-042]
+    utilisee_par: [F-019, F-028, F-033, F-034, F-037, F-038, F-039, F-041, F-042, F-063]
 
   - id: E-11
     nom: Message
     champs: [expéditeur, texte en charabia (D-083), photo en graine (D-086), message cité, post partagé, date]
-    utilisee_par: [F-019, F-038, F-040, F-041, F-042]
+    utilisee_par: [F-019, F-038, F-040, F-041, F-042, F-063]
 
   - id: E-12
     nom: Story
@@ -1636,7 +1633,7 @@ entites:
       - audience (D-059)
       - personnes identifiées
       - lieu
-    utilisee_par: [F-036, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-068]
+    utilisee_par: [F-036, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-063, F-068]
 
   - id: E-13
     nom: Recherche
@@ -1656,14 +1653,14 @@ entites:
       - cycles écoulés
       - pourcentage de gris
       - temps restant
-    utilisee_par: [F-024, F-059, F-060, F-061]
+    utilisee_par: [F-024, F-059, F-060, F-061, F-063]
 
   - id: E-15
     nom: Temps d'utilisation
     champs:
       - compte (D-093)
       - durée cumulée, appli ouverte et au premier plan (D-093)
-    utilisee_par: [F-015, F-065, F-073]
+    utilisee_par: [F-015, F-063, F-065, F-073]
 
   - id: E-16
     nom: Soutien
@@ -1672,11 +1669,12 @@ entites:
       - compte (D-092)
       - statut (non soutenu, soutenu)
       - achat du store, renvoyé à chaque ouverture tant que le serveur ne l'a pas enregistré (D-095)
-    utilisee_par: [F-015]
+    utilisee_par: [F-015, F-063]
 
   - id: E-17
     nom: Préférences d'interface
     champs:
+      - téléphone, pas le compte (D-103)
       - thème d'icône (Noir, Orange, Rouge)
       - carrousels de pause (oui/non)
     utilisee_par: [F-002, F-012, F-066, F-067]
@@ -2175,6 +2173,48 @@ decisions:
     choix: 'Un post du fil (E-03) n''expire jamais : il reste dans le fil, la recherche et le profil tant que le compte de son auteur existe (F-063). Aucun flow d''expiration. E-03 perd le champ « jours restants avant expiration ». P-17 n''affiche plus de jours restants, et le texte de l''état vide P-17.a devient « Tes posts s’affichent ici. » (au lieu de celui fixé par D-051). F-062 porte design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond. Les stories gardent leurs 24 h (D-079).'
     raison: Choix du propriétaire.
     impacte: [E-03, F-062, F-051, F-009]
+
+  - id: D-098
+    sujet: 'FL-11 : pseudo et description en charabia'
+    choix: 'Le téléphone change le pseudo et la description en charabia, émojis gardés, avant de les envoyer (F-056), comme un message (D-083) : le vrai texte ne quitte jamais le téléphone, et personne, le titulaire compris, ne peut le relire. E-01 ne garde que le charabia, et P-19 est prérempli avec ce charabia. Le texte tapé reste visible moins d''1 s sur P-17, sur ce téléphone seulement. L''identifiant (@) reste en clair (F-043, F-057). La maquette, qui préremplit P-19 avec le texte tapé plus tôt dans la même session, ne change pas.'
+    raison: 'Choix du propriétaire : le profil suit la règle des messages (D-083) et de la recherche (D-087).'
+    impacte: [F-056, F-057, E-01, P-19]
+
+  - id: D-099
+    sujet: 'FL-11 : pseudo ou description vides'
+    choix: 'Sur P-19, « Enregistrer » avec un pseudo vide garde l''ancien pseudo, sans message ; la description peut être vidée. Le design ne change pas.'
+    raison: 'Choix du propriétaire : c''est ce que fait la maquette, et un compte garde toujours un pseudo (question ouverte de F-056).'
+    impacte: [F-056, E-01]
+
+  - id: D-100
+    sujet: 'FL-11 : enregistrement de la photo de profil'
+    choix: 'Une nouvelle photo de profil (F-058) s''applique tout de suite sur le téléphone, puis sa graine et son algorithme (D-086) sont renvoyés au serveur sans message jusqu''à ce qu''ils soient enregistrés, comme D-077. Pas d''état d''erreur réseau : P-18.a ne sert qu''à un fichier inutilisable. Pas de nouvel artboard.'
+    raison: 'Choix du propriétaire : comme le minuteur, la photo se renvoie d''elle-même ; un message gênerait pour rien.'
+    impacte: [F-058, E-01, E-04]
+
+  - id: D-101
+    sujet: 'FL-11 : ce qu''efface la suppression du compte'
+    choix: '« Supprimer définitivement » (F-063) efface tout de suite et pour de bon, sans délai de grâce, tout ce qui vient du compte : E-01 ; ses sessions sur tous les téléphones (E-02), un autre téléphone ouvrant P-01 à son prochain échange avec le serveur ; ses posts (E-03) et leurs médias (E-04) ; ses stories (E-12) ; ses commentaires (E-05) et ses likes (E-06) ; ses collections (E-07) ; les notifications qu''il a reçues ou causées (E-08) ; ses relations d''amitié et invitations (E-09) ; ses conversations et leurs messages (E-10, E-11), qui disparaissent aussi du P-08 de ses amis ; son minuteur (E-14), son temps d''utilisation (E-15) et son soutien (E-16), si bien qu''un nouveau compte de la même personne repart non soutenu. Les compteurs des autres comptes baissent d''autant. Ce qui attendait d''être renvoyé pour ce compte (D-077, D-095, D-100) est abandonné. L''effacement est tout ou rien : s''il échoue, P-21.a dit que rien n''a été effacé. Le design ne change pas.'
+    raison: 'Choix du propriétaire : la fenêtre de confirmation dit déjà que posts, messages et amis sont effacés, et que c''est définitif (question ouverte de F-063).'
+    impacte: [F-063, E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16]
+
+  - id: D-102
+    sujet: 'FL-11 : identifiant d''un compte supprimé'
+    choix: 'L''identifiant (@) d''un compte supprimé (F-063) est libéré tout de suite : n''importe qui peut le prendre à l''inscription (F-070). Rien du compte n''est gardé, pas même son @. Les autres règles de l''identifiant restent une question ouverte de F-070.'
+    raison: 'Choix du propriétaire : ses amitiés étant effacées (D-101), personne ne peut prendre le nouveau titulaire pour l''ancien.'
+    impacte: [F-063, F-070, E-01]
+
+  - id: D-103
+    sujet: 'FL-11 : préférences d''interface sur le téléphone'
+    choix: 'Les préférences d''interface (E-17 : thème de l''icône, carrousels de pause) appartiennent au téléphone, pas au compte : gardées sur le téléphone, jamais envoyées. P-01 montre donc le thème choisi sur ce téléphone avant toute connexion (F-002). Un nouveau téléphone, ou une réinstallation, part du thème Noir avec les carrousels de pause activés ; ni la déconnexion (F-071) ni la suppression du compte (F-063) ne les changent. P-23 fait partie de FL-11. Le design ne change pas.'
+    raison: 'Choix du propriétaire : l''icône de l''appli est un réglage du téléphone, et P-01 en a besoin avant la connexion (questions ouvertes de F-002, F-066 et F-067).'
+    impacte: [F-002, F-012, F-066, F-067, E-17]
+
+  - id: D-104
+    sujet: 'FL-11 : envois en attente à la déconnexion'
+    choix: 'À la déconnexion (F-071), ce qui attend encore d''être renvoyé au serveur (minuteur, D-077 ; soutien, D-095 ; photo de profil, D-100) reste sur le téléphone, rattaché au compte, et part à sa prochaine connexion sur ce téléphone. Rien n''est jamais envoyé pour un autre compte qui se connecte sur le même téléphone. Le design ne change pas.'
+    raison: 'Choix du propriétaire : se déconnecter ne fait rien perdre (D-065).'
+    impacte: [F-071, F-015, F-058, F-060, F-061, E-02]
 
 ids_retires:
   - {id: F-013, decision: D-002}

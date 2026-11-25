@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 38, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 39, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -570,3 +570,75 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-015 : remboursement par le store ; achat en attente (à approuver par un parent, paiement différé).
 - F-073 : deux téléphones ouverts en même temps sur le même compte, comme F-024.
+
+## FL-11 Gérer son profil et son compte
+
+Un utilisateur connecté (R-02) consulte son profil (P-17), change son pseudo, sa description (P-19) ou sa photo (P-18), règle l'interface de l'appli (P-23), puis peut se déconnecter ou supprimer son compte (P-21). Mobile seulement. Décisions : D-023, D-053, D-063, D-065, D-069, D-083, D-086, D-091, D-098, D-099, D-100, D-101, D-102, D-103, D-104.
+
+### Entrées
+
+- Icône Profil du menu du bas (F-025), depuis P-03, P-08, P-14, P-15 ou P-16 → P-17.
+- Fin de FL-01 avec un nouveau compte : la photo et la description se règlent ici, sur P-18 et P-19 (D-063).
+
+Hors de ce flow : le minuteur de couleur de P-17 (F-059 à F-061) et le grisage F-024 (FL-05) ; « Créer un post » de P-17.a et le bouton + (F-026, FL-03) ; la ligne « Premium » de P-20 et le comptage F-073 (FL-09) ; la Connexion qui suit la déconnexion ou la suppression (FL-01).
+
+### Séquence
+
+| Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- | --- |
+| 1. Voir son profil | Icône Profil (F-025) | P-17 (P-17.b pendant le chargement des posts) | F-057, F-062 | E-01 (pseudo et description en charabia, @, photo, compteurs), E-03 (ses posts) | — |
+| 2. Ouvrir la modification | Lien « Modifier » | P-17 → P-19 | F-056 | E-01 (charabia actuel, prérempli, D-098) | — |
+| 3. Enregistrer | Lien « Enregistrer » | P-19 → P-19.a → P-17 | F-056 | — | E-01 (pseudo et description, en charabia fait sur le téléphone, D-098, D-099) |
+| 3'. Annuler | Lien « Annuler » | P-19 → P-17 | F-005.b | — | — |
+| 4. Changer sa photo | Photo ronde de P-17 | P-17 → P-18 → P-17 | F-058, F-027 | — | E-04 (graine et algorithme, D-086), E-01 (photo) ; renvoyés sans message (D-100) |
+| 5. Ouvrir les options | Engrenage | P-17 → P-20 | F-055, F-027.b | — | — |
+| 6. Régler l'interface | Ligne « Interface de l'appli » | P-20 → P-23 → P-20 (F-005, D-023) | F-002.b, F-066, F-067 | E-17 (sur le téléphone, D-103) | E-17 |
+| 7. Voir son compte | Ligne « Gérer mon compte » | P-20 → P-21 | F-057.a | E-01 (@) | — |
+| 8a. Se déconnecter | Bouton « Se déconnecter », sans confirmation | P-21 → P-01 | F-071 | — | E-02 (session de ce téléphone fermée, D-053, D-065) |
+| 8b. Supprimer son compte | « Supprimer mon compte », puis « Supprimer définitivement » | P-21 → « Compte supprimé » 2 s → P-01 (D-069) | F-063 | — | Tout le compte effacé (D-101) : E-01 à E-12, E-14, E-15, E-16 |
+
+Suite simple : P-17 → F-056 → P-19 → P-17 ; P-17 → F-058 → P-18 → P-17 ; P-17 → F-055 → P-20 → P-23 (F-066, F-067) ou P-21 → F-071 / F-063 → P-01. Les entités suivent les `operations` des features : F-057 et F-062 lisent E-01 et E-03 ; F-056 lit et écrit E-01 ; F-058 écrit E-01 et E-04 ; F-066 et F-067 écrivent E-17, que F-002 lit ; F-071 et F-063 suppriment.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| P-17 | Ses posts chargent | P-17.b : anneau centré (F-062) |
+| P-17 | Ses posts ne chargent pas | P-17.c : « Tes posts n’ont pas pu être chargés. » avec « Réessayer » |
+| P-17 | Aucun post | P-17.a : « Créer un post » ouvre P-12 (F-026, D-035, FL-03) |
+| P-19 | Pseudo vide | L'ancien pseudo est gardé, sans message (D-099) |
+| P-19 | Description vide | Enregistrée vide (D-099) |
+| P-19 | Frappe au-delà de 16 ou 80 caractères | Bloquée |
+| P-19.a | L'enregistrement échoue | P-19.b : « Tes modifications n’ont pas été enregistrées. Vérifie ta connexion et réessaie. » avec « Réessayer », saisies gardées (D-027) |
+| P-18 | Fichier inutilisable | P-18.a : « Cette image n’a pas pu être utilisée. Choisis-en une autre. » |
+| P-18 | Pas de réseau | Photo appliquée sur le téléphone, renvoyée sans message (D-100) |
+| P-18 | Accès à la galerie refusé | Ouvert : F-058 |
+| P-23 | Nouveau téléphone ou réinstallation | Thème Noir, carrousels de pause activés (D-103) |
+| P-21 | « Annuler » dans la fenêtre | La fenêtre se ferme, rien n'est effacé |
+| P-21 | La suppression échoue | P-21.a : « Ton compte n’a pas pu être supprimé. Rien n’a été effacé. » avec « Réessayer » : tout ou rien (D-101) |
+| F-071 | Envois en attente (D-077, D-095, D-100) | Gardés pour la prochaine connexion du compte sur ce téléphone, jamais pour un autre compte (D-104) |
+| F-063 | Envois en attente | Abandonnés avec le compte (D-101) |
+| Autre téléphone | Compte supprimé ailleurs | P-01 à son prochain échange avec le serveur (D-101) |
+| F-070 | Quelqu'un prend le @ d'un compte supprimé | Permis tout de suite (D-102) |
+| P-17 | Ouvrir un de ses posts ; combien de posts montre la grille | Ouvert : F-062 |
+| P-17 | Calcul réel des compteurs | Ouvert : F-057 |
+
+Fin du flow : P-17 ou P-20 après une modification ou un réglage ; P-01 après la déconnexion ou la suppression (FL-01).
+
+### Manques du registre
+
+Réglés le 25 novembre 2026 :
+
+- Ce qui quitte le téléphone quand on modifie son profil : seulement le charabia (D-098). La règle du pseudo vide, laissée en question par F-056, est close (D-099).
+- L'enregistrement de la photo sans réseau (D-100).
+- Ce qu'efface la suppression du compte : F-063 n'écrivait que E-01 et E-02 ; elle efface désormais tout le compte, tout de suite (D-101), et libère son @ (D-102). La question ouverte de F-063 est close.
+- Où vivent les préférences d'interface : sur le téléphone (D-103). Les questions de F-002, F-066 et F-067 sont closes, et P-23, qui n'était dans aucun flow, entre dans FL-11.
+- Ce que devient un envoi en attente à la déconnexion (D-104).
+
+Restent ouverts, dans les `questions_ouvertes` des features :
+
+- F-057 : calcul réel des compteurs.
+- F-058 : autorisation d'accès à la galerie, et l'état si elle est refusée.
+- F-062 : ouvrir un de ses posts ; nombre de posts de la grille.
+- F-066 : changement réel de l'icône du téléphone.
+- F-070 : règles de l'identifiant (longueur, caractères permis, message s'il est pris).
