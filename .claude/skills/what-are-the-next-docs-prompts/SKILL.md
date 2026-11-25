@@ -81,6 +81,7 @@ Up to 5 items, in method order: finish the current step, then go on into the nex
 - Point to the prompt in `describe.md`; never copy its text.
 - Fill its brackets from the docs. A value that depends on an earlier item's result says "from item <n>".
 - Steps 1, 6 and 7 have no prompt: the item says what to write and where.
+- Each item lists the open questions it can settle: the `questions_ouvertes` of the IDs it touches, and the questions in `docs/questions.md` on its subject, each as `<ID>: <the question, one line>`. A question the item cannot settle waits for its feature's turn in the feature loop. An item with none leaves out "Open questions".
 
 ```markdown
 # Next docs prompts
@@ -94,7 +95,7 @@ Doc tests: all passed. The docs are at step <n>, <step name>.
 | 1 Design | Done | L1, B1 passed |
 
 ## Next prompts
-1. **Prompt <n>: <name>** (step <n>). Give it: <files, values for its brackets>. It produces: <what>.
+1. **Prompt <n>: <name>** (step <n>). Give it: <files, values for its brackets>. It produces: <what>. Open questions: <ID>: <question>; <ID>: <question>.
 ```
 
 ## 6. Report
