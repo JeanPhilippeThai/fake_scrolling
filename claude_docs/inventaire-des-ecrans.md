@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 139, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 147, exported 2026-11-25 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -72,7 +72,7 @@ Fil plein écran, un post à la fois, avec actions en colonne à droite et cloch
 | Lire un carrousel de pause | Post de @fakescrolling tous les 5 à 8 posts : 4 phrases courtes, une par photo | Une des 5 séries de phrases | Fond pastel différent par phrase ; masqué si l'interrupteur de P-23 est désactivé |
 | Suivre un post Inspire / Expire | Cercle qui grandit et rétrécit avec « Inspire » puis « Expire », environ 1 post sur 8 | Cycle de 8 s | Animation continue ; figée si l'appareil réduit les animations |
 | Voir un post Premium | Après 1 h dans l'app, 1 post sur 20 propose de soutenir le projet | Temps passé, icône du thème, prix 1,99 € | Absent avant 1 h ou si déjà soutenu |
-| Soutenir le projet | Bouton noir « Soutenir le projet » du post Premium | Achat 1,99 € (paiement par le store : à confirmer) | Bouton ; puis « Merci pour ton soutien. » ; paiement échoué (P-03.c) |
+| Soutenir le projet | Bouton noir « Soutenir le projet » du post Premium | Achat 1,99 € (achat unique dans le store, D-092) | Bouton ; puis « Merci pour ton soutien. » ; paiement échoué (P-03.c) |
 | Liker un post par double tap | Double tap sur l'image : grand cœur animé | Like du post (+1) | Animation du cœur ; ne retire jamais le like |
 | Liker ou retirer son like | Cœur blanc dans la colonne de droite | Nombre de likes | Vide blanc ; plein rose quand liké ; échec : redevient vide (P-03.e) |
 | Ouvrir les commentaires | Bulle dans la colonne de droite, ouvre P-05 | Nombre de commentaires (+ les miens) | — |
@@ -469,9 +469,9 @@ Page plein écran pour changer son pseudo et sa description (pas le @).
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
 | Annuler la modification | Lien « Annuler » en haut à gauche, revient à P-17 | Saisies abandonnées | — |
-| Saisir son pseudo | Champ « Pseudo », compteur « 0/16 » dessous | Pseudo (16 caractères max) | Prérempli avec le pseudo actuel ; frappe bloquée à 16 |
-| Saisir sa description | Champ « Description » sur 3 lignes, compteur « 0/80 » dessous | Description (80 caractères max) | Préremplie ; frappe bloquée à 80 |
-| Enregistrer le profil | Lien vert « Enregistrer » en haut à droite, revient à P-17 | Pseudo et description | Pseudo vide : l'ancien est gardé ; enregistrement (P-19.a) ; erreur (P-19.b) |
+| Saisir son pseudo | Champ « Pseudo », compteur « 0/16 » dessous | Pseudo (16 caractères max) | Prérempli avec le charabia du pseudo actuel (D-098) ; frappe bloquée à 16 |
+| Saisir sa description | Champ « Description » sur 3 lignes, compteur « 0/80 » dessous | Description (80 caractères max) | Préremplie avec le charabia (D-098) ; frappe bloquée à 80 |
+| Enregistrer le profil | Lien vert « Enregistrer » en haut à droite, revient à P-17 | Pseudo et description | Pseudo vide : l'ancien est gardé ; description vidable (D-099) ; enregistrement (P-19.a) ; erreur (P-19.b) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
 **États dessinés à part**
@@ -504,7 +504,7 @@ La page permet de se déconnecter ou de supprimer son compte.
 | Voir son identifiant | « Compte » puis @moi.ici | @ en clair | — |
 | Se déconnecter | Bouton encadré gris « Se déconnecter », au-dessus de « Supprimer mon compte » ; ouvre P-01 sans confirmation (D-065) | Session de l'appareil fermée (D-053) | — |
 | Supprimer son compte | Bouton rouge encadré « Supprimer mon compte » | Aucune | Ouvre une confirmation |
-| Confirmer la suppression | Fenêtre « Supprimer ton compte ? » : posts, messages et amis effacés, définitif ; bouton rouge « Supprimer définitivement » | Compte, posts, messages, amis ; session de l'appareil fermée (D-053) ; effacement réel : à confirmer | Puis état « Compte supprimé » + « Merci d'être passé·e. », 2 s, puis P-01 s'ouvre (D-069) ; échec (P-21.a) |
+| Confirmer la suppression | Fenêtre « Supprimer ton compte ? » : posts, messages et amis effacés, définitif ; bouton rouge « Supprimer définitivement » | Compte, posts, messages, amis ; session de l'appareil fermée (D-053) ; effacés tout de suite et pour de bon, partout (D-101) | Puis état « Compte supprimé » + « Merci d'être passé·e. », 2 s, puis P-01 s'ouvre (D-069) ; échec (P-21.a) |
 | Annuler la suppression | Bouton « Annuler » dans la fenêtre | Aucune | La fenêtre se ferme |
 | Recommencer la démo | Lien souligné après la suppression | Compte rétabli | Propre à la maquette, hors registre (décision D-020) ; touché dans les 2 s, il annule l'ouverture de P-01 |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
@@ -526,7 +526,7 @@ Temps passé dans l'app et, après une heure, offre de soutien à 1,99 €.
 | Voir son temps passé | Grand anneau avec « 23 min » et « passées ici » | Temps passé sur tous les écrans | Anneau qui se remplit jusqu'à 1 h |
 | Lire le temps restant | Deux lignes « Après une heure dans l'appli, / tu pourras soutenir le projet. » + « encore 37 min » | Minutes restantes avant 1 h | Avant 1 h seulement |
 | Voir l'offre | Deux lignes « Une heure passée ici. / Soutiens un projet indépendant. », « 1,99 € », « un seul paiement » | Prix | À partir de 1 h |
-| Soutenir le projet | Bouton noir arrondi « Soutenir le projet » | Achat 1,99 €, partagé avec le post Premium de P-03 (paiement par le store : à confirmer) | Puis « Merci pour ton soutien. » ; paiement échoué (P-22.a) ; paiement annulé (P-22.b) |
+| Soutenir le projet | Bouton noir arrondi « Soutenir le projet » | Achat 1,99 €, partagé avec le post Premium de P-03 (achat unique dans le store, D-092) | Puis « Merci pour ton soutien. » ; paiement échoué (P-22.a) ; paiement annulé (P-22.b) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
 **États dessinés à part**
@@ -544,8 +544,8 @@ Choix du thème de l'icône, puis un interrupteur pour le fil.
 | --- | --- | --- | --- |
 | Revenir aux options | Flèche en haut à gauche, rouvre le panneau Options (P-20) | Aucune | — |
 | Voir la nouvelle icône | Grand carré arrondi avec un F blanc, « fake scrolling » dessous | Thème choisi | Noir ; dégradé orange ; rouge |
-| Choisir un thème | Trois cases Noir, Orange, Rouge avec mini-icône | Thème, mémorisé et repris par P-01 et P-22 (changement réel de l'icône du téléphone : à confirmer) | Case choisie cerclée de noir |
-| Activer les carrousels de pause | Interrupteur « Carrousels de pause », « Toutes les 5 à 8 publications. » | Réglage oui/non | Vert = actif ; gris = inactif : les carrousels de pause disparaissent du fil |
+| Choisir un thème | Trois cases Noir, Orange, Rouge avec mini-icône | Thème, gardé sur le téléphone (D-103) et repris par P-01 et P-22 (changement réel de l'icône du téléphone : à confirmer) | Case choisie cerclée de noir |
+| Activer les carrousels de pause | Interrupteur « Carrousels de pause », « Toutes les 5 à 8 publications. » | Réglage oui/non, gardé sur le téléphone (D-103) | Vert = actif ; gris = inactif : les carrousels de pause disparaissent du fil |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
 ## P-24 Nouveau post — panneau Identifier des personnes
