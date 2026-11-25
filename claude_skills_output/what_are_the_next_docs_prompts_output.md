@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-25 · commit ebd658d · fingerprint d369641c43b1
+2026-11-25 · commit ebd658d · fingerprint 99ddc83c33d7
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -21,5 +21,4 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Step 6: entities and states** (no prompt). Fix finding 3 (L6-02, class A): F-070 creates the timer (E-14) and the support record (E-16) in SM-E-14 and SM-E-16, but its `entites` list only E-01 and E-02; add them in the registry Claude Doc (and E-15 if it is created at sign-up), or drop « F-070 » from the two initial moves. Then write the five TLA+ models D-107 chose (SM-E-09, SM-E-12, SM-E-14, SM-E-16 and sync between phones), as `workflow_docs/method/verification.md` says, with their rules from the table « Modèles TLA+ à écrire » of `conception-systeme.md`, and run the model checker in CI (finding 4, L6-03). It produces: TLA+ models checked in CI; their `BR` IDs wait for step 7 or the feature specs (L6-04).
-2. **Step 7: non-functional requirements** (no prompt). Write the app-wide NFRs once (privacy, speed, security, accessibility), each with a number or a test, in the Conception système Claude Doc, with feature-level ones only where they are specific (D-074, D-086 and D-101 already constrain privacy). It produces: NFRs (`NFR-xx`).
+1. **Step 7: non-functional requirements** (no prompt). Write the app-wide NFRs once (privacy, speed, security, accessibility), each with a number or a test, in the Conception système Claude Doc, with feature-level ones only where they are specific (D-074, D-086 and D-101 already constrain privacy). It produces: NFRs (`NFR-xx`).

@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 60, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 84, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -7,7 +7,7 @@ Les flows de l'appli (prompt 5 de la méthode), un par section, écrits uniqueme
 
 ## FL-01 Se connecter
 
-Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-02) sur P-03, par un compte tiers ou par un code reçu par e-mail. Mobile seulement. Décisions : D-024, D-052, D-053, D-054, D-069.
+Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-02) sur P-03, par un compte tiers ou par un code reçu par e-mail. Mobile seulement. Décisions : D-024, D-052, D-053, D-054, D-069, D-114.
 
 ### Entrées
 
@@ -24,7 +24,7 @@ Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-0
 | 2b. Demande du code | P-01 → P-01.d | F-003 | — | E-02 (adresse e-mail, code à 6 chiffres, délai avant renvoi) |
 | 3b. Saisie du code | P-02 | F-006, F-007 | E-02 (adresse, code), E-01 (compte existant ?) | E-02 (session) |
 | 3b'. Renvoi du code | P-02 | F-008 | E-02 (délai avant renvoi) | E-02 (nouveau code) |
-| 4. Inscription, si aucun compte | P-27 | F-070 | E-02 (fournisseur ou adresse) | E-01 (pseudo, identifiant), E-02 (session) |
+| 4. Inscription, si aucun compte | P-27 | F-070 | E-02 (fournisseur ou adresse) | E-01 (pseudo, identifiant), E-02 (session), E-14, E-15 et E-16 (valeurs de départ, D-114) |
 | 5. Arrivée sur le fil | P-03.a → P-03 | F-009 | E-03 (posts ; d'abord le post du lien, D-054) | — |
 
 Suite simple : P-01 → F-001 / F-001.a → (P-27 → F-070) → P-03, ou P-01 → F-003 → P-02 → F-007 → (P-27 → F-070) → P-03. Les entités suivent les `operations` des features : F-003 écrit E-02 ; F-006 la lit ; F-001, F-007, F-008, F-070 lisent et écrivent. À partir de P-03, le grisage F-024 s'applique ; P-01, P-02 et P-27 ne sont jamais grisées (D-009, D-019, D-052).
@@ -276,7 +276,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-05 Griser l'app par cycles
 
-Tâche de fond, sans geste de l'utilisateur : tant qu'un utilisateur connecté (R-02) a l'appli ouverte, le minuteur de couleur de son compte (E-14) avance, et chaque cycle terminé retire 10 % de couleur à toutes les pages de F-024. Après 10 cycles, l'appli reste en noir et blanc jusqu'à « Réinitialiser » (F-061). Mobile seulement. Décisions : D-009, D-019, D-052, D-074, D-075, D-076, D-077, D-105.
+Tâche de fond, sans geste de l'utilisateur : tant qu'un utilisateur connecté (R-02) a l'appli ouverte, le minuteur de couleur de son compte (E-14) avance, et chaque cycle terminé retire 10 % de couleur à toutes les pages de F-024. Après 10 cycles, l'appli reste en noir et blanc jusqu'à « Réinitialiser » (F-061). Mobile seulement. Décisions : D-009, D-019, D-052, D-074, D-075, D-076, D-077, D-105, D-117.
 
 ### Entrées
 
@@ -305,7 +305,7 @@ Suite simple : ouverture → F-024 (1 → 2 → 3, dix fois) → noir et blanc, 
 
 | Où | Cas | Suite |
 | --- | --- | --- |
-| Pages de F-024 | Appli au premier plan | Le minuteur avance (D-075) |
+| Pages de F-024 | Appli au premier plan | Le minuteur avance (D-075), même sans réseau : le téléphone grise de lui-même et ses secondes repartent par FL-12 (D-117) |
 | Toutes | Appli fermée ou en arrière-plan | Le minuteur s'arrête, rien ne grise (D-075) |
 | P-01, P-02, P-27 | Pas encore connecté, ou inscription | Jamais grisées (D-009, D-019, D-052) |
 | FL-01 | Reconnexion, ou autre téléphone | Le minuteur du compte reprend au même gris (D-074) |
@@ -514,7 +514,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-09 Soutenir le projet
 
-Un utilisateur connecté (R-02) cumule du temps d'utilisation sur son compte (E-15) ; à 1 h, P-22 et un post sur 20 du fil (F-015.a) lui proposent de soutenir le projet pour 1,99 €, payés une seule fois dans l'App Store ou Google Play. Mobile seulement. Décisions : D-005, D-022, D-027, D-036, D-075, D-077, D-092, D-093, D-094, D-095, D-096, D-105.
+Un utilisateur connecté (R-02) cumule du temps d'utilisation sur son compte (E-15) ; à 1 h, P-22 et un post sur 20 du fil (F-015.a) lui proposent de soutenir le projet pour 1,99 €, payés une seule fois dans l'App Store ou Google Play. Mobile seulement. Décisions : D-005, D-022, D-027, D-036, D-075, D-077, D-092, D-093, D-094, D-095, D-096, D-105, D-115, D-116, D-117.
 
 ### Entrées
 
@@ -528,7 +528,7 @@ Hors de ce flow : le minuteur de couleur (E-14) et le grisage F-024, qui s'appli
 
 | Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- | --- |
-| 1. Compter le temps | Chaque seconde, appli au premier plan, connecté | Pages de F-073 | F-073 | E-15 | E-15 (durée cumulée, D-093) |
+| 1. Compter le temps | Chaque seconde, appli au premier plan, connecté | Pages de F-073 | F-073 | E-15 | E-15 (durée cumulée, D-093 ; secondes sans réseau renvoyées par FL-12, D-117) |
 | 2. Suivre son temps | Ligne « Premium » de P-20 | P-20 → P-22 | F-065 | E-15 (temps passé, minutes restantes avant 1 h) | — |
 | 3. Voir l'offre | E-15 atteint 1 h | P-22 ; P-03 (1 post sur 20) | F-015, F-015.a | E-15, E-16 (non soutenu) | — |
 | 4. Payer | Bouton « Soutenir le projet » | P-22 ou P-03 → paiement du store | F-015 ou F-015.a | E-16 | — |
@@ -548,7 +548,7 @@ Suite simple : F-073 (jusqu'à 1 h) → P-20 → P-22 (F-065) → F-015 → stor
 | P-03 | Moins de 1 h, ou compte soutenu avant ce chargement du fil | Aucun post Premium (F-015.a, D-094) |
 | Store | Paiement échoué, rien débité | P-22.a ou P-03.c : « Le paiement n’a pas abouti. Tu n’as pas été débité. » avec « Réessayer » (D-027) |
 | Store | Paiement annulé | P-22.b : « Paiement annulé. Tu n’as pas été débité. » et de nouveau « Soutenir le projet » ; même état sur F-015.a (D-036) |
-| Serveur | Le store a débité, le serveur n'enregistre pas | « Merci pour ton soutien. » quand même ; l'achat est renvoyé sans message par FL-12 (D-095, D-112) |
+| Serveur | Le store a débité, le serveur n'enregistre pas | « Merci pour ton soutien. » quand même ; l'achat est renvoyé sans message par FL-12 (D-095, D-112) ; le serveur n'enregistre qu'un soutien par compte, même si un autre téléphone a payé entre-temps (D-115) |
 | P-22 | Compte déjà soutenu | Anneau et offre gardés, « Merci pour ton soutien. » à la place du bouton (D-094) |
 | FL-01 | Autre téléphone, réinstallation ou déconnexion | Même temps et même soutien : ils appartiennent au compte (D-092, D-093) |
 | Toutes | Deux téléphones ouverts en même temps sur le compte | Le temps ne compte qu'une fois (D-105) |
@@ -573,7 +573,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-11 Gérer son profil et son compte
 
-Un utilisateur connecté (R-02) consulte son profil (P-17), change son pseudo, sa description (P-19) ou sa photo (P-18), règle l'interface de l'appli (P-23), puis peut se déconnecter ou supprimer son compte (P-21). Mobile seulement. Décisions : D-023, D-053, D-063, D-065, D-069, D-083, D-086, D-091, D-098, D-099, D-100, D-101, D-102, D-103, D-104.
+Un utilisateur connecté (R-02) consulte son profil (P-17), change son pseudo, sa description (P-19) ou sa photo (P-18), règle l'interface de l'appli (P-23), puis peut se déconnecter ou supprimer son compte (P-21). Mobile seulement. Décisions : D-023, D-053, D-063, D-065, D-069, D-083, D-086, D-091, D-098, D-099, D-100, D-101, D-102, D-103, D-104, D-116.
 
 ### Entrées
 
@@ -617,7 +617,7 @@ Suite simple : P-17 → F-056 → P-19 → P-17 ; P-17 → F-058 → P-18 → P-
 | P-21 | « Annuler » dans la fenêtre | La fenêtre se ferme, rien n'est effacé |
 | P-21 | La suppression échoue | P-21.a : « Ton compte n’a pas pu être supprimé. Rien n’a été effacé. » avec « Réessayer » : tout ou rien (D-101) |
 | F-071 | Envois en attente (D-077, D-078, D-095, D-100 ; D-109) | Gardés pour la prochaine connexion du compte sur ce téléphone, jamais pour un autre compte (D-104) |
-| F-063 | Envois en attente | Abandonnés avec le compte (D-101) |
+| F-063 | Envois en attente | Abandonnés avec le compte (D-101), soutien compris (D-116) |
 | Autre téléphone | Compte supprimé ailleurs | P-01 à son prochain échange avec le serveur (D-101) |
 | F-070 | Quelqu'un prend le @ d'un compte supprimé | Permis tout de suite (D-102) |
 | P-17 | Ouvrir un de ses posts ; combien de posts montre la grille | Ouvert : F-062 |
@@ -645,11 +645,11 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-12 Renvoyer les envois en attente
 
-Tâche de fond, sans geste de l'utilisateur : ce qu'un utilisateur connecté (R-02) a changé sur son téléphone sans que le serveur l'enregistre attend sur ce téléphone, rattaché à son compte, puis repart sans message jusqu'à ce que le serveur l'enregistre ou le refuse pour de bon. Mobile seulement. Décisions : D-077, D-078, D-095, D-100, D-101, D-104, D-108, D-109, D-111, D-112, D-113.
+Tâche de fond, sans geste de l'utilisateur : ce qu'un utilisateur connecté (R-02) a changé sur son téléphone sans que le serveur l'enregistre attend sur ce téléphone, rattaché à son compte, puis repart sans message jusqu'à ce que le serveur l'enregistre ou le refuse pour de bon. Mobile seulement. Décisions : D-077, D-078, D-095, D-100, D-101, D-104, D-108, D-109, D-111, D-112, D-113, D-116, D-117.
 
 ### Entrées
 
-- FL-05 : une durée (F-060) ou une réinitialisation (F-061) que le serveur n'a pas enregistrée (D-077).
+- FL-05 : une durée (F-060) ou une réinitialisation (F-061) que le serveur n'a pas enregistrée (D-077) ; une période passée appli ouverte au premier plan sans réseau (F-024, F-073, D-117).
 - FL-06 : une « vue » de story (F-036) que le serveur n'a pas enregistrée (D-078).
 - FL-09 : un soutien débité par le store que le serveur n'a pas enregistré (F-015, D-095).
 - FL-11 : une photo de profil (F-058) dont la graine et l'algorithme ne sont pas enregistrés (D-100).
@@ -660,9 +660,9 @@ Hors de ce flow : les envois qui montrent une erreur avec « Réessayer » (publ
 
 | Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- | --- |
-| 1. Garder l'envoi | Le serveur n'enregistre pas un changement de FL-05, FL-06, FL-09 ou FL-11 | — | F-060, F-061, F-036, F-015, F-058 | — | Sur le téléphone : l'envoi, son compte et l'heure où il a été fait |
+| 1. Garder l'envoi | Le serveur n'enregistre pas un changement de FL-05, FL-06, FL-09 ou FL-11 | — | F-060, F-061, F-036, F-015, F-058, F-024, F-073 | — | Sur le téléphone : l'envoi, son compte et l'heure où il a été fait |
 | 2. Partir | Ouverture de l'appli ou retour au premier plan, ou retour du réseau appli ouverte, connecté au compte de l'envoi (D-112) | — | Celle de l'envoi | — | — |
-| 3. Envoyer | Un envoi après l'autre, du plus ancien au plus récent | — | Celle de l'envoi | — | E-14 (durée ou cycles, D-077), E-12 (vue par, D-078), E-16 (soutien, D-095), E-04 et E-01 (photo, D-100) |
+| 3. Envoyer | Un envoi après l'autre, du plus ancien au plus récent | — | Celle de l'envoi | — | E-14 (durée ou cycles, D-077 ; secondes au premier plan, D-117), E-15 (secondes au premier plan, D-117), E-12 (vue par, D-078), E-16 (soutien, D-095), E-04 et E-01 (photo, D-100) |
 | 4. Enregistré | Le serveur l'enregistre | — | — | — | L'envoi quitte le téléphone |
 | 5. Attendre | Réseau ou serveur injoignable | — | — | — | — (l'envoi repart au prochain départ, étape 2) |
 
@@ -673,12 +673,12 @@ Suite simple : changement non enregistré → 1 → 2 → 3 → 4, ou 5 puis de 
 | Où | Cas | Suite |
 | --- | --- | --- |
 | Serveur | Réseau ou serveur injoignable | L'envoi reste sur le téléphone et repart au prochain départ (D-112) ; aucun message |
-| Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones, est gardé (D-111) |
+| Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones, est gardé (D-111) ; leurs secondes sans réseau se fusionnent, une seconde commune ne comptant qu'une fois, et seules celles d'après la dernière réinitialisation comptent pour le minuteur (D-105, D-117) |
 | Serveur | Refus pour de bon : données invalides, story déjà effacée (FL-13) | Envoi abandonné sans message ; au chargement suivant, le téléphone montre ce que le serveur a (D-113) |
-| Serveur | Soutien refusé | Jamais abandonné : renvoyé jusqu'à ce qu'il soit enregistré (D-095, D-113) |
+| Serveur | Soutien refusé | Jamais abandonné : renvoyé jusqu'à ce qu'il soit enregistré (D-095, D-113), sauf si le compte est supprimé (D-116) |
 | F-071 | Déconnexion | Les envois restent sur le téléphone, rattachés au compte, et repartent à sa prochaine connexion sur ce téléphone ; jamais pour un autre compte (D-104, D-109) |
 | F-063 | Compte supprimé sur ce téléphone | Envois abandonnés avec le compte (D-101, D-109) |
-| Autre téléphone | Compte supprimé ailleurs | Le serveur refuse ses envois pour de bon : abandonnés (D-101, D-113) |
+| Autre téléphone | Compte supprimé ailleurs | Le serveur refuse ses envois pour de bon : abandonnés, soutien compris (D-101, D-113, D-116) ; un téléphone qui n'est plus connecté à ce compte les abandonne à son prochain échange avec le serveur, quel que soit le compte connecté (D-101) |
 
 Fin du flow : chaque envoi finit enregistré ou abandonné, sans rien montrer à l'utilisateur.
 
@@ -689,7 +689,8 @@ Réglés le 25 novembre 2026 :
 - Le renvoi a son propre flow (D-108) ; une « vue » en attente suit les mêmes règles que les autres envois (D-109).
 - Deux téléphones qui changent le minuteur : le changement fait le plus tard gagne (D-111) ; la question ouverte de F-060 est close.
 - Les envois partent à l'ouverture, au retour au premier plan et au retour du réseau (D-112).
-- Un refus pour de bon abandonne l'envoi, sauf un soutien (D-113).
+- Un refus pour de bon abandonne l'envoi, sauf un soutien (D-113), abandonné seulement avec son compte (D-116).
+- Le temps passé appli ouverte sans réseau compte, et passe par ce flow (D-117).
 
 Aucune feature ni page ne manque : la tâche n'a rien à l'écran.
 
@@ -778,7 +779,7 @@ stateDiagram-v2
 | Code envoyé ou renvoyable → Déconnecté | F-005 | Mauvaise adresse, retour à P-01 |
 | Code envoyé ou renvoyable, ou Déconnecté → Session ouverte | F-007 bon code, ou F-001 / F-001.a, compte trouvé | P-03 |
 | Code envoyé ou renvoyable, ou Déconnecté → Inscription | Même déclencheur, aucun compte | P-27 (D-052) |
-| Inscription → Session ouverte | F-070 | Compte créé (D-052, D-064) |
+| Inscription → Session ouverte | F-070 | Compte créé, avec son minuteur, son temps d'utilisation et son soutien (D-052, D-064, D-114) |
 | Inscription → Déconnecté | F-005 | Abandon, aucun compte créé |
 | Session ouverte → Déconnecté | F-071 ; F-063 ; compte supprimé sur un autre téléphone, au prochain échange avec le serveur | P-01 (D-053, D-065, D-069, D-101) ; les envois en attente restent rattachés au compte après F-071 (D-104) |
 
@@ -943,7 +944,7 @@ stateDiagram-v2
 | --- | --- | --- |
 | Arrêté → En marche | Un téléphone connecté a l'appli ouverte et au premier plan (F-024) | Reprend où il en était, au même gris, sur tout téléphone (D-074) |
 | En marche → Arrêté | Plus aucun téléphone au premier plan : appli fermée, en arrière-plan ou déconnectée (F-071) | Temps passé gardé sur le serveur (D-074, D-075) |
-| En marche → En marche | Chaque seconde où au moins un téléphone est au premier plan | Temps passé + 1 s, une seule fois même avec deux téléphones (D-075, D-105) |
+| En marche → En marche | Chaque seconde où au moins un téléphone est au premier plan | Temps passé + 1 s, une seule fois même avec deux téléphones (D-075, D-105) ; sans réseau aussi, renvoyé par FL-12 (D-117) |
 | En marche → En marche, cycle fini | Le temps passé atteint la durée, moins de 9 cycles écoulés | Cycles + 1, 10 % de gris en plus, temps remis à 0 (F-024) |
 | En marche → Noir et blanc | Le 10e cycle finit | Le minuteur s'arrête ; F-059 dit « Noir et blanc. Réinitialise pour retrouver les couleurs. » |
 | Tout état → En marche, cycle 1 | F-061 « Réinitialiser » (sur P-17, donc appli ouverte) | 0 cycle écoulé, 0 % de gris ; appliqué sur le téléphone, renvoyé sans message (D-077) |
@@ -975,19 +976,21 @@ stateDiagram-v2
 | Non soutenu → Paiement en cours | « Soutenir le projet » (F-015 sur P-22, F-015.a dans le fil) | Seulement quand E-15 atteint 1 h (D-005, D-093, D-105) |
 | Paiement en cours → Non soutenu | Paiement échoué ou annulé, rien débité | P-22.a ou P-03.c (D-027) ; P-22.b (D-036) |
 | Paiement en cours → Soutenu, pas encore enregistré | Le store confirme l'achat | « Merci pour ton soutien. » tout de suite (D-094, D-095) |
-| Soutenu, pas encore enregistré → Soutenu | Le serveur enregistre l'achat | Renvoyé sans message à chaque ouverture jusque-là (D-095), pour ce compte seulement, même après F-071 (D-104) |
-| Tout état → (effacé) | F-063 | Un achat pas encore enregistré est abandonné ; un nouveau compte repart non soutenu (D-101) |
+| Soutenu, pas encore enregistré → Soutenu | Le serveur enregistre l'achat | Renvoyé sans message à chaque ouverture jusque-là (D-095), pour ce compte seulement, même après F-071 (D-104) ; un seul soutien enregistré par compte (D-115) |
+| Tout état → (effacé) | F-063 | Un achat pas encore enregistré est abandonné, sur ce téléphone ou un autre (D-116) ; un nouveau compte repart non soutenu (D-101) |
 
-Ouverts dans F-015 : remboursement, achat en attente.
+Ouverts dans F-015 : remboursement, achat en attente, second achat fait sur un autre téléphone avant que le premier soit enregistré (D-115).
 
-### Modèles TLA+ à écrire
+### Modèles TLA+
 
-Choisis par D-107. Chaque règle qu'un modèle vérifie portera le nom d'une règle métier (`BR-xxx`) écrite dans la spec de sa feature (étape 10) ; d'ici là, ce qu'il doit vérifier est noté ici.
+Choisis par D-107, écrits dans le dépôt sous `docs/system-design/` (un fichier `.tla` et son `.cfg` par modèle) et vérifiés par le model checker TLC dans la CI à chaque changement. Chaque règle porte pour l'instant le nom des décisions d'où elle vient ; elle prendra le nom de sa règle métier (`BR_xxx`) quand celle-ci sera écrite, à l'étape 7 ou dans la spec de sa feature (étape 10). Les bornes sont petites (2 ou 3 comptes ou téléphones, quelques secondes), assez pour croiser chaque ordre d'événements ; les horloges des téléphones sont supposées à l'heure.
 
-| Modèle | Ce qu'il doit vérifier |
-| --- | --- |
-| SM-E-09 | Jamais deux demandes en attente dans les deux sens (D-073) ; une conversation existe si et seulement si les deux comptes sont amis (D-071, D-082) ; un ami proche est toujours un ami (D-060) |
-| SM-E-12 | Une story finie ne se rouvre jamais, même si « vue » arrive après (D-078, D-079) ; seuls les amis, et les amis proches pour « Amis proches », la voient (D-080) |
-| SM-E-14 | Le gris vaut toujours 10 % par cycle écoulé, 10 cycles au plus ; deux téléphones ne font jamais compter une seconde deux fois (D-105) ; un réglage renvoyé (D-077) finit enregistré ; entre deux téléphones, le changement fait le plus tard gagne (D-111) |
-| SM-E-16 | Aucune erreur n'est montrée après un débit (D-095) ; un achat confirmé finit enregistré, pour le compte qui l'a fait seulement (D-104) ; un compte ne paie qu'une fois (D-092) |
-| Synchronisation | Les envois en attente (D-077, D-078, D-095, D-100) partent tous, ne partent jamais pour un autre compte (D-104), et jamais après la suppression du compte (D-101) ; le temps d'un compte avance d'une seconde par seconde où au moins un téléphone est au premier plan (D-105) |
+| Modèle | Fichier | Règles vérifiées |
+| --- | --- | --- |
+| SM-E-09 | `SM_E_09.tla` | `D073_NoCrossedRequests`, `D073_NoRequestBetweenFriends` : jamais deux demandes en attente dans les deux sens, ni entre amis (D-073) ; `D070_InvitationWhileRequest` : l'invitation existe tant que la demande attend (D-070) ; `D071_D082_ConversationIffFriends` : une conversation existe si et seulement si les deux comptes sont amis (D-071, D-082) ; `D060_CloseFriendIsFriend` : un ami proche est toujours un ami (D-060) ; `D101_NothingLeftOfDeleted` (D-101) |
+| SM-E-12 | `SM_E_12.tla` | `D079_FinishedNeverReopens` : une story finie ne se rouvre jamais, même si « vue » arrive après (D-078, D-079) ; `D080_OpensOnlyForAudience` : seuls les amis, et les amis proches pour « Amis proches », l'ouvrent (D-080) ; `D078_SeenOnlyAfterAnImage` (D-078) ; `D110_ErasedKeepsNothing`, `D110_FinishedIsErased` (D-110) ; `D101_DeletedViewerLeavesNothing` (D-101, D-109) ; `D113_WaitingVueEnds` : une « vue » en attente finit enregistrée ou abandonnée (D-108, D-113) |
+| SM-E-14 | `SM_E_14.tla` | `D024_GreyTenPercentPerCycle` : 10 % de gris par cycle écoulé, 10 cycles au plus (F-024) ; `D105_SecondCountedOnce`, `D105_D117_UsageIsForegroundTime` : deux téléphones ne font jamais compter une seconde deux fois, et le temps d'utilisation (E-15) finit égal aux secondes où au moins un téléphone était au premier plan, sans réseau compris (D-105, D-117) ; `D111_LatestChangeWins` : le réglage fait le plus tard gagne, quel que soit l'ordre d'arrivée (D-111, D-117) ; `D077_D117_EverythingEndsRecorded` : réglages et secondes renvoyés finissent enregistrés (D-077, D-117) |
+| SM-E-16 | `SM_E_16.tla` | `D095_NoErrorAfterDebit` : aucune erreur après un débit (D-095) ; `D115_RecordedOnce` : le serveur n'enregistre qu'un soutien par compte (D-092, D-115) ; `D092_SupportedOnlyIfPaid` ; `D095_D116_PaidEndsRecorded` : un achat confirmé finit enregistré, pour son compte seulement, sauf si le compte est supprimé (D-095, D-104, D-116) |
+| Synchronisation | `sync.tla` | `D104_NeverForAnotherAccount` (D-104) ; `D101_NothingKeptForDeleted`, `D101_NothingAfterDeletion` (D-101) ; `D116_SupportDroppedOnlyWithAccount` (D-113, D-116) ; `D108_SentWhileConnected` : un envoi en attente part dès que son compte est connecté sur le téléphone (D-104, D-108, D-112) ; `D101_DeletedAccountChangesEnd` : ceux d'un compte supprimé finissent abandonnés, même sur un téléphone où il n'est plus connecté (D-101, D-116). Le temps entre téléphones est vérifié par SM-E-14 |
+
+Trouvé par TLC le 25 novembre 2026 : un soutien que le store confirme après la suppression du compte sur un autre téléphone est débité, puis abandonné (D-116) ; son remboursement rejoint la question ouverte de F-015. Ouvert dans F-060 : un téléphone dont l'horloge est fausse peut faire gagner un réglage plus ancien (D-111).
