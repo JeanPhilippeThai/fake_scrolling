@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 116, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 121, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -779,7 +779,7 @@ Aucune feature ni page ne manque : la tâche n'a rien à l'écran.
 
 ## États des entités
 
-Étape 6 de la méthode : un diagramme d'états `SM-E-xx` par entité aux états non triviaux (D-107), tiré des flows FL-01 à FL-09 et FL-11 et des décisions du registre. Chaque passage cite la feature ou la tâche de fond qui le déclenche. Les autres entités (E-01, E-04 à E-07, E-11, E-13, E-15, E-17) ne font qu'exister puis être effacées ; leurs échecs d'envoi (« Non envoyé. », « Non publié. ») restent sur le téléphone et sont décrits dans les flows. Le seuil d'1 h de E-15 est une garde de SM-E-16. Partout, la suppression du compte (F-063) efface tout, tout de suite (D-101).
+Étape 6 de la méthode : un diagramme d'états `SM-E-xx` par entité aux états non triviaux (D-107), tiré des flows FL-01 à FL-09 et FL-11 à FL-14 et des décisions du registre. Chaque passage cite la feature ou la tâche de fond qui le déclenche. Les autres entités (E-01, E-05 à E-07, E-11, E-13, E-15, E-17) ne font qu'exister puis être effacées ; leurs échecs d'envoi (« Non envoyé. », « Non publié. ») restent sur le téléphone et sont décrits dans les flows. Le seuil d'1 h de E-15 est une garde de SM-E-16. Partout, la suppression du compte (F-063) efface tout, tout de suite (D-101).
 
 ### SM-E-02 Connexion
 
@@ -849,13 +849,46 @@ stateDiagram-v2
 
 | Passage | Déclencheur | Effet et décisions |
 | --- | --- | --- |
-| → Brouillon | F-026 ou F-026.a, puis F-044, F-045, F-046 | Seule la graine de chaque photo part au serveur avant F-051 (D-120) ; le reste ne quitte pas le téléphone (D-045, D-068) ; F-047 à F-050 et F-068 le complètent |
-| Brouillon → (abandonné) | F-005.a | Sans confirmation ni sauvegarde (D-045), retour à la page d'origine (D-062, D-090) ; le serveur efface aussitôt les graines déjà envoyées (D-121) |
+| → Brouillon | F-026 ou F-026.a, puis F-044, F-045, F-046 | Seule la graine de chaque photo part au serveur avant F-051 (D-120, SM-E-04) ; le reste ne quitte pas le téléphone (D-045, D-068) ; F-047 à F-050 et F-068 le complètent |
+| Brouillon → (abandonné) | F-005.a | Sans confirmation ni sauvegarde (D-045), retour à la page d'origine (D-062, D-090) ; le serveur efface aussitôt les graines déjà envoyées (D-121, SM-E-04) |
 | Brouillon → En publication | F-051, destination « Fil d'actualité » (F-068) | Avec « Story », voir SM-E-12 |
 | En publication → Publié | Le serveur enregistre | Fondu P-13.c (D-120), puis P-03.d (D-031) ; une notification « identification » par personne identifiée (D-061, SM-E-08) |
 | En publication → Échec | Le serveur ou le réseau échoue | P-13.b, photos et légende gardées (D-027) |
 | Échec → En publication | « Réessayer » (F-051) | — |
 | Publié → (effacé) | F-063 de l'auteur | Seule fin d'un post : il n'expire jamais (D-097) et aucune feature n'efface un post seul (D-101) |
+
+### SM-E-04 Média
+
+Une graine par photo ou vidéo ; seuls la graine et son algorithme quittent le téléphone (D-086, D-119). Modèle TLA+ : le téléphone, les envois en attente (FL-12) et le ménage des 24 h (FL-14) se croisent (D-124).
+
+```mermaid
+stateDiagram-v2
+    state "En attente, sur le téléphone (FL-12)" as attente
+    state "Graine d'un brouillon, sur le serveur" as brouillon
+    state "Rattachée" as rattachee
+    [*] --> brouillon : F-044, F-046
+    [*] --> attente : F-044, F-046 sans réseau ; F-058
+    [*] --> rattachee : F-042 ; F-051 renvoie une graine effacée
+    attente --> brouillon : FL-12
+    attente --> rattachee : F-051 ; FL-12 pour F-058
+    attente --> [*] : photo retirée, brouillon disparu, F-063
+    brouillon --> rattachee : F-051
+    brouillon --> [*] : photo retirée, F-005.a ; 24 h, FL-14 ; F-063
+    rattachee --> [*] : FL-13 ; nouvelle photo de profil ; F-063
+```
+
+| Passage | Déclencheur | Effet et décisions |
+| --- | --- | --- |
+| → Graine d'un brouillon | Photo choisie ou prise (F-044, F-046), avec réseau | Le serveur choisit l'algorithme et note l'heure d'arrivée (D-119, D-120, D-123) |
+| → En attente | Même geste sans réseau ; nouvelle photo de profil (F-058) | Part par FL-12 (D-100, D-122) |
+| En attente → Graine d'un brouillon | FL-12, quand le réseau revient | L'heure d'arrivée est celle où le serveur la reçoit (D-122, D-123) |
+| En attente → Rattachée | F-051 ; FL-12 pour une photo de profil | Les graines qui attendent partent avec la publication (D-120) ; la photo de profil est enregistrée (D-100) |
+| En attente → (abandonnée) | Photo retirée (F-044), brouillon fermé (F-005.a) ou perdu (appli fermée de force, téléphone éteint) ; F-063 | Jamais envoyée (D-121, D-122) ; abandonnée avec le compte (D-101) |
+| Graine d'un brouillon → Rattachée | F-051 : le serveur enregistre le post ou la story | FL-14 ne l'efface plus (D-123) |
+| Graine d'un brouillon → (effacée) | Photo retirée (F-044) ou « Fermer » (F-005.a) | Effacée aussitôt, ou par FL-12 sans réseau ; arrivé après FL-14, l'effacement est refusé pour de bon, sans message (D-113, D-121, D-122) |
+| Graine d'un brouillon → (effacée) | 24 h après son arrivée, si rien ne l'a prise (FL-14) | Avec son algorithme (D-123) |
+| → Rattachée | Photo envoyée dans un message (F-042) ; publication d'une graine qu'FL-14 a déjà effacée (F-051) | Le message porte la graine (D-086) ; la publication renvoie la graine (D-123) |
+| Rattachée → (effacée) | Fin de la story (FL-13) ; nouvelle photo de profil enregistrée (F-058) ; F-063 | Effacée avec la story (D-110), à la place de l'ancienne photo (D-125), avec le compte (D-101) ; un post n'expire jamais (D-097) |
 
 ### SM-E-08 Notification
 
@@ -1028,10 +1061,11 @@ Ouverts dans F-015 : remboursement, achat en attente, second achat fait sur un a
 
 ### Modèles TLA+
 
-Choisis par D-107, écrits dans le dépôt sous `docs/system-design/` (un fichier `.tla` et son `.cfg` par modèle) et vérifiés par le model checker TLC dans la CI à chaque changement. Chaque règle porte pour l'instant le nom des décisions d'où elle vient ; elle prendra le nom de sa règle métier (`BR_xxx`) quand celle-ci sera écrite, à l'étape 7 ou dans la spec de sa feature (étape 10). Les bornes sont petites (2 ou 3 comptes ou téléphones, quelques secondes), assez pour croiser chaque ordre d'événements ; les horloges des téléphones sont supposées à l'heure.
+Choisis par D-107 et D-124, écrits dans le dépôt sous `docs/system-design/` (un fichier `.tla` et son `.cfg` par modèle) et vérifiés par le model checker TLC dans la CI à chaque changement. Chaque règle porte pour l'instant le nom des décisions d'où elle vient ; elle prendra le nom de sa règle métier (`BR_xxx`) quand celle-ci sera écrite, à l'étape 7 ou dans la spec de sa feature (étape 10). Les bornes sont petites (2 ou 3 comptes ou téléphones, quelques secondes), assez pour croiser chaque ordre d'événements ; les horloges des téléphones sont supposées à l'heure.
 
 | Modèle | Fichier | Règles vérifiées |
 | --- | --- | --- |
+| SM-E-04 | `SM_E_04.tla` | `D120_D123_PublishedHasArt` : un post ou une story publié a toujours ses graines, même si FL-14 les avait effacées avant (D-120, D-123) ; `D121_AbandonedNeverAttached`, `D121_AbandonedEndsErased`, `D121_ErasedStaysErased` : une photo retirée ou d'un brouillon perdu n'est jamais rattachée, finit effacée et ne revient pas (D-121, D-122, D-123) ; `D122_DroppedNeverSent`, `D122_EraseNeverHitsPublished` (D-121, D-122) ; `D123_NoOrphanForever` : aucune graine ne reste sur le serveur sans rien qui la prenne (D-123) ; `D125_OneProfilePhoto`, `D100_D125_ProfileIsCurrent`, `D100_ProfileQueueEnds` : le serveur garde une seule graine de photo de profil, celle du téléphone une fois tout envoyé (D-100, D-125) ; `D101_NothingAfterDeletion` (D-101) |
 | SM-E-09 | `SM_E_09.tla` | `D073_NoCrossedRequests`, `D073_NoRequestBetweenFriends` : jamais deux demandes en attente dans les deux sens, ni entre amis (D-073) ; `D070_InvitationWhileRequest` : l'invitation existe tant que la demande attend (D-070) ; `D071_D082_ConversationIffFriends` : une conversation existe si et seulement si les deux comptes sont amis (D-071, D-082) ; `D060_CloseFriendIsFriend` : un ami proche est toujours un ami (D-060) ; `D101_NothingLeftOfDeleted` (D-101) |
 | SM-E-12 | `SM_E_12.tla` | `D079_FinishedNeverReopens` : une story finie ne se rouvre jamais, même si « vue » arrive après (D-078, D-079) ; `D080_OpensOnlyForAudience` : seuls les amis, et les amis proches pour « Amis proches », l'ouvrent (D-080) ; `D078_SeenOnlyAfterAnImage` (D-078) ; `D110_ErasedKeepsNothing`, `D110_FinishedIsErased` (D-110) ; `D101_DeletedViewerLeavesNothing` (D-101, D-109) ; `D113_WaitingVueEnds` : une « vue » en attente finit enregistrée ou abandonnée (D-108, D-113) |
 | SM-E-14 | `SM_E_14.tla` | `D024_GreyTenPercentPerCycle` : 10 % de gris par cycle écoulé, 10 cycles au plus (F-024) ; `D105_SecondCountedOnce`, `D105_D117_UsageIsForegroundTime` : deux téléphones ne font jamais compter une seconde deux fois, et le temps d'utilisation (E-15) finit égal aux secondes où au moins un téléphone était au premier plan, sans réseau compris (D-105, D-117) ; `D111_LatestChangeWins` : le réglage fait le plus tard gagne, quel que soit l'ordre d'arrivée (D-111, D-117) ; `D077_D117_EverythingEndsRecorded` : réglages et secondes renvoyés finissent enregistrés (D-077, D-117) |
