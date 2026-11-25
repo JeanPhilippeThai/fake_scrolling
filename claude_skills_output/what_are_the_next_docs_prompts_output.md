@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-24 · commit f2afcbf · fingerprint 4768bea81081
+2026-11-24 · commit f2afcbf · fingerprint c257037f3451
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -21,7 +21,6 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 5: flows** (step 5). Give it: FL-09 « Soutenir le projet », proposed: the usage time (E-15) reaches 1 h → F-065 on P-22 and the post F-015.a in P-03 → payment (F-015) → P-22.a / P-22.b or « soutenu » (E-16). It produces: the flow's sequence by IDs, the entities read and written, its decision points and errors, and the features or pages missing from the registry.
-2. **Prompt 5: flows** (step 5), background job. Give it: FL-10 « Faire expirer les posts », proposed: each post's remaining days (E-03) count down, shown on P-17 (F-062), until the post leaves the feed, the search and the profile. It produces: the same, for this job.
-3. **Prompt 5: flows** (step 5). Give it: FL-11 « Gérer son profil et son compte », proposed: P-17 Profil → P-19 Modifier le profil (F-058 photo on P-18) → P-17, and P-21 Mon compte → F-063 Supprimer son compte → P-01. It produces: the same, for this flow.
-4. **Step 6: entities and states** (no prompt). Write in the Conception système Claude Doc one state diagram `SM-E-xx` per entity with non-trivial states, from FL-01 to FL-11: at least the post (E-03, from item 2), the support (E-16, from item 1), the colour timer (E-14) and the friend invitation; say which ones need a TLA+ model. It produces: the `SM` diagrams, and the list of TLA+ models to write.
+1. **Prompt 5: flows** (step 5), background job. Give it: FL-10 « Faire expirer les posts », proposed: each post's remaining days (E-03) count down, shown on P-17 (F-062), until the post leaves the feed, the search and the profile. It produces: the same, for this job.
+2. **Prompt 5: flows** (step 5). Give it: FL-11 « Gérer son profil et son compte », proposed: P-17 Profil → P-19 Modifier le profil (F-058 photo on P-18) → P-17, and P-21 Mon compte → F-063 Supprimer son compte → P-01. It produces: the same, for this flow.
+3. **Step 6: entities and states** (no prompt). Write in the Conception système Claude Doc one state diagram `SM-E-xx` per entity with non-trivial states, from FL-01 to FL-11: at least the post (E-03, from item 1), the support (E-16, from FL-09), the colour timer (E-14) and the friend invitation; say which ones need a TLA+ model. It produces: the `SM` diagrams, and the list of TLA+ models to write.
