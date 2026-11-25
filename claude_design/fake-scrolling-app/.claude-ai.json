@@ -1,7 +1,7 @@
 {
  "url": "https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT",
  "format": 2,
- "synced": "2026-11-25T09:20:12+00:00",
+ "synced": "2026-11-25T09:45:58+00:00",
  "files": {
   "project/Chat.dc.html": "ae709f0b59aa3c99621e73f1884a31a8ea671b2bff9118ac7448bfeb7a2e3267",
   "project/Code.dc.html": "9f1091e023fa3fb8c422281ee39421bafb5547210bbb29c640514489cd1ec0a5",
@@ -57,7 +57,7 @@
   "project/Etat-P15-recherche-vide.dc.html": "7dbeadd86155ec640087383baf68c419f53e128c30415a697bf66f701ad0dd63",
   "project/Etat-P17-posts-chargement.dc.html": "560011fd802bc76e85086b0babebe4d1ede6e1d2e92098509363855f4e1748d3",
   "project/Etat-P17-posts-erreur.dc.html": "373b78cd6f7b776388d195e40b763a6bd95817d87b63d17352e2027eb5f10c55",
-  "project/Etat-P17-posts-vide.dc.html": "49ccbd6fa3f6f5b30c04f69162f5609015dabd5b92b8d280cfbb518d517a5ac1",
+  "project/Etat-P17-posts-vide.dc.html": "630319b03b25a3ccaf163135f6ce6b541883126bfc45d1fa67b0d9ab059d5e2e",
   "project/Etat-P18-photo-erreur.dc.html": "afc9b89b829ddd054bfc0e977c3ea3feca7289a209d241572ff0b66b59934d6b",
   "project/Etat-P19-profil-envoi.dc.html": "3195fe39558b27daefba8d68950d6e35f0fccf65c0147b1740c83e19497f9e4d",
   "project/Etat-P19-profil-erreur.dc.html": "61332072c210c82f04885cb3e283c5f30a3fa064e6b8071af97b6098af34a5ce",
@@ -69,8 +69,12 @@
   "project/Inscription.dc.html": "6ff7f0fcb4d00a784398ed9cc136c986b05fdee63b0e45538fa066a02a6830d6",
   "project/Login.dc.html": "bfa757905395a1ead79f89104cfad50a1a3f9bdcc96abc80d16dd4bd122292a3",
   "project/Main.dc.html": "8601de9493787bdeca839c8296fc90aa3b36cc415a7ad02786dd13b225971183",
-  "project/Profile.dc.html": "546a5e2e3bf39cc61fb9fc8217c3a6d7a6040a7885d8811bbc097b69980872e9",
+  "project/Profile.dc.html": "a74d96b18e7913c65716c5110dcb5f49c3f3fbf59d52fb864e8023c523b53fe5",
   "project/Search.dc.html": "4f1ce31d0658b6b30a4df1806c7cb3d39f45d730cfb7751d613287f7fc693c2a",
   "project/canvas.json": "ee1bc7318ab75b8f88071bd4ad3816c52014a92166594c4d730858eaaa81e7be"
+ },
+ "round": {
+  "project/Etat-P17-posts-vide.dc.html": "changed",
+  "project/Profile.dc.html": "changed"
  }
 }

@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 318, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 326, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -550,7 +550,7 @@ features:
       - 'chargement : anneau et « Chargement des posts suivants… » en bas du fil'
       - 'erreur : « Les posts suivants n’ont pas pu être chargés. » avec « Réessayer » (D-032)'
     questions_ouvertes:
-      - 'Post du lien partagé expiré, supprimé ou hors de son audience après la connexion (D-054)'
+      - 'Post du lien partagé supprimé ou hors de son audience après la connexion (D-054)'
 
   - id: F-010
     nom: Voir un post en plein écran
@@ -1205,7 +1205,7 @@ features:
       - 'succès story : Messages affiche le toast « Story publiée. » (D-031)'
     questions_ouvertes:
       - 'Envoi et charabia de la légende côté amis ; photos : art généré (D-086)'
-      - 'Palette et durée de vie du post (E-03) : qui les fixe à la publication, et combien de jours ?'
+      - 'Palette du post (E-03) : qui la fixe à la publication ? Le post n’expire pas (D-097)'
 
   - id: F-052
     nom: Rechercher des posts
@@ -1367,7 +1367,7 @@ features:
 
   - id: F-062
     nom: Voir ses posts
-    description: Grille de 9 posts floutés avec jours restants.
+    description: Grille de 9 posts floutés.
     pages: [P-17, P-17.a, P-17.b, P-17.c]
     plateformes: [mobile]
     acces: [R-02]
@@ -1376,11 +1376,12 @@ features:
     operations: [lecture]
     etats_ui:
       - non cliquables
-      - 'vide : « Aucun post pour l’instant » · « Tes posts s’affichent ici, avec leurs jours restants. » avec « Créer un post » (F-026, D-035)'
+      - 'vide : « Aucun post pour l’instant » · « Tes posts s’affichent ici. » avec « Créer un post » (F-026, D-035, D-097)'
       - 'chargement : anneau centré'
       - 'erreur : « Tes posts n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
       - Ouvrir un de ses posts
+      - 'Combien de posts montre la grille, maintenant qu’ils n’expirent plus (D-097) : tous, avec défilement et chargement par lots ?'
 
   - id: F-063
     nom: Supprimer son compte
@@ -1553,7 +1554,6 @@ entites:
       - nombre d'enregistrements
       - nombre de partages
       - audience
-      - jours restants avant expiration
       - palette
       - lien
       - personnes identifiées
@@ -2169,6 +2169,12 @@ decisions:
     choix: 'Nouvelle feature F-073 « Compter le temps d''utilisation », tâche de fond sans élément visible, sur les mêmes pages que F-024 : chaque seconde passée appli ouverte et au premier plan s''ajoute à E-15 (D-093). Elle continue après les 10 cycles de F-024. F-065 ne fait que lire E-15.'
     raison: 'Choix du propriétaire : aucune feature n''écrivait E-15, et F-024 grise et s''arrête après 10 cycles.'
     impacte: [F-073, E-15, F-065]
+
+  - id: D-097
+    sujet: Durée de vie d'un post du fil
+    choix: 'Un post du fil (E-03) n''expire jamais : il reste dans le fil, la recherche et le profil tant que le compte de son auteur existe (F-063). Aucun flow d''expiration. E-03 perd le champ « jours restants avant expiration ». P-17 n''affiche plus de jours restants, et le texte de l''état vide P-17.a devient « Tes posts s’affichent ici. » (au lieu de celui fixé par D-051). F-062 porte design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond. Les stories gardent leurs 24 h (D-079).'
+    raison: Choix du propriétaire.
+    impacte: [E-03, F-062, F-051, F-009]
 
 ids_retires:
   - {id: F-013, decision: D-002}

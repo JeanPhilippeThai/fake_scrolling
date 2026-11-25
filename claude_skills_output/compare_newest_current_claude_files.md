@@ -1,31 +1,28 @@
 # Design and docs: newest vs current
 
-Compared on 2026-11-25. The flow FL-09 « Soutenir le projet » is written, with five new decisions (D-092 to D-096) and a new background feature F-073 that counts the usage time. The design did not change.
+Compared on 2026-11-25. Feed posts no longer expire (D-097): the « jours restants » field, copy and questions are gone from the docs, and F-062 waits for P-17 and P-17.a to be redrawn without them. The design is unchanged.
 
 ## Docs
 
-### Registre canonique – Fake scrolling (`registry.md`, rev 284 -> 318)
+### Registre canonique – Fake scrolling (`registry.md`, rev 318 -> 325)
+- New decision **D-097** « Durée de vie d'un post du fil »: a feed post (E-03) never expires; it stays in the feed, the search and the profile as long as its author's account exists (F-063). No expiry flow. Stories keep their 24 h (D-079).
+- **E-03** Post: field « jours restants avant expiration » removed.
+- **F-062** Voir ses posts: description is now « Grille de 9 posts floutés. »; the empty state's text is « Tes posts s’affichent ici. » (D-097); new open question « Combien de posts montre la grille, maintenant qu’ils n’expirent plus (D-097) : tous, avec défilement et chargement par lots ? »; `design_a_mettre_a_jour: true` (P-17 still draws « 7 j » badges and the old empty-state text).
+- **F-051**: open question narrowed to « Palette du post (E-03) : qui la fixe à la publication ? Le post n’expire pas (D-097) ».
+- **F-009**: open question no longer mentions an expired post: « Post du lien partagé supprimé ou hors de son audience après la connexion (D-054) ».
 
-- **D-092**: support is a one-time App Store or Google Play purchase at 1,99 €, once per account. The server keeps the status in E-16, restored on another phone or after a reinstall.
-- **D-093**: the usage time (E-15) belongs to the account and is kept on the server, like the colour timer (D-074). It counts only while the app is open, in the foreground and signed in.
-- **D-094**: after support, it works as the design shows. P-22 keeps the ring and the offer, with « Merci pour ton soutien. » in place of the button. The Premium post (F-015.a) shows the thanks until the feed reloads, then is never offered again.
-- **D-095**: « Merci pour ton soutien. » shows as soon as the store confirms. If the server doesn't record the purchase, the app resends it silently at each launch. P-22.a and P-03.c show only when the store charged nothing.
-- **D-096**: new feature **F-073** « Compter le temps d'utilisation ». It is a background job with no visible element, on the same 25 pages as F-024 (P-03 to P-28), and it reads and writes E-15.
-- **F-015**: description and states updated (D-092, D-094, D-095). Its open questions on the payment channel and on the hiding rule are closed. Two new ones: a store refund, and a pending purchase.
-- **F-015.a**: its `difference` now says the thanks stay until the feed reloads (D-094).
-- **F-065**: the « par compte ou par appareil » question is closed (D-093).
-- **E-15**: new fields `compte` and « durée cumulée, appli ouverte et au premier plan ». `utilisee_par` adds F-073.
-- **E-16**: new fields `compte` (D-092) and « achat du store » (D-095).
-- **P-03 to P-26, and P-28** (25 pages): `features` adds F-073.
+### Fake scrolling — inventaire des écrans (`inventaire-des-ecrans.md`, rev 137 -> 139)
+- P-17 « Voir ses posts »: « 9 posts floutés, sans jours restants : un post n’expire pas (D-097) ».
+- P-17.a: text « Tes posts s’affichent ici. » (D-051, D-097).
 
-### Conception système – Fake scrolling (`conception-systeme.md`, rev 32 -> 34)
-
-- **FL-09 Soutenir le projet** added:
-  - a 7-step sequence: count the time, follow it on P-22, the offer at 1 h, pay, thanks, after support, another phone;
-  - 11 decision points;
-  - the registry gaps settled (D-092 to D-096), and the questions left open (F-015, F-073).
-- **FL-05**: its out-of-scope line now points to FL-09, and its open F-065 question now says it was settled by D-093.
+### Conception système – Fake scrolling (`conception-systeme.md`, rev 34 -> 38)
+- FL-01: the error row reads « Post du lien supprimé ou hors audience ».
+- FL-03 and FL-08: the open points on F-051 keep only the palette; they cite D-097 for the lifetime.
 
 ## Unchanged
 
-Design canvas « Fake scrolling — app » (69 files); Fake scrolling — inventaire des écrans (rev 137).
+Design canvas « Fake scrolling — app » (69 files).
+
+## Second pass, same day
+
+Claude redrew P-17 in the repo (`Profile.dc.html`: no « X j » badges, tiles labelled « Post flouté »; `Etat-P17-posts-vide.dc.html`: « Tes posts s’affichent ici. »), published it to the canvas, and prompt 9 cleared `design_a_mettre_a_jour` on F-062 (registry rev 325 -> 326).

@@ -98,13 +98,12 @@ button:focus-visible,a:focus-visible{outline:2px solid #2F4F9E;outline-offset:2p
       <h2 style="margin: 0; font-size: 14px; font-weight: 600; color: #5E5E5B">Tes posts</h2>
       <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
         <sc-for list="{{tiles}}" as="t" hint-placeholder-count="9">
-          <div role="img" aria-label="Post flouté, expire dans {{t.days}} jours" style="position: relative; aspect-ratio: 4 / 5; border-radius: 10px; overflow: hidden; background: {{t.bg}}">
+          <div role="img" aria-label="Post flouté" style="position: relative; aspect-ratio: 4 / 5; border-radius: 10px; overflow: hidden; background: {{t.bg}}">
             <div style="position: absolute; inset: 0; filter: blur(9px)">
               <sc-for list="{{t.blobs}}" as="b" hint-placeholder-count="2">
                 <div style="position: absolute; left: {{b.x}}%; top: {{b.y}}%; width: {{b.s}}%; aspect-ratio: 1; border-radius: 50%; background: {{b.c}}"></div>
               </sc-for>
             </div>
-            <span style="position: absolute; right: 6px; bottom: 6px; font: 500 10px 'IBM Plex Mono', monospace; background: rgba(255, 255, 255, 0.9); color: #1C1C1C; padding: 1px 6px; border-radius: 999px">{{t.days}} j</span>
           </div>
         </sc-for>
       </div>
@@ -495,7 +494,7 @@ class Component extends DCLogic {
       for (var j = 0; j < 3; j++) {
         blobs.push({ x: Math.round(r() * 70 - 15), y: Math.round(r() * 70 - 10), s: Math.round(45 + r() * 45), c: PAL[Math.floor(r() * PAL.length)] });
       }
-      tiles.push({ bg: BG[Math.floor(r() * BG.length)], blobs: blobs, days: 7 - Math.floor(i * 0.75) });
+      tiles.push({ bg: BG[Math.floor(r() * BG.length)], blobs: blobs });
     }
     var clock = this.readClock();
     var done = this.cyclesDone(clock);
