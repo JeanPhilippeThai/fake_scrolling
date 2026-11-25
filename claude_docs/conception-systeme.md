@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 103, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 116, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -140,7 +140,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-03 Publier un post
 
-Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende et règle ses options sur P-13, puis publie dans le fil (P-03) ou en story (P-08). Avant la publication, seule la graine de chaque photo part au serveur, pour préparer l'art généré ; le reste n'est enregistré qu'à la publication (D-045, D-120). Mobile seulement. Décisions : D-001, D-012, D-031, D-033, D-034, D-035, D-045, D-047, D-059, D-060, D-061, D-062, D-068, D-120, D-121.
+Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende et règle ses options sur P-13, puis publie dans le fil (P-03) ou en story (P-08). Avant la publication, seule la graine de chaque photo part au serveur, pour préparer l'art généré ; le reste n'est enregistré qu'à la publication (D-045, D-120). Mobile seulement. Décisions : D-001, D-012, D-031, D-033, D-034, D-035, D-045, D-047, D-059, D-060, D-061, D-062, D-068, D-120, D-121, D-122, D-123.
 
 ### Entrées
 
@@ -154,8 +154,8 @@ Hors de ce flow : la palette du post publié (question ouverte de F-051), sa lé
 
 | Étape | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- |
-| 1. Choisir les photos | P-12 | F-044, F-045 | E-04 (galerie, album) | E-04 (graine, envoyée au serveur dès le choix, D-120), E-03 ou E-12 (brouillon : photos choisies, rang dans le carrousel, D-068) |
-| 1'. Prendre une photo | P-12 ou P-12.a | F-046, F-046.a | — | E-04 (graine, envoyée au serveur, D-120), E-03 ou E-12 (brouillon : la photo prise devient celle du post ou de la story, D-047, D-068) |
+| 1. Choisir les photos | P-12 | F-044, F-045 | E-04 (galerie, album) | E-04 (graine, envoyée au serveur dès le choix, D-120 ; sans réseau, en attente dans FL-12, D-122), E-03 ou E-12 (brouillon : photos choisies, rang dans le carrousel, D-068) |
+| 1'. Prendre une photo | P-12 ou P-12.a | F-046, F-046.a | — | E-04 (graine, envoyée au serveur, D-120 ; sans réseau, en attente dans FL-12, D-122), E-03 ou E-12 (brouillon : la photo prise devient celle du post ou de la story, D-047, D-068) |
 | 2. Passer à la légende | P-12 → P-13 | F-044 (« Suivant ») | — | — |
 | 3. Écrire la légende | P-13 | F-047 | — | E-03 ou E-12 (brouillon : légende, D-068) |
 | 4. Choisir où publier | P-13 | F-068 | — | E-03 ou E-12 (destination) |
@@ -167,7 +167,7 @@ Hors de ce flow : la palette du post publié (question ouverte de F-051), sa lé
 | 9. Publier | P-13 → P-13.a → P-13.c | F-051 | E-03 ou E-12 (brouillon), E-04 | E-03 et E-04 (post), ou E-12 (story) ; E-08 (une notification « identification » par personne identifiée, D-061) |
 | 10. Arrivée | P-03.d ou P-08.b | F-051 | E-03 ou E-12 | — |
 
-Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-048, P-25 F-049, P-26 F-050 → P-28 F-072) → F-051 → P-03, ou P-08 → F-026.a → P-12 → … → F-068 « Story » → F-051 → P-08. Les entités suivent les `operations` des features : F-045 lit ; F-046, F-047, F-050, F-068 écrivent ; F-044, F-048, F-051, F-072 lisent et écrivent ; F-049 lit, écrit et supprime. Avant F-051, ces écritures ne touchent que le brouillon sur l'appareil, sauf la graine de chaque photo, envoyée dès le choix (D-120).
+Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-048, P-25 F-049, P-26 F-050 → P-28 F-072) → F-051 → P-03, ou P-08 → F-026.a → P-12 → … → F-068 « Story » → F-051 → P-08. Les entités suivent les `operations` des features : F-045 lit ; F-046, F-047, F-050, F-068 écrivent ; F-044, F-048, F-051, F-072 lisent et écrivent ; F-049 lit, écrit et supprime. Avant F-051, ces écritures ne touchent que le brouillon sur l'appareil, sauf la graine de chaque photo, envoyée dès le choix (D-120), ou par FL-12 dès que le réseau revient (D-122).
 
 ### Points de décision et erreurs
 
@@ -178,7 +178,9 @@ Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-
 | P-12 | Prise de vue refusée ou annulée | Non dessinée (questions ouvertes de F-046) |
 | P-12 | Sélection simple ou multiple | Une photo, ou jusqu'à 10 numérotées (F-044) |
 | P-12 | « Suivant » | Toujours actif : une photo au moins est choisie |
-| P-12 | Croix « Fermer » (F-005.a) | Brouillon abandonné sans confirmation (D-045), ses graines effacées du serveur (D-121), retour à la page d'origine (D-062) ; ouverte depuis la Recherche (P-14 à P-16), retour sur P-14 (D-090) |
+| P-12 | Croix « Fermer » (F-005.a) | Brouillon abandonné sans confirmation (D-045), ses graines effacées du serveur, par FL-12 sans réseau, et celles qui attendaient encore jamais envoyées (D-121, D-122), retour à la page d'origine (D-062) ; ouverte depuis la Recherche (P-14 à P-16), retour sur P-14 (D-090) |
+| P-12 | Photo retirée de la sélection (F-044) | Sa graine effacée du serveur, par FL-12 sans réseau ; jamais envoyée si elle attendait encore (D-121, D-122) |
+| P-12, P-13 | Brouillon perdu sans « Fermer » (appli fermée de force, téléphone éteint) | Ses graines en attente ne partent jamais (D-122) ; celles déjà envoyées sont effacées par FL-14, 24 h après leur arrivée (D-123) |
 | P-13 | Flèche retour (F-005) | P-12, photos choisies gardées |
 | P-13 | Fil d'actualité ou Story (F-068) | Bouton « Partager dans le fil » ou « Partager en story » |
 | P-24, P-25 | Liste en chargement ou en échec | Anneau, puis message sur place avec « Réessayer » (D-043) |
@@ -186,6 +188,7 @@ Suite simple : P-03 → F-026 → P-12 → F-044 → P-13 → F-047 → (P-24 F-
 | P-25 | Un lieu est déjà choisi | « Retirer le lieu » (F-049) |
 | P-26 | « Amis proches » avec une liste vide | Non défini (question ouverte de F-072) |
 | P-28 | Liste en chargement ou en échec | Anneau, puis message sur place avec « Réessayer » (F-072) |
+| P-13.a | Graines encore en attente, ou déjà effacées par FL-14 | Elles partent avec la publication (D-120, D-122, D-123) |
 | P-13.a | La publication échoue | P-13.b : pas de fondu, photos et légende gardées (D-120), « Réessayer » relance F-051 (D-027) |
 | P-13.a | Publié dans le fil | Fondu vers l'art généré et le charabia (P-13.c, D-120), puis P-03 avec le toast « Post publié. » (P-03.d, D-031) |
 | P-13.a | Publié en story | Fondu vers l'art généré et le charabia (P-13.c, D-120), puis P-08 avec le toast « Story publiée. » (P-08.b, D-031) |
@@ -200,6 +203,8 @@ Réglés le 24 novembre 2026 :
 - Aucune liste d'« Amis proches » : E-09 prend « ami proche », F-072 la règle sur le nouveau panneau P-28, ouvert depuis P-26 (D-060). P-26 et P-28 dessinés depuis.
 - Une identification ne notifiait personne : E-08 a un type « identification », F-051 l'écrit (D-061). P-04 redessiné depuis (F-022).
 - La croix de P-12 ramenait toujours à l'Accueil : elle ramène à la page d'origine (D-062). Design mis à jour depuis (F-005).
+
+Réglés le 25 novembre 2026 : sans réseau, les graines et leurs effacements attendent dans FL-12 (D-122) ; les graines d'un brouillon perdu sont effacées 24 h après leur arrivée par FL-14 (D-123), et la question ouverte de F-044 est close.
 
 Restent ouverts, dans les `questions_ouvertes` des features :
 
@@ -645,24 +650,25 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-12 Renvoyer les envois en attente
 
-Tâche de fond, sans geste de l'utilisateur : ce qu'un utilisateur connecté (R-02) a changé sur son téléphone sans que le serveur l'enregistre attend sur ce téléphone, rattaché à son compte, puis repart sans message jusqu'à ce que le serveur l'enregistre ou le refuse pour de bon. Mobile seulement. Décisions : D-077, D-078, D-095, D-100, D-101, D-104, D-108, D-109, D-111, D-112, D-113, D-116, D-117.
+Tâche de fond, sans geste de l'utilisateur : ce qu'un utilisateur connecté (R-02) a changé sur son téléphone sans que le serveur l'enregistre attend sur ce téléphone, rattaché à son compte, puis repart sans message jusqu'à ce que le serveur l'enregistre ou le refuse pour de bon. Mobile seulement. Décisions : D-077, D-078, D-095, D-100, D-101, D-104, D-108, D-109, D-111, D-112, D-113, D-116, D-117, D-120, D-121, D-122.
 
 ### Entrées
 
+- FL-03 : la graine d'une photo choisie ou prise (F-044, F-046, D-120), ou l'effacement des graines d'une photo retirée ou d'un brouillon fermé (F-044, F-005.a, D-121), que le serveur n'a pas reçus (D-122).
 - FL-05 : une durée (F-060) ou une réinitialisation (F-061) que le serveur n'a pas enregistrée (D-077) ; une période passée appli ouverte au premier plan sans réseau (F-024, F-073, D-117).
 - FL-06 : une « vue » de story (F-036) que le serveur n'a pas enregistrée (D-078).
 - FL-09 : un soutien débité par le store que le serveur n'a pas enregistré (F-015, D-095).
 - FL-11 : une photo de profil (F-058) dont la graine n'est pas enregistrée (D-100, D-119).
 
-Hors de ce flow : les envois qui montrent une erreur avec « Réessayer » (publier, commenter, envoyer un message…), que l'utilisateur relance lui-même.
+Hors de ce flow : les envois qui montrent une erreur avec « Réessayer » (publier, commenter, envoyer un message…), que l'utilisateur relance lui-même ; l'effacement par le serveur des graines que rien n'a prises, dans FL-14 (D-123).
 
 ### Séquence
 
 | Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- | --- |
-| 1. Garder l'envoi | Le serveur n'enregistre pas un changement de FL-05, FL-06, FL-09 ou FL-11 | — | F-060, F-061, F-036, F-015, F-058, F-024, F-073 | — | Sur le téléphone : l'envoi, son compte et l'heure où il a été fait |
+| 1. Garder l'envoi | Le serveur n'enregistre pas un changement de FL-03, FL-05, FL-06, FL-09 ou FL-11 | — | F-044, F-046, F-005, F-060, F-061, F-036, F-015, F-058, F-024, F-073 | — | Sur le téléphone : l'envoi, son compte et l'heure où il a été fait |
 | 2. Partir | Ouverture de l'appli ou retour au premier plan, ou retour du réseau appli ouverte, connecté au compte de l'envoi (D-112) | — | Celle de l'envoi | — | — |
-| 3. Envoyer | Un envoi après l'autre, du plus ancien au plus récent | — | Celle de l'envoi | — | E-14 (durée ou cycles, D-077 ; secondes au premier plan, D-117), E-15 (secondes au premier plan, D-117), E-12 (vue par, D-078), E-16 (soutien, D-095), E-04 et E-01 (photo, D-100) |
+| 3. Envoyer | Un envoi après l'autre, du plus ancien au plus récent | — | Celle de l'envoi | — | E-14 (durée ou cycles, D-077 ; secondes au premier plan, D-117), E-15 (secondes au premier plan, D-117), E-12 (vue par, D-078), E-16 (soutien, D-095), E-04 et E-01 (photo, D-100), E-04 (graine d'un brouillon, D-120 ; graines effacées, D-121) |
 | 4. Enregistré | Le serveur l'enregistre | — | — | — | L'envoi quitte le téléphone |
 | 5. Attendre | Réseau ou serveur injoignable | — | — | — | — (l'envoi repart au prochain départ, étape 2) |
 
@@ -674,8 +680,10 @@ Suite simple : changement non enregistré → 1 → 2 → 3 → 4, ou 5 puis de 
 | --- | --- | --- |
 | Serveur | Réseau ou serveur injoignable | L'envoi reste sur le téléphone et repart au prochain départ (D-112) ; aucun message |
 | Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones, est gardé (D-111) ; leurs secondes sans réseau se fusionnent, une seconde commune ne comptant qu'une fois, et seules celles d'après la dernière réinitialisation comptent pour le minuteur (D-105, D-117) |
-| Serveur | Refus pour de bon : données invalides, story déjà effacée (FL-13) | Envoi abandonné sans message ; au chargement suivant, le téléphone montre ce que le serveur a (D-113) |
+| Serveur | Refus pour de bon : données invalides, story déjà effacée (FL-13), graine déjà effacée (FL-14) | Envoi abandonné sans message ; au chargement suivant, le téléphone montre ce que le serveur a (D-113) |
 | Serveur | Soutien refusé | Jamais abandonné : renvoyé jusqu'à ce qu'il soit enregistré (D-095, D-113), sauf si le compte est supprimé (D-116) |
+| Téléphone | Le brouillon d'une graine en attente disparaît (« Fermer », photo retirée, appli fermée de force, téléphone éteint) | La graine est abandonnée, jamais envoyée (D-121, D-122) |
+| F-051 | Publication avec des graines en attente | Elles partent avec la publication et quittent le téléphone (D-120, D-122) |
 | F-071 | Déconnexion | Les envois restent sur le téléphone, rattachés au compte, et repartent à sa prochaine connexion sur ce téléphone ; jamais pour un autre compte (D-104, D-109) |
 | F-063 | Compte supprimé sur ce téléphone | Envois abandonnés avec le compte (D-101, D-109) |
 | Autre téléphone | Compte supprimé ailleurs | Le serveur refuse ses envois pour de bon : abandonnés, soutien compris (D-101, D-113, D-116) ; un téléphone qui n'est plus connecté à ce compte les abandonne à son prochain échange avec le serveur, quel que soit le compte connecté (D-101) |
@@ -691,6 +699,7 @@ Réglés le 25 novembre 2026 :
 - Les envois partent à l'ouverture, au retour au premier plan et au retour du réseau (D-112).
 - Un refus pour de bon abandonne l'envoi, sauf un soutien (D-113), abandonné seulement avec son compte (D-116).
 - Le temps passé appli ouverte sans réseau compte, et passe par ce flow (D-117).
+- La graine d'une photo et l'effacement des graines sont des envois en attente comme les autres ; une graine dont le brouillon a disparu n'est jamais envoyée (D-122).
 
 Aucune feature ni page ne manque : la tâche n'a rien à l'écran.
 
@@ -731,6 +740,42 @@ Réglé le 25 novembre 2026 : une story finie est effacée du serveur dès sa fi
 Reste ouvert, dans les `questions_ouvertes` de F-036 : une story en cours de lecture sur P-10 quand sa fin arrive va-t-elle jusqu'au bout ?
 
 Aucune feature ni page ne manque.
+
+## FL-14 Effacer les graines orphelines
+
+Tâche de fond du serveur, sans geste de l'utilisateur : 24 h après son arrivée, une graine rattachée à rien est effacée avec son algorithme. Mobile seulement. Décisions : D-101, D-113, D-120, D-121, D-122, D-123.
+
+### Entrées
+
+- Une graine reçue avant la publication de son post ou de sa story (F-044, F-046, D-120), par FL-03 ou FL-12 (D-122).
+
+Hors de ce flow : l'effacement demandé par le téléphone quand une photo est retirée ou le brouillon fermé (D-121), dans FL-03 et FL-12 ; l'effacement de tous les médias d'un compte supprimé (F-063, D-101), dans FL-11.
+
+### Séquence
+
+| Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- | --- |
+| 1. Attendre | Une graine arrive sans post ni story (D-120) | — | F-044, F-046 | — | E-04 (graine, heure d'arrivée, D-123) |
+| 2. Effacer | 24 h après son arrivée, si rien ne l'a prise : ni post, ni story, ni message, ni photo de profil | — | — | E-04 (heure d'arrivée) | E-04 effacée du serveur, avec son algorithme (D-123) |
+
+Suite simple : graine arrivée → 1 → 2. Publiée avant, elle est rattachée au post ou à la story (F-051) et sort de ce flow. F-044 et F-046 écrivent E-04 ; la tâche du serveur n'est portée par aucune feature.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| Serveur | Publication dans les 24 h | La graine est rattachée au post ou à la story, et n'est pas effacée (F-051) |
+| P-13.a | Publication après l'effacement | La publication renvoie les graines que le serveur n'a plus (D-123) |
+| Serveur | Effacement demandé par le téléphone (FL-12) après celui de FL-14 | Refus pour de bon : abandonné sans message (D-113, D-122) |
+| F-063 | Compte supprimé avant les 24 h | Ses graines sont effacées avec lui (D-101) |
+
+Fin du flow : aucune graine que rien n'a prise ne reste plus de 24 h sur le serveur.
+
+### Manques du registre
+
+Réglé le 25 novembre 2026 : les graines d'un brouillon perdu sont effacées 24 h après leur arrivée (D-123) ; E-04 prend l'heure d'arrivée de la graine, et la question ouverte de F-044 est close.
+
+Aucune feature ni page ne manque : la tâche n'a rien à l'écran.
 
 ## États des entités
 
@@ -991,6 +1036,6 @@ Choisis par D-107, écrits dans le dépôt sous `docs/system-design/` (un fichie
 | SM-E-12 | `SM_E_12.tla` | `D079_FinishedNeverReopens` : une story finie ne se rouvre jamais, même si « vue » arrive après (D-078, D-079) ; `D080_OpensOnlyForAudience` : seuls les amis, et les amis proches pour « Amis proches », l'ouvrent (D-080) ; `D078_SeenOnlyAfterAnImage` (D-078) ; `D110_ErasedKeepsNothing`, `D110_FinishedIsErased` (D-110) ; `D101_DeletedViewerLeavesNothing` (D-101, D-109) ; `D113_WaitingVueEnds` : une « vue » en attente finit enregistrée ou abandonnée (D-108, D-113) |
 | SM-E-14 | `SM_E_14.tla` | `D024_GreyTenPercentPerCycle` : 10 % de gris par cycle écoulé, 10 cycles au plus (F-024) ; `D105_SecondCountedOnce`, `D105_D117_UsageIsForegroundTime` : deux téléphones ne font jamais compter une seconde deux fois, et le temps d'utilisation (E-15) finit égal aux secondes où au moins un téléphone était au premier plan, sans réseau compris (D-105, D-117) ; `D111_LatestChangeWins` : le réglage fait le plus tard gagne, quel que soit l'ordre d'arrivée (D-111, D-117) ; `D077_D117_EverythingEndsRecorded` : réglages et secondes renvoyés finissent enregistrés (D-077, D-117) |
 | SM-E-16 | `SM_E_16.tla` | `D095_NoErrorAfterDebit` : aucune erreur après un débit (D-095) ; `D115_RecordedOnce` : le serveur n'enregistre qu'un soutien par compte (D-092, D-115) ; `D092_SupportedOnlyIfPaid` ; `D095_D116_PaidEndsRecorded` : un achat confirmé finit enregistré, pour son compte seulement, sauf si le compte est supprimé (D-095, D-104, D-116) |
-| Synchronisation | `sync.tla` | `D104_NeverForAnotherAccount` (D-104) ; `D101_NothingKeptForDeleted`, `D101_NothingAfterDeletion` (D-101) ; `D116_SupportDroppedOnlyWithAccount` (D-113, D-116) ; `D108_SentWhileConnected` : un envoi en attente part dès que son compte est connecté sur le téléphone (D-104, D-108, D-112) ; `D101_DeletedAccountChangesEnd` : ceux d'un compte supprimé finissent abandonnés, même sur un téléphone où il n'est plus connecté (D-101, D-116). Le temps entre téléphones est vérifié par SM-E-14 |
+| Synchronisation | `sync.tla` | `D104_NeverForAnotherAccount` (D-104) ; `D101_NothingKeptForDeleted`, `D101_NothingAfterDeletion` (D-101) ; `D116_SupportDroppedOnlyWithAccount` (D-113, D-116) ; `D122_RecordedOrDropped` : un envoi finit enregistré ou abandonné, jamais les deux ; une graine dont le brouillon a disparu est abandonnée sans partir (D-113, D-121, D-122) ; `D108_SentWhileConnected` : un envoi en attente part dès que son compte est connecté sur le téléphone (D-104, D-108, D-112) ; `D101_DeletedAccountChangesEnd` : ceux d'un compte supprimé finissent abandonnés, même sur un téléphone où il n'est plus connecté (D-101, D-116). Le temps entre téléphones est vérifié par SM-E-14 |
 
 Trouvé par TLC le 25 novembre 2026 : un soutien que le store confirme après la suppression du compte sur un autre téléphone est débité, puis abandonné (D-116) ; son remboursement rejoint la question ouverte de F-015. Ouvert dans F-060 : un téléphone dont l'horloge est fausse peut faire gagner un réglage plus ancien (D-111).

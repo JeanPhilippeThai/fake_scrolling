@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 409, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 412, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -1090,7 +1090,6 @@ features:
       - 'accès refusé : « Accès aux photos refusé » avec « Ouvrir les réglages » du téléphone (D-034)'
     questions_ouvertes:
       - Vraie galerie et autorisation d'accès
-      - 'Brouillon perdu sans « Fermer » (appli fermée de force, téléphone éteint) : quand le serveur efface-t-il ses graines (D-121) ?'
 
   - id: F-045
     nom: Choisir un album
@@ -1573,6 +1572,7 @@ entites:
       - algorithme qui dessine l'art généré, choisi par le serveur et décrit en données (D-086, D-119)
       - durée de la vidéo
       - rang dans le carrousel
+      - heure d'arrivée de la graine sur le serveur, pour l'effacer après 24 h si rien ne la prend (D-123)
     utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, F-063]
 
   - id: E-05
@@ -2327,6 +2327,18 @@ decisions:
     choix: 'Quand une photo choisie est retirée de la sélection (F-044) ou que le brouillon est abandonné par la croix « Fermer » (F-005.a, D-045), le serveur efface aussitôt les graines déjà envoyées (D-120) et leur algorithme (E-04). Une graine pas encore envoyée ne l''est jamais. Le design ne change pas.'
     raison: 'Choix du propriétaire : rien ne doit survivre d''un post qui n''est pas publié.'
     impacte: [F-044, F-046, F-005, E-04]
+
+  - id: D-122
+    sujet: 'FL-12 : graines et effacements de graines en attente'
+    choix: 'La graine d''une photo choisie ou prise (D-120) et l''effacement des graines d''une photo retirée ou d''un brouillon abandonné (D-121) sont, sans réseau, des envois en attente de FL-12, avec ses règles : quand ils partent (D-112), du plus ancien au plus récent, abandonnés sans message si le serveur les refuse pour de bon (D-113), rattachés au compte à la déconnexion (D-104) et abandonnés avec lui (D-101). Une graine encore en attente quand son brouillon disparaît (croix « Fermer », appli fermée de force, téléphone éteint) n''est jamais envoyée (D-121) ; à la publication (F-051), celles qui attendent encore partent avec elle (D-120). Élargit la liste de D-108. Le design ne change pas.'
+    raison: 'Choix du propriétaire : une seule règle pour tout envoi qui attend le réseau.'
+    impacte: [F-005, F-044, F-046, F-051, E-04]
+
+  - id: D-123
+    sujet: 'Graines orphelines : effacées après 24 h'
+    choix: 'Une tâche de fond du serveur efface, 24 h après son arrivée, toute graine rattachée à rien (ni post, ni story, ni message, ni photo de profil), avec son algorithme (E-04). Elle couvre le brouillon perdu sans « Fermer » (appli fermée de force, téléphone éteint) et l''effacement qui n''arrive jamais (D-121, D-122). Le flow FL-14 la décrit. Une publication faite plus tard renvoie les graines que le serveur n''a plus (F-051). La question ouverte de F-044 est close. Le design ne change pas.'
+    raison: 'Choix du propriétaire : la même durée qu''une story (D-079) ; rien ne survit longtemps d''un post qui n''est pas publié (D-121).'
+    impacte: [F-044, F-051, E-04]
 
 ids_retires:
   - {id: F-013, decision: D-002}
