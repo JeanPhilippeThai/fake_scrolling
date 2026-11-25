@@ -7,10 +7,12 @@
 (* Several accounts sign in and out of several phones. A change waits on   *)
 (* the phone, tied to its account, and goes only while that account is     *)
 (* connected there (D-104, D-109, D-112). The kinds of change are reduced  *)
-(* to two: a support, never dropped while its account exists (D-095,       *)
-(* D-113, D-116), and the others (timer, D-077; story "vue", D-078;        *)
-(* profile photo, D-100; offline time, D-117), which the server can refuse *)
-(* for good (D-113). Counting time across phones is in SM_E_14.            *)
+(* to three: a support, never dropped while its account exists (D-095,     *)
+(* D-113, D-116); a photo seed, which the phone also drops unsent when its *)
+(* draft is gone (D-120, D-121, D-122); and the others (timer, D-077;      *)
+(* story "vue", D-078; profile photo, D-100; offline time, D-117; seed     *)
+(* erase, D-121, D-122), which the server can refuse for good (D-113).     *)
+(* Counting time across phones is in SM_E_14.                              *)
 (* Rules are named after their decisions until their BR exist.             *)
 (***************************************************************************)
 EXTENDS Naturals
@@ -21,7 +23,7 @@ CONSTANTS
     NoAccount,   \* a phone with no session (P-01)
     MaxChanges   \* changes the model makes, all phones together
 
-Kinds == {"support", "other"}
+Kinds == {"support", "seed", "other"}
 Items == [id : 1..MaxChanges, acc : Accounts, kind : Kinds]
 
 VARIABLES
@@ -97,6 +99,16 @@ RefuseForGood(p, i) ==
     /\ dropped' = dropped \cup {i}
     /\ UNCHANGED <<alive, session, recorded, nextId>>
 
+\* A seed still waiting when its draft is gone ("Fermer", photo removed, app
+\* killed, phone off) is never sent (D-121, D-122). Modelled at any time: a draft
+\* can be lost whatever the phone is doing.
+DraftGone(p, i) ==
+    /\ i \in pending[p]
+    /\ i.kind = "seed"
+    /\ pending' = [pending EXCEPT ![p] = @ \ {i}]
+    /\ dropped' = dropped \cup {i}
+    /\ UNCHANGED <<alive, session, recorded, nextId>>
+
 \* F-063 on p: the account and everything it had go at once; what waited for it
 \* on p is dropped (D-101, D-109).
 DeleteAccount(p) ==
@@ -134,7 +146,7 @@ Next ==
           \/ Logout(p) \/ DeleteAccount(p) \/ Kicked(p) \/ Purge(p)
           \/ \E a \in Accounts : Login(p, a)
           \/ \E k \in Kinds : Change(p, k)
-          \/ \E i \in Items : Send(p, i) \/ RefuseForGood(p, i)
+          \/ \E i \in Items : Send(p, i) \/ RefuseForGood(p, i) \/ DraftGone(p, i)
 
 \* FL-12 sends whenever it can; the phone talks to the server now and then.
 Fairness ==
@@ -157,6 +169,9 @@ D101_NothingKeptForDeleted == \A r \in recorded : r.item.acc \in alive
 \* Nothing is ever recorded after the account's deletion (D-101).
 D101_NothingAfterDeletion ==
     [][\A r \in recorded' \ recorded : r.item.acc \in alive]_vars
+
+\* A change ends one way only: recorded or dropped, never both (D-113, D-122).
+D122_RecordedOrDropped == \A r \in recorded : r.item \notin dropped
 
 \* A support is only dropped with its account (D-113, D-116).
 D116_SupportDroppedOnlyWithAccount ==
