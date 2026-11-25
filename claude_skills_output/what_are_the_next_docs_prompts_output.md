@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-24 · commit f2afcbf · fingerprint 729753cb24d6
+2026-11-24 · commit f2afcbf · fingerprint cb949fbb8208
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -21,4 +21,3 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Step 6: entities and states** (no prompt). Write in the Conception système Claude Doc one state diagram `SM-E-xx` per entity with non-trivial states, from FL-01 to FL-11: at least the post (E-03, from item 1), the support (E-16, from FL-09), the colour timer (E-14) and the friend invitation; say which ones need a TLA+ model. It produces: the `SM` diagrams, and the list of TLA+ models to write.

@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 355, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 367, exported 2026-11-25 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -731,6 +731,7 @@ features:
       - 'Envoyer à un ami (F-019.a) : amis seulement (ami ou non, E-09)'
       - Un lien de post ouvert sans connexion mène à la connexion (P-01)
       - 'Aspect du post reçu dans la conversation de l''ami (F-019.a, D-044) : non dessiné sur P-09'
+      - 'Un post envoyé à un ami (F-019.a) passe-t-il la conversation en non lu chez lui, comme un message (F-041, D-085, SM-E-10) ?'
 
   - id: F-020
     nom: Lire l'auteur et la légende d'un post
@@ -766,9 +767,9 @@ features:
     acces: [R-02]
     variantes: []
     entites: [E-08, E-09, E-06, E-05]
-    operations: [lecture]
+    operations: [lecture, écriture]
     etats_ui:
-      - pastille avec nombre
+      - 'pastille avec le nombre de notifications non vues ; ouvrir P-04 les marque toutes vues et la pastille disparaît (D-106)'
       - sans pastille
       - section Invitations masquée si vide
       - 'vide : « Aucune notification » · « Les invitations, les likes, les commentaires et les identifications reçus s’affichent ici. » (D-066)'
@@ -780,7 +781,7 @@ features:
 
   - id: F-024
     nom: Voir l'app se griser
-    description: Toute l'interface perd 10 % de couleur par cycle, noir et blanc après 10 cycles, sans message. Seul le temps passé dans l'appli ouverte compte (D-075).
+    description: Toute l'interface perd 10 % de couleur par cycle, noir et blanc après 10 cycles, sans message. Seul le temps passé dans l'appli ouverte compte (D-075) ; deux téléphones ouverts en même temps ne comptent qu'une fois (D-105).
     pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28]
     plateformes: [mobile]
     acces: [R-02]
@@ -789,8 +790,7 @@ features:
     operations: [lecture, écriture]
     etats_ui:
       - de 0 à 100 % de gris
-    questions_ouvertes:
-      - 'Deux téléphones ouverts en même temps sur le même compte : le temps compte-t-il deux fois ?'
+    questions_ouvertes: []
 
   - id: F-025
     nom: Naviguer entre les sections
@@ -950,6 +950,7 @@ features:
     questions_ouvertes:
       - 'Voir sa propre story, et qui l''a vue : « Ta story » ouvre toujours la création (F-026.a)'
       - Ordre des ronds de la rangée de P-08 (non vues d'abord ?)
+      - 'Une story finie (D-079) est-elle effacée du serveur, ou gardée jusqu''à la suppression du compte (SM-E-12) ?'
 ```
 
 ```yaml
@@ -1350,7 +1351,8 @@ features:
     etats_ui:
       - flèche grisée aux bornes
       - 'enregistrement : appliqué tout de suite, renvoyé sans message tant que le serveur ne l''a pas (D-077)'
-    questions_ouvertes: []
+    questions_ouvertes:
+      - 'Deux téléphones règlent le minuteur hors connexion (F-060, F-061), puis leurs réglages arrivent au serveur : lequel garder ? (SM-E-14, D-077, D-105)'
 
   - id: F-061
     nom: Réinitialiser les cycles
@@ -1503,7 +1505,7 @@ features:
 
   - id: F-073
     nom: Compter le temps d'utilisation
-    description: 'Tâche de fond sans élément visible : chaque seconde passée appli ouverte et au premier plan s''ajoute au temps d''utilisation du compte, même après les 10 cycles de F-024 (D-093, D-096).'
+    description: 'Tâche de fond sans élément visible : chaque seconde passée appli ouverte et au premier plan s''ajoute au temps d''utilisation du compte, même après les 10 cycles de F-024 (D-093, D-096) ; deux téléphones ouverts en même temps ne comptent qu''une fois (D-105).'
     pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28]
     plateformes: [mobile]
     acces: [R-02]
@@ -1511,8 +1513,7 @@ features:
     entites: [E-15]
     operations: [lecture, écriture]
     etats_ui: []
-    questions_ouvertes:
-      - 'Deux téléphones ouverts en même temps sur le même compte : le temps compte-t-il deux fois ?'
+    questions_ouvertes: []
 ```
 
 ```yaml
@@ -1597,6 +1598,7 @@ entites:
       - auteur
       - ancienneté
       - post concerné (miniature)
+      - vue / non vue (ouvrir P-04 les marque toutes vues, D-106)
     utilisee_par: [F-016, F-022, F-028, F-030, F-034, F-051, F-063]
 
   - id: E-09
@@ -1647,7 +1649,7 @@ entites:
   - id: E-14
     nom: Minuteur de couleur
     champs:
-      - compte (D-074)
+      - compte (D-074) ; deux téléphones ouverts ensemble ne comptent qu'une fois (D-105)
       - durée du cycle
       - temps passé appli ouverte dans le cycle en cours (D-075)
       - cycles écoulés
@@ -1659,7 +1661,7 @@ entites:
     nom: Temps d'utilisation
     champs:
       - compte (D-093)
-      - durée cumulée, appli ouverte et au premier plan (D-093)
+      - durée cumulée, appli ouverte et au premier plan sur au moins un téléphone, comptée une fois (D-093, D-105)
     utilisee_par: [F-015, F-063, F-065, F-073]
 
   - id: E-16
@@ -2215,6 +2217,24 @@ decisions:
     choix: 'À la déconnexion (F-071), ce qui attend encore d''être renvoyé au serveur (minuteur, D-077 ; soutien, D-095 ; photo de profil, D-100) reste sur le téléphone, rattaché au compte, et part à sa prochaine connexion sur ce téléphone. Rien n''est jamais envoyé pour un autre compte qui se connecte sur le même téléphone. Le design ne change pas.'
     raison: 'Choix du propriétaire : se déconnecter ne fait rien perdre (D-065).'
     impacte: [F-071, F-015, F-058, F-060, F-061, E-02]
+
+  - id: D-105
+    sujet: 'Étape 6 : deux téléphones ouverts en même temps'
+    choix: 'Le minuteur de couleur (E-14) et le temps d''utilisation (E-15) du compte avancent tant qu''au moins un de ses téléphones a l''appli ouverte et au premier plan ; les secondes où deux téléphones sont ouverts ensemble ne comptent qu''une fois. Les questions ouvertes de F-024 et F-073 sont closes. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le gris et l''offre de soutien suivent le vrai temps passé, quel que soit le nombre de téléphones.'
+    impacte: [F-024, F-073, E-14, E-15]
+
+  - id: D-106
+    sujet: 'Étape 6 : pastille de la cloche'
+    choix: 'Une notification (E-08) est vue ou non vue. La pastille de la cloche (F-022) compte les notifications non vues ; ouvrir le panneau P-04 les marque toutes vues et la pastille disparaît. F-022 écrit E-08. Le design ne change pas.'
+    raison: 'Choix du propriétaire : rien ne disait ce qui fait disparaître la pastille, et E-08 n''avait pas d''état « vue ».'
+    impacte: [F-022, E-08]
+
+  - id: D-107
+    sujet: 'Étape 6 : diagrammes d''états et modèles TLA+'
+    choix: 'Huit entités ont un diagramme d''états dans la Conception système : SM-E-02 Connexion, SM-E-03 Post, SM-E-08 Notification, SM-E-09 Relation d''amitié, SM-E-10 Conversation, SM-E-12 Story, SM-E-14 Minuteur de couleur, SM-E-16 Soutien. Les autres entités ne font qu''exister puis être effacées. Auront un modèle TLA+ : SM-E-09, SM-E-12, SM-E-14, SM-E-16, et un modèle de synchronisation des envois en attente et des téléphones ouverts ensemble (D-104, D-105).'
+    raison: 'Choix du propriétaire : ce sont les entités où deux comptes, deux téléphones, le store ou un renvoi peuvent se croiser.'
+    impacte: [E-02, E-03, E-08, E-09, E-10, E-12, E-14, E-16]
 
 ids_retires:
   - {id: F-013, decision: D-002}
