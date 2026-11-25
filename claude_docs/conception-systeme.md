@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 34, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 38, exported 2026-11-25 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -47,7 +47,7 @@ Suite simple : P-01 → F-001 / F-001.a → (P-27 → F-070) → P-03, ou P-01 �
 | P-27 | Abandon | F-005 : retour à P-01, sans compte créé |
 | P-27 | Identifiant pris, erreur d'enregistrement | Erreur : P-27.b, « Réessayer », saisies gardées (D-064) ; identifiant pris : question ouverte de F-070 |
 | P-03.a | Le fil ne charge pas | P-03.b : « Réessayer » (F-009) |
-| P-03 | Post du lien expiré, supprimé ou hors audience | Non défini (question ouverte de F-009) |
+| P-03 | Post du lien supprimé ou hors audience | Non défini (question ouverte de F-009) |
 
 Fin du flow : P-03, en R-02, session ouverte (D-053).
 
@@ -148,7 +148,7 @@ Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende 
 - « Créer un post » de l'état vide P-17.a (F-026, D-035) → P-12.
 - Rond « Ta story » de P-08 (F-026.a, D-001) → P-12, destination « Story » présélectionnée (F-068).
 
-Hors de ce flow : ce que voient les amis du post publié (flou, charabia), sa palette et ses jours restants (questions ouvertes de F-051) ; le grisage F-024, qui s'applique à toutes ces pages.
+Hors de ce flow : ce que voient les amis du post publié (flou, charabia), sa palette (questions ouvertes de F-051) ; un post n’expire jamais (D-097) ; le grisage F-024, qui s'applique à toutes ces pages.
 
 ### Séquence
 
@@ -209,7 +209,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-048 : liste de démo ; seuls des amis peuvent être identifiés.
 - F-049 : vraie recherche de lieux, et donc la source des lieux.
 - F-050 : règle de l'audience (qui voit le post et agit dessus).
-- F-051 : ce que voient les amis (charabia de la légende ; les photos deviennent un art généré, D-086) ; palette et durée de vie du post.
+- F-051 : ce que voient les amis (charabia de la légende ; les photos deviennent un art généré, D-086) ; palette du post (il n’expire pas, D-097).
 - F-072 : liste vide ; effet d'un changement sur les posts déjà publiés.
 
 ## FL-04 Ajouter un ami
@@ -510,7 +510,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-053 : choix des 6 mots des tendances et rythme de leur renouvellement.
 - F-050 : agir sur un post suit-il aussi son audience ? (accès supposés de F-016, F-017, F-018, F-019, F-020 et F-030, FL-02)
-- F-051 : qui fixe la palette d'un post à la publication, et sa durée de vie ; la recherche par palette en dépend.
+- F-051 : qui fixe la palette d'un post à la publication ; la recherche par palette en dépend (le post n’expire pas, D-097).
 
 ## FL-09 Soutenir le projet
 

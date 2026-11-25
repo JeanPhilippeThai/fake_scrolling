@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 137, exported 2026-11-24 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 139, exported 2026-11-25 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -429,7 +429,7 @@ Son propre profil : identité, minuteur de couleur, puis ses posts.
 | Allonger le cycle | Petite flèche haut dans la case « 2 min », à droite | Durée : 1, 2, 3, 5, 10, 15, 20 ou 30 min (2 par défaut) | Flèche grisée à 30 min |
 | Raccourcir le cycle | Petite flèche bas dans la même case | Durée du cycle | Flèche grisée à 1 min |
 | Réinitialiser les cycles | Bouton « Réinitialiser » sous la case, à droite | Repart du cycle 1, couleurs revenues partout | — |
-| Voir ses posts | Titre « Tes posts » (D-051) et grille de 3 colonnes | 9 posts floutés, jours restants (« 7 j ») | Non cliquables ; vide (P-17.a) ; chargement (P-17.b) ; erreur (P-17.c) |
+| Voir ses posts | Titre « Tes posts » (D-051) et grille de 3 colonnes | 9 posts floutés, sans jours restants : un post n’expire pas (D-097) | Non cliquables ; vide (P-17.a) ; chargement (P-17.b) ; erreur (P-17.c) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 | Ouvrir l'Accueil | Icône maison du menu du bas, ouvre P-03 | Aucune | Inactive (grise) |
 | Ouvrir Messages | Icône bulle du menu du bas, ouvre P-08 | Aucune | Inactive (grise) |
@@ -441,7 +441,7 @@ Son propre profil : identité, minuteur de couleur, puis ses posts.
 
 | État | Nom | Ce qu'il montre | Artboard |
 | --- | --- | --- | --- |
-| P-17.a | Aucun post | « Aucun post pour l’instant » · « Tes posts s’affichent ici, avec leurs jours restants. » (D-051), avec « Créer un post » | `Etat-P17-posts-vide.dc.html` |
+| P-17.a | Aucun post | « Aucun post pour l’instant » · « Tes posts s’affichent ici. » (D-051, D-097), avec « Créer un post » | `Etat-P17-posts-vide.dc.html` |
 | P-17.b | Mes posts : chargement | Grille remplacée par un indicateur de chargement | `Etat-P17-posts-chargement.dc.html` |
 | P-17.c | Mes posts : erreur | « Tes posts n’ont pas pu être chargés. » avec « Réessayer » | `Etat-P17-posts-erreur.dc.html` |
 
