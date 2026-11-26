@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 147, exported 2026-11-26 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 167, exported 2026-11-26 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -7,11 +7,11 @@ Les flows de l'appli (prompt 5 de la méthode), un par section, écrits uniqueme
 
 ## FL-01 Se connecter
 
-Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-02) sur P-03, par un compte tiers ou par un code reçu par e-mail. Mobile seulement. Décisions : D-024, D-052, D-053, D-054, D-069, D-114, D-127, D-131.
+Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-02) sur P-03, par un compte tiers ou par un code reçu par e-mail. Mobile seulement. Décisions : D-024, D-052, D-053, D-054, D-069, D-114, D-127, D-131, D-141.
 
 ### Entrées
 
-- Ouverture de l'appli sans session sur l'appareil → P-01. Avec une session ouverte, l'appli s'ouvre sur P-03 sans passer par ce flow (D-053).
+- Ouverture de l'appli sans session sur l'appareil → P-01. Avec une session ouverte, l'appli s'ouvre sur P-03 sans passer par ce flow (D-053). Si la version de l'appli est trop vieille pour le serveur, P-29 s'ouvre à la place de toute page, avec ou sans session, jusqu'à la mise à jour (F-074, D-141).
 - Lien de post ouvert sans connexion → P-01 ; le post attend la fin du flow (D-024, D-054).
 - Déconnexion F-071 sur P-21, ou suppression du compte F-063 → P-01 (D-053) ; après la suppression, « Compte supprimé » reste 2 s avant P-01 (D-069).
 
@@ -133,7 +133,7 @@ Réglés le 24 novembre 2026 :
 
 Restent ouverts, dans les `questions_ouvertes` des features :
 
-- F-016, F-017, F-018, F-019, F-020, F-030 : accès supposé à tout post qu'on peut voir, selon son audience (F-050).
+- F-016, F-017, F-018, F-019, F-020, F-030 : accès supposé à tout post qu'on peut voir, selon son audience (F-050) ; réglé depuis : agir sur un post suit son audience (D-138).
 - F-019 : rangée limitée aux amis ; partage d'un post « Amis proches » ; aspect du post reçu sur P-09.
 - F-031 : saisie du nom de la collection.
 - F-011 : pause et déplacement dans la vidéo.
@@ -148,7 +148,7 @@ Un utilisateur connecté (R-02) choisit des photos sur P-12, écrit la légende 
 - « Créer un post » de l'état vide P-17.a (F-026, D-035) → P-12.
 - Rond « Ta story » de P-08 (F-026.a, D-001) → P-12, destination « Story » présélectionnée (F-068).
 
-Hors de ce flow : la palette du post publié (question ouverte de F-051), sa légende en charabia (D-118) et ses photos en art généré (D-086, D-119) ; un post n’expire jamais (D-097) ; le grisage F-024, qui s'applique à toutes ces pages.
+Hors de ce flow : la légende du post publié, en charabia (D-118) et ses photos en art généré (D-086, D-119) ; un post n’expire jamais (D-097) ; le grisage F-024, qui s'applique à toutes ces pages.
 
 ### Séquence
 
@@ -214,7 +214,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-048 : liste de démo ; seuls des amis peuvent être identifiés.
 - F-049 : vraie recherche de lieux, et donc la source des lieux.
 - F-050 : règle de l'audience (qui voit le post et agit dessus).
-- F-051 : palette du post (il n’expire pas, D-097).
+- F-051 : réglé depuis, un post n’a plus de palette (D-139).
 - F-072 : liste vide ; effet d'un changement sur les posts déjà publiés.
 
 ## FL-04 Ajouter un ami
@@ -459,7 +459,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-08 Rechercher
 
-Un utilisateur connecté (R-02) ouvre la Recherche, tape un mot ou touche une suggestion ou une tendance sur P-14, parcourt la grille de P-15, puis ouvre un résultat sur P-16, où il réagit comme dans le fil. Le texte tapé ne quitte jamais le téléphone : seule sa palette est envoyée. Mobile seulement. Décisions : D-046, D-049, D-050, D-051, D-062, D-087, D-088, D-089, D-090.
+Un utilisateur connecté (R-02) ouvre la Recherche, tape un mot ou touche une suggestion ou une tendance sur P-14, parcourt la grille de P-15, puis ouvre un résultat sur P-16, où il réagit comme dans le fil. Le texte tapé ne quitte jamais le téléphone : seule sa graine est envoyée (D-139). Mobile seulement. Décisions : D-046, D-049, D-050, D-051, D-062, D-087, D-088, D-089, D-090, D-139.
 
 ### Entrées
 
@@ -472,10 +472,10 @@ Hors de ce flow : les réactions sur P-16 et leurs panneaux P-05 à P-07 (FL-02,
 
 | Étape | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- |
-| 1. Ouvrir la Recherche | P-03 (ou une autre page) → P-14.a → P-14 | F-025, F-053 | E-13 (8 suggestions tirées au hasard, 6 tendances, sur le téléphone, D-089), E-03 (nombre de posts visibles par palette, D-089) | — |
-| 2. Taper une recherche | P-14 → P-15.a → P-15 | F-052 | E-13 (texte saisi → palette, sur le téléphone, D-087) ; E-03, E-09 (jusqu'à 18 posts visibles de la palette, D-088) | — |
+| 1. Ouvrir la Recherche | P-03 (ou une autre page) → P-14.a → P-14 | F-025, F-053 | E-13 (8 suggestions tirées au hasard, 6 tendances, sur le téléphone, D-089), E-03 (nombre de posts de chaque tendance, D-089 ; ce qu'il compte est ouvert dans F-053, D-139) | — |
+| 2. Taper une recherche | P-14 → P-15.a → P-15 | F-052 | E-13 (texte saisi → graine, sur le téléphone, D-139) ; E-03, E-09 (jusqu'à 18 posts visibles, les plus proches de la graine, D-088, D-139) | — |
 | 2'. Lancer une suggestion ou une tendance | P-14 → P-15.a → P-15 | F-053, F-053.a, puis F-052 | E-13 (champ rempli), E-03, E-09 | — |
-| 3. Modifier la recherche | P-15 | F-052 | E-13 (nouvelle palette à chaque frappe), E-03, E-09 | — |
+| 3. Modifier la recherche | P-15 | F-052 | E-13 (nouvelle graine à chaque frappe), E-03, E-09 | — |
 | 4. Revenir aux suggestions | P-15 → P-14 | F-052 (champ vidé) | E-13 | — |
 | 5. Ouvrir un résultat | P-15 → P-16 | F-054, F-010.a | E-03, E-04 | — |
 | 6. Passer d'un résultat à l'autre | P-16 | F-009.a, F-010.a, F-020, F-021 | E-03, E-04 | — |
@@ -489,10 +489,10 @@ Suite simple : P-14 → F-052 (ou F-053) → P-15 → F-054 → P-16 → F-009.a
 | Où | Cas | Suite |
 | --- | --- | --- |
 | P-14.a | Les suggestions ne chargent pas | P-14.b : « Les suggestions n’ont pas pu être chargées. » avec « Réessayer » ; le champ reste utilisable (F-053) |
-| P-15 | Chaque frappe | La palette est recalculée sur le téléphone et la grille change (F-052, D-087) |
+| P-15 | Chaque frappe | La graine est recalculée sur le téléphone et la grille change (F-052, D-139) |
 | P-15 | Champ vidé | Retour à P-14 |
 | P-15.a | La recherche n'aboutit pas | P-15.c : « La recherche n’a pas abouti. » avec « Réessayer » |
-| P-15.a | Aucun post visible dans la palette | P-15.b : « Aucun résultat » · « Aucun post ne correspond à « … ». Essaie un autre mot. » (D-087) |
+| P-15.a | Aucun post à montrer (un post trop loin de la graine est-il écarté ? ouvert dans F-052, D-139) | P-15.b : « Aucun résultat » · « Aucun post ne correspond à « … ». Essaie un autre mot. » (D-087) |
 | P-15 | Post hors de son audience pour l'utilisateur | Jamais dans les résultats ni dans les tendances (D-088, D-089) |
 | P-16 | Premier ou dernier résultat | Résistance, pas de posts suivants à charger (F-009.a, D-049) |
 | P-16 | Like ou enregistrement échoué | Comme P-03.e et P-03.f (FL-02, D-046) |
@@ -506,7 +506,7 @@ Fin du flow : retour sur P-15 avec la même recherche, ou sur P-14 champ vide.
 
 Réglés le 24 novembre 2026 :
 
-- Rien ne disait si le texte cherché quittait le téléphone, ni quand s'affiche « Aucun résultat » : seule la palette part, et la grille montre jusqu'à 18 posts visibles de cette palette (D-087).
+- Rien ne disait si le texte cherché quittait le téléphone, ni quand s'affiche « Aucun résultat » : seule la palette part, et la grille montre jusqu'à 18 posts visibles de cette palette (D-087). Depuis le 26 novembre 2026, une graine remplace la palette (D-139).
 - Qui voit un post n'était pas réglé : son audience décide, et la recherche ne montre que les posts qu'on peut voir ; F-052 lit E-09 (D-088). Les questions d'accès de F-010, F-052 et F-054 sont closes.
 - L'origine des suggestions et des tendances : du charabia tiré par l'app, sans historique ; les tendances comptent les posts visibles de leur palette ; F-053 lit E-03 (D-089).
 - D-062 ne disait pas où revient une création ouverte depuis P-15 ou P-16 : sur P-14, comme la maquette (D-090).
@@ -515,7 +515,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-053 : choix des 6 mots des tendances et rythme de leur renouvellement.
 - F-050 : agir sur un post suit-il aussi son audience ? (accès supposés de F-016, F-017, F-018, F-019, F-020 et F-030, FL-02)
-- F-051 : qui fixe la palette d'un post à la publication ; la recherche par palette en dépend (le post n’expire pas, D-097).
+- F-051 : qui fixe la palette d'un post à la publication ; réglé depuis, un post n’a plus de palette (D-139). F-052 : la règle de la recherche par graine. F-053 : aussi ce que comptent et montrent les tendances (D-139).
 
 ## FL-09 Soutenir le projet
 
@@ -679,7 +679,7 @@ Suite simple : changement non enregistré → 1 → 2 → 3 → 4, ou 5 puis de 
 | Où | Cas | Suite |
 | --- | --- | --- |
 | Serveur | Réseau ou serveur injoignable | L'envoi reste sur le téléphone et repart au prochain départ (D-112) ; aucun message |
-| Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones, est gardé (D-111) ; leurs secondes sans réseau se fusionnent, une seconde commune ne comptant qu'une fois, et seules celles d'après la dernière réinitialisation comptent pour le minuteur (D-105, D-117) |
+| Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones corrigée par celle du serveur (D-140), est gardé (D-111) ; leurs secondes sans réseau se fusionnent, une seconde commune ne comptant qu'une fois, et seules celles d'après la dernière réinitialisation comptent pour le minuteur (D-105, D-117) |
 | Serveur | Refus pour de bon : données invalides, story déjà effacée (FL-13), graine déjà effacée (FL-14) | Envoi abandonné sans message ; au chargement suivant, le téléphone montre ce que le serveur a (D-113) |
 | Serveur | Soutien refusé | Jamais abandonné : renvoyé jusqu'à ce qu'il soit enregistré (D-095, D-113), sauf si le compte est supprimé (D-116) |
 | Téléphone | Le brouillon d'une graine en attente disparaît (« Fermer », photo retirée, appli fermée de force, téléphone éteint) | La graine est abandonnée, jamais envoyée (D-121, D-122) |
@@ -1102,7 +1102,7 @@ Ouverts dans F-015 : remboursement, achat en attente, second achat fait sur un a
 
 ### Modèles TLA+
 
-Choisis par D-107 et D-124, écrits dans le dépôt sous `docs/system-design/` (un fichier `.tla` et son `.cfg` par modèle) et vérifiés par le model checker TLC dans la CI à chaque changement. Chaque règle porte pour l'instant le nom des décisions d'où elle vient ; elle prendra le nom de sa règle métier (`BR_xxx`) quand celle-ci sera écrite, à l'étape 7 ou dans la spec de sa feature (étape 10). Les bornes sont petites (2 ou 3 comptes ou téléphones, quelques secondes), assez pour croiser chaque ordre d'événements ; les horloges des téléphones sont supposées à l'heure.
+Choisis par D-107 et D-124, écrits dans le dépôt sous `docs/system-design/` (un fichier `.tla` et son `.cfg` par modèle) et vérifiés par le model checker TLC dans la CI à chaque changement. Chaque règle porte pour l'instant le nom des décisions d'où elle vient ; elle prendra le nom de sa règle métier (`BR_xxx`) quand celle-ci sera écrite, à l'étape 7 ou dans la spec de sa feature (étape 10). Les bornes sont petites (2 ou 3 comptes ou téléphones, quelques secondes), assez pour croiser chaque ordre d'événements ; les horloges des téléphones sont supposées à l'heure, ce que D-140 assure en les corrigeant par l'heure du serveur.
 
 | Modèle | Fichier | Règles vérifiées |
 | --- | --- | --- |
@@ -1113,7 +1113,7 @@ Choisis par D-107 et D-124, écrits dans le dépôt sous `docs/system-design/` (
 | SM-E-16 | `SM_E_16.tla` | `D095_NoErrorAfterDebit` : aucune erreur après un débit (D-095) ; `D115_RecordedOnce` : le serveur n'enregistre qu'un soutien par compte (D-092, D-115) ; `D092_SupportedOnlyIfPaid` ; `D095_D116_PaidEndsRecorded` : un achat confirmé finit enregistré, pour son compte seulement, sauf si le compte est supprimé (D-095, D-104, D-116) |
 | Synchronisation | `sync.tla` | `D104_NeverForAnotherAccount` (D-104) ; `D101_NothingKeptForDeleted`, `D101_NothingAfterDeletion` (D-101) ; `D116_SupportDroppedOnlyWithAccount` (D-113, D-116) ; `D122_RecordedOrDropped` : un envoi finit enregistré ou abandonné, jamais les deux ; une graine dont le brouillon a disparu est abandonnée sans partir (D-113, D-121, D-122) ; `D108_SentWhileConnected` : un envoi en attente part dès que son compte est connecté sur le téléphone (D-104, D-108, D-112) ; `D101_DeletedAccountChangesEnd` : ceux d'un compte supprimé finissent abandonnés, même sur un téléphone où il n'est plus connecté (D-101, D-116). Le temps entre téléphones est vérifié par SM-E-14 |
 
-Trouvé par TLC le 25 novembre 2026 : un soutien que le store confirme après la suppression du compte sur un autre téléphone est débité, puis abandonné (D-116) ; son remboursement rejoint la question ouverte de F-015. Ouvert dans F-060 : un téléphone dont l'horloge est fausse peut faire gagner un réglage plus ancien (D-111).
+Trouvé par TLC le 25 novembre 2026 : un soutien que le store confirme après la suppression du compte sur un autre téléphone est débité, puis abandonné (D-116) ; son remboursement rejoint la question ouverte de F-015. Un téléphone dont l'horloge est fausse pouvait faire gagner un réglage plus ancien (D-111) : réglé le 26 novembre 2026, le téléphone corrige son heure par celle du serveur (D-140).
 
 ## Exigences non fonctionnelles
 
@@ -1123,7 +1123,7 @@ Les exigences de toute l'appli (étape 7 de la méthode), chacune avec un nombre
 
 | ID | Exigence | Nombre ou test | Source |
 | --- | --- | --- | --- |
-| NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa palette. Seuls l'identifiant (@) et l'adresse e-mail de connexion partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
+| NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa graine (D-139). Seuls l'identifiant (@) et l'adresse e-mail de connexion partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
 | NFR-X-2 | Aucune photo ni vidéo ne quitte le téléphone : seule sa graine part. | Même capture : aucune requête n'a un corps image ou vidéo, ni les octets de la photo choisie. | D-086, D-091, D-119 |
 | NFR-X-3 | Les préférences d'interface (E-17) et l'historique de recherche (E-13) ne quittent jamais le téléphone. | Même capture, pendant un changement de thème sur P-23 et une recherche sur P-14 : aucune requête ne les porte. | D-087, D-089, D-103 |
 | NFR-X-4 | Un compte supprimé n'est plus dans aucun stockage du serveur dès la réponse de F-063, sauf son numéro interne, gardé seul 7 jours (D-128, FL-15), et plus nulle part, sauvegardes comprises, 7 jours après. | Test d'intégration : un compte avec une ligne dans chaque entité est supprimé, puis son numéro interne est cherché dans chaque table : 0 ligne, hors de la liste des comptes supprimés ; 7 jours après, 0 ligne là aussi. Configuration : sauvegardes gardées 7 jours au plus ; une sauvegarde restaurée efface les comptes supprimés depuis. | D-101, D-102, D-128 |
@@ -1159,3 +1159,57 @@ Sur iOS et sur Android. Le gris (F-024), le charabia (D-118) et l'art généré 
 | NFR-X-15 | Zones à toucher assez grandes. | 44 × 44 pt au moins sur iOS, 48 × 48 dp au moins sur Android ; audit automatique de chaque page. | D-130, consignes des plateformes |
 | NFR-X-16 | Les textes de l'appli elle-même suivent la taille de texte du téléphone et restent lisibles à chaque niveau de gris. | Jusqu'à 200 % sans texte coupé ni chevauché ; contraste 4,5:1 au moins (3:1 en grand texte) ; audit à 100 % et 200 %, à 0 et à 10 cycles de gris. | D-130 |
 | NFR-X-17 | Si le téléphone demande moins d'animations, rien ne bouge seul : le fondu de la publication (D-120) devient un changement net et l'art généré des vidéos reste immobile, comme Inspire / Expire (F-014). | Test de bout en bout, réglage du téléphone activé : aucune animation pendant une publication et sur un post vidéo. | D-130 |
+
+## Serveur, téléphone et API
+
+Le serveur décide de tout ce que plusieurs comptes ou plusieurs téléphones partagent ; le téléphone fait ce qui ne doit pas le quitter ou doit marcher sans réseau (D-136). L'appli parle au serveur par une API HTTPS en 10 groupes, et par une connexion WebSocket pour le direct (D-137). C'est la réponse au prompt 6 de la méthode, sur la pile choisie par D-132 à D-135.
+
+### Qui fait quoi
+
+| Sujet | Téléphone | Serveur | Source |
+| --- | --- | --- | --- |
+| Textes écrits | Les change en charabia avant l'envoi | Ne garde que le charabia | D-118, NFR-X-1 |
+| Photos et vidéos | Tire la graine, dessine l'art | Garde la graine, choisit l'algorithme | D-086, D-119, NFR-X-2 |
+| Recherche | Change le texte en graine, garde E-13, tire les suggestions | Renvoie jusqu'à 18 posts visibles, les plus proches de la graine | D-088, D-089, D-139 |
+| Préférences d'interface (E-17) | Les garde et les applique | Ne les connaît pas | D-103, NFR-X-3 |
+| Fil | Place les carrousels de pause (F-012.a), les posts Inspire / Expire (F-014) et le post Premium (F-015.a) | Compose les posts selon l'audience, par pages de 8 ; dit si le post Premium est à proposer | D-088, D-094, D-136 |
+| Likes, commentaires, enregistrements, partages | Montre le changement tout de suite, revient en arrière si le serveur refuse | Vérifie le droit, tient les compteurs, écrit les notifications | D-055, D-056, D-138, NFR-X-7 |
+| Connexion | Garde la session dans le stockage sécurisé | Envoie et vérifie le code, vérifie le compte Google ou Apple, ouvre et ferme les sessions | D-131, D-135, NFR-X-8, NFR-X-9 |
+| Amis, conversations, messages | Affiche ; signale « en train d'écrire » | Tient amitiés, conversations et lu / non lu ; pousse les messages en direct | D-071, D-084, D-085 |
+| Stories | Lecteur ; « vue » en attente si le serveur ne répond pas | Audience, liste « vue par », fin à 24 h (FL-13) | D-078, D-080, D-110 |
+| Minuteur et temps d'utilisation | Compte les secondes et grise, même sans réseau ; corrige son heure par celle du serveur | Fusionne les secondes et les réglages des téléphones du compte | D-105, D-111, D-117, D-140 |
+| Soutien | Lance l'achat du store et envoie sa preuve | Vérifie l'achat auprès du store, l'enregistre une seule fois | D-092, D-095, D-115 |
+| Brouillon et envois en attente | Brouillon en mémoire ; envois en attente dans SQLite (FL-12) | Enregistre, ou refuse pour de bon | D-068, D-113, D-135 |
+| Tâches de fond | Aucune | Finir les stories (FL-13), effacer les graines orphelines (FL-14), oublier les comptes supprimés (FL-15) | D-110, D-123, D-128 |
+| Version de l'appli | Montre P-29 si elle est trop vieille (F-074) | Dit quelles versions il accepte encore | D-141 |
+
+### Groupes de l'API
+
+Chaque point d'entrée appartient à une seule feature ; ses types sont dans le paquet partagé par l'appli et le serveur (D-133). Le détail de chaque point d'entrée vient avec les contrats de page et la spec de sa feature.
+
+| Groupe | Ce qu'il porte | Flows | Features | Entités |
+| --- | --- | --- | --- | --- |
+| Connexion | Compte tiers, demande, vérification et renvoi du code, inscription, déconnexion | FL-01, FL-11 | F-001, F-003, F-007, F-008, F-070, F-071 | E-01, E-02 |
+| Fil et posts | Pages du fil, post d'un lien, likes, commentaires, collections, partages, publication | FL-02, FL-03 | F-009, F-016, F-017, F-018, F-019, F-030, F-031, F-051 | E-03, E-05, E-06, E-07 |
+| Médias | Arrivée et effacement des graines, algorithme d'art de chaque média | FL-03, FL-12, FL-14 | F-005, F-044, F-046 | E-04 |
+| Amis et notifications | Recherche de comptes, demandes et réponses, amis proches, notifications | FL-03, FL-04 | F-022, F-028, F-034, F-043, F-048, F-072 | E-08, E-09 |
+| Minuteur et temps | Minuteur du compte, réglages, secondes passées au premier plan | FL-05, FL-09, FL-12 | F-024, F-059, F-060, F-061, F-065, F-073 | E-14, E-15 |
+| Stories | Stories en cours des amis, « vue » | FL-06, FL-13 | F-036 | E-12 |
+| Messages | Discussions, messages, photo, lu ; le direct passe par WebSocket | FL-07 | F-037, F-038, F-040, F-041, F-042 | E-10, E-11 |
+| Recherche | Résultats pour une graine, nombres des tendances | FL-08 | F-052, F-053, F-054 | E-03 |
+| Soutien | Preuve d'achat du store, état « soutenu » | FL-09 | F-015 | E-16 |
+| Profil et compte | Profil, ses posts, pseudo et description, photo, suppression du compte | FL-11, FL-15 | F-056, F-057, F-058, F-062, F-063 | E-01, E-03, E-04 |
+
+Les lieux (F-049) n'ont pas encore de groupe : leur source est une question ouverte de F-049.
+
+### Règles communes
+
+- Session : un jeton opaque, gardé par le serveur, envoyé à chaque requête ; le serveur le refuse dès la déconnexion ou la suppression du compte (NFR-X-9).
+- Écritures : chacune porte un numéro fait par le téléphone ; un « Réessayer » ou un renvoi de FL-12 avec le même numéro n'est jamais enregistré deux fois (D-115).
+- Listes : elles arrivent par pages, 8 posts pour le fil (F-009), 18 résultats au plus pour une recherche (D-139).
+- Erreurs : chaque erreur dit si l'envoi peut repartir, ou s'il est refusé pour de bon (D-113).
+- Heure : chaque réponse porte l'heure du serveur, dont le téléphone tire son écart (D-140).
+- Versions : chaque requête porte la version de l'API ; le serveur garde une version tant qu'une appli acceptée s'en sert, et une appli trop vieille ouvre P-29 (D-141).
+- Direct : la connexion WebSocket, ouverte tant que l'appli est au premier plan, ne porte que le message reçu et « en train d'écrire » ; envoyer un message passe par l'API (D-084, D-133).
+
+Restent ouverts, dans les `questions_ouvertes` des features : F-009, quels posts montre le fil et dans quel ordre ; F-052, la règle de la recherche par graine ; F-053, ce que comptent les tendances ; F-049, la source des lieux ; F-074, le texte de P-29.

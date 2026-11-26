@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 429, exported 2026-11-26 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 452, exported 2026-11-26 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -373,6 +373,10 @@ pages:
     nom: Nouveau post — panneau Amis proches
     plateforme: mobile
     features: [F-024, F-027, F-072, F-073]
+  - id: P-29
+    nom: Mise à jour requise
+    plateforme: mobile
+    features: [F-074]
 ```
 
 ```yaml
@@ -551,6 +555,7 @@ features:
       - 'erreur : « Les posts suivants n’ont pas pu être chargés. » avec « Réessayer » (D-032)'
     questions_ouvertes:
       - 'Post du lien partagé supprimé ou hors de son audience après la connexion (D-054)'
+      - 'Quels posts montre le fil (ceux des amis seulement, les siens, ceux en « Tout le monde ») et dans quel ordre ? Le serveur le compose (D-136)'
 
   - id: F-010
     nom: Voir un post en plein écran
@@ -665,8 +670,7 @@ features:
       - plein (liké)
       - 'échec : le cœur redevient vide, « Le like n’a pas été enregistré. » en bas du fil pendant 2 s'
       - 'échec du like d''un commentaire (F-016.b) : le petit cœur redevient gris, « Le like n’a pas été enregistré. » en bas du panneau pendant 2 s (D-043)'
-    questions_ouvertes:
-      - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
+    questions_ouvertes: []
 
   - id: F-017
     nom: Consulter les commentaires
@@ -682,8 +686,7 @@ features:
       - 'chargement : anneau centré'
       - 'vide : « Aucun commentaire » · « Écris le premier. »'
       - 'erreur : « Les commentaires n’ont pas pu être chargés. » avec « Réessayer »'
-    questions_ouvertes:
-      - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
+    questions_ouvertes: []
 
   - id: F-018
     nom: Enregistrer un post dans une collection
@@ -700,8 +703,7 @@ features:
       - collection choisie encadrée « enregistré »
       - message « Enregistré dans … » ou « Retiré de … » en bas du fil pendant 2 s
       - 'échec : le signet redevient vide, « Le post n’a pas été enregistré. » en bas du fil pendant 2 s'
-    questions_ouvertes:
-      - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
+    questions_ouvertes: []
 
   - id: F-019
     nom: Partager un post
@@ -729,7 +731,7 @@ features:
       - 'envoi à un ami échoué : l’ami cerclé de rouge, « Non envoyé à … » avec « Réessayer », le panneau reste ouvert'
       - 'rangée d''amis (F-019.a) en chargement : anneau centré ; en échec : message sur place avec « Réessayer » (D-043)'
     questions_ouvertes:
-      - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050) ; peut-on partager un post « Amis proches » ?'
+      - 'Peut-on partager un post « Amis proches » ? Agir sur un post suit son audience (D-138)'
       - 'Envoyer à un ami (F-019.a) : amis seulement (ami ou non, E-09)'
       - Un lien de post ouvert sans connexion mène à la connexion (P-01)
       - 'Aspect du post reçu dans la conversation de l''ami (F-019.a, D-044) : non dessiné sur P-09'
@@ -746,8 +748,7 @@ features:
     operations: [lecture]
     etats_ui:
       - pseudo et légende en charabia
-    questions_ouvertes:
-      - 'Accès supposé : visible sur tout post qu''on peut voir (audience du post, F-050)'
+    questions_ouvertes: []
 
   - id: F-021
     nom: Déplier la légende
@@ -877,8 +878,7 @@ features:
       - bouton gris si vide
       - texte tapé visible moins d'1 s puis charabia
       - 'échec : le commentaire reste affiché, marqué « Non publié. » avec « Réessayer » (D-030)'
-    questions_ouvertes:
-      - 'Accès supposé : sur tout post qu''on peut voir (audience du post, F-050)'
+    questions_ouvertes: []
 
   - id: F-031
     nom: Créer une collection
@@ -1188,8 +1188,7 @@ features:
     etats_ui:
       - choix coché
       - valeur affichée sur la ligne
-    questions_ouvertes:
-      - 'Règle : agir sur un post (liker, commenter, enregistrer, partager) suit-il aussi son audience ? Qui peut le voir est réglé (D-088)'
+    questions_ouvertes: []
 
   - id: F-051
     nom: Publier le post
@@ -1207,12 +1206,11 @@ features:
       - 'erreur : « Le post n’a pas été publié. Tes photos et ta légende sont gardées. » avec « Réessayer »'
       - 'succès fil : l''Accueil affiche le toast « Post publié. » (D-031)'
       - 'succès story : Messages affiche le toast « Story publiée. » (D-031)'
-    questions_ouvertes:
-      - 'Palette du post (E-03) : qui la fixe à la publication ? Le post n’expire pas (D-097)'
+    questions_ouvertes: []
 
   - id: F-052
     nom: Rechercher des posts
-    description: Le téléphone change la saisie en l'une des 5 palettes (somme des codes modulo 5) et n'envoie que la palette ; jusqu'à 18 posts visibles de cette palette s'affichent (D-087, D-088).
+    description: Le téléphone change la saisie en une graine et n'envoie que la graine ; jusqu'à 18 posts visibles, les plus proches de cette graine, s'affichent (D-088, D-139).
     pages: [P-14, P-15, P-15.a, P-15.b, P-15.c]
     plateformes: [mobile]
     acces: [R-02]
@@ -1225,7 +1223,8 @@ features:
       - 'chargement : anneau centré (P-15)'
       - 'aucun résultat : « Aucun résultat » · « Aucun post ne correspond à « … ». Essaie un autre mot. »'
       - 'erreur : « La recherche n’a pas abouti. » avec « Réessayer » (P-15)'
-    questions_ouvertes: []
+    questions_ouvertes:
+      - 'Règle de la recherche par graine (D-139) : comment un texte devient une graine, ce que « proche » veut dire, et un post trop loin est-il écarté (P-15.b) ?'
 ```
 
 ```yaml
@@ -1246,7 +1245,7 @@ features:
       - 'chargement : anneau centré'
       - 'erreur : « Les suggestions n’ont pas pu être chargées. » avec « Réessayer » ; le champ reste utilisable'
     questions_ouvertes:
-      - 'Tendances : choix des 6 mots et rythme de leur renouvellement ; deux tendances de même palette auraient le même nombre de posts (D-089)'
+      - 'Tendances : choix des 6 mots et rythme de leur renouvellement ; depuis la recherche par graine (D-139), que compte le nombre de posts d''une tendance, et que montrent ses 3 bandes de couleur ?'
 
   - id: F-054
     nom: Ouvrir un résultat de recherche
@@ -1355,8 +1354,7 @@ features:
       - flèche grisée aux bornes
       - 'enregistrement : appliqué tout de suite, renvoyé sans message tant que le serveur ne l''a pas (D-077)'
       - 'deux téléphones hors connexion : le serveur garde le changement fait le plus tard (D-111)'
-    questions_ouvertes:
-      - 'Un téléphone dont l''horloge est fausse peut faire gagner un réglage plus ancien (D-111) : corriger l''heure des téléphones par celle du serveur ?'
+    questions_ouvertes: []
 
   - id: F-061
     nom: Réinitialiser les cycles
@@ -1518,6 +1516,21 @@ features:
     operations: [lecture, écriture]
     etats_ui: []
     questions_ouvertes: []
+
+  - id: F-074
+    nom: Mettre à jour l'appli
+    description: 'Quand la version de l''appli est trop vieille pour le serveur, un message le dit et un bouton ouvre l''appli dans l''App Store ou Google Play ; rien d''autre n''est utilisable (D-141).'
+    pages: [P-29]
+    plateformes: [mobile]
+    acces: [R-01, R-02]
+    variantes: []
+    entites: []
+    operations: []
+    etats_ui:
+      - page affichée à la place de toute autre tant que la version est trop vieille
+    questions_ouvertes:
+      - 'Texte du message et du bouton, à fixer en dessinant P-29'
+    design_a_mettre_a_jour: true
 ```
 
 ```yaml
@@ -1558,7 +1571,6 @@ entites:
       - nombre d'enregistrements
       - nombre de partages
       - audience
-      - palette
       - lien
       - personnes identifiées
       - lieu
@@ -1648,9 +1660,9 @@ entites:
     nom: Recherche
     champs:
       - texte saisi (sur le téléphone seulement, D-087)
-      - palette obtenue (seule envoyée, D-087)
+      - graine obtenue (seule envoyée, D-139)
       - suggestions (tirées au hasard, sans historique, D-089)
-      - tendances (rang, nombre de posts visibles de la palette, D-089)
+      - tendances (rang et nombre de posts ; ce que compte ce nombre est ouvert dans F-053, D-139)
     utilisee_par: [F-052, F-053]
 
   - id: E-14
@@ -2123,7 +2135,7 @@ decisions:
     impacte: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, E-04, E-11]
   - id: D-087
     sujet: 'FL-08 : ce que trouve une recherche'
-    choix: 'Le téléphone change le texte saisi en l''une des 5 palettes (soleil, océan, forêt, lavande, terre), par la somme des codes des caractères modulo 5 ; seule la palette est envoyée, jamais le texte. Les résultats (F-052) sont jusqu''à 18 posts de cette palette qu''on peut voir (D-088), les plus récents d''abord ; P-15.b « Aucun résultat » ne s''affiche que si aucun ne reste. E-13 reste sur le téléphone. Le design ne change pas.'
+    choix: 'Le téléphone change le texte saisi en l''une des 5 palettes (soleil, océan, forêt, lavande, terre), par la somme des codes des caractères modulo 5 ; seule la palette est envoyée, jamais le texte. Les résultats (F-052) sont jusqu''à 18 posts de cette palette qu''on peut voir (D-088), les plus récents d''abord ; P-15.b « Aucun résultat » ne s''affiche que si aucun ne reste. E-13 reste sur le téléphone. Le design ne change pas. Remplacée en partie par D-139 : le texte devient une graine, plus une palette.'
     raison: 'Choix du propriétaire : comme le charabia (D-083), le texte tapé ne quitte pas le téléphone ; la grille par palette est déjà dessinée (question ouverte de F-052).'
     impacte: [F-052, P-15, E-03, E-13]
   - id: D-088
@@ -2133,7 +2145,7 @@ decisions:
     impacte: [F-010, F-050, F-052, F-054, E-03, E-09]
   - id: D-089
     sujet: 'FL-08 : suggestions et tendances'
-    choix: 'Suggestions et tendances (F-053, F-053.a) sont des mots de charabia que l''app tire elle-même. À chaque ouverture de P-14, 8 suggestions sont tirées au hasard ; aucun historique des recherches n''est gardé. Les 6 tendances sont classées par le nombre de posts qu''on peut voir dans leur palette d''arrivée (D-087, D-088), et ce nombre est celui affiché. Rien des recherches n''est envoyé ni gardé : E-13 reste sur le téléphone. F-053 lit E-03. Le design ne change pas.'
+    choix: 'Suggestions et tendances (F-053, F-053.a) sont des mots de charabia que l''app tire elle-même. À chaque ouverture de P-14, 8 suggestions sont tirées au hasard ; aucun historique des recherches n''est gardé. Les 6 tendances sont classées par le nombre de posts qu''on peut voir dans leur palette d''arrivée (D-087, D-088), et ce nombre est celui affiché. Rien des recherches n''est envoyé ni gardé : E-13 reste sur le téléphone. F-053 lit E-03. Le design ne change pas. Remplacée en partie par D-139 : il n''y a plus de palette.'
     raison: 'Choix du propriétaire : sans texte envoyé (D-087), le serveur ne peut ni garder d''historique ni compter les recherches (question ouverte de F-053).'
     impacte: [F-053, E-03, E-13]
   - id: D-090
@@ -2345,16 +2357,16 @@ decisions:
     raison: 'Choix du propriétaire : depuis D-120 et D-121, ce que devient une graine dépend de son état, et le téléphone, FL-12 et FL-14 peuvent se croiser.'
     impacte: [E-04, F-005, F-044, F-046, F-051, F-058]
 
+
+```
+
+```yaml
   - id: D-125
     sujet: 'Graine de l''ancienne photo de profil'
     choix: 'Quand le serveur enregistre une nouvelle photo de profil (F-058, D-100), il efface aussitôt la graine de l''ancienne et son algorithme (E-04) : il ne garde qu''une graine de photo de profil par compte. Le design ne change pas.'
     raison: 'Choix du propriétaire : rien ne reste d''une photo qu''on n''affiche plus, comme pour un brouillon abandonné (D-121).'
     impacte: [F-058, E-04]
 
-
-```
-
-```yaml
   - id: D-126
     sujet: 'Étape 7 : rapidité de l''appli'
     choix: 'Sur un téléphone d''environ 5 ans (téléphones de référence : iPhone 12 sous iOS, Samsung Galaxy A52 sous Android), en 4G : le fil montre son premier post au plus 2 s après le toucher de l''icône ; les posts suivants s''affichent au plus 0,5 s après l''arrivée en bas du fil ; le message d''un ami s''affiche au plus 2 s après son envoi, les deux téléphones en ligne ; le défilement reste à 60 images par seconde, art généré compris. Ce sont NFR-X-10 à NFR-X-13 de la Conception système. Le design ne change pas.'
@@ -2414,6 +2426,42 @@ decisions:
     choix: 'Le téléphone garde dans une base SQLite (expo-sqlite) les envois en attente de FL-12, dans l''ordre, l''historique de recherche (E-13) et les préférences d''interface (E-17). La session est dans le stockage sécurisé (Trousseau sur iOS, Keystore sur Android) par expo-secure-store (NFR-X-9). Le brouillon d''un post ou d''une story reste en mémoire et se perd si l''appli est fermée de force (D-121). Le design ne change pas.'
     raison: 'Choix du propriétaire : les envois en attente survivent à une fermeture forcée ou une batterie vide et partent toujours du plus ancien au plus récent (D-108).'
     impacte: [E-02, E-13, E-17]
+
+  - id: D-136
+    sujet: 'Étape 8 : ce que fait le serveur, ce que fait le téléphone'
+    choix: 'Le serveur est seul à décider de ce que plusieurs comptes ou plusieurs téléphones partagent : comptes et sessions (E-01, E-02), vérification du code (D-131), droits à chaque requête (NFR-X-7), posts du fil et résultats de recherche selon l''audience (D-088), compteurs (E-01, E-03, E-05), notifications (E-08), amitiés et conversations (E-09, E-10), algorithme d''art de chaque média (D-119), fusion du minuteur et du temps d''utilisation entre téléphones (D-105, D-111), vérification de l''achat auprès du store (D-092), tâches de fond FL-13, FL-14 et FL-15. Le téléphone fait ce qui ne doit pas le quitter ou doit marcher sans réseau : charabia (D-118), graine d''une photo (D-086) et d''une recherche (D-139), dessin de l''art (D-119), brouillon (D-068), recherche et préférences d''interface (E-13, E-17, D-103), gris affiché et secondes comptées (D-117), envois en attente (FL-12). Il place aussi lui-même dans le fil les carrousels de pause (F-012.a) et les posts Inspire / Expire (F-014), qui ne portent aucune donnée de compte : le serveur ne connaît pas l''interrupteur de P-23 (NFR-X-3). Le serveur dit seulement, à chaque chargement du fil, si le post Premium (F-015.a) est à proposer (D-094), et le téléphone le place 1 post sur 20. Là où le design le dessine (like, enregistrement, FL-02), le téléphone montre le changement avant la réponse du serveur et revient en arrière s''il refuse. Le détail est dans la Conception système, section « Serveur, téléphone et API ». Le design ne change pas.'
+    raison: 'Découle des décisions déjà prises : rien d''écrit ni de photographié ne quitte le téléphone (NFR-X-1 à NFR-X-3), et le serveur tient ce qui doit rester d''accord entre comptes (D-134, NFR-X-7).'
+    impacte: [F-009, F-012, F-014, F-015]
+
+  - id: D-137
+    sujet: 'Étape 8 : découpage de l''API'
+    choix: 'L''appli parle au serveur par une seule API en HTTPS et JSON (D-133, NFR-X-6), rangée en 10 groupes, un par domaine : connexion (FL-01), fil et posts (FL-02, FL-03), médias (FL-03, FL-14), amis et notifications (FL-04), minuteur et temps d''utilisation (FL-05, FL-09), stories (FL-06, FL-13), messages (FL-07), recherche (FL-08), soutien (FL-09), profil et compte (FL-11, FL-15). Chaque point d''entrée appartient à une seule feature ; ses types sont dans le paquet partagé (D-133). La connexion WebSocket ne sert qu''au direct : message reçu et « en train d''écrire » (D-084) ; envoyer un message passe par l''API. Règles communes : la session est un jeton opaque gardé par le serveur et envoyé à chaque requête (NFR-X-9) ; chaque écriture porte un numéro fait par le téléphone, si bien qu''un « Réessayer » ou un renvoi de FL-12 n''est jamais enregistré deux fois (D-115) ; les listes arrivent par pages (8 posts pour le fil, F-009) ; une erreur dit si l''envoi peut repartir ou s''il est refusé pour de bon (D-113) ; chaque réponse porte l''heure du serveur (D-140) ; chaque requête porte la version de l''API, et le serveur garde une version tant qu''une appli acceptée s''en sert (D-141). Le tableau des groupes est dans la Conception système, section « Serveur, téléphone et API ». Le design ne change pas.'
+    raison: 'Un groupe par domaine suit les flows et les dossiers de features du serveur ; les règles communes tiennent les promesses déjà faites (pas de double enregistrement, refus pour de bon, vieilles versions qui marchent encore).'
+    impacte: [F-009, F-038, F-041]
+
+  - id: D-138
+    sujet: 'Agir sur un post suit son audience'
+    choix: 'On ne peut liker (F-016), commenter (F-017, F-030), enregistrer (F-018) ou partager (F-019) qu''un post qu''on a le droit de voir (D-088) ; le serveur le vérifie à chaque action (NFR-X-7). Si ce droit a été perdu pendant que le post était à l''écran (l''auteur vient de retirer la personne de ses amis proches), l''action est refusée : l''appli montre l''état d''échec déjà dessiné (P-03.e, P-03.f, P-05.c, P-05.d, P-07.a) et le post disparaît au chargement suivant. Les questions ouvertes d''accès de F-016, F-017, F-018, F-020, F-030 et F-050 sont closes ; reste, dans F-019, le partage d''un post « Amis proches ». Le design ne change pas.'
+    raison: 'Choix du propriétaire : une seule règle pour voir et pour agir.'
+    impacte: [F-016, F-017, F-018, F-019, F-020, F-030, F-050]
+
+  - id: D-139
+    sujet: 'Recherche par graine'
+    choix: 'Remplace en partie D-087 et D-089 : le téléphone change le texte saisi en une graine, et seule la graine est envoyée, jamais le texte. Les résultats (F-052) sont jusqu''à 18 posts qu''on peut voir (D-088), les plus proches de cette graine d''abord, comparée à la graine des médias de chaque post (E-04). Les 5 palettes disparaissent de la recherche : E-03 perd le champ « palette », E-13 garde la graine obtenue au lieu de la palette, et la question ouverte de F-051 sur la palette d''un post est close. La règle exacte (comment un texte devient une graine, ce que « proche » veut dire, si un post trop loin est écarté) reste ouverte dans F-052 ; ce que comptent et montrent les tendances reste ouvert dans F-053. Les tuiles de P-15 et le post de P-16 montrent l''art généré de chaque post (D-086), dont les formes du design tiennent lieu : le design ne change pas.'
+    raison: 'Choix du propriétaire : la recherche suit une graine, comme l''art généré, plutôt que 5 couleurs fixes ; l''algorithme reste à inventer.'
+    impacte: [F-051, F-052, F-053, E-03, E-13]
+
+  - id: D-140
+    sujet: 'Heure des téléphones corrigée par celle du serveur'
+    choix: 'Complète D-111 : chaque réponse du serveur porte son heure (D-137) ; le téléphone en tire son écart et l''applique, sans rien montrer, à l''heure de chaque envoi en attente (FL-12) et de chaque seconde comptée sans réseau (D-117). Un téléphone dont l''horloge est fausse ne fait donc plus gagner un réglage plus ancien. Sans réseau, il garde le dernier écart connu. La question ouverte de F-060 est close. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le dernier réglage de la personne gagne vraiment (D-111), même si l''horloge d''un téléphone est fausse.'
+    impacte: [F-024, F-060, F-061, F-073, E-14, E-15]
+
+  - id: D-141
+    sujet: 'Étape 8 : appli trop vieille'
+    choix: 'Quand la version de l''appli est trop vieille pour le serveur (D-137), l''appli ouvre la nouvelle page P-29 « Mise à jour requise » à la place de toute autre : un message, et un bouton qui ouvre l''appli dans l''App Store ou Google Play (nouvelle feature F-074 « Mettre à jour l''appli »). Rien d''autre n''est utilisable ; la session et les envois en attente (FL-12) sont gardés et repartent après la mise à jour. P-29 n''est jamais grisée, comme P-01 (D-009). F-074 porte design_a_mettre_a_jour: true jusqu''à ce que P-29 soit dessinée.'
+    raison: 'Choix du propriétaire : dire clairement quoi faire, plutôt que laisser l''appli échouer partout.'
+    impacte: [F-074, P-29]
 
 ids_retires:
   - {id: F-013, decision: D-002}

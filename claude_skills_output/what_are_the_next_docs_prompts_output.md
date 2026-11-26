@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-26 · commit e4b341c · fingerprint 06c7fc3e4494
+2026-11-26 · commit e4b341c · fingerprint 970f2521c834
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -21,5 +21,5 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 6: system design** (step 8), question « qu'est-ce qui doit être côté serveur vs client, et quel découpage en API ». Give it: the registry, FL-01 to FL-15, the stack (D-132 to D-135). It produces: decisions on the API split.
+1. **Redraw, then prompt 9: design changed after the extraction** (L1-04). Draw in `claude_design/` the new page P-29 « Mise à jour requise » of F-074 « Mettre à jour l'appli » (D-141: a message and a button that opens the store, never greyed), run prompt 9 on it, then `publish-claude-design`. Prompt 9 clears the flag. Open questions: F-074: texte du message et du bouton, à fixer en dessinant P-29.
 2. **Prompt 6: system design** (step 8), question « quel outil derrière la commande `app` de la vérification à l'exécution (lancer l'appli, la piloter, trouver chaque élément par son nom accessible) ». Give it: the stack (D-132 to D-135), NFR-X-14, `workflow_docs/method/verification.md`. It produces: the decision on the runtime verification tool.
