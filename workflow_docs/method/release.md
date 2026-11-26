@@ -1,6 +1,6 @@
 # Release and watch
 
-Part of [the method](../method.md). Snapshot of the "Release" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 5, taken on 2026-11-17.
+Part of [the method](../method.md). Snapshot of the "Release" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 6, taken on 2026-11-26.
 
 Step 11: getting a merged feature to users, then learning from real use. Merging is not releasing. A feature is deployed with its flag off, released to a growing share of users while someone watches, and only then is it done. Read this part when preparing a release or investigating a problem in production. Checks that run before this point are in [Verification](verification.md).
 
@@ -45,7 +45,7 @@ Two things make release matter more for the installed apps (iOS, Android, deskto
 
 - Claude never releases, turns a flag up or starts a rollout on its own: it prepares the step, and you decide.
 - A problem found in production becomes a backlog task citing the feature and the rule or criterion it broke. If the description was wrong, "[When the design changes](build.md#when-the-design-changes)" in [Build the app](build.md) applies.
-- A bug that reached users gets a test before its fix ships, and a proof block or a TLA+ rule if it fits.
+- A bug that reached users gets a test before its fix ships, written by the test writer and failing on the code before the fix (see [Verification](verification.md#tests-claude-cannot-game)), and a proof block or a TLA+ rule if it fits.
 - The server supports a stated range of app versions; dropping the oldest one is a decision (`D`).
 - Once a feature is fully released, its flag is removed. A flag kept on purpose is written in the workarounds log.
 

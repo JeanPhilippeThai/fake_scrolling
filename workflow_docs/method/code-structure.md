@@ -1,6 +1,6 @@
 # Code structure
 
-Part of [the method](../method.md). Snapshot of the "Code structure" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 16, taken on 2026-11-26.
+Part of [the method](../method.md). Snapshot of the "Code structure" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 17, taken on 2026-11-26.
 
 How the code is laid out (set up in step 9, the walking skeleton, on the stack decided in step 8) and the rules every agent follows when it writes code. Read this part before touching code.
 
@@ -37,6 +37,8 @@ flowchart TB
 
 A feature's spec lives in `docs/features/F-012-apply-coupon.md`, where both its UI folder and its server folder can point to it.
 
+A feature's visible tests sit in its folders; its hidden tests (see [Verification](verification.md#tests-claude-cannot-game)) sit outside this repo, in a private repo the builder's sessions cannot read, which CI checks out.
+
 `ui/client/` and `ui/primitives/` are the app framework: written once, with navigation, rendering and IPC, and every feature plugs into them. A change to them is its own task and pull request.
 
 When two features must talk, they go through the framework: a route or a message, never a direct import. When the UI needs the operating system or the server, it calls `ui/client/`, and a feature never checks which platform it runs on. The server never assumes the latest app: installed apps keep old versions for months, and an open web page runs its old code until it reloads, so an API change keeps them working until the oldest supported version drops. The stack itself is a step 8 decision (`D`); this layout holds whichever one is chosen.
@@ -58,6 +60,8 @@ TypeScript shown; the same idea works in any language.
 | --- | --- | --- |
 | `.web.ts`, `.ios.ts`, `.android.ts`, `.desktop.ts` | Built only for that platform; the build picks the right file | `platform/notifications/push.ios.ts` |
 | `.hot.ts` | Runs on every frame or tick: no allocations | `ui/features/F-030-map/pan.hot.ts` |
+| `.test.ts` | Written by the test writer, never by the builder; a code commit that changes it fails CI | `ui/features/F-012-apply-coupon/coupon.test.ts` |
+| `.fixture.ts` | Test data, locked like the tests; its values never appear in feature code unless the spec names them | `server/features/F-012-apply-coupon/coupons.fixture.ts` |
 
 ## Pitfalls
 

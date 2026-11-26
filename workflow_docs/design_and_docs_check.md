@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-26 (revision 55).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-26 (revision 56).
 For now the Claude Doc is the source of truth of this check and this file is a copy of it. An app's design is different: its source of truth is the app repo's `claude_design/`, not claude.ai.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the screens of the repo's design down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -453,6 +453,7 @@ This check ends where the code starts. Another agent checks that the code matche
 | A test for every rule (`BR`) and every criterion (`AC`) | Feature specs, cross-cutting page | Tests named after those IDs exist |
 | A screenshot for every visible criterion on every platform its feature is on | Proof blocks | Proofs named `<criterion>.<platform>.png` exist and pass |
 | A test for every failure trace the model checker produced | TLA+ models and their CI results | Those tests exist |
+| A hidden test for every rule (BR) and every criterion (AC), and the guards against gamed tests | Feature specs, the method's Verification part | The hidden-tests repo holds a test named after each of those IDs, and CI runs the test lock, red before green, the gaming scan and the reviewer |
 | Every table and column of the data model | Data model | The schema and migrations match it |
 | Every event named in a spec | Feature specs | Events with those names are sent |
 | One flag per feature that is not fully released | Backlog, Release step | Flags named after the feature exist |
