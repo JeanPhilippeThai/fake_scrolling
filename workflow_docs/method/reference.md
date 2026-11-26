@@ -1,6 +1,6 @@
 # Reference
 
-Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 26, taken on 2026-11-20.
+Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 29, taken on 2026-11-26.
 
 Where each fact lives, how it is named, and how any line of code traces back to it. Every other part relies on these rules: read this one once, then come back to look things up.
 
@@ -102,9 +102,13 @@ Where the IDs go:
 - **Page contract:** each component names its feature, the columns (`TB`) it reads and writes, the flows (`DF`) that carry them, and the roles, states and flags it depends on. Prompt 14, and the CI check, verify every one of those links.
 - **Backlog row:** the task ID, its feature, plus the rules, criteria and decisions it serves (a `Serves` column).
 - **Model rule:** a rule checked in a TLA+ model is named after its business rule, e.g. `BR_007_2` for `BR-007-2`.
-- **Test name:** the criterion or rule it checks, e.g. `it("BR-012-3: refuses an expired coupon")`.
+- **Test name:** the criterion, rule or requirement (NFR) it checks, and a benchmark or a load scenario is named the same way, e.g. `it("BR-012-3: refuses an expired coupon")`.
 - **Proof:** a screenshot named after the criterion and the platform, e.g. `AC-012-1.ios.png`, attached to the pull request.
-- **Code:** no ID and no comment. The folder names carry the feature (`src/ui/features/F-012-apply-coupon/`, `src/server/features/F-012-apply-coupon/`), the test name and the commit title carry the rest, and the registry carries the why.
+- **Route:** each page is one route of the navigation shell, named after its page, e.g. `P-03-cart`.
+- **Component:** each component of a page contract carries its ID as its test identifier, in its feature's UI folder, e.g. `data-testid="C-D04-03"`.
+- **API contract:** each data flow between an app and the server has the type of what it carries in a file named after it, e.g. `src/shared/api/DF-07-coupon-request.ts`.
+- **Job:** each background flow is one folder named after it, e.g. `src/server/jobs/FL-09-expire-coupons/`, or under `src/platform/` when it runs on the device.
+- **Code:** no comment, and an ID only in a name: a folder, a file, a route, a test identifier, a test, an event or a flag. The folder names carry the feature (`src/ui/features/F-012-apply-coupon/`, `src/server/features/F-012-apply-coupon/`), the test name and the commit title carry the rest, and the registry carries the why.
 - **Commit and pull request title:** the task ID and the main references, e.g. `T-041: apply a coupon (D-07, BR-012-3)`.
 - **Production:** the flag, events, traces and crash reports carry the feature ID, so a problem seen by users leads back to `F-012` and its rules.
 - **Question:** once settled, it becomes a decision (`D`) in the registry, and the question links to it.
@@ -124,7 +128,7 @@ Every ID above is a primary key and every link is a foreign key. From step 3, as
 | `docs/features/*.md` | Rules (`BR`), criteria (`AC`) and requirements (`NFR`), read from the IDs that start their lines, with their proof blocks |
 | `docs/system-design/*.tla` | State models (`SM`) and the rules they check (`BR_007_2`) |
 | `docs/backlog.md`, `docs/questions.md`, `docs/workarounds.md` | Tasks (`T`) with their `Serves` column, questions (`Q`), workarounds (`W`) |
-| The code | Feature folders, test names, proof screenshots and event names, scanned for the IDs they carry; the code itself is not stored |
+| The code | Feature folders, route names, test identifiers, contract files, job folders, test names, proof screenshots and event names, scanned for the IDs they carry; the code itself is not stored |
 
 Rules:
 
