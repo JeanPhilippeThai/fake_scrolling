@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-26 · commit e4b341c · fingerprint 810e5afae77b
+2026-11-26 · commit e4b341c · fingerprint 06c04066a3f3
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -21,7 +21,6 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 8: sort the check's findings** (step 6), on finding #3 (L6-02), with #9 (T-04), which is about the same D-127. Give it: the findings with their evidence, SM-E-02, FL-01, E-02. It produces: SM-E-02's move to « Code expiré » on the 5th wrong code, FL-01's error table and open list, E-02's fields. Open questions: F-008: Nouvel envoi réel à confirmer.
-2. **Prompt 6: system design** (step 8), question « choisis la stack : langage et framework de l'app mobile, du serveur, et le moteur de chaque stockage (SQL ou NoSQL) ». Give it: the registry, FL-01 to FL-15, the NFRs (NFR-X-1 to NFR-X-17 in Conception système). It produces: stack decisions.
-3. **Prompt 6: system design** (step 8), question « qu'est-ce qui doit être côté serveur vs client, et quel découpage en API ». Give it: the registry, FL-01 to FL-15, the stack from item 2. It produces: decisions on the API split.
-4. **Prompt 6: system design** (step 8), question « quel outil derrière la commande `app` de la vérification à l'exécution (lancer l'appli, la piloter, trouver chaque élément par son nom accessible) ». Give it: the stack from item 2, NFR-X-14, `workflow_docs/method/verification.md`. It produces: the decision on the runtime verification tool.
+1. **Prompt 6: system design** (step 8), question « choisis la stack : langage et framework de l'app mobile, du serveur, et le moteur de chaque stockage (SQL ou NoSQL) ». Give it: the registry, FL-01 to FL-15, the NFRs (NFR-X-1 to NFR-X-17 in Conception système). It produces: stack decisions.
+2. **Prompt 6: system design** (step 8), question « qu'est-ce qui doit être côté serveur vs client, et quel découpage en API ». Give it: the registry, FL-01 to FL-15, the stack from item 1. It produces: decisions on the API split.
+3. **Prompt 6: system design** (step 8), question « quel outil derrière la commande `app` de la vérification à l'exécution (lancer l'appli, la piloter, trouver chaque élément par son nom accessible) ». Give it: the stack from item 1, NFR-X-14, `workflow_docs/method/verification.md`. It produces: the decision on the runtime verification tool.

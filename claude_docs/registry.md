@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 424, exported 2026-11-26 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 428, exported 2026-11-26 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -514,7 +514,6 @@ features:
       - 'code faux : « Ce code n’est pas le bon. Vérifie-le et réessaie. », bouton « Se connecter » désactivé'
       - 'code expiré : « Ce code a expiré. Demande-en un nouveau. », « Se connecter » remplacé par « Renvoyer un code » (F-008)'
     questions_ouvertes:
-      - Vérification réelle du code (la maquette accepte tout code)
       - Remplissage automatique depuis l'e-mail selon le téléphone
 
   - id: F-008
@@ -530,8 +529,7 @@ features:
       - décompte 30 → 0
       - lien visible à 0 s
       - 'code expiré : bouton « Renvoyer un code » à la place de « Se connecter », sans décompte'
-    questions_ouvertes:
-      - Nouvel envoi réel à confirmer
+    questions_ouvertes: []
 
   - id: F-009
     nom: Faire défiler le fil
@@ -1544,6 +1542,8 @@ entites:
       - adresse e-mail
       - code à 6 chiffres
       - délai avant renvoi (30 s)
+      - heure d'envoi du code, valide 10 min (D-127) ; seul le dernier code envoyé marche (D-131)
+      - essais faux, 5 au plus (D-127), remis à 0 par un nouveau code (D-131)
       - session ouverte sur l'appareil (D-053)
     utilisee_par: [F-001, F-003, F-006, F-007, F-008, F-063, F-070, F-071]
 
@@ -2384,6 +2384,12 @@ decisions:
     choix: 'Sur iOS et Android : le lecteur d''écran (VoiceOver, TalkBack) nomme chaque bouton, champ et lien ; chaque zone à toucher fait au moins 44 × 44 pt (iOS) ou 48 × 48 dp (Android) ; les textes de l''appli elle-même suivent la taille de texte du téléphone jusqu''à 200 % et gardent un contraste d''au moins 4,5:1 (3:1 en grand texte) à chaque niveau de gris ; si le téléphone demande moins d''animations, le fondu de la publication (D-120) devient un changement net et l''art généré des vidéos reste immobile, comme Inspire / Expire (F-014). Le gris (F-024), le charabia (D-118) et l''art généré (D-086) restent tels quels. Ce sont NFR-X-14 à NFR-X-17. Le design ne change pas.'
     raison: 'Choix du propriétaire : l''appli reste utilisable par qui voit mal ou touche mal, sans toucher à ce qui fait son propos.'
     impacte: [F-014, F-024, F-051]
+
+  - id: D-131
+    sujet: 'Étape 6 : renvoi du code de connexion'
+    choix: 'Un nouveau code (F-008) remplace le précédent : seul le dernier code envoyé marche, avec 10 min et 5 essais neufs (D-127, NFR-X-8). Dans l''appli réelle, le serveur vérifie vraiment le code (F-007) et « Renvoyer un code » envoie vraiment un nouvel e-mail (F-008). Cela clôt la question ouverte de F-007 sur la vérification réelle du code et celle de F-008 sur le nouvel envoi. Le design ne change pas.'
+    raison: 'Choix du propriétaire : un seul code valide à la fois est plus simple à comprendre et plus sûr ; la maquette acceptait tout code, l''appli réelle non.'
+    impacte: [F-007, F-008, E-02]
 
 ids_retires:
   - {id: F-013, decision: D-002}
