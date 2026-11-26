@@ -1,21 +1,15 @@
 # Design and docs: newest vs current
 
-Compared on 2026-11-25. Photo seeds and seed erases now wait in FL-12 when there is no network (D-122). A new server task, FL-14, erases after 24 h the seeds that nothing took (D-123).
+Compared on 2026-11-26. The only change: the registry now holds the stack chosen at step 8 (D-132 to D-135). The design hasn't changed.
 
 ## Docs
 
-### Registre canonique – Fake scrolling (`registry.md`, rev 409 -> 412)
-- **D-122** added: without network, the seed of a chosen or taken photo (D-120) and the erase of a removed photo's or closed draft's seeds (D-121) are pending sends of FL-12, with its rules (D-101, D-104, D-112, D-113). A seed still waiting when its draft is gone is never sent. Seeds still waiting go with the publication. This widens D-108's list.
-- **D-123** added: « Une tâche de fond du serveur efface, 24 h après son arrivée, toute graine rattachée à rien (ni post, ni story, ni message, ni photo de profil), avec son algorithme ». A publication made later sends the seeds again. Described by FL-14.
-- **E-04**: new field « heure d'arrivée de la graine sur le serveur, pour l'effacer après 24 h si rien ne la prend (D-123) ».
-- **F-044**: open question « Brouillon perdu sans « Fermer » … quand le serveur efface-t-il ses graines (D-121) ? » removed, settled by D-123.
-
-### Conception système – Fake scrolling (`conception-systeme.md`, rev 103 -> 116)
-- **FL-03**: steps 1 and 1' say a seed waits in FL-12 without network (D-122). The « Fermer » row now covers erases sent through FL-12 and seeds never sent. Three rows added: a photo removed from the selection; a draft lost without « Fermer »; publishing with seeds still waiting or already erased by FL-14. A « Réglés le 25 novembre 2026 » line was added.
-- **FL-12**: FL-03 is a new entry. Steps 1 and 3 add F-044, F-046, F-005 and E-04 (seed, erase). Two rows added: a seed whose draft disappears is dropped unsent, and seeds still waiting go with the publication. « graine déjà effacée (FL-14) » is a refusal for good.
-- **FL-14 Effacer les graines orphelines** added: a server background task, 2 steps (wait, then erase after 24 h), with 4 decision rows (publication within 24 h, publication after the erase, a late erase from FL-12, account deletion).
-- **Modèles TLA+**: the sync row adds `D122_RecordedOrDropped`.
+### Registre canonique – Fake scrolling (`registry.md`, rev 428 -> 429)
+- **D-132 Étape 8 : appli mobile**: one app for iOS and Android, React Native with Expo, in TypeScript; the generated art is drawn by Skia (react-native-skia) on both phones, at 60 fps (NFR-X-13); accessible names through React Native's accessibility props (NFR-X-14).
+- **D-133 Étape 8 : serveur**: TypeScript on Node.js with Fastify; HTTPS (NFR-X-6); live messages and « en train d'écrire » (D-084) pushed over a WebSocket while the app is in the foreground; request types and the art description (D-119) live in one package shared with the app.
+- **D-134 Étape 8 : stockage du serveur**: one managed PostgreSQL database for every server entity (E-01 to E-12, E-14 to E-16) and the deleted-accounts list of D-128; backups kept 7 days at most (NFR-X-4); live messages fan out through PostgreSQL LISTEN/NOTIFY, with no other store or queue.
+- **D-135 Étape 8 : stockage du téléphone**: SQLite (expo-sqlite) on the phone for FL-12's pending sends, in order, the search history (E-13) and the display preferences (E-17); the session goes in the Keychain/Keystore through expo-secure-store (NFR-X-9); the draft stays in memory and is lost on a forced close (D-121).
 
 ## Unchanged
 
-Design canvas `fake-scrolling-app` (70 files); `inventaire-des-ecrans.md` (rev 152).
+Design canvas « Fake scrolling — app » (70 files); « Conception système – Fake scrolling » (rev 147); « Fake scrolling — inventaire des écrans » (rev 152).
