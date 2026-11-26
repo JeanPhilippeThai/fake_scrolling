@@ -11,17 +11,19 @@ Script: `python3 .claude/skills/registry-db/registry_db.py <command>`, run from 
 
 It reads `docs/` and `claude_docs/`: every `*.yaml` file, the ```` ```yaml ```` blocks of every `*.md` file, the flows (`FL`) written as Markdown headings, and every ID cited in prose. An archived per-platform registry ("archive" in its file name or title) is loaded in its own scope, next to the `canonical` one. [reference.md](reference.md) says exactly how each doc is read: read it when a row looks wrong, or before querying `mentions`, `aliases` or a flow.
 
+It also reads `src/` (another folder with `--code`), for its names only, never for what the code does: the feature folders, routes, test identifiers, contract files, job folders and test names that carry an ID land in the `code` table. No shipped check reads that table: it is there for the code check.
+
 It lives in `.registry/registry.db`, outside git: the folder ignores itself. Each repo builds its own from its own docs.
 
 ## Commands
 
-Every command except `build` and `diff` first rebuilds the database if a doc changed since the last build, so the answer always matches the docs as they are now.
+Every command except `build` and `diff` first rebuilds the database if a doc, or a file of the code, changed since the last build, so the answer always matches the repo as it is now.
 
 | Command | Gives |
 | --- | --- |
 | `build` | Rebuilds, then prints what was read, the IDs per kind, and any problem: a YAML that does not parse, an item without an ID. Exit 1 on a problem |
 | `check [L3-02 …]` | Runs every check of `checks.sql`, or only those named. Prints one line per check (passed, rows, not reached) and then the rows. Exit 1 if a `Query` check finds a row in the canonical docs. Options: `--all` shows every row, `--no-fail` always exits 0, `--since <git revision>` also compares with the docs at that revision for G-03 |
-| `where ID …` | Where each ID is defined (file and line), what it links to and what links to it, and every line that cites it |
+| `where ID …` | Where each ID is defined (file and line), what it links to and what links to it, every line that cites it, and the names in the code that carry it |
 | `impact ID …` | Everything a change to those IDs can reach through the `links` view, nearest first, with the file and line of each, then the files that cite them |
 | `query "SQL"` | One read-only SQL query, printed as a table |
 | `schema` | The tables and views, with their columns and row counts |
@@ -34,6 +36,7 @@ Start with `schema` before writing a query. An ID is a number: `D-01` and `D-001
 - `links(source, target, rel)`: the canonical links, oriented so that a change to `source` can affect `target`.
 - `mentions(scope, id, kind, path, line, written)`: every ID cited in any doc, prose included.
 - `aliases(kind, id, platform, alias, path, partial, retired)`: every old ID of a canonical item.
+- `code(kind, id, path, line, written, feature)`: every name in the code that carries an ID, or should.
 - Typed tables: `pages` (page states included), `features`, `variants`, `roles`, `entities`, `entity_fields`, `decisions`, `flows`, `data_tables`, `table_columns`, `nodes`, `data_flows`, `page_contracts`, `components`, `component_columns`, `component_conditions`, `missing` (every MANQUANT).
 
 ## The checks

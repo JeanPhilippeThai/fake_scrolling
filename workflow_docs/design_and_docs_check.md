@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-26 (revision 56).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-26 (revision 58).
 For now the Claude Doc is the source of truth of this check and this file is a copy of it. An app's design is different: its source of truth is the app repo's `claude_design/`, not claude.ai.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the screens of the repo's design down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -39,7 +39,7 @@ Read the method doc first, "Building apps with Claude: the method" ([method.md](
 6. **Do not decide product questions.** When two documents disagree, use the method's precedence order (decisions, registry, feature specs, product brief, system design, the repo's design) to say which one is probably wrong, and leave the choice to the owner.
 7. **Classify every finding as prompt 8 does.** A: an error in a document, with a mechanical fix. B: behavior nobody defined, which needs the owner's decision. C: the design itself is inconsistent, which needs a design change.
 8. **Give every finding a severity.** Blocking: it stops the method's next step, or step 10 for a feature. Major: a wrong or missing link that will cause rework. Minor: format, naming or wording.
-9. **Stop before the code.** Do not open `src/`, tests, or the database rows that come from the code scan (feature folders, test names, proof screenshots, event names). Those belong to the code checker.
+9. **Stop before the code.** Do not open `src/`, tests, or the database rows that come from the code scan (feature folders, route names, test identifiers, contract files, job folders, test names, proof screenshots, event names). Those belong to the code checker.
 
 ## The layers
 
@@ -450,7 +450,12 @@ This check ends where the code starts. Another agent checks that the code matche
 | Expectation | Read from | The code checker verifies |
 | --- | --- | --- |
 | One folder per canonical feature at step 10 or beyond, on the UI side and, if it uses the server, on the server side | Registry, data flows | The folders exist under `src/ui/features/` and `src/server/features/`, named after the feature |
+| One route per page that holds such a feature | Registry | A route named after the page exists in the navigation shell, e.g. `P-03-cart` |
+| A test identifier for every component of such a feature | Page contracts | The component's ID is a test identifier in its feature's UI folder, e.g. `data-testid="C-D04-03"` |
+| A contract file for every data flow between an app and the server that such a feature triggers | Data flows | A file named after the flow exists under `src/shared/`, e.g. `DF-07-coupon-request.ts` |
+| A job folder for every background flow that is built | Flows, data flows | A folder named after the flow exists under `src/server/jobs/` or `src/platform/`, e.g. `FL-09-expire-coupons/` |
 | A test for every rule (`BR`) and every criterion (`AC`) | Feature specs, cross-cutting page | Tests named after those IDs exist |
+| A test, a benchmark or a load scenario for every requirement (`NFR`) | Feature specs, cross-cutting page | One named after the requirement exists, e.g. `NFR-X-3: …` |
 | A screenshot for every visible criterion on every platform its feature is on | Proof blocks | Proofs named `<criterion>.<platform>.png` exist and pass |
 | A test for every failure trace the model checker produced | TLA+ models and their CI results | Those tests exist |
 | A hidden test for every rule (BR) and every criterion (AC), and the guards against gamed tests | Feature specs, the method's Verification part | The hidden-tests repo holds a test named after each of those IDs, and CI runs the test lock, red before green, the gaming scan and the reviewer |
@@ -462,7 +467,7 @@ This check ends where the code starts. Another agent checks that the code matche
 Leave out of this check, for the code checker:
 
 - Anything in `src/`, the tests and the lint config itself.
-- The database rows that come from the code scan: feature folders, test names, proof screenshots, event names.
+- The database rows that come from the code scan: feature folders, route names, test identifiers, contract files, job folders, test names, proof screenshots, event names.
 - CI results other than the model checker's (L6-05).
 - What happens in production: flags, rollouts, monitoring.
 
