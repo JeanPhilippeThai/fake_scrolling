@@ -73,10 +73,11 @@ Compared on <YYYY-MM-DD>. <One or two sentences: the most important changes.>
 - A file whose diff is only reformatting or ids: one line saying so, nothing more.
 - Leave out empty sections. Don't add a summary at the end.
 - "Needs your answer" holds every item of step 2, one bullet each. Find why the repo drew a file in the git log of `claude_design/` (the commit that published it).
+- An item that a decision of the newest registry already covers (it names that screen or state, added since the current registry) was answered at an earlier pass: mark its bullet "on purpose, <decision ID>".
 
 ## 4. Ask, then report
 
-If "Needs your answer" has items, ask the owner about each with AskUserQuestion: "On purpose" or "By mistake". An item that a decision of the newest registry already covers (it names that screen or state, added since the current registry) was answered at an earlier pass: mark it "on purpose, <decision ID>" without asking again.
+Ask the owner about each item of "Needs your answer" not already marked "on purpose", with AskUserQuestion: "On purpose" or "By mistake".
 
 - **On purpose**: the owner gives the reason. Write it in the registry's Claude Doc as a decision that says what is not wanted and why; for a removed ID, also list it in `ids_retires` with that decision. Then import again.
 - **By mistake**: the owner restores it on claude.ai (the repo's version is in `claude_design/` and in git), then imports again.

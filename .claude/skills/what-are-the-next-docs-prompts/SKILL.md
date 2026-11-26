@@ -68,7 +68,7 @@ All of steps 1 to 8 done: write this, then stop.
 
 <header line>
 
-The docs are clean: steps 1 to 8 are done, nothing is left to do on the docs. Next is step 9, Build the app, in `workflow_docs/method/build.md`: the docs skills do not do it.
+The docs are clean: steps 1 to 8 are done, nothing is left to do on the docs. Next is step 9, Walking skeleton, in `workflow_docs/method.md`, then the feature loop in `workflow_docs/method/build.md`: the docs skills do not do them.
 ```
 
 ## 5. List the next prompts

@@ -20,7 +20,7 @@ Run this only when the user asks for it: it replaces what the app is built from.
    - a design change: publish it first with `publish-claude-design`, then import again;
    - a doc change: make it in the Claude Doc, then import again;
    - if claude.ai changed too, both sides have to be merged by hand with the user.
-   A current folder with no stamp yet (before its first stamped import) is refused when it differs from the import. Read the comparison: if none of the differences was made in the repo, run it again with `--first-sync`.
+   A current folder with no stamp yet (before its first stamped import) is refused when it differs from the import. Show the owner those differences, with the commits that touched them (`git log -- claude_design claude_docs`), and ask whether any was made in the repo. Only when the owner confirms that none was, run it again with `--first-sync`.
 4. Nothing undone without an answer:
    - `python3 .claude/skills/registry-db/registry_db.py diff claude_docs newest_claude_docs > /dev/null` (only when both folders exist) must exit 0. Exit 1 means an ID was removed without being listed in `ids_retires`: stop, and run `compare-newest-current-claude-files`, which asks the owner about it.
    - `python3 .claude/skills/publish-claude-design/claude_sync.py undone`: each item it lists needs the owner's answer in `claude_skills_output/compare_newest_current_claude_files.md` ("Needs your answer"). An item marked "on purpose" must have its decision in the import. If one has no answer, stop and run the comparison first.
