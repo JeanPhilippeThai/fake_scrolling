@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 414, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 417, exported 2026-11-26 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -516,7 +516,6 @@ features:
     questions_ouvertes:
       - Vérification réelle du code (la maquette accepte tout code)
       - Remplissage automatique depuis l'e-mail selon le téléphone
-      - Durée de validité du code et nombre d'essais faux avant blocage
 
   - id: F-008
     nom: Renvoyer le code
@@ -2351,6 +2350,40 @@ decisions:
     choix: 'Quand le serveur enregistre une nouvelle photo de profil (F-058, D-100), il efface aussitôt la graine de l''ancienne et son algorithme (E-04) : il ne garde qu''une graine de photo de profil par compte. Le design ne change pas.'
     raison: 'Choix du propriétaire : rien ne reste d''une photo qu''on n''affiche plus, comme pour un brouillon abandonné (D-121).'
     impacte: [F-058, E-04]
+
+
+```
+
+```yaml
+  - id: D-126
+    sujet: 'Étape 7 : rapidité de l''appli'
+    choix: 'Sur un téléphone d''environ 5 ans (téléphones de référence : iPhone 12 sous iOS, Samsung Galaxy A52 sous Android), en 4G : le fil montre son premier post au plus 2 s après le toucher de l''icône ; les posts suivants s''affichent au plus 0,5 s après l''arrivée en bas du fil ; le message d''un ami s''affiche au plus 2 s après son envoi, les deux téléphones en ligne ; le défilement reste à 60 images par seconde, art généré compris. Ce sont NFR-X-10 à NFR-X-13 de la Conception système. Le design ne change pas.'
+    raison: 'Choix du propriétaire : une appli qui paraît rapide sur un téléphone ancien, sans le coût d''un objectif instantané.'
+    impacte: [F-009, F-010, F-011, F-041, F-042]
+
+  - id: D-127
+    sujet: 'Étape 7 : validité du code de connexion'
+    choix: 'Le code à 6 chiffres reçu par e-mail (F-003) vaut 10 min ; après 5 essais faux (F-007), il ne marche plus, même juste, et P-02 montre l''état « code expiré » (P-02.b) avec « Renvoyer un code » (F-008). C''est NFR-X-8. La question ouverte de F-007 sur la durée et les essais est close. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le temps d''aller lire l''e-mail et de revenir, et assez d''essais pour une faute de frappe, pas assez pour deviner un code.'
+    impacte: [F-003, F-007, F-008, E-02]
+
+  - id: D-128
+    sujet: 'Étape 7 : sauvegardes et compte supprimé'
+    choix: 'Précise D-101 : les sauvegardes du serveur sont gardées 7 jours au plus, si bien qu''un compte supprimé (F-063) a disparu partout 7 jours après. Pour qu''une sauvegarde restaurée ne le fasse pas revenir, le serveur garde 7 jours le seul numéro interne du compte supprimé, sans rien d''autre (ni @, ni adresse, ni contenu, D-102), et l''efface à nouveau de toute sauvegarde restaurée. C''est NFR-X-4. Le design ne change pas.'
+    raison: 'Choix du propriétaire : un filet de sécurité en cas de panne du serveur, sans qu''un compte supprimé survive plus d''une semaine.'
+    impacte: [F-063, E-01]
+
+  - id: D-129
+    sujet: 'Étape 7 : services extérieurs'
+    choix: 'L''appli ne parle qu''à son serveur, sauf pour ce qu''un flow exige (connexion Google ou Apple, F-001 ; paiement du store, D-092 ; envoi du code par e-mail, F-003) et pour les rapports de plantage. Un rapport de plantage ne porte que des données techniques (modèle et système du téléphone, version de l''appli, endroit du plantage), jamais un contenu, un texte tapé, une graine, un identifiant de compte ou une adresse e-mail. Aucune mesure d''audience, aucun traceur publicitaire. C''est NFR-X-5. Le design ne change pas.'
+    raison: 'Choix du propriétaire : trouver les plantages sans suivre les gens, dans l''esprit du charabia et de l''art généré (D-083, D-086).'
+    impacte: [F-001, F-003, F-015]
+
+  - id: D-130
+    sujet: 'Étape 7 : accessibilité'
+    choix: 'Sur iOS et Android : le lecteur d''écran (VoiceOver, TalkBack) nomme chaque bouton, champ et lien ; chaque zone à toucher fait au moins 44 × 44 pt (iOS) ou 48 × 48 dp (Android) ; les textes de l''appli elle-même suivent la taille de texte du téléphone jusqu''à 200 % et gardent un contraste d''au moins 4,5:1 (3:1 en grand texte) à chaque niveau de gris ; si le téléphone demande moins d''animations, le fondu de la publication (D-120) devient un changement net et l''art généré des vidéos reste immobile, comme Inspire / Expire (F-014). Le gris (F-024), le charabia (D-118) et l''art généré (D-086) restent tels quels. Ce sont NFR-X-14 à NFR-X-17. Le design ne change pas.'
+    raison: 'Choix du propriétaire : l''appli reste utilisable par qui voit mal ou touche mal, sans toucher à ce qui fait son propos.'
+    impacte: [F-014, F-024, F-051]
 
 ids_retires:
   - {id: F-013, decision: D-002}
