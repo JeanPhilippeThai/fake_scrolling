@@ -21,7 +21,7 @@ Rebuilding reruns every doc test, which is slow: rebuild only when the list is o
 
 If it is outdated, follow `.claude/skills/what-are-the-next-docs-prompts/SKILL.md`, then read the new list. If not, say in one line why the list is still current.
 
-If the list says "The docs are clean", tell the owner and stop.
+If the list says "The docs are clean", give the owner that line as it is: steps 1 to 8 are done, and step 9, Build the app, comes next, outside this skill. Then stop.
 
 ## 2. Take the first item
 
@@ -65,3 +65,5 @@ Change nothing else.
 ## 5. Report
 
 Two or three lines: what was done, the files and IDs changed, the open questions settled or left open, and the next item (say so when step 4 put it first).
+
+If the list has no item left, it held only part of the work: rebuild it as step 1 says, before reporting. If the new list says "The docs are clean", end the report with it, as step 1 says. Otherwise name its first item.
