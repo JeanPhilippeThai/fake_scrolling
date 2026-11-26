@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 129, exported 2026-11-26 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 147, exported 2026-11-26 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -7,7 +7,7 @@ Les flows de l'appli (prompt 5 de la méthode), un par section, écrits uniqueme
 
 ## FL-01 Se connecter
 
-Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-02) sur P-03, par un compte tiers ou par un code reçu par e-mail. Mobile seulement. Décisions : D-024, D-052, D-053, D-054, D-069, D-114.
+Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-02) sur P-03, par un compte tiers ou par un code reçu par e-mail. Mobile seulement. Décisions : D-024, D-052, D-053, D-054, D-069, D-114, D-127, D-131.
 
 ### Entrées
 
@@ -21,9 +21,9 @@ Une personne non connectée (R-01) arrive sur P-01 et en ressort connectée (R-0
 | --- | --- | --- | --- | --- |
 | 1. Accueil de la connexion | P-01 | F-002, F-004 | E-17 (thème de l'icône) | — |
 | 2a. Compte tiers | P-01 → P-01.a | F-001 (Google) ou F-001.a (Apple) | E-02 (fournisseur), E-01 (compte existant ?) | E-02 (fournisseur, session) |
-| 2b. Demande du code | P-01 → P-01.d | F-003 | — | E-02 (adresse e-mail, code à 6 chiffres, délai avant renvoi) |
-| 3b. Saisie du code | P-02 | F-006, F-007 | E-02 (adresse, code), E-01 (compte existant ?) | E-02 (session) |
-| 3b'. Renvoi du code | P-02 | F-008 | E-02 (délai avant renvoi) | E-02 (nouveau code) |
+| 2b. Demande du code | P-01 → P-01.d | F-003 | — | E-02 (adresse e-mail, code à 6 chiffres, heure d'envoi, délai avant renvoi) |
+| 3b. Saisie du code | P-02 | F-006, F-007 | E-02 (adresse, code), E-01 (compte existant ?) | E-02 (essais faux, D-127 ; session) |
+| 3b'. Renvoi du code | P-02 | F-008 | E-02 (délai avant renvoi) | E-02 (nouveau code, heure d'envoi, essais faux remis à 0 ; l'ancien code ne marche plus, D-131) |
 | 4. Inscription, si aucun compte | P-27 | F-070 | E-02 (fournisseur ou adresse) | E-01 (pseudo, identifiant), E-02 (session), E-14, E-15 et E-16 (valeurs de départ, D-114) |
 | 5. Arrivée sur le fil | P-03.a → P-03 | F-009 | E-03 (posts ; d'abord le post du lien, D-054) | — |
 
@@ -40,7 +40,7 @@ Suite simple : P-01 → F-001 / F-001.a → (P-27 → F-070) → P-03, ou P-01 �
 | P-01.d | L'envoi du code échoue | P-01.e : « Réessayer » relance P-01.d |
 | P-02 | Mauvaise adresse | F-005 : retour à P-01 |
 | P-02 | Code faux | P-02.a : corriger les cases, puis F-007 |
-| P-02 | Code expiré | P-02.b : F-008 « Renvoyer un code », puis P-02 |
+| P-02 | Code expiré : 10 min écoulées, ou 5e code faux, même si le suivant est juste (D-127) | P-02.b : F-008 « Renvoyer un code », puis P-02 ; seul ce nouveau code marche (D-131) |
 | P-02 | Code pas reçu | F-008 après le décompte de 30 s |
 | F-001, F-007 | Compte trouvé (lecture E-01) | P-03 |
 | F-001, F-007 | Aucun compte | P-27, F-070 (D-052) |
@@ -62,7 +62,7 @@ Ajoutés le 24 novembre 2026 :
 Restent ouverts, dans les `questions_ouvertes` des features :
 
 - F-001 : l'écran d'autorisation du fournisseur et son annulation.
-- F-007 : durée de validité du code et nombre d'essais faux avant blocage.
+- F-007 : réglé depuis, le code vaut 10 min et 5 essais faux (D-127), seul le dernier envoyé marche (D-131).
 - F-070 : règles de l'identifiant (photo et description viennent plus tard, D-063 ; états dessinés, D-064).
 - F-071 : réglé depuis, pas de confirmation (D-065).
 - F-009 : post du lien devenu invisible.
@@ -838,6 +838,8 @@ stateDiagram-v2
     code_renvoyable --> code_envoye : F-008
     code_envoye --> code_expire : validité écoulée
     code_renvoyable --> code_expire : validité écoulée
+    code_envoye --> code_expire : F-007, 5e code faux
+    code_renvoyable --> code_expire : F-007, 5e code faux
     code_expire --> code_envoye : F-008
     code_envoye --> deconnecte : F-005
     code_renvoyable --> deconnecte : F-005
@@ -856,10 +858,10 @@ stateDiagram-v2
 | --- | --- | --- |
 | Déconnecté → Code envoyé | F-003 | Code à 6 chiffres envoyé ; si l'envoi échoue, P-01.e et on reste Déconnecté |
 | Code envoyé → Code renvoyable | 30 s écoulées | F-008 devient possible |
-| Code renvoyable → Code envoyé | F-008 | Nouveau code, nouveau décompte de 30 s |
-| Code envoyé ou renvoyable → Code expiré | Durée de validité écoulée | P-02.b ; la durée reste ouverte (F-007) |
-| Code expiré → Code envoyé | F-008 | Nouveau code |
-| Code envoyé ou renvoyable → Code envoyé ou renvoyable | F-007, code faux | P-02.a ; nombre d'essais avant blocage ouvert (F-007) |
+| Code renvoyable → Code envoyé | F-008 | Nouveau code, nouveau décompte de 30 s ; l'ancien code ne marche plus, 10 min et 5 essais neufs (D-131) |
+| Code envoyé ou renvoyable → Code expiré | 10 min écoulées depuis l'envoi ; ou F-007, 5e code faux | P-02.b ; le code ne marche plus, même juste (D-127) |
+| Code expiré → Code envoyé | F-008 | Nouveau code, 10 min et 5 essais neufs (D-131) |
+| Code envoyé ou renvoyable → Code envoyé ou renvoyable | F-007, code faux | P-02.a ; un essai faux de plus, Code expiré au 5e (D-127) |
 | Code envoyé ou renvoyable → Déconnecté | F-005 | Mauvaise adresse, retour à P-01 |
 | Code envoyé ou renvoyable, ou Déconnecté → Session ouverte | F-007 bon code, ou F-001 / F-001.a, compte trouvé | P-03 |
 | Code envoyé ou renvoyable, ou Déconnecté → Inscription | Même déclencheur, aucun compte | P-27 (D-052) |
@@ -1133,7 +1135,7 @@ Les exigences de toute l'appli (étape 7 de la méthode), chacune avec un nombre
 | --- | --- | --- | --- |
 | NFR-X-6 | Tous les échanges passent en HTTPS, TLS 1.2 ou plus ; aucune connexion en clair, sur iOS (App Transport Security sans exception) comme sur Android (trafic en clair interdit). | Lint de la configuration des deux applis ; la capture ne trouve aucune requête en clair. | Contrainte des plateformes |
 | NFR-X-7 | Le serveur vérifie les droits à chaque requête : un compte ne lit jamais un post, une story, une conversation ou un message hors de son audience ou de ses amitiés, ni rien après la fermeture de sa session ou la suppression de son compte. | Test d'autorisation de chaque point d'entrée avec un compte non ami, un ami hors « Amis proches », une session fermée et un compte supprimé : refus à chaque fois. | D-024, D-080, D-082, D-088, D-101 |
-| NFR-X-8 | Le code de connexion a 6 chiffres, vaut 10 min et ne marche plus après 5 essais faux ; un nouveau code se demande après 30 s. | Tests du serveur : code accepté à 9 min 59 s, refusé à 10 min ; le bon code est refusé au 6e essai après 5 faux. | FL-01, F-008, D-127 |
+| NFR-X-8 | Le code de connexion a 6 chiffres, vaut 10 min et ne marche plus après 5 essais faux ; un nouveau code se demande après 30 s et remplace le précédent. | Tests du serveur : code accepté à 9 min 59 s, refusé à 10 min ; le bon code est refusé au 6e essai après 5 faux ; après un renvoi, l'ancien code est refusé. | FL-01, F-008, D-127, D-131 |
 | NFR-X-9 | La session est gardée dans le stockage sécurisé du téléphone (Trousseau sur iOS, Keystore sur Android), jamais en clair ; le serveur la refuse dès l'échange suivant une déconnexion ou une suppression du compte. | Revue du code de stockage ; test du serveur : une session fermée ou d'un compte supprimé reçoit un refus et l'appli ouvre P-01. | D-053, D-101, contrainte des plateformes |
 
 ### Rapidité
