@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 428, exported 2026-11-26 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 429, exported 2026-11-26 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -2390,6 +2390,30 @@ decisions:
     choix: 'Un nouveau code (F-008) remplace le précédent : seul le dernier code envoyé marche, avec 10 min et 5 essais neufs (D-127, NFR-X-8). Dans l''appli réelle, le serveur vérifie vraiment le code (F-007) et « Renvoyer un code » envoie vraiment un nouvel e-mail (F-008). Cela clôt la question ouverte de F-007 sur la vérification réelle du code et celle de F-008 sur le nouvel envoi. Le design ne change pas.'
     raison: 'Choix du propriétaire : un seul code valide à la fois est plus simple à comprendre et plus sûr ; la maquette acceptait tout code, l''appli réelle non.'
     impacte: [F-007, F-008, E-02]
+
+  - id: D-132
+    sujet: 'Étape 8 : appli mobile'
+    choix: 'Une seule appli pour iOS et Android, en React Native avec Expo, écrite en TypeScript. L''art généré (D-086, D-119) est dessiné par Skia (react-native-skia), le même moteur sur les deux téléphones : le même média y montre le même art, à 60 images par seconde (NFR-X-13). Les noms accessibles (NFR-X-14) passent par les propriétés d''accessibilité de React Native, lues par VoiceOver et TalkBack. Le design ne change pas.'
+    raison: 'Choix du propriétaire : chaque feature est faite une fois pour les deux téléphones, l''art est identique partout, et la langue est celle du serveur (D-133), si bien que ce qu''ils s''envoient est décrit une seule fois.'
+    impacte: [E-04, F-010, F-011, F-042]
+
+  - id: D-133
+    sujet: 'Étape 8 : serveur'
+    choix: 'Le serveur est écrit en TypeScript sur Node.js, avec Fastify. Il reçoit les requêtes de l''appli en HTTPS (NFR-X-6) et pousse en direct les messages et « en train d''écrire » (D-084) par une connexion WebSocket ouverte tant que l''appli est au premier plan. Les types des échanges et la description des algorithmes d''art en données (D-119) sont écrits une fois, dans un paquet partagé par l''appli (D-132) et le serveur. Le design ne change pas.'
+    raison: 'Choix du propriétaire : une seule langue de bout en bout, et Node tient sans peine les premières dizaines de milliers de comptes.'
+    impacte: [E-04, E-11, F-038, F-041]
+
+  - id: D-134
+    sujet: 'Étape 8 : stockage du serveur'
+    choix: 'Le serveur garde tout dans une seule base PostgreSQL, hébergée et gérée par l''hébergeur : comptes, connexions, posts, médias (graines et algorithmes), commentaires, likes, collections, notifications, amitiés, conversations, messages, stories, minuteurs, temps d''utilisation, soutiens, et la liste des comptes supprimés de D-128. Les sauvegardes sont gardées 7 jours au plus (D-128, NFR-X-4). Un message est poussé à l''autre téléphone par LISTEN/NOTIFY de PostgreSQL, sans autre stockage ni file. Le design ne change pas.'
+    raison: 'Choix du propriétaire : amitiés, audiences et compteurs restent toujours d''accord entre eux (NFR-X-7), et la suppression d''un compte efface tout en une seule transaction (D-101).'
+    impacte: [E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16, F-063]
+
+  - id: D-135
+    sujet: 'Étape 8 : stockage du téléphone'
+    choix: 'Le téléphone garde dans une base SQLite (expo-sqlite) les envois en attente de FL-12, dans l''ordre, l''historique de recherche (E-13) et les préférences d''interface (E-17). La session est dans le stockage sécurisé (Trousseau sur iOS, Keystore sur Android) par expo-secure-store (NFR-X-9). Le brouillon d''un post ou d''une story reste en mémoire et se perd si l''appli est fermée de force (D-121). Le design ne change pas.'
+    raison: 'Choix du propriétaire : les envois en attente survivent à une fermeture forcée ou une batterie vide et partent toujours du plus ancien au plus récent (D-108).'
+    impacte: [E-02, E-13, E-17]
 
 ids_retires:
   - {id: F-013, decision: D-002}

@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-26 · commit e4b341c · fingerprint 06c04066a3f3
+2026-11-26 · commit e4b341c · fingerprint 06c7fc3e4494
 
 Doc tests: all passed. The docs are at step 5, Flows.
 
@@ -21,6 +21,5 @@ Doc tests: all passed. The docs are at step 5, Flows.
 | 8 System design | Not done | L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 6: system design** (step 8), question « choisis la stack : langage et framework de l'app mobile, du serveur, et le moteur de chaque stockage (SQL ou NoSQL) ». Give it: the registry, FL-01 to FL-15, the NFRs (NFR-X-1 to NFR-X-17 in Conception système). It produces: stack decisions.
-2. **Prompt 6: system design** (step 8), question « qu'est-ce qui doit être côté serveur vs client, et quel découpage en API ». Give it: the registry, FL-01 to FL-15, the stack from item 1. It produces: decisions on the API split.
-3. **Prompt 6: system design** (step 8), question « quel outil derrière la commande `app` de la vérification à l'exécution (lancer l'appli, la piloter, trouver chaque élément par son nom accessible) ». Give it: the stack from item 1, NFR-X-14, `workflow_docs/method/verification.md`. It produces: the decision on the runtime verification tool.
+1. **Prompt 6: system design** (step 8), question « qu'est-ce qui doit être côté serveur vs client, et quel découpage en API ». Give it: the registry, FL-01 to FL-15, the stack (D-132 to D-135). It produces: decisions on the API split.
+2. **Prompt 6: system design** (step 8), question « quel outil derrière la commande `app` de la vérification à l'exécution (lancer l'appli, la piloter, trouver chaque élément par son nom accessible) ». Give it: the stack (D-132 to D-135), NFR-X-14, `workflow_docs/method/verification.md`. It produces: the decision on the runtime verification tool.
