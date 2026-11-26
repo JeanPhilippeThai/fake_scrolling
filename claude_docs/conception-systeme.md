@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 122, exported 2026-11-26 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 129, exported 2026-11-26 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -578,14 +578,14 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-11 Gérer son profil et son compte
 
-Un utilisateur connecté (R-02) consulte son profil (P-17), change son pseudo, sa description (P-19) ou sa photo (P-18), règle l'interface de l'appli (P-23), puis peut se déconnecter ou supprimer son compte (P-21). Mobile seulement. Décisions : D-023, D-053, D-063, D-065, D-069, D-083, D-086, D-091, D-098, D-099, D-100, D-101, D-102, D-103, D-104, D-116.
+Un utilisateur connecté (R-02) consulte son profil (P-17), change son pseudo, sa description (P-19) ou sa photo (P-18), règle l'interface de l'appli (P-23), puis peut se déconnecter ou supprimer son compte (P-21). Mobile seulement. Décisions : D-023, D-053, D-063, D-065, D-069, D-083, D-086, D-091, D-098, D-099, D-100, D-101, D-102, D-103, D-104, D-116, D-128.
 
 ### Entrées
 
 - Icône Profil du menu du bas (F-025), depuis P-03, P-08, P-14, P-15 ou P-16 → P-17.
 - Fin de FL-01 avec un nouveau compte : la photo et la description se règlent ici, sur P-18 et P-19 (D-063).
 
-Hors de ce flow : le minuteur de couleur de P-17 (F-059 à F-061) et le grisage F-024 (FL-05) ; « Créer un post » de P-17.a et le bouton + (F-026, FL-03) ; la ligne « Premium » de P-20 et le comptage F-073 (FL-09) ; la Connexion qui suit la déconnexion ou la suppression (FL-01).
+Hors de ce flow : le minuteur de couleur de P-17 (F-059 à F-061) et le grisage F-024 (FL-05) ; « Créer un post » de P-17.a et le bouton + (F-026, FL-03) ; la ligne « Premium » de P-20 et le comptage F-073 (FL-09) ; la Connexion qui suit la déconnexion ou la suppression (FL-01) ; ce que le serveur garde 7 jours après la suppression, ses sauvegardes et le seul numéro interne du compte (FL-15, D-128).
 
 ### Séquence
 
@@ -600,7 +600,7 @@ Hors de ce flow : le minuteur de couleur de P-17 (F-059 à F-061) et le grisage 
 | 6. Régler l'interface | Ligne « Interface de l'appli » | P-20 → P-23 → P-20 (F-005, D-023) | F-002.b, F-066, F-067 | E-17 (sur le téléphone, D-103) | E-17 |
 | 7. Voir son compte | Ligne « Gérer mon compte » | P-20 → P-21 | F-057.a | E-01 (@) | — |
 | 8a. Se déconnecter | Bouton « Se déconnecter », sans confirmation | P-21 → P-01 | F-071 | — | E-02 (session de ce téléphone fermée, D-053, D-065) |
-| 8b. Supprimer son compte | « Supprimer mon compte », puis « Supprimer définitivement » | P-21 → « Compte supprimé » 2 s → P-01 (D-069) | F-063 | — | Tout le compte effacé (D-101) : E-01 à E-12, E-14, E-15, E-16 |
+| 8b. Supprimer son compte | « Supprimer mon compte », puis « Supprimer définitivement » | P-21 → « Compte supprimé » 2 s → P-01 (D-069) | F-063 | — | Tout le compte effacé (D-101) : E-01 à E-12, E-14, E-15, E-16 ; seul son numéro interne est gardé 7 jours, et les sauvegardes qui le portent sont effacées en 7 jours (D-128, FL-15) |
 
 Suite simple : P-17 → F-056 → P-19 → P-17 ; P-17 → F-058 → P-18 → P-17 ; P-17 → F-055 → P-20 → P-23 (F-066, F-067) ou P-21 → F-071 / F-063 → P-01. Les entités suivent les `operations` des features : F-057 et F-062 lisent E-01 et E-03 ; F-056 lit et écrit E-01 ; F-058 écrit E-01 et E-04 ; F-066 et F-067 écrivent E-17, que F-002 lit ; F-071 et F-063 suppriment.
 
@@ -636,7 +636,7 @@ Réglés le 25 novembre 2026 :
 
 - Ce qui quitte le téléphone quand on modifie son profil : seulement le charabia (D-098). La règle du pseudo vide, laissée en question par F-056, est close (D-099).
 - L'enregistrement de la photo sans réseau (D-100).
-- Ce qu'efface la suppression du compte : F-063 n'écrivait que E-01 et E-02 ; elle efface désormais tout le compte, tout de suite (D-101), et libère son @ (D-102). La question ouverte de F-063 est close.
+- Ce qu'efface la suppression du compte : F-063 n'écrivait que E-01 et E-02 ; elle efface désormais tout le compte, tout de suite (D-101), et libère son @ (D-102). Le 26 novembre 2026, D-128 a précisé ce qui reste 7 jours : les sauvegardes et le seul numéro interne du compte (FL-15). La question ouverte de F-063 est close.
 - Où vivent les préférences d'interface : sur le téléphone (D-103). Les questions de F-002, F-066 et F-067 sont closes, et P-23, qui n'était dans aucun flow, entre dans FL-11.
 - Ce que devient un envoi en attente à la déconnexion (D-104).
 
@@ -777,9 +777,48 @@ Réglé le 25 novembre 2026 : les graines d'un brouillon perdu sont effacées 24
 
 Aucune feature ni page ne manque : la tâche n'a rien à l'écran.
 
+## FL-15 Oublier un compte supprimé
+
+Tâche de fond du serveur, sans geste de l'utilisateur : 7 jours après sa suppression, un compte n'est plus dans aucune sauvegarde du serveur, et le serveur oublie son numéro interne. Mobile seulement. Décisions : D-101, D-102, D-128.
+
+### Entrées
+
+- La suppression d'un compte (F-063), à l'étape 8b de FL-11 (D-101).
+- Les sauvegardes du serveur, faites sans geste de personne (D-128).
+
+Hors de ce flow : l'effacement du compte lui-même, tout de suite et tout ou rien, dans FL-11 (D-101) ; l'effacement des stories finies (FL-13) et des graines orphelines (FL-14).
+
+### Séquence
+
+| Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- | --- |
+| 1. Noter le compte supprimé | Le serveur efface le compte (F-063, D-101) | — | F-063 | — | Liste des comptes supprimés : son numéro interne seul et l'heure de la suppression, ni @, ni adresse, ni contenu (D-102, D-128) |
+| 2. Sauvegarder | Chaque sauvegarde du serveur | — | — | Tout ce que garde le serveur | Une sauvegarde, gardée 7 jours au plus (D-128) |
+| 3. Effacer les vieilles sauvegardes | 7 jours après une sauvegarde | — | — | — | La sauvegarde effacée (D-128) |
+| 4. Oublier le numéro | 7 jours après la suppression | — | — | Liste des comptes supprimés (heure de la suppression) | Son numéro interne effacé de la liste (D-128) |
+
+Suite simple : F-063 → 1 → 4 ; à côté, 2 → 3 pour chaque sauvegarde. F-063 écrit la liste des comptes supprimés ; la tâche du serveur n'est portée par aucune feature.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| Serveur | Une sauvegarde est restaurée après une panne | Chaque compte de la liste des comptes supprimés en est effacé à nouveau, tout comme à l'étape 8b de FL-11 (D-101, D-128) |
+| Serveur | Sauvegarde faite avant la suppression | Elle porte encore le compte jusqu'à son effacement, au plus 7 jours après la suppression (D-128) |
+| Serveur | Sauvegarde restaurée plus de 7 jours après une suppression | Impossible : aucune sauvegarde n'a plus de 7 jours, donc aucune ne porte un compte dont le numéro est déjà oublié (D-128) |
+| F-070 | Quelqu'un a pris le @ du compte supprimé, puis une sauvegarde est restaurée | L'ancien compte est effacé par son numéro interne ; le nouveau titulaire garde le @ (D-102, D-128) |
+
+Fin du flow : 7 jours après sa suppression, rien du compte ne reste sur le serveur, ni dans une sauvegarde, ni dans la liste des comptes supprimés.
+
+### Manques du registre
+
+Réglé le 26 novembre 2026 : D-128 n'était dans aucun flow ; FL-15 le décrit, et FL-11, NFR-X-4, D-101 et D-102 disent ce qui reste 7 jours.
+
+Aucune feature ni page ne manque : la tâche n'a rien à l'écran. La liste des comptes supprimés n'est pas une entité du registre : elle ne garde qu'un numéro, sans rien du compte ; le modèle de données lui donnera sa table.
+
 ## États des entités
 
-Étape 6 de la méthode : un diagramme d'états `SM-E-xx` par entité aux états non triviaux (D-107), tiré des flows FL-01 à FL-09 et FL-11 à FL-14 et des décisions du registre. Chaque passage cite la feature ou la tâche de fond qui le déclenche. Les autres entités (E-01, E-05 à E-07, E-11, E-13, E-15, E-17) ne font qu'exister puis être effacées ; leurs échecs d'envoi (« Non envoyé. », « Non publié. ») restent sur le téléphone et sont décrits dans les flows. Le seuil d'1 h de E-15 est une garde de SM-E-16. Partout, la suppression du compte (F-063) efface tout, tout de suite (D-101).
+Étape 6 de la méthode : un diagramme d'états `SM-E-xx` par entité aux états non triviaux (D-107), tiré des flows FL-01 à FL-09 et FL-11 à FL-14 et des décisions du registre. Chaque passage cite la feature ou la tâche de fond qui le déclenche. Les autres entités (E-01, E-05 à E-07, E-11, E-13, E-15, E-17) ne font qu'exister puis être effacées ; leurs échecs d'envoi (« Non envoyé. », « Non publié. ») restent sur le téléphone et sont décrits dans les flows. Le seuil d'1 h de E-15 est une garde de SM-E-16. Partout, la suppression du compte (F-063) efface tout, tout de suite (D-101) ; seuls les sauvegardes du serveur et le numéro interne du compte restent 7 jours au plus (D-128, FL-15).
 
 ### SM-E-02 Connexion
 
@@ -1085,7 +1124,7 @@ Les exigences de toute l'appli (étape 7 de la méthode), chacune avec un nombre
 | NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa palette. Seuls l'identifiant (@) et l'adresse e-mail de connexion partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
 | NFR-X-2 | Aucune photo ni vidéo ne quitte le téléphone : seule sa graine part. | Même capture : aucune requête n'a un corps image ou vidéo, ni les octets de la photo choisie. | D-086, D-091, D-119 |
 | NFR-X-3 | Les préférences d'interface (E-17) et l'historique de recherche (E-13) ne quittent jamais le téléphone. | Même capture, pendant un changement de thème sur P-23 et une recherche sur P-14 : aucune requête ne les porte. | D-087, D-089, D-103 |
-| NFR-X-4 | Un compte supprimé n'est plus dans aucun stockage du serveur dès la réponse de F-063, et plus dans aucune sauvegarde 7 jours après. | Test d'intégration : un compte avec une ligne dans chaque entité est supprimé, puis son numéro interne est cherché dans chaque table : 0 ligne. Configuration : sauvegardes gardées 7 jours au plus ; une sauvegarde restaurée efface les comptes supprimés depuis. | D-101, D-102, D-128 |
+| NFR-X-4 | Un compte supprimé n'est plus dans aucun stockage du serveur dès la réponse de F-063, sauf son numéro interne, gardé seul 7 jours (D-128, FL-15), et plus nulle part, sauvegardes comprises, 7 jours après. | Test d'intégration : un compte avec une ligne dans chaque entité est supprimé, puis son numéro interne est cherché dans chaque table : 0 ligne, hors de la liste des comptes supprimés ; 7 jours après, 0 ligne là aussi. Configuration : sauvegardes gardées 7 jours au plus ; une sauvegarde restaurée efface les comptes supprimés depuis. | D-101, D-102, D-128 |
 | NFR-X-5 | L'appli ne parle qu'à son serveur, aux services qu'un flow exige (Google, Apple, store, envoi du code) et au service de rapports de plantage. Un rapport de plantage ne porte aucun contenu, texte tapé, graine, identifiant de compte ni adresse e-mail. | Capture : la liste des hôtes contactés pendant le test de bout en bout ne contient que ceux-là. Un plantage provoqué en test donne un rapport sans aucune de ces données. | D-129 |
 
 ### Sécurité
