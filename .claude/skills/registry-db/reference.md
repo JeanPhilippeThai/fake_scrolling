@@ -11,6 +11,23 @@ The details behind [SKILL.md](SKILL.md). Read this when a row looks wrong, or be
 - A format template copied from a prompt (`stockage: N-xx`, or every `nom:` empty) is skipped, never read as data.
 - Every ID cited anywhere, even in prose, is recorded in `mentions` with its file and line.
 
+## What it reads in the code
+
+Names only, from `src/`, as the method's Reference part names them ("Where the IDs go"). Dependencies (`node_modules`), build output and hidden folders are skipped. One row of `code` per name:
+
+| `kind` | A row for | `id` |
+| --- | --- | --- |
+| `feature_folder` | Each folder of `src/ui/features/` and `src/server/features/` | Its feature (`F-012-apply-coupon/`), or empty when its name carries none |
+| `route` | Each `P-03-cart` in a file of `src/ui/primitives/`, or in the name of a file or folder there | Its page. A page state (`P-21.b`) has no route |
+| `test_identifier` | Each component ID in a file of `src/ui/` | The component. `feature` is the feature folder it sits in, empty outside `src/ui/features/` |
+| `contract_file` | Each file of `src/shared/` named `DF-07-….ts` | Its data flow |
+| `job_folder` | Each folder of `src/server/jobs/`, and each folder of `src/platform/` named `FL-09-…` | Its background flow, or empty for a folder of `src/server/jobs/` whose name carries none |
+| `test_name` | Each test title that starts with a `BR`, `AC` or `NFR` ID and a colon, in a `.test.` file | The rule, criterion or requirement. `feature` is the feature folder it sits in |
+
+- `written` is the name as the code writes it, and `line` its line, empty for the name of a file or folder.
+- A `.test.` or `.fixture.` file gives no route and no test identifier: a test that looks a component up by its ID does not make the component exist.
+- Proof screenshots and event names are not read yet.
+
 ## The tables, in detail
 
 - `defs`: `defs.number` holds an ID as a number (`D-1` for `D-01` and `D-001`). For a flow, `data` is `{"nom", "texte"}`, the section's text, so that `diff` sees a flow change.

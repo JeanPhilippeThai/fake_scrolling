@@ -19,6 +19,8 @@ Docs are read from docs/ and claude_docs/ at the repo root: *.yaml files, and th
 *.md files, joined in order so that a YAML split over several blocks parses as one. A flow (prompt 5)
 is prose, not YAML: it is defined by a Markdown heading that starts with its ID ("## FL-01 Connexion"),
 and its section cites the pages, features and entities it links to.
+The code is read from src/ for its names only, never for what it does: the folders, files, routes, test
+identifiers and test names that carry an ID land in the `code` table.
 """
 import argparse
 import datetime
@@ -42,6 +44,7 @@ except ImportError:
 HERE = Path(__file__).resolve().parent
 CHECKS_FILE = HERE / "checks.sql"
 DEFAULT_DOCS = ["docs", "claude_docs"]
+DEFAULT_CODE = "src"
 DB_REL = Path(".registry") / "registry.db"
 PLATFORMS = ("web", "desktop", "mobile")
 CANONICAL = "canonical"
@@ -92,6 +95,15 @@ HEADING_RE = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 # A flow's heading starts with its ID, after an optional "Flow": "## FL-01 Connexion", "### Flow FL-02 : Purge".
 FLOW_HEADING_RE = re.compile(r"^(?:\*\*)?(?:flow\s+)?(FL-\d{2,})(?![\w-])(?:\*\*)?[\s:·.–—-]*(.*)$", re.I)
 NAME_TRIM = " \t\"'«»“”*:·–—-"
+# The names in the code that carry an ID (the method's Reference part, "Where the IDs go").
+FEATURE_FOLDER_RE = re.compile(r"(F-\d{3,})(?:-|$)")
+JOB_FOLDER_RE = re.compile(r"(FL-\d{2,})(?:-|$)")
+CONTRACT_FILE_RE = re.compile(r"(DF-\d{2,})[-.]")
+ROUTE_RE = re.compile(r"(?<![\w-])(P-[WDM]?\d{2,})-[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?![\w-])")
+COMPONENT_RE = re.compile(r"(?<![\w-])C-[WDM]?\d{2,}-\d{2,}(?![\w-])")
+TEST_NAME_RE = re.compile(r"""["'`]((?:BR|AC|NFR)-(?:\d{3,}|X)-\d+)\s*:\s*([^"'`]*)""")
+CODE_SKIP_DIRS = {"node_modules", "dist", "build", "coverage", "vendor", "__pycache__"}
+CODE_MAX_BYTES = 2_000_000
 # The link from a flow to each kind of ID its section cites.
 FLOW_RELS = {"page": "flow_page", "page_state": "flow_page", "feature": "flow_feature", "variant": "flow_feature",
              "entity": "flow_entity", "role": "flow_role", "decision": "flow_decision", "flow": "flow_flow"}
@@ -139,6 +151,7 @@ CREATE TABLE flows(scope TEXT, id TEXT, name TEXT, path TEXT, line INT, end_line
 CREATE TABLE missing(path TEXT, line INT, text TEXT);
 CREATE TABLE mentions(scope TEXT, id TEXT, kind TEXT, path TEXT, line INT, written TEXT);
 CREATE TABLE problems(path TEXT, line INT, message TEXT);
+CREATE TABLE code(kind TEXT, id TEXT, path TEXT, line INT, written TEXT, feature TEXT);
 CREATE TABLE rel_direction(rel TEXT PRIMARY KEY, forward INT);
 CREATE VIEW ids AS SELECT scope, id, kind, MIN(path) AS path, MIN(line) AS line, MIN(name) AS name
   FROM defs GROUP BY scope, id, kind;
@@ -166,6 +179,7 @@ CREATE INDEX refs_source ON refs(scope, source);
 CREATE INDEX refs_target ON refs(scope, target);
 CREATE INDEX defs_id ON defs(scope, id);
 CREATE INDEX mentions_id ON mentions(id);
+CREATE INDEX code_id ON code(id);
 """
 
 
@@ -268,7 +282,17 @@ def doc_files(root, docs):
     return files
 
 
-def fingerprint(root, docs):
+def code_walk(root, code):
+    """The folders of the code, as os.walk gives them, without dependencies, build output and hidden folders."""
+    base = root / code if code else None
+    if base is None or not base.is_dir():
+        return
+    for folder, dirs, files in os.walk(base):
+        dirs[:] = sorted(d for d in dirs if d not in CODE_SKIP_DIRS and not d.startswith("."))
+        yield Path(folder), dirs, sorted(files)
+
+
+def fingerprint(root, docs, code=None):
     h = hashlib.sha256()
     for p in (Path(__file__).resolve(), CHECKS_FILE):
         h.update(p.name.encode())
@@ -277,6 +301,12 @@ def fingerprint(root, docs):
         h.update(str(p.relative_to(root)).encode())
         h.update(p.read_bytes())
     h.update(json.dumps(docs).encode())
+    # The code is read for its names: a file's path, size and date are enough to see a change.
+    for folder, _, files in code_walk(root, code):
+        h.update(str(folder.relative_to(root)).encode())
+        for f in files:
+            st = (folder / f).stat()
+            h.update(f"{f}|{st.st_size}|{st.st_mtime_ns}".encode())
     return h.hexdigest()[:16]
 
 
@@ -331,8 +361,8 @@ def platform_words(name):
 
 
 class Builder:
-    def __init__(self, root, docs, db_path, fp=None):
-        self.root, self.docs, self.db_path, self.fp = root, docs, db_path, fp
+    def __init__(self, root, docs, db_path, fp=None, code=None):
+        self.root, self.docs, self.db_path, self.fp, self.code = root, docs, db_path, fp, code
         self.file_scope = {}
         self.id_lines = {}
 
@@ -462,11 +492,14 @@ class Builder:
             self.problem(", ".join(canonical_registries),
                          "more than one canonical registry: archive the per-platform ones (name them with 'archive' and their platform)")
 
+        self.scan_code()
+
         meta = {
             "built_at": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
             "commit": git_head(self.root),
-            "fingerprint": self.fp or fingerprint(self.root, self.docs),
+            "fingerprint": self.fp or fingerprint(self.root, self.docs, self.code),
             "docs": json.dumps(self.docs),
+            "code": self.code or "",
             "multi_platform": "1" if multi else "0",
         }
         self.db.executemany("INSERT INTO meta VALUES (?,?)", meta.items())
@@ -681,12 +714,72 @@ class Builder:
             if "MANQUANT" in line:
                 self.row("missing", path, n, line.strip())
 
+    # -- reading the code's names -------------------------------------------------------------
+    def scan_code(self):
+        """Names only, never what the code does. `code.id` is empty for a folder that should carry an ID
+        and does not; `code.feature` is the feature folder the name sits in."""
+        if not self.code or not (self.root / self.code).is_dir():
+            return
+        base, count = self.root / self.code, 0
+
+        def name(kind, id_, path, line, written, feature=None):
+            nonlocal count
+            self.row("code", kind, id_, path, line, written, feature)
+            count += 1
+
+        for folder, dirs, files in code_walk(self.root, self.code):
+            rel = folder.relative_to(base).parts
+            feature = None
+            if len(rel) >= 3 and rel[0] in ("ui", "server") and rel[1] == "features":
+                m = FEATURE_FOLDER_RE.match(rel[2])
+                feature = m.group(1) if m else None
+            shell = rel[:2] == ("ui", "primitives")
+            for d in dirs:
+                sub, path = rel + (d,), self.rel(folder / d) + "/"
+                if len(sub) == 3 and sub[0] in ("ui", "server") and sub[1] == "features":
+                    m = FEATURE_FOLDER_RE.match(d)
+                    name("feature_folder", m.group(1) if m else None, path, None, d, m.group(1) if m else None)
+                m = JOB_FOLDER_RE.match(d)
+                if (len(sub) == 3 and sub[:2] == ("server", "jobs")) or (sub[0] == "platform" and m):
+                    name("job_folder", m.group(1) if m else None, path, None, d)
+                if shell:
+                    for m in ROUTE_RE.finditer(d):
+                        name("route", m.group(1), path, None, m.group(0))
+            for f in files:
+                p, path = folder / f, self.rel(folder / f)
+                is_test = ".test." in f
+                names = rel[:1] == ("ui",) and not is_test and ".fixture." not in f
+                if rel[:1] == ("shared",):
+                    m = CONTRACT_FILE_RE.match(f)
+                    if m:
+                        name("contract_file", m.group(1), path, None, f)
+                if shell and names:
+                    for m in ROUTE_RE.finditer(f):
+                        name("route", m.group(1), path, None, m.group(0))
+                if not (is_test or names) or p.stat().st_size > CODE_MAX_BYTES:
+                    continue
+                try:
+                    lines = p.read_text(encoding="utf-8").splitlines()
+                except (UnicodeDecodeError, OSError):
+                    continue
+                for n, line in enumerate(lines, 1):
+                    if is_test:
+                        for m in TEST_NAME_RE.finditer(line):
+                            name("test_name", m.group(1), path, n, f"{m.group(1)}: {m.group(2).strip()}", feature)
+                        continue
+                    if shell:
+                        for m in ROUTE_RE.finditer(line):
+                            name("route", m.group(1), path, n, m.group(0))
+                    for m in COMPONENT_RE.finditer(line):
+                        name("test_identifier", m.group(0), path, n, m.group(0), feature)
+        self.row("sources", self.code + "/", "names", "code", None, f"{count} names that carry an ID, or should")
+
 
 # -- commands -----------------------------------------------------------------------------------
 
 def open_db(args):
     db_path = args.root / DB_REL
-    fp, fresh = fingerprint(args.root, args.docs), False
+    fp, fresh = fingerprint(args.root, args.docs, args.code), False
     if db_path.exists():
         try:
             con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
@@ -696,7 +789,7 @@ def open_db(args):
         except sqlite3.Error:
             fresh = False
     if not fresh:
-        Builder(args.root, args.docs, db_path, fp).build()
+        Builder(args.root, args.docs, db_path, fp, args.code).build()
     return read_only(db_path)
 
 
@@ -744,13 +837,16 @@ def md_table(rows, cols=None, limit=None):
 
 
 def cmd_build(args):
-    meta = Builder(args.root, args.docs, args.root / DB_REL).build()
+    meta = Builder(args.root, args.docs, args.root / DB_REL, code=args.code).build()
     con = read_only(args.root / DB_REL)
     print(f"Built {DB_REL} from {', '.join(args.docs)} at commit {meta['commit'] or '-'} (fingerprint {meta['fingerprint']}).")
     rows = con.execute("SELECT scope, kind, COUNT(DISTINCT id) AS n FROM defs GROUP BY scope, kind ORDER BY scope, kind").fetchall()
     print(md_table(rows))
     rows = con.execute("SELECT path, content, scope, note FROM sources WHERE content != 'other' ORDER BY path").fetchall()
     print("Read as data:\n" + md_table(rows))
+    rows = con.execute("SELECT kind, COUNT(*) AS names, COUNT(id) AS with_an_id FROM code GROUP BY kind ORDER BY kind").fetchall()
+    if rows:
+        print("Names in the code:\n" + md_table(rows))
     probs = con.execute("SELECT path, line, message FROM problems").fetchall()
     if probs:
         print("Problems:\n" + md_table(probs))
@@ -911,6 +1007,8 @@ def cmd_where(args):
             "SELECT scope, rel, target AS id FROM refs WHERE source=? UNION ALL SELECT scope, rel || ' (from)', source FROM refs WHERE target=?",
             (id_, id_)).fetchall()))
         print("Cited on:\n" + md_table(con.execute("SELECT path, GROUP_CONCAT(line) AS lines FROM mentions WHERE id=? GROUP BY path", (id_,)).fetchall()))
+        print("In the code:\n" + md_table(con.execute(
+            "SELECT kind, written, path, line FROM code WHERE id=? OR feature=? ORDER BY kind, path, line", (id_, id_)).fetchall()))
     return 0
 
 
@@ -992,6 +1090,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--root", type=Path, default=None, help="the app repo (default: the git repo around the current folder)")
     ap.add_argument("--docs", nargs="+", default=DEFAULT_DOCS, help="docs folders, relative to the root (default: docs claude_docs)")
+    ap.add_argument("--code", default=DEFAULT_CODE, help="the code folder, relative to the root, read for its names only (default: src)")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("build")
     c = sub.add_parser("check")
