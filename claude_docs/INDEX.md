@@ -1,4 +1,4 @@
-# Docs index — Fake scrolling (imported 2026-11-25)
+# Docs index — Fake scrolling (imported 2026-11-26)
 
 Read this index first, then open only the file you need. The docs are in French.
 

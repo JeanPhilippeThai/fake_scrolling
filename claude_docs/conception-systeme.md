@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 121, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 122, exported 2026-11-26 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -1073,3 +1073,48 @@ Choisis par D-107 et D-124, écrits dans le dépôt sous `docs/system-design/` (
 | Synchronisation | `sync.tla` | `D104_NeverForAnotherAccount` (D-104) ; `D101_NothingKeptForDeleted`, `D101_NothingAfterDeletion` (D-101) ; `D116_SupportDroppedOnlyWithAccount` (D-113, D-116) ; `D122_RecordedOrDropped` : un envoi finit enregistré ou abandonné, jamais les deux ; une graine dont le brouillon a disparu est abandonnée sans partir (D-113, D-121, D-122) ; `D108_SentWhileConnected` : un envoi en attente part dès que son compte est connecté sur le téléphone (D-104, D-108, D-112) ; `D101_DeletedAccountChangesEnd` : ceux d'un compte supprimé finissent abandonnés, même sur un téléphone où il n'est plus connecté (D-101, D-116). Le temps entre téléphones est vérifié par SM-E-14 |
 
 Trouvé par TLC le 25 novembre 2026 : un soutien que le store confirme après la suppression du compte sur un autre téléphone est débité, puis abandonné (D-116) ; son remboursement rejoint la question ouverte de F-015. Ouvert dans F-060 : un téléphone dont l'horloge est fausse peut faire gagner un réglage plus ancien (D-111).
+
+## Exigences non fonctionnelles
+
+Les exigences de toute l'appli (étape 7 de la méthode), chacune avec un nombre ou un test et sa source. L'appli n'a pas de page transversale à part : elles vivent ici, en `NFR-X-<n>`. Plateformes : iOS et Android (D-092) ; une exigence qui diffère selon la plateforme le dit. Aucune exigence propre à une seule feature pour l'instant.
+
+### Confidentialité
+
+| ID | Exigence | Nombre ou test | Source |
+| --- | --- | --- | --- |
+| NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa palette. Seuls l'identifiant (@) et l'adresse e-mail de connexion partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
+| NFR-X-2 | Aucune photo ni vidéo ne quitte le téléphone : seule sa graine part. | Même capture : aucune requête n'a un corps image ou vidéo, ni les octets de la photo choisie. | D-086, D-091, D-119 |
+| NFR-X-3 | Les préférences d'interface (E-17) et l'historique de recherche (E-13) ne quittent jamais le téléphone. | Même capture, pendant un changement de thème sur P-23 et une recherche sur P-14 : aucune requête ne les porte. | D-087, D-089, D-103 |
+| NFR-X-4 | Un compte supprimé n'est plus dans aucun stockage du serveur dès la réponse de F-063, et plus dans aucune sauvegarde 7 jours après. | Test d'intégration : un compte avec une ligne dans chaque entité est supprimé, puis son numéro interne est cherché dans chaque table : 0 ligne. Configuration : sauvegardes gardées 7 jours au plus ; une sauvegarde restaurée efface les comptes supprimés depuis. | D-101, D-102, D-128 |
+| NFR-X-5 | L'appli ne parle qu'à son serveur, aux services qu'un flow exige (Google, Apple, store, envoi du code) et au service de rapports de plantage. Un rapport de plantage ne porte aucun contenu, texte tapé, graine, identifiant de compte ni adresse e-mail. | Capture : la liste des hôtes contactés pendant le test de bout en bout ne contient que ceux-là. Un plantage provoqué en test donne un rapport sans aucune de ces données. | D-129 |
+
+### Sécurité
+
+| ID | Exigence | Nombre ou test | Source |
+| --- | --- | --- | --- |
+| NFR-X-6 | Tous les échanges passent en HTTPS, TLS 1.2 ou plus ; aucune connexion en clair, sur iOS (App Transport Security sans exception) comme sur Android (trafic en clair interdit). | Lint de la configuration des deux applis ; la capture ne trouve aucune requête en clair. | Contrainte des plateformes |
+| NFR-X-7 | Le serveur vérifie les droits à chaque requête : un compte ne lit jamais un post, une story, une conversation ou un message hors de son audience ou de ses amitiés, ni rien après la fermeture de sa session ou la suppression de son compte. | Test d'autorisation de chaque point d'entrée avec un compte non ami, un ami hors « Amis proches », une session fermée et un compte supprimé : refus à chaque fois. | D-024, D-080, D-082, D-088, D-101 |
+| NFR-X-8 | Le code de connexion a 6 chiffres, vaut 10 min et ne marche plus après 5 essais faux ; un nouveau code se demande après 30 s. | Tests du serveur : code accepté à 9 min 59 s, refusé à 10 min ; le bon code est refusé au 6e essai après 5 faux. | FL-01, F-008, D-127 |
+| NFR-X-9 | La session est gardée dans le stockage sécurisé du téléphone (Trousseau sur iOS, Keystore sur Android), jamais en clair ; le serveur la refuse dès l'échange suivant une déconnexion ou une suppression du compte. | Revue du code de stockage ; test du serveur : une session fermée ou d'un compte supprimé reçoit un refus et l'appli ouvre P-01. | D-053, D-101, contrainte des plateformes |
+
+### Rapidité
+
+Mesurée sur les téléphones de référence de D-126 (iPhone 12 sous iOS, Samsung Galaxy A52 sous Android), en 4G.
+
+| ID | Exigence | Nombre ou test | Source |
+| --- | --- | --- | --- |
+| NFR-X-10 | De l'appui sur l'icône au premier post du fil affiché, appli fermée, session ouverte. | 2 s au plus au 90e centile, sur iOS et sur Android ; 20 lancements mesurés sur appareil réel. | D-126 |
+| NFR-X-11 | Posts suivants du fil (F-009) affichés après l'arrivée en bas. | 0,5 s au plus au 95e centile sur le téléphone ; banc de mesure du point d'entrée du fil à chaque pull request qui le touche. | D-126 |
+| NFR-X-12 | Message d'un ami affiché sur P-09 ou P-08 après son envoi, les deux téléphones en ligne (D-084). | 2 s au plus au 95e centile ; test de bout en bout à deux téléphones. | D-126 |
+| NFR-X-13 | Défilement du fil et de P-09, art généré compris. | 60 images par seconde, moins de 1 % d'images manquées sur 30 s de défilement ; dessiner l'art d'un média prend 16 ms au plus (une image). | D-119, D-126 |
+
+### Accessibilité
+
+Sur iOS et sur Android. Le gris (F-024), le charabia (D-118) et l'art généré (D-086) restent tels quels.
+
+| ID | Exigence | Nombre ou test | Source |
+| --- | --- | --- | --- |
+| NFR-X-14 | Chaque bouton, champ et lien a un nom accessible, fixé dans le contrat de sa page (`nom_accessible`), lu par VoiceOver et TalkBack. | Lint là où c'est possible ; la commande `app` des tests trouve chaque élément par son nom ; audit d'accessibilité automatique de chaque page : 0 élément sans nom. | D-130, méthode (verification.md) |
+| NFR-X-15 | Zones à toucher assez grandes. | 44 × 44 pt au moins sur iOS, 48 × 48 dp au moins sur Android ; audit automatique de chaque page. | D-130, consignes des plateformes |
+| NFR-X-16 | Les textes de l'appli elle-même suivent la taille de texte du téléphone et restent lisibles à chaque niveau de gris. | Jusqu'à 200 % sans texte coupé ni chevauché ; contraste 4,5:1 au moins (3:1 en grand texte) ; audit à 100 % et 200 %, à 0 et à 10 cycles de gris. | D-130 |
+| NFR-X-17 | Si le téléphone demande moins d'animations, rien ne bouge seul : le fondu de la publication (D-120) devient un changement net et l'art généré des vidéos reste immobile, comme Inspire / Expire (F-014). | Test de bout en bout, réglage du téléphone activé : aucune animation pendant une publication et sur un post vidéo. | D-130 |
