@@ -1,8 +1,8 @@
 # Code structure
 
-Part of [the method](../method.md). Snapshot of the "Code structure" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 15, taken on 2026-11-19.
+Part of [the method](../method.md). Snapshot of the "Code structure" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 16, taken on 2026-11-26.
 
-How the code is laid out (decided in step 8) and the rules every agent follows when it writes code. Read this part before touching code.
+How the code is laid out (set up in step 9, the walking skeleton, on the stack decided in step 8) and the rules every agent follows when it writes code. Read this part before touching code.
 
 ## Folders
 

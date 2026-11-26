@@ -1,6 +1,6 @@
 # Verification
 
-Part of [the method](../method.md). Snapshot of the "Verification" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 9, taken on 2026-11-17.
+Part of [the method](../method.md). Snapshot of the "Verification" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 10, taken on 2026-11-26.
 
 How Claude checks its own work before anything reaches users. TLA+ models check the design (step 6), runtime proofs check the running app (step 10), and a set of automated checks guards the code in CI. What happens once code reaches users is in [Release and watch](release.md). Read this part when writing a state model or a feature's proof blocks, and before shipping a feature.
 
@@ -46,7 +46,7 @@ Claude proves each feature on the real app before asking for your review: it rea
 | Feature map | For each feature: how a user reaches it and what proves it works. It is built from what already exists: features from the registry, paths from the flows, proofs from the acceptance criteria | Registry (`F`), flows (`FL`), and a proof block per criterion in the feature spec |
 | `app` command | A command line that drives the real app on each platform (on the web, a real browser): click by accessible name, snapshot what is on screen, take a screenshot | `tools/app/`, its commands listed in `CLAUDE.md` |
 
-The commands, as in dune (the exact names are settled in step 8):
+The commands, as in dune (the tool is a step 8 decision, and the exact names are settled when it is built in step 9):
 
 ```bash
 $ app --platform ios aria-click --accessible-name "Apply coupon"

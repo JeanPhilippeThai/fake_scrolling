@@ -1,6 +1,6 @@
 # Building apps with Claude: top to bottom check instruction
 
-Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-24 (revision 54).
+Snapshot of the Claude Doc ["Building apps with Claude: top to bottom check instruction"](https://claude.ai/artifact/EstadEuPyWMhdta7gNjwiG), taken on 2026-11-26 (revision 55).
 For now the Claude Doc is the source of truth of this check and this file is a copy of it. An app's design is different: its source of truth is the app repo's `claude_design/`, not claude.ai.
 
 These are instructions for an agent. They tell it how to check, layer by layer from the screens of the repo's design down to the feature specs, that every document and every piece of data in a project built with the method is complete, consistent and traceable. It runs in two passes: top to bottom proves that everything in the design made it into the documents, and bottom to top proves that everything in the documents comes from the design or from a decision. Together they make the documents match the design exactly. The check stops before the code: a separate agent checks that the code matches these documents.
@@ -185,6 +185,7 @@ Only when the app has more than one version (web and mobile, desktop and mobile,
 | L9-06 | Every flow carrying personal data, credentials or payment is marked `sensible: true`, and the threat model covers each one | Read | Blocking |
 | L9-07 | Every threat-model finding has an NFR or a decision | Read | Major |
 | L9-08 | The drawn graph matches the YAML: no node or edge exists only in the picture | Read | Minor |
+| L9-09 | The stack, the API split, what runs on the server and what on the client, and the tool behind the app command are each a decision (`D`) with its reason | Read | Major |
 
 ### L10 · Page contracts (prompts 13 and 14)
 
