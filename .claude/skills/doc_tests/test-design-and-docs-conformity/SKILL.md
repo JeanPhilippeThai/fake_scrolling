@@ -12,7 +12,13 @@ If `workflow_docs/design_and_docs_check.md` is missing, write that in the output
 
 ## 1. Run the check
 
-Read `workflow_docs/design_and_docs_check.md` in full, then follow it exactly, in mode B (its "Two modes"): its `registry_db.py check --all --no-fail` first, redirected to `"$TMPDIR/registry_checks.md"` and read from there (it rebuilds the database from the current docs, so L0-03 passes), then every layer top to bottom, the bottom-up pass, and the checks across layers. A check with a query is not done again by reading. An L3 row from an archived per-platform registry (its `scope` is web, desktop or mobile) means that registry did not pass L3 before the merge: report it under L4-01, one finding per check, not one per row.
+Read `workflow_docs/design_and_docs_check.md` in full, then follow it exactly, in mode B (its "Two modes"), in this order:
+
+1. Its `registry_db.py check --all --no-fail`, redirected to `"$TMPDIR/registry_checks.md"`, then read from there. It rebuilds the database from the current docs, so L0-03 passes.
+2. Every layer, top to bottom. A check with a query is not done again by reading.
+3. The bottom-up pass, then the checks across layers.
+
+An L3 row from an archived per-platform registry (its `scope` is web, desktop or mobile) means that registry did not pass L3 before the merge. Report it under L4-01: one finding per check, not one per row.
 
 The inputs are at the paths the check's input table gives. The design and the Claude Docs are `./claude_design/` and `./claude_docs/`, the current version the app is built from. Ignore `./newest_claude_design/` and `./newest_claude_docs/`: they are an import nobody has adopted yet.
 

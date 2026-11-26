@@ -21,7 +21,7 @@ Rebuilding reruns every doc test, which is slow: rebuild only when the list is o
 
 If it is outdated, follow `.claude/skills/what-are-the-next-docs-prompts/SKILL.md`, then read the new list. If not, say in one line why the list is still current.
 
-If the list says "The docs are clean", give the owner that line as it is: steps 1 to 8 are done, and step 9, Build the app, comes next, outside this skill. Then stop.
+If the list says "The docs are clean", give the owner that line as it is: steps 1 to 8 are done, and step 9, Walking skeleton, comes next, outside this skill. Then stop.
 
 ## 2. Take the first item
 
@@ -40,7 +40,10 @@ Whatever the item, first read the open questions it can settle: those the item l
    - Talk to the owner as to a five-year-old who knows the app but not the docs. Before asking, say in one or two short sentences of everyday words what the question is about: what a person using the app sees or does, with a concrete example. The question, its options and their descriptions say only what each choice changes for that person: no IDs, file or field names, code, quoted doc lines, prompt or check numbers, or method words (class B, registry, variant…). Keep that mapping to yourself, and translate the answer into the docs afterwards.
    - Ask until each question is answered, or the owner leaves it open. An open question goes in the feature's `questions_ouvertes`, or in `docs/questions.md` for the whole app.
 4. Write each result where the "Sources of truth" table of `workflow_docs/method/reference.md` puts it. If the app's `CLAUDE.md` says a document lives in a Claude Doc, edit that doc, not a local copy. One Claude Docs edit call takes at most 64 operations: split a large change (renaming IDs across a whole doc, for example) into several calls, then search the doc to check that nothing was left. Record each owner choice in `decisions` with its ID, subject, choice and reason. Never renumber an ID.
-5. Run `python3 .claude/skills/registry-db/registry_db.py check`. A row your change caused is fixed before you go on, except an L1-04 row for a feature you flagged `design_a_mettre_a_jour` on purpose (a class C choice, or a change the design must now show): its redraw is an item of its own, put first in the list in step 4. A row that was already there before you started is not yours, so leave it and mention it.
+5. Run `python3 .claude/skills/registry-db/registry_db.py check`.
+   - A row your change caused: fix it before you go on.
+   - Except an L1-04 row for a feature you flagged `design_a_mettre_a_jour` on purpose (a class C choice, or a change the design must now show): leave it. Its redraw is an item of its own, put first in the list in step 4.
+   - A row that was there before you started is not yours: leave it and mention it.
 6. Show the files and IDs you changed, and revise until the owner confirms.
 
 **A finding**: read it with its evidence in `claude_skills_output/design_and_docs_check_output.md`. If its check has a query in `.claude/skills/registry-db/checks.sql`, run `registry_db.py check <its check ID>` before and after the fix: the fix is done when its rows are gone.
