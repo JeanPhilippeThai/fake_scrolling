@@ -48,7 +48,7 @@ Whatever the item, first read the open questions it can settle: those the item l
 - Class A: show the fix, apply it once the owner agrees, and fix the findings it caused ("Caused by").
 - Class B or C: ask its question as step 3 of a prompt says, apply the choice and record it in `decisions`. For C, also set `design_a_mettre_a_jour: true` on the features it concerns.
 
-**A step with no prompt** (1, 6, 7): the same loop: propose, ask, write, confirm.
+**A step with no prompt** (1, 6, 7, and step 8's threat model): the same loop: propose, ask, write, confirm. Write docs only: the code is step 9.
 
 ## 4. Strike it off
 

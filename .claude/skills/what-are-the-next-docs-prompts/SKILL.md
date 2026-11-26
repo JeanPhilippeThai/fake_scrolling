@@ -59,7 +59,7 @@ Read `workflow_docs/method.md` and `workflow_docs/method/describe.md`. Map the l
 | L7, B7 | 7 NFRs |
 | L8, L9, L10, B8, B9, B10 | 8 System design |
 
-A step is done when each of its layers is "passed" or has only Minor findings. "Not reached" or "not run" means not done. Step 8 also needs the stack decisions, the code layout and the threat model. The docs are at the first step not done.
+A step is done when each of its layers is "passed" or has only Minor findings. "Not reached" or "not run" means not done. The docs are at the first step not done.
 
 All of steps 1 to 8 done: write this, then stop.
 
@@ -80,7 +80,7 @@ Up to 5 items, in method order: finish the current step, then go on into the nex
 - The other open Major findings in the current step's layers come next, as one prompt 8 item.
 - Point to the prompt in `describe.md`; never copy its text.
 - Fill its brackets from the docs. A value that depends on an earlier item's result says "from item <n>".
-- Steps 1, 6 and 7 have no prompt: the item says what to write and where.
+- Steps 1, 6 and 7, and step 8's threat model, have no prompt: the item says what to write and where. The code (folders, lint rules) is step 9: never an item.
 - Each item lists the open questions it can settle: the `questions_ouvertes` of the IDs it touches, and the questions in `docs/questions.md` on its subject, each as `<ID>: <the question, one line>`. A question the item cannot settle waits for its feature's turn in the feature loop. An item with none leaves out "Open questions".
 
 ```markdown
