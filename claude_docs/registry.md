@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 417, exported 2026-11-26 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 424, exported 2026-11-26 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -469,15 +469,15 @@ features:
       - id: F-005.a
         pages: [P-12]
         plateforme: mobile
-        difference: Croix « Fermer » qui abandonne la création du post et revient à la page d'où elle a été ouverte (D-062) ; ouverte depuis la Recherche (P-14 à P-16), sur P-14 (D-090)
+        difference: Croix « Fermer » qui abandonne la création du post et revient à la page d'où elle a été ouverte (D-062) ; ouverte depuis la Recherche (P-14 à P-16), sur P-14 (D-090) ; le serveur efface aussitôt les graines déjà envoyées du brouillon (D-121)
         acces: [R-02]
       - id: F-005.b
         pages: [P-19]
         plateforme: mobile
         difference: Lien « Annuler » qui abandonne les saisies du profil
         acces: [R-02]
-    entites: []
-    operations: [lecture]
+    entites: [E-04]
+    operations: [lecture, suppression]
     etats_ui: []
     questions_ouvertes: []
 
@@ -1080,7 +1080,7 @@ features:
     acces: [R-02]
     variantes: []
     entites: [E-04, E-03, E-12]
-    operations: [lecture, écriture]
+    operations: [lecture, écriture, suppression]
     etats_ui:
       - photo affichée voilée
       - numéros 1 à 10 en multiple
@@ -1572,7 +1572,7 @@ entites:
       - durée de la vidéo
       - rang dans le carrousel
       - heure d'arrivée de la graine sur le serveur, pour l'effacer après 24 h si rien ne la prend (D-123)
-    utilisee_par: [F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, F-063]
+    utilisee_par: [F-005, F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, F-063]
 
   - id: E-05
     nom: Commentaire
@@ -2203,13 +2203,13 @@ decisions:
 
   - id: D-101
     sujet: 'FL-11 : ce qu''efface la suppression du compte'
-    choix: '« Supprimer définitivement » (F-063) efface tout de suite et pour de bon, sans délai de grâce, tout ce qui vient du compte : E-01 ; ses sessions sur tous les téléphones (E-02), un autre téléphone ouvrant P-01 à son prochain échange avec le serveur ; ses posts (E-03) et leurs médias (E-04) ; ses stories (E-12) ; ses commentaires (E-05) et ses likes (E-06) ; ses collections (E-07) ; les notifications qu''il a reçues ou causées (E-08) ; ses relations d''amitié et invitations (E-09) ; ses conversations et leurs messages (E-10, E-11), qui disparaissent aussi du P-08 de ses amis ; son minuteur (E-14), son temps d''utilisation (E-15) et son soutien (E-16), si bien qu''un nouveau compte de la même personne repart non soutenu. Les compteurs des autres comptes baissent d''autant. Ce qui attendait d''être renvoyé pour ce compte (D-077, D-078, D-095, D-100 ; D-109) est abandonné. L''effacement est tout ou rien : s''il échoue, P-21.a dit que rien n''a été effacé. Le design ne change pas.'
+    choix: '« Supprimer définitivement » (F-063) efface tout de suite et pour de bon, sans délai de grâce, tout ce qui vient du compte : E-01 ; ses sessions sur tous les téléphones (E-02), un autre téléphone ouvrant P-01 à son prochain échange avec le serveur ; ses posts (E-03) et leurs médias (E-04) ; ses stories (E-12) ; ses commentaires (E-05) et ses likes (E-06) ; ses collections (E-07) ; les notifications qu''il a reçues ou causées (E-08) ; ses relations d''amitié et invitations (E-09) ; ses conversations et leurs messages (E-10, E-11), qui disparaissent aussi du P-08 de ses amis ; son minuteur (E-14), son temps d''utilisation (E-15) et son soutien (E-16), si bien qu''un nouveau compte de la même personne repart non soutenu. Les compteurs des autres comptes baissent d''autant. Ce qui attendait d''être renvoyé pour ce compte (D-077, D-078, D-095, D-100 ; D-109) est abandonné. L''effacement est tout ou rien : s''il échoue, P-21.a dit que rien n''a été effacé. Précisée par D-128 : les sauvegardes du serveur, gardées 7 jours au plus, et le seul numéro interne du compte, gardé 7 jours (FL-15). Le design ne change pas.'
     raison: 'Choix du propriétaire : la fenêtre de confirmation dit déjà que posts, messages et amis sont effacés, et que c''est définitif (question ouverte de F-063).'
     impacte: [F-063, E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16]
 
   - id: D-102
     sujet: 'FL-11 : identifiant d''un compte supprimé'
-    choix: 'L''identifiant (@) d''un compte supprimé (F-063) est libéré tout de suite : n''importe qui peut le prendre à l''inscription (F-070). Rien du compte n''est gardé, pas même son @. Les autres règles de l''identifiant restent une question ouverte de F-070.'
+    choix: 'L''identifiant (@) d''un compte supprimé (F-063) est libéré tout de suite : n''importe qui peut le prendre à l''inscription (F-070). Rien du compte n''est gardé, pas même son @, sauf son seul numéro interne, 7 jours (précisée par D-128). Les autres règles de l''identifiant restent une question ouverte de F-070.'
     raison: 'Choix du propriétaire : ses amitiés étant effacées (D-101), personne ne peut prendre le nouveau titulaire pour l''ancien.'
     impacte: [F-063, F-070, E-01]
 
@@ -2369,7 +2369,7 @@ decisions:
 
   - id: D-128
     sujet: 'Étape 7 : sauvegardes et compte supprimé'
-    choix: 'Précise D-101 : les sauvegardes du serveur sont gardées 7 jours au plus, si bien qu''un compte supprimé (F-063) a disparu partout 7 jours après. Pour qu''une sauvegarde restaurée ne le fasse pas revenir, le serveur garde 7 jours le seul numéro interne du compte supprimé, sans rien d''autre (ni @, ni adresse, ni contenu, D-102), et l''efface à nouveau de toute sauvegarde restaurée. C''est NFR-X-4. Le design ne change pas.'
+    choix: 'Précise D-101 : les sauvegardes du serveur sont gardées 7 jours au plus, si bien qu''un compte supprimé (F-063) a disparu partout 7 jours après. Pour qu''une sauvegarde restaurée ne le fasse pas revenir, le serveur garde 7 jours le seul numéro interne du compte supprimé, sans rien d''autre (ni @, ni adresse, ni contenu, D-102), et l''efface à nouveau de toute sauvegarde restaurée. C''est NFR-X-4. Le flow FL-15 la décrit. Le design ne change pas.'
     raison: 'Choix du propriétaire : un filet de sécurité en cas de panne du serveur, sans qu''un compte supprimé survive plus d''une semaine.'
     impacte: [F-063, E-01]
 
