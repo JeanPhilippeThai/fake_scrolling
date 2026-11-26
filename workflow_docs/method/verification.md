@@ -1,6 +1,6 @@
 # Verification
 
-Part of [the method](../method.md). Snapshot of the "Verification" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 10, taken on 2026-11-26.
+Part of [the method](../method.md). Snapshot of the "Verification" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 12, taken on 2026-11-26.
 
 How Claude checks its own work before anything reaches users. TLA+ models check the design (step 6), runtime proofs check the running app (step 10), and a set of automated checks guards the code in CI. What happens once code reaches users is in [Release and watch](release.md). Read this part when writing a state model or a feature's proof blocks, and before shipping a feature.
 
@@ -72,6 +72,38 @@ Rules:
 - A failing proof sends the work back to Build. Like a test, a proof block is never weakened to make it pass.
 - The proof is evidence for your review, not a replacement for it: you look at the screenshots in the pull request.
 
+## Tests Claude cannot game
+
+All tests green must mean the code follows the spec, not that it was shaped to the tests. So the agent that builds a feature never writes its tests, cannot change them and cannot see all of them, and every test must fail before the code that makes it pass exists. No guard alone makes cheating impossible; together they leave one way to turn the suite green: code that applies the rules.
+
+Two agents work on each feature, in separate sessions (step 10, in [Build the app](build.md)):
+
+| Agent | Reads | Writes | Never |
+| --- | --- | --- | --- |
+| Test writer | The feature spec (rules, criteria, proof blocks, NFRs) and the API contracts in `shared/` | The visible tests, in the feature's folders, and the hidden tests | Reads the feature's code |
+| Builder | The spec and the visible tests | The feature's code | Writes or changes a test file, or sees a hidden test |
+
+Test files are the files named `.test.ts` or `.fixture.ts`, the test snapshots, and the settings of the test runner, the coverage tool and the mutation tool.
+
+| Guard | What it stops | How it holds |
+| --- | --- | --- |
+| Tests first | Tests written to fit code that already exists | In a pull request, test files change only in the commits before the first code commit, written by the test writer; CI fails the pull request otherwise |
+| Tests locked | A test, fixture, snapshot or threshold eased until the code passes | The builder's commits never touch a test file (the same CI check). A wrong test is fixed by the test writer in its own pull request, after a spec change you approved ("When the design changes" in Build), and the work rebases on it |
+| Red before green | A test that passes whatever the code does | CI runs each new or changed test on the base commit; one that passes there fails the pull request. The test for a bug must fail on the code before its fix |
+| Hidden tests | Code fitted to the tests the builder can read | A second set, written from the same spec, in a private repo the builder's sessions cannot read. CI checks it out and runs it on each pull request; the builder sees only the ID of the rule or criterion that failed |
+| A property test for every rule | Code that recognizes the examples instead of applying the rule | Every rule (`BR`) about values (amounts, dates, text, lists) gets a property test: random inputs checked against the rule |
+| Gaming scan | Code that behaves differently under test | A lint rule on `src/` fails on a check for the test environment or the test runner; a test name or a fixture value in feature code, unless the spec names that value; `skip`, `only` or `todo` in a test; an error caught and dropped |
+| Adversarial review | Special cases no scan recognizes | A reviewer agent reads only the spec and the diff, and looks for branches on specific values, rules applied to the examples only, and behavior that differs under test. Each finding blocks the merge like a failing check |
+
+Mutation tests and runtime proofs complete these guards: the first catch tests that check nothing, the second a screen that is wrong while every test is green.
+
+Rules:
+
+- The test writer, the hidden-tests repo, the gaming scan and the reviewer are set up in step 9, with the walking skeleton. You create the private repo and the key CI reads it with.
+- A failing hidden test sends the work back to step 4 with the ID it checks. The builder fixes the code from the spec and never asks to see the test.
+- Hidden tests are named after their IDs like visible ones (`it("BR-012-3: refuses an expired coupon")`), and traceability counts both.
+- When a feature's spec changes, the test writer updates both sets before any code changes.
+
 ## Other checks before release
 
 Each of these is set up once, mostly in steps 8 and 9, then runs on its own.
@@ -98,3 +130,4 @@ Each of these is set up once, mostly in steps 8 and 9, then runs on its own.
 | Buttons and fields without accessible names | The app command cannot find them, and neither can screen readers | An accessible name on every interactive element, from the walking skeleton on |
 | Hollow tests | Claude's tests pass but would also pass on broken code | Mutation tests on every changed file |
 | Testing the server only against the latest app | Users who have not updated start seeing errors | Contract tests against every supported app version |
+| Code shaped to the tests | Every test is green while the bug is still there: special cases for the test values, or behavior that changes under test | Tests written and locked by another agent, hidden tests, red before green, the gaming scan (Tests Claude cannot game) |
