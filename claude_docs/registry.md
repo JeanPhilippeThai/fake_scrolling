@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 455, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 463, exported 2026-11-27 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -376,7 +376,7 @@ pages:
   - id: P-29
     nom: Mise à jour requise
     plateforme: mobile
-    features: [F-074]
+    features: [F-002, F-074]
 ```
 
 ```yaml
@@ -407,7 +407,7 @@ features:
   - id: F-002
     nom: Afficher l'icône de l'appli
     description: Carré arrondi avec un F blanc dont la couleur suit le thème choisi sur ce téléphone (D-103).
-    pages: [P-01, P-22, P-23]
+    pages: [P-01, P-22, P-23, P-29]
     plateformes: [mobile]
     acces: [R-01, R-02]
     variantes:
@@ -1215,7 +1215,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-13, E-03, E-09]
+    entites: [E-13, E-03, E-04, E-09]
     operations: [lecture]
     etats_ui:
       - 'champ vide : suggestions'
@@ -1583,7 +1583,7 @@ entites:
       - durée de la vidéo
       - rang dans le carrousel
       - heure d'arrivée de la graine sur le serveur, pour l'effacer après 24 h si rien ne la prend (D-123)
-    utilisee_par: [F-005, F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-058, F-063]
+    utilisee_par: [F-005, F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-052, F-058, F-063]
 
   - id: E-05
     nom: Commentaire
@@ -2422,7 +2422,7 @@ decisions:
 
   - id: D-135
     sujet: 'Étape 8 : stockage du téléphone'
-    choix: 'Le téléphone garde dans une base SQLite (expo-sqlite) les envois en attente de FL-12, dans l''ordre, l''historique de recherche (E-13) et les préférences d''interface (E-17). La session est dans le stockage sécurisé (Trousseau sur iOS, Keystore sur Android) par expo-secure-store (NFR-X-9). Le brouillon d''un post ou d''une story reste en mémoire et se perd si l''appli est fermée de force (D-121). Le design ne change pas.'
+    choix: 'Le téléphone garde dans une base SQLite (expo-sqlite) les envois en attente de FL-12, dans l''ordre, l''état de la recherche (E-13, sans historique, D-089) et les préférences d''interface (E-17). La session est dans le stockage sécurisé (Trousseau sur iOS, Keystore sur Android) par expo-secure-store (NFR-X-9). Le brouillon d''un post ou d''une story reste en mémoire et se perd si l''appli est fermée de force (D-121). Le design ne change pas.'
     raison: 'Choix du propriétaire : les envois en attente survivent à une fermeture forcée ou une batterie vide et partent toujours du plus ancien au plus récent (D-108).'
     impacte: [E-02, E-13, E-17]
 
@@ -2448,7 +2448,7 @@ decisions:
     sujet: 'Recherche par graine'
     choix: 'Remplace en partie D-087 et D-089 : le téléphone change le texte saisi en une graine, et seule la graine est envoyée, jamais le texte. Les résultats (F-052) sont jusqu''à 18 posts qu''on peut voir (D-088), les plus proches de cette graine d''abord, comparée à la graine des médias de chaque post (E-04). Les 5 palettes disparaissent de la recherche : E-03 perd le champ « palette », E-13 garde la graine obtenue au lieu de la palette, et la question ouverte de F-051 sur la palette d''un post est close. La règle exacte (comment un texte devient une graine, ce que « proche » veut dire, si un post trop loin est écarté) reste ouverte dans F-052 ; ce que comptent et montrent les tendances reste ouvert dans F-053. Les tuiles de P-15 et le post de P-16 montrent l''art généré de chaque post (D-086), dont les formes du design tiennent lieu : le design ne change pas.'
     raison: 'Choix du propriétaire : la recherche suit une graine, comme l''art généré, plutôt que 5 couleurs fixes ; l''algorithme reste à inventer.'
-    impacte: [F-051, F-052, F-053, E-03, E-13]
+    impacte: [F-051, F-052, F-053, E-03, E-04, E-13]
 
   - id: D-140
     sujet: 'Heure des téléphones corrigée par celle du serveur'
@@ -2466,7 +2466,7 @@ decisions:
     sujet: 'Textes de P-29 « Mise à jour requise »'
     choix: 'P-29 montre le logo de l’appli, le titre « Mise à jour requise », le message « Cette version de l’appli est trop ancienne. Mets-la à jour pour continuer : ton compte et tes envois en attente sont gardés. » et un bouton vert « Mettre à jour », le même texte sur iPhone et Android, jamais désactivé (F-074, D-141). P-29 est dessinée (artboard MiseAJour.dc.html) : F-074 ne porte plus design_a_mettre_a_jour.'
     raison: 'Choix du propriétaire : dire quoi faire et que rien n’est perdu ; un seul texte de bouton pour les deux stores.'
-    impacte: [F-074, P-29]
+    impacte: [F-002, F-074, P-29]
 
 ids_retires:
   - {id: F-013, decision: D-002}
@@ -2485,7 +2485,7 @@ ids_retires:
 
 | Feature | Justification |
 | --- | --- |
-| F-002 | Icône de l'appli sur P-01, P-22, P-23 : même donnée (thème), simple affichage ; taille et contexte en variantes. Le changement en direct relève de F-066. |
+| F-002 | Icône de l'appli sur P-01, P-22, P-23, P-29 : même donnée (thème), simple affichage ; taille et contexte en variantes. Le changement en direct relève de F-066. |
 | F-005 | Flèches retour sur 8 pages : même geste sans donnée ; « Fermer » (P-12) et « Annuler » (P-19) en variantes car ils abandonnent une saisie. |
 | F-010 | Voir un post sur P-03 et P-16 : même image ; P-16 sans actions en variante. |
 | F-012 | Carrousel de photos et carrousel de pause : même geste de défilement ; la pause (ex-F-013) en variante F-012.a (décision D-002). |

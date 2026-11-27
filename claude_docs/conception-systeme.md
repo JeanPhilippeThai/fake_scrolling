@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 167, exported 2026-11-26 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 171, exported 2026-11-27 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -473,9 +473,9 @@ Hors de ce flow : les réactions sur P-16 et leurs panneaux P-05 à P-07 (FL-02,
 | Étape | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- |
 | 1. Ouvrir la Recherche | P-03 (ou une autre page) → P-14.a → P-14 | F-025, F-053 | E-13 (8 suggestions tirées au hasard, 6 tendances, sur le téléphone, D-089), E-03 (nombre de posts de chaque tendance, D-089 ; ce qu'il compte est ouvert dans F-053, D-139) | — |
-| 2. Taper une recherche | P-14 → P-15.a → P-15 | F-052 | E-13 (texte saisi → graine, sur le téléphone, D-139) ; E-03, E-09 (jusqu'à 18 posts visibles, les plus proches de la graine, D-088, D-139) | — |
-| 2'. Lancer une suggestion ou une tendance | P-14 → P-15.a → P-15 | F-053, F-053.a, puis F-052 | E-13 (champ rempli), E-03, E-09 | — |
-| 3. Modifier la recherche | P-15 | F-052 | E-13 (nouvelle graine à chaque frappe), E-03, E-09 | — |
+| 2. Taper une recherche | P-14 → P-15.a → P-15 | F-052 | E-13 (texte saisi → graine, sur le téléphone, D-139) ; E-03, E-04, E-09 (graine des médias de chaque post, D-139 ; jusqu'à 18 posts visibles, les plus proches de la graine, D-088, D-139) | — |
+| 2'. Lancer une suggestion ou une tendance | P-14 → P-15.a → P-15 | F-053, F-053.a, puis F-052 | E-13 (champ rempli), E-03, E-04, E-09 | — |
+| 3. Modifier la recherche | P-15 | F-052 | E-13 (nouvelle graine à chaque frappe), E-03, E-04, E-09 | — |
 | 4. Revenir aux suggestions | P-15 → P-14 | F-052 (champ vidé) | E-13 | — |
 | 5. Ouvrir un résultat | P-15 → P-16 | F-054, F-010.a | E-03, E-04 | — |
 | 6. Passer d'un résultat à l'autre | P-16 | F-009.a, F-010.a, F-020, F-021 | E-03, E-04 | — |
@@ -1125,7 +1125,7 @@ Les exigences de toute l'appli (étape 7 de la méthode), chacune avec un nombre
 | --- | --- | --- | --- |
 | NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa graine (D-139). Seuls l'identifiant (@) et l'adresse e-mail de connexion partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
 | NFR-X-2 | Aucune photo ni vidéo ne quitte le téléphone : seule sa graine part. | Même capture : aucune requête n'a un corps image ou vidéo, ni les octets de la photo choisie. | D-086, D-091, D-119 |
-| NFR-X-3 | Les préférences d'interface (E-17) et l'historique de recherche (E-13) ne quittent jamais le téléphone. | Même capture, pendant un changement de thème sur P-23 et une recherche sur P-14 : aucune requête ne les porte. | D-087, D-089, D-103 |
+| NFR-X-3 | Les préférences d'interface (E-17) et l'état de la recherche (E-13, sans historique, D-089) ne quittent jamais le téléphone. | Même capture, pendant un changement de thème sur P-23 et une recherche sur P-14 : aucune requête ne les porte. | D-087, D-089, D-103 |
 | NFR-X-4 | Un compte supprimé n'est plus dans aucun stockage du serveur dès la réponse de F-063, sauf son numéro interne, gardé seul 7 jours (D-128, FL-15), et plus nulle part, sauvegardes comprises, 7 jours après. | Test d'intégration : un compte avec une ligne dans chaque entité est supprimé, puis son numéro interne est cherché dans chaque table : 0 ligne, hors de la liste des comptes supprimés ; 7 jours après, 0 ligne là aussi. Configuration : sauvegardes gardées 7 jours au plus ; une sauvegarde restaurée efface les comptes supprimés depuis. | D-101, D-102, D-128 |
 | NFR-X-5 | L'appli ne parle qu'à son serveur, aux services qu'un flow exige (Google, Apple, store, envoi du code) et au service de rapports de plantage. Un rapport de plantage ne porte aucun contenu, texte tapé, graine, identifiant de compte ni adresse e-mail. | Capture : la liste des hôtes contactés pendant le test de bout en bout ne contient que ceux-là. Un plantage provoqué en test donne un rapport sans aucune de ces données. | D-129 |
 
