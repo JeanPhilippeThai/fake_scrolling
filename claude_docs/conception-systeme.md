@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 179, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 210, exported 2026-11-27 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -215,7 +215,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-049 : vraie recherche de lieux, et donc la source des lieux.
 - F-050 : règle de l'audience (qui voit le post et agit dessus).
 - F-051 : réglé depuis, un post n’a plus de palette (D-139).
-- F-072 : liste vide ; effet d'un changement sur les posts déjà publiés.
+- F-072 : liste vide ; l'effet d'un changement sur les posts déjà publiés est réglé : la liste du moment vaut pour tout (D-146).
 
 ## FL-04 Ajouter un ami
 
@@ -679,7 +679,7 @@ Suite simple : changement non enregistré → 1 → 2 → 3 → 4, ou 5 puis de 
 | Où | Cas | Suite |
 | --- | --- | --- |
 | Serveur | Réseau ou serveur injoignable | L'envoi reste sur le téléphone et repart au prochain départ (D-112) ; aucun message |
-| Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones corrigée par celle du serveur (D-140), est gardé (D-111) ; leurs secondes sans réseau se fusionnent, une seconde commune ne comptant qu'une fois, et seules celles d'après la dernière réinitialisation comptent pour le minuteur (D-105, D-117) |
+| Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones corrigée par celle du serveur (D-140), est gardé (D-111) ; leurs secondes sans réseau se fusionnent, une seconde commune ne comptant qu'une fois, sauf pour une période arrivée plus de 7 jours après sa fin (D-147), et seules celles d'après la dernière réinitialisation comptent pour le minuteur (D-105, D-117) |
 | Serveur | Refus pour de bon : données invalides, story déjà effacée (FL-13), graine déjà effacée (FL-14) | Envoi abandonné sans message ; au chargement suivant, le téléphone montre ce que le serveur a (D-113) |
 | Serveur | Soutien refusé | Jamais abandonné : renvoyé jusqu'à ce qu'il soit enregistré (D-095, D-113), sauf si le compte est supprimé (D-116) |
 | Téléphone | Le brouillon d'une graine en attente disparaît (« Fermer », photo retirée, appli fermée de force, téléphone éteint) | La graine est abandonnée, jamais envoyée (D-121, D-122) |
@@ -705,7 +705,7 @@ Aucune feature ni page ne manque : la tâche n'a rien à l'écran.
 
 ## FL-13 Finir une story
 
-Tâche de fond du serveur, sans geste de l'utilisateur : 24 h après sa publication, une story passe à Finie et le serveur l'efface. Mobile seulement. Décisions : D-079, D-101, D-110, D-113.
+Tâche de fond du serveur, sans geste de l'utilisateur : 24 h après sa publication, une story passe à Finie et le serveur l'efface. Mobile seulement. Décisions : D-079, D-101, D-110, D-113, D-148.
 
 ### Entrées
 
@@ -718,7 +718,7 @@ Hors de ce flow : regarder une story, dans FL-06 ; l'effacement de toutes les st
 | Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- | --- |
 | 1. Finir | La fin (E-12) est atteinte | — | — | E-12 (fin) | E-12 (Finie) |
-| 2. Effacer | Tout de suite après | — | — | — | E-12 effacée du serveur, avec ses images et sa liste « vue par » (D-110) |
+| 2. Effacer | Tout de suite après | — | — | — | E-12 effacée du serveur, avec ses images et sa liste « vue par » (D-110) ; E-08 : ses notifications effacées (D-148) |
 | 3. Disparaître des téléphones | Chargement suivant de P-08 ou de P-09 | P-08, P-09 | F-036 | E-12 | — (plus de rond ni de cercle, D-079) |
 
 Suite simple : fin atteinte → 1 → 2 → 3. F-036 lit E-12 ; la tâche du serveur n'est portée par aucune feature.
@@ -919,6 +919,8 @@ stateDiagram-v2
     deconnecte --> inscription : F-001, aucun compte
     inscription --> session : F-070
     inscription --> deconnecte : F-005
+    inscription --> deconnecte : 1 h, FL-16
+    code_expire --> deconnecte : 1 h, FL-16
     session --> deconnecte : F-071, F-063, suppression ailleurs
 ```
 
@@ -928,13 +930,13 @@ stateDiagram-v2
 | Code envoyé → Code renvoyable | 30 s écoulées | F-008 devient possible |
 | Code renvoyable → Code envoyé | F-008 | Nouveau code, nouveau décompte de 30 s ; l'ancien code ne marche plus, 10 min et 5 essais neufs (D-131) |
 | Code envoyé ou renvoyable → Code expiré | 10 min écoulées depuis l'envoi ; ou F-007, 5e code faux | P-02.b ; le code ne marche plus, même juste (D-127) |
-| Code expiré → Code envoyé | F-008 | Nouveau code, 10 min et 5 essais neufs (D-131) |
+| Code expiré → Code envoyé | F-008 | Nouveau code, 10 min et 5 essais neufs (D-131). Sans nouveau code, le serveur oublie le code et l'adresse 1 h après l'envoi (FL-16, D-149) |
 | Code envoyé ou renvoyable → Code envoyé ou renvoyable | F-007, code faux | P-02.a ; un essai faux de plus, Code expiré au 5e (D-127) |
 | Code envoyé ou renvoyable → Déconnecté | F-005 | Mauvaise adresse, retour à P-01 |
 | Code envoyé ou renvoyable, ou Déconnecté → Session ouverte | F-007 bon code, ou F-001 / F-001.a, compte trouvé | P-03 |
 | Code envoyé ou renvoyable, ou Déconnecté → Inscription | Même déclencheur, aucun compte | P-27 (D-052) |
 | Inscription → Session ouverte | F-070 | Compte créé, avec son minuteur, son temps d'utilisation et son soutien (D-052, D-064, D-114) |
-| Inscription → Déconnecté | F-005 | Abandon, aucun compte créé |
+| Inscription → Déconnecté | F-005 | Abandon, aucun compte créé. Sans F-070, le serveur oublie l'inscription 1 h après son début (FL-16, D-149) ; ce que voit alors le téléphone est ouvert dans F-070 |
 | Session ouverte → Déconnecté | F-071 ; F-063 ; compte supprimé sur un autre téléphone, au prochain échange avec le serveur | P-01 (D-053, D-065, D-069, D-101) ; les envois en attente restent rattachés au compte après F-071 (D-104) |
 
 ### SM-E-03 Post
@@ -1009,15 +1011,15 @@ stateDiagram-v2
     state "Vue" as vue
     [*] --> non_vue : F-016, F-030, F-034, F-051
     non_vue --> vue : P-04 ouvert, F-022
-    non_vue --> [*] : like retiré, invitation répondue, F-063
-    vue --> [*] : like retiré, invitation répondue, F-063
+    non_vue --> [*] : like retiré, invitation répondue, post ou story effacé, F-063
+    vue --> [*] : like retiré, invitation répondue, post ou story effacé, F-063
 ```
 
 | Passage | Déclencheur | Effet et décisions |
 | --- | --- | --- |
 | → Non vue | Like d'un post (F-016, D-055), commentaire (F-030, D-056), demande d'ami (F-034, D-070), identification (F-051, D-061) | Compte dans la pastille de la cloche (F-022, D-106) |
 | Non vue → Vue | Ouverture du panneau P-04 (F-022) | Toutes les notifications du compte passent en vue ; la pastille disparaît (D-106) |
-| Non vue ou Vue → (supprimée) | Like retiré (F-016) ; invitation acceptée ou refusée (F-028, F-028.a, D-070) ou demande croisée (F-034, D-073) ; F-063 de l'auteur ou du destinataire (D-101) | La ligne disparaît de P-04 |
+| Non vue ou Vue → (supprimée) | Like retiré (F-016) ; invitation acceptée ou refusée (F-028, F-028.a, D-070) ou demande croisée (F-034, D-073) ; F-063 de l'auteur ou du destinataire (D-101) ; post ou story effacé, story finie comprise (FL-13, D-148) | La ligne disparaît de P-04 |
 
 ### SM-E-09 Relation d'amitié
 
@@ -1131,7 +1133,7 @@ stateDiagram-v2
 | --- | --- | --- |
 | Arrêté → En marche | Un téléphone connecté a l'appli ouverte et au premier plan (F-024) | Reprend où il en était, au même gris, sur tout téléphone (D-074) |
 | En marche → Arrêté | Plus aucun téléphone au premier plan : appli fermée, en arrière-plan ou déconnectée (F-071) | Temps passé gardé sur le serveur (D-074, D-075) |
-| En marche → En marche | Chaque seconde où au moins un téléphone est au premier plan | Temps passé + 1 s, une seule fois même avec deux téléphones (D-075, D-105) ; sans réseau aussi, renvoyé par FL-12 (D-117) |
+| En marche → En marche | Chaque seconde où au moins un téléphone est au premier plan | Temps passé + 1 s, une seule fois même avec deux téléphones (D-075, D-105), sauf une période arrivée plus de 7 jours après sa fin (D-147) ; sans réseau aussi, renvoyé par FL-12 (D-117) |
 | En marche → En marche, cycle fini | Le temps passé atteint la durée, moins de 9 cycles écoulés | Cycles + 1, 10 % de gris en plus, temps remis à 0 (F-024) |
 | En marche → Noir et blanc | Le 10e cycle finit | Le minuteur s'arrête ; F-059 dit « Noir et blanc. Réinitialise pour retrouver les couleurs. » |
 | Tout état → En marche, cycle 1 | F-061 « Réinitialiser » (sur P-17, donc appli ouverte) | 0 cycle écoulé, 0 % de gris ; appliqué sur le téléphone, renvoyé sans message (D-077) |
@@ -1177,7 +1179,7 @@ Choisis par D-107 et D-124, écrits dans le dépôt sous `docs/system-design/` (
 | SM-E-04 | `SM_E_04.tla` | `D120_D123_PublishedHasArt` : un post ou une story publié a toujours ses graines, même si FL-14 les avait effacées avant (D-120, D-123) ; `D121_AbandonedNeverAttached`, `D121_AbandonedEndsErased`, `D121_ErasedStaysErased` : une photo retirée ou d'un brouillon perdu n'est jamais rattachée, finit effacée et ne revient pas (D-121, D-122, D-123) ; `D122_DroppedNeverSent`, `D122_EraseNeverHitsPublished` (D-121, D-122) ; `D123_NoOrphanForever` : aucune graine ne reste sur le serveur sans rien qui la prenne (D-123) ; `D125_OneProfilePhoto`, `D100_D125_ProfileIsCurrent`, `D100_ProfileQueueEnds` : le serveur garde une seule graine de photo de profil, celle du téléphone une fois tout envoyé (D-100, D-125) ; `D101_NothingAfterDeletion` (D-101) |
 | SM-E-09 | `SM_E_09.tla` | `D073_NoCrossedRequests`, `D073_NoRequestBetweenFriends` : jamais deux demandes en attente dans les deux sens, ni entre amis (D-073) ; `D070_InvitationWhileRequest` : l'invitation existe tant que la demande attend (D-070) ; `D071_D082_ConversationIffFriends` : une conversation existe si et seulement si les deux comptes sont amis (D-071, D-082) ; `D060_CloseFriendIsFriend` : un ami proche est toujours un ami (D-060) ; `D101_NothingLeftOfDeleted` (D-101) |
 | SM-E-12 | `SM_E_12.tla` | `D079_FinishedNeverReopens` : une story finie ne se rouvre jamais, même si « vue » arrive après (D-078, D-079) ; `D080_OpensOnlyForAudience` : seuls les amis, et les amis proches pour « Amis proches », l'ouvrent (D-080) ; `D078_SeenOnlyAfterAnImage` (D-078) ; `D110_ErasedKeepsNothing`, `D110_FinishedIsErased` (D-110) ; `D101_DeletedViewerLeavesNothing` (D-101, D-109) ; `D113_WaitingVueEnds` : une « vue » en attente finit enregistrée ou abandonnée (D-108, D-113) |
-| SM-E-14 | `SM_E_14.tla` | `D024_GreyTenPercentPerCycle` : 10 % de gris par cycle écoulé, 10 cycles au plus (F-024) ; `D105_SecondCountedOnce`, `D105_D117_UsageIsForegroundTime` : deux téléphones ne font jamais compter une seconde deux fois, et le temps d'utilisation (E-15) finit égal aux secondes où au moins un téléphone était au premier plan, sans réseau compris (D-105, D-117) ; `D111_LatestChangeWins` : le réglage fait le plus tard gagne, quel que soit l'ordre d'arrivée (D-111, D-117) ; `D077_D117_EverythingEndsRecorded` : réglages et secondes renvoyés finissent enregistrés (D-077, D-117) |
+| SM-E-14 | `SM_E_14.tla` | `D024_GreyTenPercentPerCycle` : 10 % de gris par cycle écoulé, 10 cycles au plus (F-024) ; `D105_SecondCountedOnce`, `D105_D117_UsageIsForegroundTime` : deux téléphones ne font jamais compter une seconde deux fois (hors du modèle : une période arrivée plus de 7 jours après sa fin compte en entier, D-147), et le temps d'utilisation (E-15) finit égal aux secondes où au moins un téléphone était au premier plan, sans réseau compris (D-105, D-117) ; `D111_LatestChangeWins` : le réglage fait le plus tard gagne, quel que soit l'ordre d'arrivée (D-111, D-117) ; `D077_D117_EverythingEndsRecorded` : réglages et secondes renvoyés finissent enregistrés (D-077, D-117) |
 | SM-E-16 | `SM_E_16.tla` | `D095_NoErrorAfterDebit` : aucune erreur après un débit (D-095) ; `D115_RecordedOnce` : le serveur n'enregistre qu'un soutien par compte (D-092, D-115) ; `D092_SupportedOnlyIfPaid` ; `D095_D116_PaidEndsRecorded` : un achat confirmé finit enregistré, pour son compte seulement, sauf si le compte est supprimé (D-095, D-104, D-116) |
 | Synchronisation | `sync.tla` | `D104_NeverForAnotherAccount` (D-104) ; `D101_NothingKeptForDeleted`, `D101_NothingAfterDeletion` (D-101) ; `D116_SupportDroppedOnlyWithAccount` (D-113, D-116) ; `D122_RecordedOrDropped` : un envoi finit enregistré ou abandonné, jamais les deux ; une graine dont le brouillon a disparu est abandonnée sans partir (D-113, D-121, D-122) ; `D108_SentWhileConnected` : un envoi en attente part dès que son compte est connecté sur le téléphone (D-104, D-108, D-112) ; `D101_DeletedAccountChangesEnd` : ceux d'un compte supprimé finissent abandonnés, même sur un téléphone où il n'est plus connecté (D-101, D-116). Le temps entre téléphones est vérifié par SM-E-14 |
 
@@ -1191,7 +1193,7 @@ Les exigences de toute l'appli (étape 7 de la méthode), chacune avec un nombre
 
 | ID | Exigence | Nombre ou test | Source |
 | --- | --- | --- | --- |
-| NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa graine (D-139). Seuls l'identifiant (@) et l'adresse e-mail de connexion partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
+| NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa graine (D-139). Seuls l'identifiant (@), l'adresse e-mail de connexion et le lieu choisi dans une liste (F-049, D-151) partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
 | NFR-X-2 | Aucune photo ni vidéo ne quitte le téléphone : seule sa graine part. | Même capture : aucune requête n'a un corps image ou vidéo, ni les octets de la photo choisie. | D-086, D-091, D-119 |
 | NFR-X-3 | Les préférences d'interface (E-17) et l'état de la recherche (E-13, sans historique, D-089) ne quittent jamais le téléphone. | Même capture, pendant un changement de thème sur P-23 et une recherche sur P-14 : aucune requête ne les porte. | D-087, D-089, D-103 |
 | NFR-X-4 | Un compte supprimé n'est plus dans aucun stockage du serveur dès la réponse de F-063, sauf son numéro interne, gardé seul 7 jours (D-128, FL-15), et plus nulle part, sauvegardes comprises, 7 jours après. | Test d'intégration : un compte avec une ligne dans chaque entité est supprimé, puis son numéro interne est cherché dans chaque table : 0 ligne, hors de la liste des comptes supprimés ; 7 jours après, 0 ligne là aussi. Configuration : sauvegardes gardées 7 jours au plus ; une sauvegarde restaurée efface les comptes supprimés depuis. | D-101, D-102, D-128 |
@@ -1298,7 +1300,7 @@ tables:
     raison: Un compte par ligne ; son id est le numéro interne du compte (D-102).
     colonnes:
       - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
-      - {nom: identifiant, type: citext, cle: unique, reference: '', obligatoire: true}
+      - {nom: identifiant, type: text, cle: unique, reference: '', obligatoire: true}
       - {nom: pseudo, type: text, cle: '', reference: '', obligatoire: true}
       - {nom: description, type: text, cle: '', reference: '', obligatoire: false}
     index: []
@@ -1712,7 +1714,6 @@ tables:
       - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
       - {nom: post_id, type: uuid, cle: '', reference: TB-06.id, obligatoire: true}
       - {nom: compte_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
-      - {nom: facon, type: "enum facon_partage ('ami', 'lien', 'ailleurs')", cle: '', reference: '', obligatoire: true}
     index: [post_id, compte_id]
 ```
 
@@ -1788,11 +1789,11 @@ Restent ouverts, dans les `questions_ouvertes` des features : F-053, ce que comp
 
 ## Flux de données
 
-13 nœuds et 84 flux, DF-01 à DF-84, choisis par D-151 : les deux rôles, une appli par téléphone (iOS, Android), le serveur, les trois stockages et cinq services tiers. Chaque flux va dans un seul sens et cite les entités qu'il porte et les features qui le déclenchent. C'est la réponse au prompt 12 de la méthode.
+14 nœuds et 84 flux, DF-01 à DF-84, choisis par D-151 : les deux rôles, une appli par téléphone (iOS, Android), le serveur, les trois stockages et six services tiers, dont les rapports de plantage (N-14), qu'aucun flux DF n'atteint. Chaque flux va dans un seul sens et cite les entités qu'il porte et les features qui le déclenchent. C'est la réponse au prompt 12 de la méthode.
 
 ### Le graphe
 
-Tiré du YAML ci-dessous : un trait par paire de nœuds, avec ses flux. Les 11 flux entre chaque appli et le serveur sont les 10 groupes de l'API et le direct par WebSocket (D-137).
+Tiré du YAML ci-dessous : un trait par paire de nœuds, avec ses flux. Les 11 flux entre chaque appli et le serveur sont les 10 groupes de l'API et le direct par WebSocket (D-137). Les pointillés vers N-14 ne sont pas des flux DF : un rapport de plantage ne porte aucune donnée d'entité (NFR-X-5).
 
 ```mermaid
 flowchart LR
@@ -1809,6 +1810,7 @@ flowchart LR
     N11{{"N-11 Service d'envoi des e-mails"}}
     N12{{"N-12 App Store"}}
     N13{{"N-13 Google Play"}}
+    N14{{"N-14 Rapports de plantage"}}
     N04 -->|DF-01| N06
     N06 -->|DF-02| N04
     N04 -->|DF-03| N07
@@ -1849,6 +1851,8 @@ flowchart LR
     N03 -->|DF-82| N07
     N08 -->|DF-83| N01
     N01 -->|DF-84| N08
+    N06 -.->|plantage, sans donnée d'entité| N14
+    N07 -.->|plantage, sans donnée d'entité| N14
 ```
 
 ### Nœuds et flux
@@ -1901,6 +1905,9 @@ noeuds:
   - id: N-13
     type: tiers
     nom: "Google Play (D-092)"
+  - id: N-14
+    type: tiers
+    nom: "Service de rapports de plantage (D-129, NFR-X-5)"
 
 flux:
   - {id: DF-01, de: N-04, vers: N-06, donnees: [E-02, E-01], features: [F-001, F-003, F-005, F-007, F-008, F-070], flows: [], protocole: "écran tactile", sensible: true}
@@ -1918,10 +1925,10 @@ flux:
   - {id: DF-12, de: N-07, vers: N-08, donnees: [E-02, E-01], features: [F-001, F-003, F-007, F-008, F-070, F-071], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-13, de: N-08, vers: N-07, donnees: [E-02, E-01], features: [F-001, F-007, F-008, F-070], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Fil et posts
-  - {id: DF-14, de: N-06, vers: N-08, donnees: [E-03, E-12, E-05, E-06, E-07], features: [F-009, F-016, F-018, F-019, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
-  - {id: DF-15, de: N-08, vers: N-06, donnees: [E-03, E-04, E-05, E-06, E-07], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
-  - {id: DF-16, de: N-07, vers: N-08, donnees: [E-03, E-12, E-05, E-06, E-07], features: [F-009, F-016, F-018, F-019, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
-  - {id: DF-17, de: N-08, vers: N-07, donnees: [E-03, E-04, E-05, E-06, E-07], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-14, de: N-06, vers: N-08, donnees: [E-03, E-12, E-05, E-06, E-07], features: [F-009, F-016, F-018, F-019, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-15, de: N-08, vers: N-06, donnees: [E-03, E-04, E-05, E-06, E-07], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-16, de: N-07, vers: N-08, donnees: [E-03, E-12, E-05, E-06, E-07], features: [F-009, F-016, F-018, F-019, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-17, de: N-08, vers: N-07, donnees: [E-03, E-04, E-05, E-06, E-07], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Médias
   - {id: DF-18, de: N-06, vers: N-08, donnees: [E-04], features: [F-005, F-044, F-046], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
   - {id: DF-19, de: N-08, vers: N-06, donnees: [E-04], features: [F-044, F-046], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
@@ -1938,9 +1945,9 @@ flux:
   - {id: DF-28, de: N-07, vers: N-08, donnees: [E-14, E-15], features: [F-024, F-060, F-061, F-073], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-29, de: N-08, vers: N-07, donnees: [E-14, E-15], features: [F-015, F-024, F-059, F-065, F-073], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Stories
-  - {id: DF-30, de: N-06, vers: N-08, donnees: [E-12], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-30, de: N-06, vers: N-08, donnees: [E-12], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-31, de: N-08, vers: N-06, donnees: [E-12, E-09], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-32, de: N-07, vers: N-08, donnees: [E-12], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-32, de: N-07, vers: N-08, donnees: [E-12], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-33, de: N-08, vers: N-07, donnees: [E-12, E-09], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Messages
   - {id: DF-34, de: N-06, vers: N-08, donnees: [E-11, E-10, E-04], features: [F-019, F-037, F-038, F-040, F-041, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
@@ -1949,9 +1956,9 @@ flux:
   - {id: DF-37, de: N-08, vers: N-07, donnees: [E-10, E-11, E-04], features: [F-033, F-037, F-038, F-039, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Recherche
   - {id: DF-38, de: N-06, vers: N-08, donnees: [E-13], features: [F-052, F-053], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
-  - {id: DF-39, de: N-08, vers: N-06, donnees: [E-03, E-04], features: [F-052, F-053, F-054], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-39, de: N-08, vers: N-06, donnees: [E-03, E-04], features: [F-052, F-053, F-054], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-40, de: N-07, vers: N-08, donnees: [E-13], features: [F-052, F-053], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
-  - {id: DF-41, de: N-08, vers: N-07, donnees: [E-03, E-04], features: [F-052, F-053, F-054], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-41, de: N-08, vers: N-07, donnees: [E-03, E-04], features: [F-052, F-053, F-054], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Soutien
   - {id: DF-42, de: N-06, vers: N-08, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-43, de: N-08, vers: N-06, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
@@ -2011,18 +2018,19 @@ flux:
 
 ### Features et stockages sans flux
 
-Aucune feature qui lit ou écrit des données ne manque, et chaque stockage est atteint. F-074 ne porte aucune donnée : il ouvre l'App Store ou Google Play sans rien leur envoyer. Le service de rapports de plantage (D-129, NFR-X-5) n'est pas un nœud : il ne reçoit aucune donnée d'entité.
+Aucune feature qui lit ou écrit des données ne manque, et chaque stockage est atteint. F-074 ne porte aucune donnée : il ouvre l'App Store ou Google Play sans rien leur envoyer. Le service de rapports de plantage (N-14, D-129, NFR-X-5) n'est atteint par aucun flux DF : il ne reçoit aucune donnée d'entité, seulement des données techniques.
 
 ### Flux sensibles
 
-70 flux portent des données personnelles, des identifiants ou un paiement : ceux qui portent E-01, E-02, E-09, E-10, E-11, E-14, E-15 ou E-16 (D-151). Les posts, médias, commentaires, likes, collections, notifications, stories, la recherche et les préférences n'y comptent pas : textes en charabia (D-118) et art généré (D-086). À reprendre dans le threat model.
+78 flux portent des données liées à un compte, des identifiants ou un paiement (D-151) : un lieu, une personne identifiée, un like ou une vue de story lient un compte à un endroit ou à un autre compte. Seuls DF-18 à DF-21 (graines des médias), DF-38 et DF-40 (graine d'une recherche) n'y comptent pas. Le chemin vers les rapports de plantage (N-14) est à examiner aussi, pour NFR-X-5. À reprendre dans le threat model.
 
 | Ce qu'ils portent | Entre | Flux |
 | --- | --- | --- |
 | Identifiants de connexion (E-02) | Personne non connectée et appli ; appli et serveur ; appli et Google ou Apple ; serveur et service d'e-mails, puis la personne ; appli et stockage sécurisé | DF-01 à DF-05, DF-10 à DF-13, DF-54 à DF-57, DF-60 à DF-63, DF-66, DF-75, DF-76, DF-81, DF-82 |
 | Paiement du soutien (E-16) | Appli et serveur ; appli et store ; serveur et store | DF-42 à DF-45, DF-58, DF-59, DF-64, DF-65, DF-67 à DF-70 |
 | Messages et conversations (E-10, E-11) | Appli et serveur, par l'API et en direct | DF-34 à DF-37, DF-50 à DF-53 |
-| Amitiés et comptes (E-01, E-09) | Appli et serveur | DF-22 à DF-25, DF-31, DF-33, DF-46 à DF-49 |
+| Amitiés et comptes (E-01, E-09) | Appli et serveur | DF-22 à DF-25, DF-46 à DF-49 |
+| Posts, commentaires, likes, collections et stories : lieu, personnes identifiées, qui a liké, qui a vu (E-03, E-05 à E-07, E-12) | Appli et serveur | DF-14 à DF-17, DF-30 à DF-33, DF-39, DF-41 |
 | Temps passé dans l'appli (E-14, E-15) | Appli et serveur | DF-26 à DF-29 |
 | Envois en attente et minuteur connu (E-01, E-14 à E-16) | Appli et SQLite | DF-71 à DF-74, DF-77 à DF-80 |
 | Tout ce que voit et fait l'utilisateur | Personne connectée et appli | DF-06 à DF-09 |

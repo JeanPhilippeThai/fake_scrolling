@@ -1,27 +1,23 @@
 # Design and docs: newest vs current
 
-Compared on 2026-11-27. The system design now holds the data model (33 tables, TB-01 to TB-33) and the data-flow graph (13 nodes, 84 flows), with two new background tasks (FL-16, FL-17) and eight decisions (D-144 to D-151). Docs only: the design was not imported, and stays as it is.
+Compared on 2026-11-27. Second import of the day: the fixes asked by the doc test on the data model and the data flows. Flows carrying a place, a tag, a like or a story view are now sensitive; the crash-report service is a node; the @ is lowercase only. Docs only: the design was not imported, and stays as it is.
 
 ## Docs
 
-### Registre canonique – Fake scrolling (`registry.md`, rev 464 -> 469)
-- D-144: the data model's rules: ids made by the phone (the write number of D-137), everything of an account erased with it, counters counted on demand, states read from rows.
-- D-145: the @ is unique, capitals ignored (`@Lea` blocks `@lea`); E-01's « identifiant » says so.
-- D-146: « Amis proches » always follows today's list, for posts and stories already published too; F-072's question on it is closed.
-- D-147: the server keeps the app's foreground periods 7 days (FL-17); a period sent more than 7 days late counts in full.
-- D-148: a post's or story's notifications are erased with it (a story's tag when it ends, FL-13).
-- D-149: an e-mail address or Google / Apple account that led to no account is forgotten within 1 h (FL-16).
-- D-150: the phone keeps the last timer state and the clock offset in SQLite, so the grey survives a restart offline.
-- D-151: the data-flow graph: one app per phone, what counts as a sensitive flow.
-- F-070: the @ question keeps length, characters and the « already taken » message; new question on a sign-up finished more than 1 h after it began.
-- F-019: new question on what a shared post shows in a conversation once it no longer exists.
+### Registre canonique – Fake scrolling (`registry.md`, rev 469 -> 480)
+- D-144: a friendship's status is named as a state column, like « vue » and « lu ».
+- D-145: the @ is lowercase only, as P-27 draws it, and unique; E-01 and F-070's question follow.
+- D-147: says it refines D-105 and D-117; E-14, E-15 and F-024 name the exception of a period sent more than 7 days late.
+- D-151: a flow is sensitive as soon as it carries data tied to an account (all entities but E-04 and E-13); the crash-report service is node N-14, reached by no DF flow.
 
-### Conception système – Fake scrolling (`conception-systeme.md`, rev 173 -> 179)
-- New flows FL-16 « Oublier les connexions inachevées » and FL-17 « Oublier les vieilles périodes au premier plan ».
-- New section « Modèle de données »: the tables TB-01 to TB-33 (PostgreSQL N-01, SQLite N-02, secure storage N-03), the entity fields that are computed, the columns with no entity field, and where each state of SM-E-02 to SM-E-16 is read.
-- New section « Flux de données »: nodes N-01 to N-13, flows DF-01 to DF-84, the graph, and the 70 sensitive flows for the threat model.
-- FL-15 now names its table (TB-26); the background-task row of « Qui fait quoi » adds FL-16 and FL-17 (D-147, D-149).
+### Conception système – Fake scrolling (`conception-systeme.md`, rev 179 -> 210)
+- NFR-X-1: the place chosen from a list (F-049) also leaves the phone readable.
+- SM-E-08 and FL-13: a post's or story's notifications are erased with it (D-148).
+- SM-E-02: the server forgets an expired code and an unfinished sign-up after 1 h (FL-16, D-149).
+- SM-E-14, FL-12 and the SM-E-14 TLA+ row: the 7-day exception of D-147.
+- FL-03: F-072's question on published posts is marked settled (D-146).
+- Data model: TB-01.identifiant is `text`; TB-33 loses the column `facon`.
+- Data flows: node N-14 and its dotted edges in the graph; DF-14 to DF-17, DF-30, DF-32, DF-39 and DF-41 are sensitive; 78 sensitive flows.
 
-## Unchanged
-
-Fake scrolling — inventaire des écrans (rev 155); the design (not imported).
+### Fake scrolling — inventaire des écrans (`inventaire-des-ecrans.md`, rev 155 -> 156)
+- P-27's identifier: « minuscules seulement, unique (D-145) »; length and the « already taken » message stay to confirm.

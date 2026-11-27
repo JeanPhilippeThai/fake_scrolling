@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 469, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 480, exported 2026-11-27 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -785,7 +785,7 @@ features:
 
   - id: F-024
     nom: Voir l'app se griser
-    description: Toute l'interface perd 10 % de couleur par cycle, noir et blanc après 10 cycles, sans message. Seul le temps passé dans l'appli ouverte compte (D-075) ; deux téléphones ouverts en même temps ne comptent qu'une fois (D-105).
+    description: Toute l'interface perd 10 % de couleur par cycle, noir et blanc après 10 cycles, sans message. Seul le temps passé dans l'appli ouverte compte (D-075) ; deux téléphones ouverts en même temps ne comptent qu'une fois (D-105), sauf une période arrivée plus de 7 jours après sa fin (D-147).
     pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28]
     plateformes: [mobile]
     acces: [R-02]
@@ -1471,7 +1471,7 @@ features:
       - 'envoi : champs grisés, anneau et « Création du compte… » dans le bouton (D-064)'
       - 'erreur : « Ton compte n’a pas été créé. Vérifie ta connexion et réessaie. » avec « Réessayer », saisies gardées (D-064)'
     questions_ouvertes:
-      - 'Règles de l''identifiant : longueur, caractères permis, message s''il est déjà pris (unique sans tenir compte des majuscules, D-145)'
+      - 'Règles de l''identifiant : longueur, caractères permis, message s''il est déjà pris (minuscules seulement, unique, D-145)'
       - 'Inscription finie plus d''1 h après son début, quand le serveur l''a oubliée (D-149, FL-16) : quel message, et retour à P-01 ?'
 
   - id: F-071
@@ -1540,7 +1540,7 @@ entites:
     nom: Compte utilisateur
     champs:
       - pseudo, en charabia (D-098)
-      - identifiant (@), unique sans tenir compte des majuscules (D-145)
+      - identifiant (@), en minuscules, unique (D-145)
       - description, en charabia (D-098)
       - photo de profil
       - nombre de posts
@@ -1668,7 +1668,7 @@ entites:
   - id: E-14
     nom: Minuteur de couleur
     champs:
-      - compte (D-074) ; deux téléphones ouverts ensemble ne comptent qu'une fois (D-105)
+      - compte (D-074) ; deux téléphones ouverts ensemble ne comptent qu'une fois (D-105), sauf une période arrivée plus de 7 jours après sa fin (D-147)
       - durée du cycle
       - temps passé appli ouverte dans le cycle en cours (D-075), y compris sans réseau (D-117)
       - cycles écoulés
@@ -1680,7 +1680,7 @@ entites:
     nom: Temps d'utilisation
     champs:
       - compte (D-093)
-      - durée cumulée, appli ouverte et au premier plan sur au moins un téléphone, comptée une fois (D-093, D-105), y compris sans réseau, renvoyée par FL-12 (D-117)
+      - durée cumulée, appli ouverte et au premier plan sur au moins un téléphone, comptée une fois (D-093, D-105 ; sauf D-147), y compris sans réseau, renvoyée par FL-12 (D-117)
     utilisee_par: [F-015, F-063, F-065, F-070, F-073]
 
   - id: E-16
@@ -2477,13 +2477,13 @@ decisions:
 
   - id: D-144
     sujet: 'Étape 8 : modèle de données'
-    choix: 'Le modèle de données est dans la Conception système, section « Modèle de données » : 33 tables, TB-01 à TB-33, dans la base PostgreSQL du serveur (N-01, D-134), la base SQLite du téléphone (N-02, D-135) et son stockage sécurisé (N-03). Règles : l''id de ce que crée un geste (post, média, commentaire, partage, message, story, notification…) est un uuid fait par le téléphone, si bien qu''un « Réessayer » ou un renvoi de FL-12 retombe sur la même ligne : c''est le numéro d''écriture de D-137 ; tout ce qui vient d''un compte pointe vers lui et s''efface avec lui, en une seule transaction (D-101) ; les compteurs (posts, amis, likes, commentaires, enregistrements, partages) sont comptés à la demande, jamais stockés ; un état se lit dans les lignes (une demande d''amitié, une graine sans rattachement) plutôt que dans une colonne à part, sauf « vue » d''une notification et « lu » d''une conversation ; les types pause, inspire-expire et premium d''un post ne sont jamais stockés (D-136), et photo, vidéo ou carrousel se déduit de ses médias. Le design ne change pas.'
+    choix: 'Le modèle de données est dans la Conception système, section « Modèle de données » : 33 tables, TB-01 à TB-33, dans la base PostgreSQL du serveur (N-01, D-134), la base SQLite du téléphone (N-02, D-135) et son stockage sécurisé (N-03). Règles : l''id de ce que crée un geste (post, média, commentaire, partage, message, story, notification…) est un uuid fait par le téléphone, si bien qu''un « Réessayer » ou un renvoi de FL-12 retombe sur la même ligne : c''est le numéro d''écriture de D-137 ; tout ce qui vient d''un compte pointe vers lui et s''efface avec lui, en une seule transaction (D-101) ; les compteurs (posts, amis, likes, commentaires, enregistrements, partages) sont comptés à la demande, jamais stockés ; un état se lit dans les lignes (l''absence d''amitié, une graine sans rattachement) plutôt que dans une colonne à part, sauf le statut d''une amitié, « vue » d''une notification et « lu » d''une conversation ; les types pause, inspire-expire et premium d''un post ne sont jamais stockés (D-136), et photo, vidéo ou carrousel se déduit de ses médias. Le design ne change pas.'
     raison: 'Chaque fait n''est gardé qu''à un endroit : rien à remettre d''accord, aucun compteur faux, et la suppression d''un compte n''oublie rien (NFR-X-4).'
     impacte: [E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-13, E-14, E-15, E-16, E-17]
 
   - id: D-145
     sujet: 'Identifiant unique'
-    choix: 'L''identifiant (@) d''un compte est unique sans tenir compte des majuscules : si « @Lea » existe, personne ne peut prendre « @lea ». Restent ouverts dans F-070 : longueur, caractères permis et message s''il est déjà pris. Le design ne change pas.'
+    choix: 'L''identifiant (@) d''un compte ne s''écrit qu''en minuscules, comme le dessine P-27 (« Minuscules, sans espace »), et il est unique : deux comptes ne peuvent pas avoir le même. Restent ouverts dans F-070 : longueur, caractères permis et message s''il est déjà pris. Le design ne change pas.'
     raison: 'Choix du propriétaire : personne ne peut passer pour un autre en changeant une majuscule.'
     impacte: [F-043, F-070, E-01]
 
@@ -2495,7 +2495,7 @@ decisions:
 
   - id: D-147
     sujet: 'Périodes au premier plan gardées 7 jours'
-    choix: 'Pour qu''une seconde ne compte qu''une fois quand deux téléphones sont ouverts ensemble (D-105, D-117), le serveur garde les périodes où l''appli du compte était au premier plan, 7 jours au plus après leur fin ; la tâche FL-17 efface les plus vieilles. Une période arrivée plus de 7 jours après sa fin (téléphone longtemps sans réseau) compte en entier, même si un autre téléphone était ouvert en même temps. Le design ne change pas.'
+    choix: 'Précise D-105 et D-117 : pour qu''une seconde ne compte qu''une fois quand deux téléphones sont ouverts ensemble (D-105, D-117), le serveur garde les périodes où l''appli du compte était au premier plan, 7 jours au plus après leur fin ; la tâche FL-17 efface les plus vieilles. Une période arrivée plus de 7 jours après sa fin (téléphone longtemps sans réseau) compte en entier, même si un autre téléphone était ouvert en même temps. Le design ne change pas.'
     raison: 'Choix du propriétaire : le serveur ne garde pas l''historique de l''usage de l''appli, comme pour les sauvegardes (D-128) ; un téléphone sans réseau plus d''une semaine est rare.'
     impacte: [F-024, F-073, E-14, E-15]
 
@@ -2519,8 +2519,8 @@ decisions:
 
   - id: D-151
     sujet: 'Étape 8 : flux de données'
-    choix: 'Le graphe des flux de données est dans la Conception système, section « Flux de données » : 13 nœuds (N-01 à N-13) et 84 flux (DF-01 à DF-84). Une appli par téléphone (iOS, Android), même si leur code est commun (D-132), parce que chacune parle à son store. Les deux rôles ne parlent qu''à l''appli. Un flux est sensible quand il porte un compte, une connexion, une amitié, une conversation, un message, le temps passé dans l''appli ou un soutien (E-01, E-02, E-09, E-10, E-11, E-14, E-15, E-16) ; posts, médias, commentaires, likes, collections, notifications, stories, recherche et préférences ne le sont pas, leurs textes étant en charabia (D-118) et leurs images de l''art généré (D-086). Le service de rapports de plantage n''est pas un nœud : il ne reçoit aucune donnée d''entité (NFR-X-5). Le design ne change pas.'
-    raison: 'Suit la méthode (prompt 12) ; la liste des flux sensibles prépare le threat model.'
+    choix: 'Le graphe des flux de données est dans la Conception système, section « Flux de données » : 14 nœuds (N-01 à N-14) et 84 flux (DF-01 à DF-84). Une appli par téléphone (iOS, Android), même si leur code est commun (D-132), parce que chacune parle à son store. Les deux rôles ne parlent qu''à l''appli. Un flux est sensible dès qu''il porte une donnée liée à un compte : compte, connexion, post, commentaire, like, collection, notification, amitié, conversation, message, story, temps passé dans l''appli ou soutien (E-01 à E-03, E-05 à E-12, E-14 à E-16) ; un lieu, une personne identifiée, un like ou une vue de story lient un compte à un endroit ou à un autre compte, même quand les textes sont en charabia (D-118). Seuls ne le sont pas les flux qui ne portent que des graines et leurs algorithmes (E-04, E-13). Le service de rapports de plantage est un nœud (N-14) : il ne reçoit aucune donnée d''entité (NFR-X-5), si bien qu''aucun flux DF ne le cite, mais le graphe montre ce chemin pour le threat model. Le design ne change pas.'
+    raison: 'Suit la méthode (prompt 12). Choix du propriétaire pour les flux sensibles et le service de rapports de plantage : le threat model examine tout ce qui lie un compte à un lieu ou à un autre compte, et vérifie NFR-X-5.'
     impacte: []
 
 ids_retires:
