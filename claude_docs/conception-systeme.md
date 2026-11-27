@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 237, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 239, exported 2026-11-27 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -2039,7 +2039,7 @@ Aucune feature qui lit ou écrit des données ne manque, et chaque stockage est 
 
 ## Contrats de pages
 
-Un contrat par page, P-01 à P-29, dans le dépôt : `docs/pages/P-01.yaml` à `docs/pages/P-29.yaml`. Chacun liste les composants de sa page (C-xx) avec leur nom accessible (NFR-X-14), les colonnes qu'ils lisent et écrivent, les flux qui les portent, et les conditions pour apparaître ou être actifs. Un état de page (P-01.a…) est un état d'un composant de sa page. C'est la réponse au prompt 13 de la méthode, et aucun MANQUANT ne reste : ce qu'il a trouvé est réglé par D-152 à D-161, par les entités ajoutées aux flux DF-15, DF-17, DF-23, DF-25, DF-31, DF-33, DF-35, DF-37, DF-39, DF-41, DF-47 et DF-49, par F-019 ajoutée à DF-23 et DF-25, F-020 à DF-39 et DF-41, et F-063 et F-071 à DF-71 et DF-77.
+Un contrat par page, P-01 à P-30, dans le dépôt : `docs/pages/P-01.yaml` à `docs/pages/P-30.yaml`. Chacun liste les composants de sa page (C-xx) avec leur nom accessible (NFR-X-14), les colonnes qu'ils lisent et écrivent, les flux qui les portent, et les conditions pour apparaître ou être actifs. Un état de page (P-01.a…) est un état d'un composant de sa page. C'est la réponse au prompt 13 de la méthode, et aucun MANQUANT ne reste : ce qu'il a trouvé est réglé par D-152 à D-161, par les entités ajoutées aux flux DF-15, DF-17, DF-23, DF-25, DF-31, DF-33, DF-35, DF-37, DF-39, DF-41, DF-47 et DF-49, par F-019 ajoutée à DF-23 et DF-25, F-020 à DF-39 et DF-41, et F-063 et F-071 à DF-71 et DF-77.
 
 - Les contrats sont des fichiers YAML vérifiés à chaque pull request (checks L10 et B10) : ils sont écrits dans le dépôt, comme les modèles TLA+, et citent les flux et les décisions qu'ils suivent.
 - Le grisage (F-024) et le temps d'utilisation (F-073) ont un composant sur chaque page où ils jouent, même sans rien à toucher.

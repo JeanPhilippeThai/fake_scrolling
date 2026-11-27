@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 521, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 542, exported 2026-11-27 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -168,7 +168,7 @@ pages:
   - id: P-09
     nom: Messages — conversation
     plateforme: mobile
-    features: [F-005, F-024, F-036, F-038, F-039, F-040, F-041, F-042, F-073]
+    features: [F-005, F-024, F-036, F-038, F-039, F-040, F-041, F-042, F-073, F-075]
   - id: P-09.a
     nom: 'Conversation : chargement'
     plateforme: mobile
@@ -369,6 +369,10 @@ pages:
     nom: 'Création : erreur'
     plateforme: mobile
     features: [F-070]
+  - id: P-27.c
+    nom: Inscription expirée
+    plateforme: mobile
+    features: [F-070]
   - id: P-28
     nom: Nouveau post — panneau Amis proches
     plateforme: mobile
@@ -377,6 +381,10 @@ pages:
     nom: Mise à jour requise
     plateforme: mobile
     features: [F-002, F-074]
+  - id: P-30
+    nom: Messages — post ouvert
+    plateforme: mobile
+    features: [F-005, F-010, F-016, F-017, F-018, F-019, F-020, F-024, F-073, F-075]
 ```
 
 ```yaml
@@ -466,7 +474,7 @@ features:
   - id: F-005
     nom: Revenir à l'écran précédent
     description: Flèche retour en haut à gauche.
-    pages: [P-02, P-09, P-11, P-12, P-13, P-16, P-19, P-21, P-22, P-23, P-27]
+    pages: [P-02, P-09, P-11, P-12, P-13, P-16, P-19, P-21, P-22, P-23, P-27, P-30]
     plateformes: [mobile]
     acces: [R-01, R-02]
     variantes:
@@ -560,7 +568,7 @@ features:
   - id: F-010
     nom: Voir un post en plein écran
     description: Image du post sur tout l'écran.
-    pages: [P-03, P-16]
+    pages: [P-03, P-16, P-30]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -651,7 +659,7 @@ features:
   - id: F-016
     nom: Liker un contenu
     description: Cœur qui ajoute ou retire un like et met à jour le compteur.
-    pages: [P-03, P-03.e, P-05, P-16]
+    pages: [P-03, P-03.e, P-05, P-16, P-30]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -675,7 +683,7 @@ features:
   - id: F-017
     nom: Consulter les commentaires
     description: Bulle du post puis panneau listant les commentaires.
-    pages: [P-03, P-05, P-05.a, P-05.b, P-05.d, P-16]
+    pages: [P-03, P-05, P-05.a, P-05.b, P-05.d, P-16, P-30]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -691,7 +699,7 @@ features:
   - id: F-018
     nom: Enregistrer un post dans une collection
     description: 'Signet du post puis choix d''une collection, une seule par post ; signet plein : P-06 se rouvre sur la collection choisie, un tap la retire, un tap sur une autre y déplace le post (D-057).'
-    pages: [P-03, P-03.f, P-06, P-16]
+    pages: [P-03, P-03.f, P-06, P-16, P-30]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -704,12 +712,11 @@ features:
       - message « Enregistré dans … » ou « Retiré de … » en bas du fil pendant 2 s
       - 'échec : le signet redevient vide, « Le post n’a pas été enregistré. » en bas du fil pendant 2 s'
     questions_ouvertes: []
-    design_a_mettre_a_jour: true
 
   - id: F-019
     nom: Partager un post
     description: Flèche du post puis panneau de partage.
-    pages: [P-03, P-07, P-07.a, P-16]
+    pages: [P-03, P-07, P-07.a, P-16, P-30]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -735,14 +742,12 @@ features:
       - 'Peut-on partager un post « Amis proches » ? Agir sur un post suit son audience (D-138)'
       - 'Envoyer à un ami (F-019.a) : amis seulement (ami ou non, E-09)'
       - Un lien de post ouvert sans connexion mène à la connexion (P-01)
-      - 'Aspect du post reçu dans la conversation de l''ami (F-019.a, D-044) : non dessiné sur P-09'
       - 'Un post envoyé à un ami (F-019.a) passe-t-il la conversation en non lu chez lui, comme un message (F-041, D-085, SM-E-10) ?'
-    design_a_mettre_a_jour: true
 
   - id: F-020
     nom: Lire l'auteur et la légende d'un post
     description: Photo, pseudo et légende en blanc en bas du post.
-    pages: [P-03, P-16]
+    pages: [P-03, P-16, P-30]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -787,7 +792,7 @@ features:
   - id: F-024
     nom: Voir l'app se griser
     description: Toute l'interface perd 10 % de couleur par cycle, noir et blanc après 10 cycles, sans message. Seul le temps passé dans l'appli ouverte compte (D-075) ; deux téléphones ouverts en même temps ne comptent qu'une fois (D-105), sauf une période arrivée plus de 7 jours après sa fin (D-147).
-    pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28]
+    pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28, P-30]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -983,7 +988,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-11, E-10, E-01, E-04]
+    entites: [E-11, E-10, E-01, E-04, E-03]
     operations: [lecture, écriture]
     etats_ui:
       - contact en train d'écrire (D-084)
@@ -991,6 +996,8 @@ features:
       - 'chargement : anneau centré'
       - 'vide : « Aucun message » · « Écris le premier message à Léa. »'
       - 'erreur : « Les messages n’ont pas pu être chargés. » avec « Réessayer »'
+      - 'post reçu (F-019.a) : carte avec la photo ronde, le pseudo et le @ de l''auteur, puis la photo floue du post ; un tap l''ouvre en P-30 (F-075, D-162, D-163)'
+      - 'post qui n''est plus disponible : case grise « Ce post n’est plus disponible. » (D-153)'
     questions_ouvertes: []
 
   - id: F-039
@@ -1170,12 +1177,9 @@ features:
     etats_ui:
       - aucun lieu
       - lieu affiché sur la ligne
+      - 'champ « Lieu » de 60 caractères au plus ; « OK » garde le lieu tapé (D-157)'
       - « Retirer le lieu »
-      - « Aucun lieu trouvé. »
-      - 'chargement : anneau centré dans la liste (D-043)'
-      - 'échec de la recherche : message sur place avec « Réessayer » (D-043)'
     questions_ouvertes: []
-    design_a_mettre_a_jour: true
 
   - id: F-050
     nom: Choisir l'audience
@@ -1458,7 +1462,7 @@ features:
   - id: F-070
     nom: Créer son compte
     description: 'À la première connexion, choix du pseudo et de l''identifiant (@), puis ouverture de l''Accueil (D-052). Seulement ces deux champs : photo et description plus tard sur P-19 (D-063). Crée aussi le minuteur, le temps d''utilisation et le soutien du compte (D-114), et sa collection « Favoris » (D-161).'
-    pages: [P-27, P-27.a, P-27.b]
+    pages: [P-27, P-27.a, P-27.b, P-27.c]
     plateformes: [mobile]
     acces: [R-01]
     variantes: []
@@ -1468,9 +1472,9 @@ features:
       - « Créer mon compte » gris tant qu'un champ est vide
       - 'envoi : champs grisés, anneau et « Création du compte… » dans le bouton (D-064)'
       - 'erreur : « Ton compte n’a pas été créé. Vérifie ta connexion et réessaie. » avec « Réessayer », saisies gardées (D-064)'
+      - 'inscription expirée (P-27.c) : « Ton inscription a expiré. Reconnecte-toi pour la finir. » et le bouton vert « Me reconnecter », qui ouvre P-01 (D-154, D-164)'
     questions_ouvertes:
       - 'Règles de l''identifiant : longueur, caractères permis, message s''il est déjà pris (minuscules seulement, unique, D-145)'
-    design_a_mettre_a_jour: true
 
   - id: F-071
     nom: Se déconnecter
@@ -1507,7 +1511,7 @@ features:
   - id: F-073
     nom: Compter le temps d'utilisation
     description: 'Tâche de fond sans élément visible : chaque seconde passée appli ouverte et au premier plan s''ajoute au temps d''utilisation du compte, même après les 10 cycles de F-024 (D-093, D-096) ; deux téléphones ouverts en même temps ne comptent qu''une fois (D-105).'
-    pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28]
+    pages: [P-03, P-04, P-05, P-06, P-07, P-08, P-09, P-10, P-11, P-12, P-13, P-14, P-15, P-16, P-17, P-18, P-19, P-20, P-21, P-22, P-23, P-24, P-25, P-26, P-28, P-30]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
@@ -1529,6 +1533,23 @@ features:
       - page affichée à la place de toute autre tant que la version est trop vieille
       - 'bouton « Mettre à jour » toujours actif (D-142)'
     questions_ouvertes: []
+
+  - id: F-075
+    nom: Ouvrir un post reçu
+    description: 'Tap sur la carte d''un post reçu dans une conversation (P-09, D-162) : le post s''ouvre seul en plein écran (P-30), avec like, commentaires, enregistrement et partage comme sur P-16 ; la flèche ramène à la conversation (D-163).'
+    pages: [P-09, P-30]
+    plateformes: [mobile]
+    acces: [R-02]
+    variantes: []
+    entites: [E-11, E-03, E-04, E-01]
+    operations: [lecture]
+    etats_ui:
+      - 'post en plein écran, flèche « Retour à la conversation »'
+      - 'chargement : anneau centré (D-043), non dessiné'
+      - 'erreur : message sur place avec « Réessayer » (D-043), non dessiné'
+      - 'post plus disponible : case grise, rien à ouvrir (D-153)'
+    questions_ouvertes:
+      - 'Sur P-30, Commentaires, Enregistrer et Partager ouvrent P-05, P-06 et P-07 comme sur P-16 (D-163) : l''artboard Messages ne les relie pas'
 ```
 
 ```yaml
@@ -2581,6 +2602,24 @@ decisions:
     choix: 'Un nouveau compte a une seule collection, « Favoris », créée par F-070 avec le compte ; les trois collections de la maquette (Pour plus tard, Formes calmes, Couleurs à garder) n''existent pas au départ. P-06 est à redessiner avec « Favoris » : F-018 porte design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
     raison: 'Choix du propriétaire.'
     impacte: [F-018, F-070, P-06, E-07]
+
+  - id: D-162
+    sujet: 'Post reçu dans une conversation'
+    choix: 'Un post envoyé à un ami (F-019.a) s''affiche dans la conversation (P-09) en carte : la photo ronde, le pseudo et le @ de son auteur, puis la photo floue du post. La question ouverte de F-019 sur son aspect est close. Le design le montre sur P-09, avec la case grise de D-153.'
+    raison: 'Choix du propriétaire : la case grise « Ce post n’est plus disponible. » remplace quelque chose qu''on voit.'
+    impacte: [F-019, F-038, P-09, E-11]
+
+  - id: D-163
+    sujet: 'Ouvrir un post reçu'
+    choix: 'Un tap sur la carte d''un post reçu (D-162) l''ouvre seul en plein écran sur une nouvelle page, P-30 « Messages — post ouvert » (F-075) : comme P-16, sans glisser vers d''autres posts. Like, commentaires (P-05), enregistrement (P-06) et partage (P-07) y marchent comme sur P-16 ; la flèche ramène à P-09. Le design le montre dans l''artboard Messages.'
+    raison: 'Choix du propriétaire.'
+    impacte: [F-075, F-005, F-010, F-016, F-017, F-018, F-019, F-020, F-024, F-073, P-09, P-30]
+
+  - id: D-164
+    sujet: 'Inscription expirée : retour à la connexion'
+    choix: 'Sur P-27.c, sous « Ton inscription a expiré. Reconnecte-toi pour la finir. » (D-154), un bouton vert « Me reconnecter » ouvre P-01 ; rien ne s''ouvre sans ce tap. Le design le montre sur l''état P-27.c.'
+    raison: 'Choix du propriétaire : le temps de lire pourquoi.'
+    impacte: [F-070, P-27, P-01]
 
 ids_retires:
   - {id: F-013, decision: D-002}

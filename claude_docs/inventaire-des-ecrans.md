@@ -1,9 +1,9 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 156, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 162, exported 2026-11-27 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
 
-Le design compte 29 écrans, de P-01 à P-29, plus 60 états de page dessinés à part (D-040, D-041). Ils suivent l'ordre du parcours : connexion, Accueil, Messages, Nouveau post, Recherche, Profil. Les panneaux de la création d'un post, ajoutés ensuite, sont à la fin (P-24 à P-26), suivis de l'inscription (P-27), du panneau Amis proches (P-28) et de la page « Mise à jour requise » (P-29).
+Le design compte 30 écrans, de P-01 à P-30, plus 61 états de page dessinés à part (D-040, D-041). Ils suivent l'ordre du parcours : connexion, Accueil, Messages, Nouveau post, Recherche, Profil. Les panneaux de la création d'un post, ajoutés ensuite, sont à la fin (P-24 à P-26), suivis de l'inscription (P-27), du panneau Amis proches (P-28), de la page « Mise à jour requise » (P-29) et du post ouvert depuis Messages (P-30).
 
 - **Écran** : toute vue distincte, y compris un panneau qui se superpose à une autre page (notifications, commentaires, options…).
 - **Pas de regroupement** : un même élément présent sur plusieurs pages (menu du bas, grisage) est relisté sur chacune.
@@ -156,7 +156,7 @@ Panneau qui monte du bas sur un post du fil (P-03) ou un résultat de recherche 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
 | Fermer le panneau | Croix ou tap sur le fond assombri | Aucune | — |
-| Enregistrer dans une collection | Ligne par collection avec pastille de couleur et nom | 3 collections par défaut : Pour plus tard, Formes calmes, Couleurs à garder | Collection choisie encadrée en vert avec « enregistré » ; le panneau se ferme |
+| Enregistrer dans une collection | Ligne par collection avec pastille de couleur et nom | 1 collection au départ : Favoris, créée avec le compte (D-161) | Collection choisie encadrée en vert avec « enregistré » ; le panneau se ferme |
 | Retirer d'une collection | Tap sur la collection déjà choisie | Enregistrement du post | Message « Retiré de … » |
 | Créer une collection | Ligne en pointillé « Nouvelle collection » | Nouvelle collection nommée automatiquement « Collection 4 »… (saisie du nom : à confirmer) | Le post y est enregistré aussitôt ; création en cours (P-06.a) ; erreur (P-06.b) |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
@@ -228,6 +228,7 @@ Fil de discussion avec un ami ; le menu du bas est masqué.
 | Appeler le contact | Icône téléphone en haut à droite | Aucune | Sans effet dans la maquette (appel : à confirmer) |
 | Lire les messages | Bulles vertes (moi) à droite, grises (contact) à gauche, repère « Aujourd'hui » | Messages en charabia + émojis | Chargement (P-09.a) ; vide (P-09.b) ; erreur (P-09.d) |
 | Voir une photo envoyée ou reçue | Image dans le fil de messages | Photo floutée | — |
+| Voir un post reçu | Carte : photo ronde, pseudo et @ de l'auteur, puis photo floue du post ; un tap ouvre P-30 (D-162, D-163) | Post envoyé par l'ami (F-019.a) | Post plus disponible : case grise « Ce post n’est plus disponible. », rien à ouvrir (D-153) |
 | Répondre à un message | Glisser un message vers la droite | Message cité | Flèche de réponse qui apparaît ; sélectionné au-delà d'un seuil |
 | Voir le message cité | Bandeau « Réponse à … » au-dessus du champ, puis petite bulle au-dessus du message envoyé | Extrait du message cité | — |
 | Annuler la réponse | Croix dans le bandeau « Réponse à … » | Message cité | Bandeau disparaît |
@@ -563,15 +564,13 @@ Panneau qui monte du bas sur P-13 pour identifier des amis dans le post.
 
 ## P-25 Nouveau post — panneau Ajouter un lieu
 
-Panneau qui monte du bas sur P-13 pour rattacher un lieu au post.
+Panneau qui monte du bas sur P-13 pour rattacher un lieu au post. Le lieu est tapé librement, sans liste de lieux (D-157).
 
 | Élément | Description | Données | États visibles |
 | --- | --- | --- | --- |
-| Fermer le panneau | Lien « OK » en haut à droite ou tap sur le fond assombri | Aucune | — |
-| Rechercher un lieu | Champ « Rechercher », filtre par nom ou ville | Texte saisi | Vide ; liste filtrée |
-| Choisir un lieu | Ligne avec icône, nom du lieu, quartier ou ville | Lieu du post (8 lieux de démo ; vraie recherche de lieux : à confirmer) | Lieu choisi coché ; le panneau se ferme ; chargement de la recherche : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) |
-| Retirer le lieu | Lien rouge « Retirer le lieu » en tête de liste | Lieu du post | Visible seulement si un lieu est choisi |
-| Lire l'absence de résultat | Texte « Aucun lieu trouvé. » | Aucune | Affiché si rien ne correspond |
+| Fermer le panneau | Lien « OK » en haut à droite ou tap sur le fond assombri ; garde le lieu tapé | Aucune | — |
+| Taper un lieu | Champ « Lieu » avec une icône de repère | Lieu du post, 60 caractères au plus, envoyé lisible (D-157) | Vide ; rempli ; la saisie s'arrête à 60 caractères |
+| Retirer le lieu | Lien rouge « Retirer le lieu » sous le champ | Lieu du post | Visible seulement si le post a un lieu |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
 
 ## P-26 Nouveau post — panneau Audience
@@ -595,7 +594,7 @@ Panneau qui monte du bas sur P-13 : qui peut voir le post.
 | Lire l'invitation | Titre « Crée ton compte » et phrase « Choisis comment les autres te verront. » | Aucune | — |
 | Saisir son pseudo | Champ « Pseudo » | Pseudo, 16 caractères au plus | Vide ; rempli |
 | Saisir son identifiant | Champ « Identifiant » précédé d'un @, avec « Minuscules, sans espace. Tes amis te trouvent avec. » | Identifiant (lettres minuscules, chiffres, point et tiret bas en démo ; longueur et message s'il est pris : à confirmer ; minuscules seulement, unique (D-145)) | Vide ; rempli |
-| Créer son compte | Bouton vert « Créer mon compte », ouvre P-03 | Compte : pseudo et identifiant | Gris tant qu'un champ est vide ; envoi (P-27.a) ; erreur (P-27.b) |
+| Créer son compte | Bouton vert « Créer mon compte », ouvre P-03 | Compte : pseudo et identifiant | Gris tant qu'un champ est vide ; envoi (P-27.a) ; erreur (P-27.b) ; inscription expirée (P-27.c) |
 | Lire la suite | « Photo et description : plus tard, depuis ton profil. » (D-063) | Aucune | — |
 
 **États dessinés à part**
@@ -604,6 +603,7 @@ Panneau qui monte du bas sur P-13 : qui peut voir le post.
 | --- | --- | --- | --- |
 | P-27.a | Création du compte | Champs grisés, anneau et « Création du compte… » dans le bouton (D-064) | `Etat-P27-inscription-envoi.dc.html` |
 | P-27.b | Création : erreur | « Ton compte n’a pas été créé. Vérifie ta connexion et réessaie. » avec « Réessayer », saisies gardées (D-064) | `Etat-P27-inscription-erreur.dc.html` |
+| P-27.c | Inscription expirée | « Ton inscription a expiré. Reconnecte-toi pour la finir. » et le bouton vert « Me reconnecter », qui ouvre P-01 (D-154, D-164) | `Etat-P27-inscription-expiree.dc.html` |
 
 ## P-28 Nouveau post — panneau Amis proches
 
@@ -627,3 +627,20 @@ Page affichée à la place de toute autre quand la version de l'appli est trop v
 | Voir le logo | Carré arrondi avec un « F » blanc, de la couleur du thème choisi, comme sur P-01 | Thème de l'icône | Noir, orange ou rouge |
 | Lire le message | Titre « Mise à jour requise » et phrase « Cette version de l’appli est trop ancienne. Mets-la à jour pour continuer : ton compte et tes envois en attente sont gardés. » (D-142) | Aucune | — |
 | Mettre à jour l'appli | Bouton vert « Mettre à jour » en bas de page, ouvre l'appli dans l'App Store ou Google Play (F-074 ; sans effet dans la maquette) | Aucune | Toujours actif (D-142) |
+
+## P-30 Messages — post ouvert
+
+Un post reçu dans une conversation, ouvert seul en plein écran par un tap sur sa carte dans P-09 (D-162, D-163) ; pas de menu du bas. Il se comporte comme un post de P-16, sans glisser vers d'autres posts. Dans la maquette, il s'ouvre par-dessus la conversation, dans l'artboard `Chat.dc.html`.
+
+| Élément | Description | Données | États visibles |
+| --- | --- | --- | --- |
+| Revenir à la conversation | Flèche blanche en haut à gauche, ouvre P-09 | Aucune | — |
+| Voir le post | Image plein écran floutée | Photo du post | Couleur ou grisage selon les cycles ; chargement : anneau centré ; erreur : message sur place avec « Réessayer » (D-043, non dessinés) |
+| Liker ou retirer son like | Cœur blanc dans la colonne de droite | Nombre de likes | Vide blanc ; plein rose quand liké |
+| Ouvrir les commentaires | Bulle dans la colonne de droite, ouvre P-05 (D-163) | Nombre de commentaires | Sans effet dans la maquette |
+| Enregistrer un post | Signet dans la colonne de droite, ouvre P-06 (D-163) | Nombre d'enregistrements | Sans effet dans la maquette |
+| Partager un post | Flèche dans la colonne de droite, ouvre P-07 (D-163) | Nombre de partages | Sans effet dans la maquette |
+| Voir la photo du publieur | Rond en haut de la colonne de droite | Photo floue du publieur | Non cliquable |
+| Lire le pseudo du publieur | Nom en blanc au-dessus de la légende | Pseudo en charabia | — |
+| Lire la légende | Texte blanc en bas, sans fond | Légende en charabia | — |
+| Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |

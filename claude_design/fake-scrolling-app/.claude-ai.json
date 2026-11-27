@@ -1,7 +1,7 @@
 {
  "url": "https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT",
  "format": 2,
- "synced": "2026-11-27T16:41:52+00:00",
+ "synced": "2026-11-27T16:53:37+00:00",
  "files": {
   "project/Chat.dc.html": "6b8f44a789d03e50097a7bcf0a70b6d8956074009cf0d721112ba2a80ac53a9e",
   "project/Code.dc.html": "9f1091e023fa3fb8c422281ee39421bafb5547210bbb29c640514489cd1ec0a5",
@@ -75,15 +75,5 @@
   "project/Profile.dc.html": "a74d96b18e7913c65716c5110dcb5f49c3f3fbf59d52fb864e8023c523b53fe5",
   "project/Search.dc.html": "4b77121fb642214b90fb28db2acc4f0e3473aae7c8403c5d28093ab56da17bf7",
   "project/canvas.json": "87356ff663267de11d22f29131a49a5f2f3ef6617f42c92fb8c9a60122a8fd24"
- },
- "round": {
-  "project/Chat.dc.html": "changed",
-  "project/Compose.dc.html": "changed",
-  "project/Etat-P06-collection-envoi.dc.html": "changed",
-  "project/Etat-P06-collection-erreur.dc.html": "changed",
-  "project/Etat-P27-inscription-expiree.dc.html": "added",
-  "project/Main.dc.html": "changed",
-  "project/Search.dc.html": "changed",
-  "project/canvas.json": "changed"
  }
 }
