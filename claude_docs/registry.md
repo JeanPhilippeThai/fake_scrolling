@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 464, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 469, exported 2026-11-27 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -736,6 +736,7 @@ features:
       - Un lien de post ouvert sans connexion mène à la connexion (P-01)
       - 'Aspect du post reçu dans la conversation de l''ami (F-019.a, D-044) : non dessiné sur P-09'
       - 'Un post envoyé à un ami (F-019.a) passe-t-il la conversation en non lu chez lui, comme un message (F-041, D-085, SM-E-10) ?'
+      - 'Post partagé à un ami qui n''existe plus (compte de son auteur supprimé, D-101) ou qui sort de l''audience de l''ami : que montre son message dans la conversation (E-11) ?'
 
   - id: F-020
     nom: Lire l'auteur et la légende d'un post
@@ -1470,7 +1471,8 @@ features:
       - 'envoi : champs grisés, anneau et « Création du compte… » dans le bouton (D-064)'
       - 'erreur : « Ton compte n’a pas été créé. Vérifie ta connexion et réessaie. » avec « Réessayer », saisies gardées (D-064)'
     questions_ouvertes:
-      - 'Règles de l''identifiant : longueur, caractères permis, unicité, message s''il est déjà pris'
+      - 'Règles de l''identifiant : longueur, caractères permis, message s''il est déjà pris (unique sans tenir compte des majuscules, D-145)'
+      - 'Inscription finie plus d''1 h après son début, quand le serveur l''a oubliée (D-149, FL-16) : quel message, et retour à P-01 ?'
 
   - id: F-071
     nom: Se déconnecter
@@ -1503,7 +1505,6 @@ features:
       - 'sur P-26 : nombre d''amis proches à droite de « Modifier la liste » (« Aucun ami proche », « 1 ami proche », « N amis proches »)'
     questions_ouvertes:
       - 'Liste vide quand on choisit « Amis proches » : P-28 s''ouvre-t-il, ou le choix est-il refusé ?'
-      - Un changement de la liste vaut-il pour les posts et stories déjà publiés en « Amis proches » ?
 
   - id: F-073
     nom: Compter le temps d'utilisation
@@ -1539,7 +1540,7 @@ entites:
     nom: Compte utilisateur
     champs:
       - pseudo, en charabia (D-098)
-      - identifiant (@)
+      - identifiant (@), unique sans tenir compte des majuscules (D-145)
       - description, en charabia (D-098)
       - photo de profil
       - nombre de posts
@@ -2472,6 +2473,54 @@ decisions:
     sujet: 'Étape 8 : vérification à l''exécution'
     choix: 'La commande app de la vérification à l''exécution (méthode, verification.md) s''appuie sur Maestro. Il pilote de l''extérieur l''appli telle qu''Expo la construit (D-132), sans rien y ajouter : il trouve chaque bouton, champ et lien par son nom accessible (NFR-X-14), lit ce que montre l''écran et prend les captures des preuves. L''audit de NFR-X-14 (0 élément sans nom) lit la même vue de l''écran. Les preuves tournent sur un simulateur iPhone et un émulateur Android, à chaque changement ; le test à deux téléphones de NFR-X-12 en lance deux à la fois. Les vrais téléphones ne sont vérifiés qu''à la main, avant une version. Le design ne change pas.'
     raison: 'Choix du propriétaire : Maestro marche avec une appli Expo sans changer sa construction et trouve les éléments comme un lecteur d''écran ; simulateur et émulateur ne coûtent rien et tournent à chaque changement.'
+    impacte: []
+
+  - id: D-144
+    sujet: 'Étape 8 : modèle de données'
+    choix: 'Le modèle de données est dans la Conception système, section « Modèle de données » : 33 tables, TB-01 à TB-33, dans la base PostgreSQL du serveur (N-01, D-134), la base SQLite du téléphone (N-02, D-135) et son stockage sécurisé (N-03). Règles : l''id de ce que crée un geste (post, média, commentaire, partage, message, story, notification…) est un uuid fait par le téléphone, si bien qu''un « Réessayer » ou un renvoi de FL-12 retombe sur la même ligne : c''est le numéro d''écriture de D-137 ; tout ce qui vient d''un compte pointe vers lui et s''efface avec lui, en une seule transaction (D-101) ; les compteurs (posts, amis, likes, commentaires, enregistrements, partages) sont comptés à la demande, jamais stockés ; un état se lit dans les lignes (une demande d''amitié, une graine sans rattachement) plutôt que dans une colonne à part, sauf « vue » d''une notification et « lu » d''une conversation ; les types pause, inspire-expire et premium d''un post ne sont jamais stockés (D-136), et photo, vidéo ou carrousel se déduit de ses médias. Le design ne change pas.'
+    raison: 'Chaque fait n''est gardé qu''à un endroit : rien à remettre d''accord, aucun compteur faux, et la suppression d''un compte n''oublie rien (NFR-X-4).'
+    impacte: [E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-13, E-14, E-15, E-16, E-17]
+
+  - id: D-145
+    sujet: 'Identifiant unique'
+    choix: 'L''identifiant (@) d''un compte est unique sans tenir compte des majuscules : si « @Lea » existe, personne ne peut prendre « @lea ». Restent ouverts dans F-070 : longueur, caractères permis et message s''il est déjà pris. Le design ne change pas.'
+    raison: 'Choix du propriétaire : personne ne peut passer pour un autre en changeant une majuscule.'
+    impacte: [F-043, F-070, E-01]
+
+  - id: D-146
+    sujet: 'Amis proches : la liste du moment'
+    choix: 'L''audience « Amis proches » (F-050) suit toujours la liste du moment (F-072), posts et stories déjà publiés compris : un ami retiré de la liste ne les voit plus, un ami ajouté les voit. C''est déjà ce que fait D-138 pour un post à l''écran. La question ouverte de F-072 sur les posts déjà publiés est close. Le design ne change pas.'
+    raison: 'Choix du propriétaire : une seule règle pour voir et pour agir (D-138), sans rien garder par post.'
+    impacte: [F-050, F-072, E-03, E-09, E-12]
+
+  - id: D-147
+    sujet: 'Périodes au premier plan gardées 7 jours'
+    choix: 'Pour qu''une seconde ne compte qu''une fois quand deux téléphones sont ouverts ensemble (D-105, D-117), le serveur garde les périodes où l''appli du compte était au premier plan, 7 jours au plus après leur fin ; la tâche FL-17 efface les plus vieilles. Une période arrivée plus de 7 jours après sa fin (téléphone longtemps sans réseau) compte en entier, même si un autre téléphone était ouvert en même temps. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le serveur ne garde pas l''historique de l''usage de l''appli, comme pour les sauvegardes (D-128) ; un téléphone sans réseau plus d''une semaine est rare.'
+    impacte: [F-024, F-073, E-14, E-15]
+
+  - id: D-148
+    sujet: 'Notification d''un post ou d''une story effacé'
+    choix: 'Quand un post ou une story est effacé, ses notifications (like, commentaire, identification, D-061) le sont aussi : une story finie (FL-13, D-110), un post ou une story effacé avec le compte de son auteur (D-101). P-04 ne montre jamais une notification qui mène à un contenu qui n''existe plus. Le design ne change pas.'
+    raison: 'Choix du propriétaire : une notification mène toujours à quelque chose.'
+    impacte: [F-022, E-08, E-12]
+
+  - id: D-149
+    sujet: 'Adresse e-mail oubliée après 1 h'
+    choix: 'Le serveur oublie une adresse e-mail, ou un compte Google ou Apple, qui n''a pas mené à un compte, au plus 1 h après : le code envoyé (F-003, F-008) et l''inscription commencée (P-27, F-070) sont effacés par la tâche FL-16 1 h après l''envoi du code ou le début de l''inscription. Le code, lui, ne marche que 10 min (D-127). Ce que voit quelqu''un qui finit son inscription plus d''1 h après reste ouvert dans F-070. Le design ne change pas.'
+    raison: 'Choix du propriétaire : le serveur ne garde pas l''adresse de quelqu''un qui n''a pas de compte.'
+    impacte: [F-003, F-008, F-070, E-02]
+
+  - id: D-150
+    sujet: 'Dernier minuteur connu sur le téléphone'
+    choix: 'Complète D-135 : le téléphone garde aussi dans SQLite le dernier état du minuteur (E-14) reçu du serveur pour le compte connecté, et le dernier écart d''heure avec le serveur (D-140). Rouverte sans réseau, l''appli montre donc le même gris et continue de compter (D-117) ; le serveur reprend la main au retour du réseau. L''état du minuteur est effacé à la déconnexion (F-071) et à la suppression du compte (F-063). Le design ne change pas.'
+    raison: 'Choix du propriétaire : le gris ne disparaît pas parce que l''appli a été fermée sans réseau.'
+    impacte: [F-024, F-059, E-14]
+
+  - id: D-151
+    sujet: 'Étape 8 : flux de données'
+    choix: 'Le graphe des flux de données est dans la Conception système, section « Flux de données » : 13 nœuds (N-01 à N-13) et 84 flux (DF-01 à DF-84). Une appli par téléphone (iOS, Android), même si leur code est commun (D-132), parce que chacune parle à son store. Les deux rôles ne parlent qu''à l''appli. Un flux est sensible quand il porte un compte, une connexion, une amitié, une conversation, un message, le temps passé dans l''appli ou un soutien (E-01, E-02, E-09, E-10, E-11, E-14, E-15, E-16) ; posts, médias, commentaires, likes, collections, notifications, stories, recherche et préférences ne le sont pas, leurs textes étant en charabia (D-118) et leurs images de l''art généré (D-086). Le service de rapports de plantage n''est pas un nœud : il ne reçoit aucune donnée d''entité (NFR-X-5). Le design ne change pas.'
+    raison: 'Suit la méthode (prompt 12) ; la liste des flux sensibles prépare le threat model.'
     impacte: []
 
 ids_retires:

@@ -1,16 +1,27 @@
 # Design and docs: newest vs current
 
-Compared on 2026-11-27. One new decision: Maestro drives the app for the runtime checks, on an iPhone simulator and an Android emulator (D-143). The design is unchanged.
+Compared on 2026-11-27. The system design now holds the data model (33 tables, TB-01 to TB-33) and the data-flow graph (13 nodes, 84 flows), with two new background tasks (FL-16, FL-17) and eight decisions (D-144 to D-151). Docs only: the design was not imported, and stays as it is.
 
 ## Docs
 
-### Registre canonique – Fake scrolling (`registry.md`, rev 463 -> 464)
-- New D-143 « Étape 8 : vérification à l'exécution »: the `app` command of the runtime checks uses Maestro. It drives the app as Expo builds it (D-132), without adding anything to the app. It finds each button, field and link by its accessible name (NFR-X-14), reads what the screen shows and takes the proof screenshots. The NFR-X-14 audit reads the same view of the screen. Proofs run on an iPhone simulator and an Android emulator on every change, and the two-phone test of NFR-X-12 starts two at once. Real phones are checked by hand only, before a release.
+### Registre canonique – Fake scrolling (`registry.md`, rev 464 -> 469)
+- D-144: the data model's rules: ids made by the phone (the write number of D-137), everything of an account erased with it, counters counted on demand, states read from rows.
+- D-145: the @ is unique, capitals ignored (`@Lea` blocks `@lea`); E-01's « identifiant » says so.
+- D-146: « Amis proches » always follows today's list, for posts and stories already published too; F-072's question on it is closed.
+- D-147: the server keeps the app's foreground periods 7 days (FL-17); a period sent more than 7 days late counts in full.
+- D-148: a post's or story's notifications are erased with it (a story's tag when it ends, FL-13).
+- D-149: an e-mail address or Google / Apple account that led to no account is forgotten within 1 h (FL-16).
+- D-150: the phone keeps the last timer state and the clock offset in SQLite, so the grey survives a restart offline.
+- D-151: the data-flow graph: one app per phone, what counts as a sensitive flow.
+- F-070: the @ question keeps length, characters and the « already taken » message; new question on a sign-up finished more than 1 h after it began.
+- F-019: new question on what a shared post shows in a conversation once it no longer exists.
 
-### Conception système – Fake scrolling (`conception-systeme.md`, rev 171 -> 173)
-- NFR-X-14: its test now says the `app` command finds each element by its name « avec Maestro (D-143) ».
-- « Serveur, téléphone et API »: the list of what stays open no longer names the text of P-29, which D-142 settled.
+### Conception système – Fake scrolling (`conception-systeme.md`, rev 173 -> 179)
+- New flows FL-16 « Oublier les connexions inachevées » and FL-17 « Oublier les vieilles périodes au premier plan ».
+- New section « Modèle de données »: the tables TB-01 to TB-33 (PostgreSQL N-01, SQLite N-02, secure storage N-03), the entity fields that are computed, the columns with no entity field, and where each state of SM-E-02 to SM-E-16 is read.
+- New section « Flux de données »: nodes N-01 to N-13, flows DF-01 to DF-84, the graph, and the 70 sensitive flows for the threat model.
+- FL-15 now names its table (TB-26); the background-task row of « Qui fait quoi » adds FL-16 and FL-17 (D-147, D-149).
 
 ## Unchanged
 
-Design canvas « Fake scrolling — app » (71 files); « Fake scrolling — inventaire des écrans ».
+Fake scrolling — inventaire des écrans (rev 155); the design (not imported).
