@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 171, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 173, exported 2026-11-27 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -1155,7 +1155,7 @@ Sur iOS et sur Android. Le gris (F-024), le charabia (D-118) et l'art généré 
 
 | ID | Exigence | Nombre ou test | Source |
 | --- | --- | --- | --- |
-| NFR-X-14 | Chaque bouton, champ et lien a un nom accessible, fixé dans le contrat de sa page (`nom_accessible`), lu par VoiceOver et TalkBack. | Lint là où c'est possible ; la commande `app` des tests trouve chaque élément par son nom ; audit d'accessibilité automatique de chaque page : 0 élément sans nom. | D-130, méthode (verification.md) |
+| NFR-X-14 | Chaque bouton, champ et lien a un nom accessible, fixé dans le contrat de sa page (`nom_accessible`), lu par VoiceOver et TalkBack. | Lint là où c'est possible ; la commande `app` des tests trouve chaque élément par son nom, avec Maestro (D-143) ; audit d'accessibilité automatique de chaque page : 0 élément sans nom. | D-130, méthode (verification.md) |
 | NFR-X-15 | Zones à toucher assez grandes. | 44 × 44 pt au moins sur iOS, 48 × 48 dp au moins sur Android ; audit automatique de chaque page. | D-130, consignes des plateformes |
 | NFR-X-16 | Les textes de l'appli elle-même suivent la taille de texte du téléphone et restent lisibles à chaque niveau de gris. | Jusqu'à 200 % sans texte coupé ni chevauché ; contraste 4,5:1 au moins (3:1 en grand texte) ; audit à 100 % et 200 %, à 0 et à 10 cycles de gris. | D-130 |
 | NFR-X-17 | Si le téléphone demande moins d'animations, rien ne bouge seul : le fondu de la publication (D-120) devient un changement net et l'art généré des vidéos reste immobile, comme Inspire / Expire (F-014). | Test de bout en bout, réglage du téléphone activé : aucune animation pendant une publication et sur un post vidéo. | D-130 |
@@ -1212,4 +1212,4 @@ Les lieux (F-049) n'ont pas encore de groupe : leur source est une question ouve
 - Versions : chaque requête porte la version de l'API ; le serveur garde une version tant qu'une appli acceptée s'en sert, et une appli trop vieille ouvre P-29 (D-141).
 - Direct : la connexion WebSocket, ouverte tant que l'appli est au premier plan, ne porte que le message reçu et « en train d'écrire » ; envoyer un message passe par l'API (D-084, D-133).
 
-Restent ouverts, dans les `questions_ouvertes` des features : F-009, quels posts montre le fil et dans quel ordre ; F-052, la règle de la recherche par graine ; F-053, ce que comptent les tendances ; F-049, la source des lieux ; F-074, le texte de P-29.
+Restent ouverts, dans les `questions_ouvertes` des features : F-009, quels posts montre le fil et dans quel ordre ; F-052, la règle de la recherche par graine ; F-053, ce que comptent les tendances ; F-049, la source des lieux.

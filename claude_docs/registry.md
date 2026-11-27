@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 463, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 464, exported 2026-11-27 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -2467,6 +2467,12 @@ decisions:
     choix: 'P-29 montre le logo de l’appli, le titre « Mise à jour requise », le message « Cette version de l’appli est trop ancienne. Mets-la à jour pour continuer : ton compte et tes envois en attente sont gardés. » et un bouton vert « Mettre à jour », le même texte sur iPhone et Android, jamais désactivé (F-074, D-141). P-29 est dessinée (artboard MiseAJour.dc.html) : F-074 ne porte plus design_a_mettre_a_jour.'
     raison: 'Choix du propriétaire : dire quoi faire et que rien n’est perdu ; un seul texte de bouton pour les deux stores.'
     impacte: [F-002, F-074, P-29]
+
+  - id: D-143
+    sujet: 'Étape 8 : vérification à l''exécution'
+    choix: 'La commande app de la vérification à l''exécution (méthode, verification.md) s''appuie sur Maestro. Il pilote de l''extérieur l''appli telle qu''Expo la construit (D-132), sans rien y ajouter : il trouve chaque bouton, champ et lien par son nom accessible (NFR-X-14), lit ce que montre l''écran et prend les captures des preuves. L''audit de NFR-X-14 (0 élément sans nom) lit la même vue de l''écran. Les preuves tournent sur un simulateur iPhone et un émulateur Android, à chaque changement ; le test à deux téléphones de NFR-X-12 en lance deux à la fois. Les vrais téléphones ne sont vérifiés qu''à la main, avant une version. Le design ne change pas.'
+    raison: 'Choix du propriétaire : Maestro marche avec une appli Expo sans changer sa construction et trouve les éléments comme un lecteur d''écran ; simulateur et émulateur ne coûtent rien et tournent à chaque changement.'
+    impacte: []
 
 ids_retires:
   - {id: F-013, decision: D-002}

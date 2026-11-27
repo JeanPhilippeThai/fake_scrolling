@@ -1,19 +1,16 @@
 # Design and docs: newest vs current
 
-Compared on 2026-11-27. The three Major findings of the design and docs check are fixed in the docs: the themed logo of P-29 now belongs to F-002, search (F-052, FL-08) names the media seeds it reads (E-04), and D-135 and NFR-X-3 no longer speak of a search history. The design was not imported: nothing changed on its side, and `claude_design/` stays as it is.
+Compared on 2026-11-27. One new decision: Maestro drives the app for the runtime checks, on an iPhone simulator and an Android emulator (D-143). The design is unchanged.
 
 ## Docs
 
-### Registre canonique – Fake scrolling (`registry.md`, rev 455 -> 463)
-- F-002 « Afficher l'icône de l'appli »: `pages` gains P-29, and P-29's `features` gains F-002. The logo of « Mise à jour requise » follows the icon theme, as on P-01 (owner's confirmation, D-103, D-142). The merge note of F-002 names P-29.
-- D-142: `impacte` gains F-002.
-- F-052 « Rechercher des posts »: `entites` gains E-04; E-04's `utilisee_par` gains F-052; D-139's `impacte` gains E-04. Search compares against the seed of each post's media, as D-139 already said.
-- D-135: « l'historique de recherche (E-13) » becomes « l'état de la recherche (E-13, sans historique, D-089) ». The phone keeps no search history (owner's confirmation of D-089).
+### Registre canonique – Fake scrolling (`registry.md`, rev 463 -> 464)
+- New D-143 « Étape 8 : vérification à l'exécution »: the `app` command of the runtime checks uses Maestro. It drives the app as Expo builds it (D-132), without adding anything to the app. It finds each button, field and link by its accessible name (NFR-X-14), reads what the screen shows and takes the proof screenshots. The NFR-X-14 audit reads the same view of the screen. Proofs run on an iPhone simulator and an Android emulator on every change, and the two-phone test of NFR-X-12 starts two at once. Real phones are checked by hand only, before a release.
 
-### Conception système – Fake scrolling (`conception-systeme.md`, rev 167 -> 171)
-- FL-08, steps 2, 2' and 3: E-04 added to the entities read (« graine des médias de chaque post, D-139 »).
-- NFR-X-3: « l'historique de recherche (E-13) » becomes « l'état de la recherche (E-13, sans historique, D-089) ».
+### Conception système – Fake scrolling (`conception-systeme.md`, rev 171 -> 173)
+- NFR-X-14: its test now says the `app` command finds each element by its name « avec Maestro (D-143) ».
+- « Serveur, téléphone et API »: the list of what stays open no longer names the text of P-29, which D-142 settled.
 
 ## Unchanged
 
-Fake scrolling — inventaire des écrans (`inventaire-des-ecrans.md`, rev 155).
+Design canvas « Fake scrolling — app » (71 files); « Fake scrolling — inventaire des écrans ».

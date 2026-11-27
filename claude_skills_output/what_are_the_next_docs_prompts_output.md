@@ -1,6 +1,6 @@
 # Next docs prompts
 
-2026-11-27 · commit 0ab85e4 · fingerprint 3d9d135a0343
+2026-11-27 · commit 0ab85e4 · fingerprint c454c21653ea
 
 Doc tests: all passed. The docs are at step 8, System design; three Major findings (L3-05, L5-02, G-04) are open in earlier steps and come first.
 
@@ -21,6 +21,5 @@ Doc tests: all passed. The docs are at step 8, System design; three Major findin
 | 8 System design | Not done | The stack (D-132 to D-135) and the split between server, phone and API (D-136 to D-141) are decided; L8 to L10, B8 to B10 not reached |
 
 ## Next prompts
-1. **Prompt 6: system design** (step 8), question « quel outil derrière la commande `app` de la vérification à l'exécution (lancer l'appli, la piloter, trouver chaque élément par son nom accessible) ». Give it: the stack (D-132 to D-135), NFR-X-14, `workflow_docs/method/verification.md`. It produces: the decision on the runtime verification tool.
-2. **Prompt 11: data model** (step 8). Give it: the registry's entities (E-01 to E-17), the state diagrams, the stores (PostgreSQL, D-134; SQLite and the secure storage, D-135), and the leads of the check report (E-03's three types never stored, FL-15's list of deleted accounts). It produces: the tables, columns and types, in « Conception système ».
-3. **Prompt 12: data-flow graph** (step 8). Give it: the data model from item 2, the flows FL-01 to FL-15, the API groups table (D-137). It produces: the nodes and data flows, in « Conception système ».
+1. **Prompt 11: data model** (step 8). Give it: the registry's entities (E-01 to E-17), the state diagrams, the stores (PostgreSQL, D-134; SQLite and the secure storage, D-135), and the leads of the check report (E-03's three types never stored, FL-15's list of deleted accounts). It produces: the tables, columns and types, in « Conception système ».
+2. **Prompt 12: data-flow graph** (step 8). Give it: the data model from item 1, the flows FL-01 to FL-15, the API groups table (D-137). It produces: the nodes and data flows, in « Conception système ».
