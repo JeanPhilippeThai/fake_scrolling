@@ -491,13 +491,18 @@ ORDER BY 1;
 -- how: Query
 -- severity: Blocking
 -- needs: registry, page_contract
+-- A page state (P-01.a) has no contract of its own: its page's contract describes it.
 SELECT p.id, 'no page contract' AS problem, p.path
 FROM pages p
-WHERE p.scope = 'canonical' AND NOT EXISTS (SELECT 1 FROM page_contracts c WHERE c.page = p.id)
+WHERE p.scope = 'canonical' AND instr(p.id, '.') = 0
+  AND NOT EXISTS (SELECT 1 FROM page_contracts c WHERE c.page = p.id)
 UNION ALL
-SELECT c.page, 'contract of a page that is not in the canonical registry', c.path
+SELECT c.page,
+  CASE WHEN instr(c.page, '.') > 0 THEN 'contract of a page state, not of a page: its page''s contract describes it'
+       ELSE 'contract of a page that is not in the canonical registry' END, c.path
 FROM page_contracts c
-WHERE NOT EXISTS (SELECT 1 FROM pages p WHERE p.scope = 'canonical' AND p.id = c.page)
+WHERE instr(c.page, '.') > 0
+   OR NOT EXISTS (SELECT 1 FROM pages p WHERE p.scope = 'canonical' AND p.id = c.page)
 ORDER BY 1;
 
 -- check: L10-03
@@ -505,14 +510,18 @@ ORDER BY 1;
 -- how: Query
 -- severity: Major
 -- needs: registry, page_contract
-SELECT c.id, c.page, c.feature, 'the page does not list this feature in the registry' AS problem, c.path
+-- A page's contract also describes its states (P-01.a): a feature a state lists counts as listed on its page.
+WITH page_features AS (
+  SELECT DISTINCT CASE WHEN instr(r.source, '.') > 0 THEN substr(r.source, 1, instr(r.source, '.') - 1) ELSE r.source END AS page,
+         r.target AS feature
+  FROM refs r WHERE r.scope = 'canonical' AND r.rel = 'page_feature')
+SELECT c.id, c.page, c.feature, 'neither the page nor one of its states lists this feature in the registry' AS problem, c.path
 FROM components c
-WHERE NOT EXISTS (SELECT 1 FROM refs r WHERE r.scope = 'canonical' AND r.rel = 'page_feature' AND r.source = c.page AND r.target = c.feature)
+WHERE NOT EXISTS (SELECT 1 FROM page_features f WHERE f.page = c.page AND f.feature = c.feature)
 UNION ALL
-SELECT NULL, r.source, r.target, 'listed on the page in the registry, but no component of its contract', pc.path
-FROM refs r JOIN page_contracts pc ON pc.page = r.source
-WHERE r.scope = 'canonical' AND r.rel = 'page_feature'
-  AND NOT EXISTS (SELECT 1 FROM components c WHERE c.page = r.source AND c.feature = r.target)
+SELECT NULL, f.page, f.feature, 'listed on the page or one of its states in the registry, but no component of its contract', pc.path
+FROM page_features f JOIN page_contracts pc ON pc.page = f.page
+WHERE NOT EXISTS (SELECT 1 FROM components c WHERE c.page = f.page AND c.feature = f.feature)
 ORDER BY 2, 3;
 
 -- check: L10-06
