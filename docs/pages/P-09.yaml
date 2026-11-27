@@ -82,8 +82,7 @@ composants:
     visible_si: ["TB-18.post_partage_id renseigné et post visible (D-088, D-138)"]
     actif_si: []
     etats: ["photo ronde, pseudo et @ de l'auteur, puis photo floue du post (D-162)"]
-    questions_ouvertes:
-      - "DF-35 et DF-37 portent E-10, E-11, E-04 et E-01, pas E-03 : la carte lit pourtant le post (TB-06)"
+    questions_ouvertes: []
   - id: C-09-07
     nom_accessible: "Répondre au message"
     type: bouton

@@ -19,15 +19,14 @@ composants:
   - id: C-30-02
     nom_accessible: "Post"
     type: image
-    feature: F-010
+    feature: F-075
     lit: [TB-07.post_id, TB-07.rang, TB-07.graine, TB-07.algorithme, TB-07.duree_video_ms]
     ecrit: []
     flux: [DF-35, DF-37, DF-84]
     visible_si: []
     actif_si: []
     etats: ["en couleur", "grisé selon les cycles", "chargement : anneau centré (D-043), non dessiné", "erreur : message sur place avec « Réessayer » (D-043), non dessiné"]
-    questions_ouvertes:
-      - "Quel flux porte le post ouvert depuis une conversation ? DF-35 et DF-37 ne portent pas E-03"
+    questions_ouvertes: []
   - id: C-30-03
     nom_accessible: "Liker"
     type: bouton

@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 542, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 549, exported 2026-11-27 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -384,7 +384,7 @@ pages:
   - id: P-30
     nom: Messages — post ouvert
     plateforme: mobile
-    features: [F-005, F-010, F-016, F-017, F-018, F-019, F-020, F-024, F-073, F-075]
+    features: [F-005, F-016, F-017, F-018, F-019, F-020, F-024, F-073, F-075]
 ```
 
 ```yaml
@@ -568,7 +568,7 @@ features:
   - id: F-010
     nom: Voir un post en plein écran
     description: Image du post sur tout l'écran.
-    pages: [P-03, P-16, P-30]
+    pages: [P-03, P-16]
     plateformes: [mobile]
     acces: [R-02]
     variantes:
@@ -1565,7 +1565,7 @@ entites:
       - nombre de posts
       - nombre d'amis
       - nombre de likes reçus
-    utilisee_par: [F-001, F-007, F-017, F-019, F-020, F-022, F-033, F-036, F-037, F-038, F-043, F-048, F-056, F-057, F-058, F-063, F-070, F-072]
+    utilisee_par: [F-001, F-007, F-017, F-019, F-020, F-022, F-033, F-036, F-037, F-038, F-043, F-048, F-056, F-057, F-058, F-063, F-070, F-072, F-075]
 
   - id: E-02
     nom: Connexion
@@ -1593,7 +1593,7 @@ entites:
       - lien
       - personnes identifiées
       - lieu
-    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-053, F-054, F-057, F-062, F-063, F-068]
+    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-038, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-053, F-054, F-057, F-062, F-063, F-068, F-075]
 
   - id: E-04
     nom: Média
@@ -1603,7 +1603,7 @@ entites:
       - durée de la vidéo
       - rang dans le carrousel
       - heure d'arrivée de la graine sur le serveur, pour l'effacer après 24 h si rien ne la prend (D-123)
-    utilisee_par: [F-005, F-010, F-011, F-012, F-017, F-019, F-020, F-022, F-030, F-036, F-037, F-038, F-042, F-043, F-044, F-045, F-046, F-048, F-051, F-052, F-053, F-058, F-062, F-063, F-072]
+    utilisee_par: [F-005, F-010, F-011, F-012, F-017, F-019, F-020, F-022, F-030, F-036, F-037, F-038, F-042, F-043, F-044, F-045, F-046, F-048, F-051, F-052, F-053, F-058, F-062, F-063, F-072, F-075]
 
   - id: E-05
     nom: Commentaire
@@ -1660,7 +1660,7 @@ entites:
   - id: E-11
     nom: Message
     champs: [expéditeur, texte en charabia (D-083), photo en graine (D-086), message cité, post partagé, date]
-    utilisee_par: [F-019, F-037, F-038, F-040, F-041, F-042, F-063]
+    utilisee_par: [F-019, F-037, F-038, F-040, F-041, F-042, F-063, F-075]
 
   - id: E-12
     nom: Story
@@ -2613,7 +2613,7 @@ decisions:
     sujet: 'Ouvrir un post reçu'
     choix: 'Un tap sur la carte d''un post reçu (D-162) l''ouvre seul en plein écran sur une nouvelle page, P-30 « Messages — post ouvert » (F-075) : comme P-16, sans glisser vers d''autres posts. Like, commentaires (P-05), enregistrement (P-06) et partage (P-07) y marchent comme sur P-16 ; la flèche ramène à P-09. Le design le montre dans l''artboard Messages.'
     raison: 'Choix du propriétaire.'
-    impacte: [F-075, F-005, F-010, F-016, F-017, F-018, F-019, F-020, F-024, F-073, P-09, P-30]
+    impacte: [F-075, F-005, F-016, F-017, F-018, F-019, F-020, F-024, F-073, P-09, P-30, FL-07]
 
   - id: D-164
     sujet: 'Inscription expirée : retour à la connexion'

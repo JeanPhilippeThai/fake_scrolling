@@ -29,3 +29,10 @@ Compared on 2026-11-27. The docs now describe the four redrawn features: a new a
 ## Unchanged
 
 Design canvas « Fake scrolling — app »: 72 files, the same as the repo.
+
+## Second import (registre rev 542 -> 549, conception système rev 239 -> 249)
+
+- E-01, E-03, E-04 and E-11 list F-075 in `utilisee_par`, and E-03 lists F-038 (check L3-04).
+- P-30 no longer lists F-010: F-075 covers the opened post there; F-010 is back to P-03 and P-16.
+- FL-07 gains step 5 « Ouvrir un post reçu » (P-09 → P-30 → P-09), and its open question on F-019 now asks only whether a sent post marks the chat unread.
+- DF-35 and DF-37 carry E-03 and F-075; DF-84 lists F-075 (checks L5-07, L9-05).
