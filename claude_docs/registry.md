@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 452, exported 2026-11-26 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 455, exported 2026-11-27 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -1528,9 +1528,8 @@ features:
     operations: []
     etats_ui:
       - page affichée à la place de toute autre tant que la version est trop vieille
-    questions_ouvertes:
-      - 'Texte du message et du bouton, à fixer en dessinant P-29'
-    design_a_mettre_a_jour: true
+      - 'bouton « Mettre à jour » toujours actif (D-142)'
+    questions_ouvertes: []
 ```
 
 ```yaml
@@ -2461,6 +2460,12 @@ decisions:
     sujet: 'Étape 8 : appli trop vieille'
     choix: 'Quand la version de l''appli est trop vieille pour le serveur (D-137), l''appli ouvre la nouvelle page P-29 « Mise à jour requise » à la place de toute autre : un message, et un bouton qui ouvre l''appli dans l''App Store ou Google Play (nouvelle feature F-074 « Mettre à jour l''appli »). Rien d''autre n''est utilisable ; la session et les envois en attente (FL-12) sont gardés et repartent après la mise à jour. P-29 n''est jamais grisée, comme P-01 (D-009). F-074 porte design_a_mettre_a_jour: true jusqu''à ce que P-29 soit dessinée.'
     raison: 'Choix du propriétaire : dire clairement quoi faire, plutôt que laisser l''appli échouer partout.'
+    impacte: [F-074, P-29]
+
+  - id: D-142
+    sujet: 'Textes de P-29 « Mise à jour requise »'
+    choix: 'P-29 montre le logo de l’appli, le titre « Mise à jour requise », le message « Cette version de l’appli est trop ancienne. Mets-la à jour pour continuer : ton compte et tes envois en attente sont gardés. » et un bouton vert « Mettre à jour », le même texte sur iPhone et Android, jamais désactivé (F-074, D-141). P-29 est dessinée (artboard MiseAJour.dc.html) : F-074 ne porte plus design_a_mettre_a_jour.'
+    raison: 'Choix du propriétaire : dire quoi faire et que rien n’est perdu ; un seul texte de bouton pour les deux stores.'
     impacte: [F-074, P-29]
 
 ids_retires:
