@@ -1,0 +1,141 @@
+page: P-12
+nom: Nouveau post — choix des photos
+acces: [R-02]
+entree:
+  parametres:
+    - "page d'origine, pour la croix « Fermer » (D-062, D-090) : P-03, P-08, P-14, P-15, P-16, P-17, P-17.a"
+    - "destination : Fil d'actualité, ou Story depuis « Ta story » de P-08 (F-026.a)"
+  conditions: ["R-02", "SM-E-02 Session ouverte"]
+composants:
+  - id: C-12-01
+    nom_accessible: Fermer la création
+    type: bouton
+    feature: F-005.a
+    lit: []
+    ecrit: [TB-07.id, TB-27.sorte, TB-27.contenu]   # efface les graines déjà envoyées du brouillon ; sans réseau, en attente (D-121, D-122)
+    flux: [DF-18, DF-20, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-12-02
+    nom_accessible: Aperçu de la photo
+    type: image
+    feature: F-044
+    lit: []   # vraie photo de la galerie du téléphone, jamais envoyée (D-086, D-120)
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-12-03
+    nom_accessible: Position dans la sélection
+    type: texte
+    feature: F-044
+    lit: []   # rang et nombre de photos choisies : brouillon en mémoire (D-135)
+    ecrit: []
+    flux: []
+    visible_si: ["SM-E-03 Brouillon, sur le téléphone : sélection multiple (F-044)"]
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-12-04
+    nom_accessible: Choisir un album
+    type: bouton
+    feature: F-045
+    lit: []   # albums de la galerie du téléphone, rien n'est stocké
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [sans effet]
+    questions_ouvertes: []
+  - id: C-12-05
+    nom_accessible: Sélection multiple
+    type: interrupteur
+    feature: F-044
+    lit: []   # mode simple ou multiple : en mémoire
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [inactif, "actif (fond noir)"]
+    questions_ouvertes: []
+  - id: C-12-06
+    nom_accessible: Prendre une photo
+    type: bouton
+    feature: F-046
+    lit: [TB-07.algorithme]
+    ecrit: [TB-07.id, TB-07.compte_id, TB-07.graine, TB-07.arrivee_le, TB-27.sorte, TB-27.contenu]   # la graine part dès la prise (D-120) ; sans réseau, en attente (D-122)
+    flux: [DF-18, DF-20, DF-19, DF-21, DF-83, DF-84, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [sans effet]
+    questions_ouvertes: []
+  - id: C-12-07
+    nom_accessible: Galerie de photos
+    type: liste
+    feature: F-044
+    lit: [TB-07.algorithme]   # l'algorithme choisi par le serveur (D-119) ; les photos viennent de la galerie du téléphone
+    ecrit: [TB-07.id, TB-07.compte_id, TB-07.graine, TB-07.rang, TB-07.arrivee_le, TB-27.sorte, TB-27.contenu]   # graine envoyée dès le choix, effacée si la photo est retirée (D-120, D-121, D-122)
+    flux: [DF-18, DF-20, DF-19, DF-21, DF-83, DF-84, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: ["photo voilée de blanc", "numéros 1 à 10 en multiple", "galerie vide (P-12.a)", "accès refusé (P-12.b)"]
+    questions_ouvertes: []
+  - id: C-12-08
+    nom_accessible: Suivant
+    type: lien
+    feature: F-044
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []   # toujours actif : une photo au moins est choisie (FL-03)
+    etats: [actif]
+    questions_ouvertes: []
+  - id: C-12-09
+    nom_accessible: Grisage de l'appli
+    type: barre
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: []
+    actif_si: []
+    etats: ["de couleur à noir et blanc", "SM-E-14 Noir et blanc"]
+    questions_ouvertes: []
+  - id: C-12-10
+    nom_accessible: Ouvrir l'appareil photo
+    type: bouton
+    feature: F-046.a
+    lit: [TB-07.algorithme]
+    ecrit: [TB-07.id, TB-07.compte_id, TB-07.graine, TB-07.arrivee_le, TB-27.sorte, TB-27.contenu]
+    flux: [DF-18, DF-20, DF-19, DF-21, DF-83, DF-84, DF-73, DF-79]
+    visible_si: ["F-044 : galerie du téléphone vide (P-12.a, D-033, D-047)"]
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-12-11
+    nom_accessible: Ouvrir les réglages
+    type: bouton
+    feature: F-044
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: ["F-044 : accès aux photos refusé par le téléphone (P-12.b, D-034)"]
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-12-12
+    nom_accessible:   # rien à l'écran : le temps passé appli ouverte est compté sans élément visible
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: []
+    questions_ouvertes: []

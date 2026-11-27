@@ -1,0 +1,52 @@
+page: P-18
+nom: Profil — panneau Photo de profil
+acces: [R-02]
+entree:
+  parametres: []   # ouvert depuis la photo de P-17 (C-17-07)
+  conditions: ["R-02", "SM-E-02 Session ouverte"]
+composants:
+  - id: C-18-01
+    nom_accessible: Fermer
+    type: bouton
+    feature: F-027
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]   # tap sur le fond assombri : même effet
+    questions_ouvertes: []
+  - id: C-18-02
+    nom_accessible: Choisir dans ta galerie
+    type: bouton
+    feature: F-058
+    lit: []   # vraie image de la galerie du téléphone, jamais envoyée (D-086)
+    ecrit: [TB-07.id, TB-07.compte_id, TB-07.graine, TB-07.arrivee_le, TB-07.profil_de, TB-27.sorte, TB-27.contenu]   # appliquée tout de suite, graine renvoyée sans message (D-100, D-119)
+    flux: [DF-46, DF-48, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [normal, "fichier refusé (P-18.a)"]
+    questions_ouvertes: []
+  # retiré : « Choisir une image de démo » (4 ronds) — propre à la maquette, exclu du registre (F-058.a, D-020)
+  - id: C-18-03
+    nom_accessible: Grisage de l'appli
+    type: barre
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: []
+    actif_si: []
+    etats: ["de couleur à noir et blanc", "SM-E-14 Noir et blanc"]
+    questions_ouvertes: []
+  - id: C-18-04
+    nom_accessible:   # rien à l'écran : le temps passé appli ouverte est compté sans élément visible
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: []
+    questions_ouvertes: []

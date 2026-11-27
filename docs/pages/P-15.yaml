@@ -1,0 +1,119 @@
+page: P-15
+nom: "Recherche — résultats"
+acces: [R-02]
+entree:
+  parametres: []
+  conditions: ["SM-E-02 Session ouverte", "TB-28.texte non vide"]
+composants:
+  - id: C-15-01
+    nom_accessible: "Rechercher"
+    type: champ
+    feature: F-052
+    lit: [TB-28.texte]
+    ecrit: [TB-28.texte, TB-28.graine]
+    flux: [DF-72, DF-78, DF-71, DF-77, DF-38, DF-40]
+    visible_si: []
+    actif_si: []
+    etats: [rempli, "les résultats changent à chaque frappe", "vidé : retour à P-14"]
+    questions_ouvertes: []
+  # retiré : « Revenir aux suggestions » n'est pas un élément à part : c'est le champ C-15-01 vidé (état « vidé : retour à P-14 »).
+  - id: C-15-02
+    nom_accessible: "Résultats"
+    type: liste
+    feature: F-052
+    lit: [TB-06.id, TB-07.post_id, TB-07.graine, TB-07.algorithme, TB-09.post_id]
+    ecrit: []
+    flux: [DF-39, DF-41, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["18 tuiles", "chargement (P-15.a)", "aucun résultat (P-15.b)", "erreur (P-15.c)"]
+    questions_ouvertes: []
+  - id: C-15-03
+    nom_accessible: "Ouvrir le résultat"
+    type: bouton
+    feature: F-054
+    lit: [TB-06.id]
+    ecrit: []
+    flux: [DF-39, DF-41, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-15-04
+    nom_accessible: "Grisage de l'appli"
+    type: minuteur
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: ["de couleur à noir et blanc, 10 % par cycle"]
+    questions_ouvertes: []
+  - id: C-15-05
+    nom_accessible: "Accueil"
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["inactive (grise)"]
+    questions_ouvertes: []
+  - id: C-15-06
+    nom_accessible: "Messages"
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["inactive (grise)"]
+    questions_ouvertes: []
+  - id: C-15-07
+    nom_accessible: "Nouveau post"
+    type: bouton
+    feature: F-026
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-15-08
+    nom_accessible: "Recherche"
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["active (verte)"]
+    questions_ouvertes: []
+  - id: C-15-09
+    nom_accessible: "Profil"
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["inactive (grise)"]
+    questions_ouvertes: []
+  # Ajouté hors inventaire : F-073 est une tâche de fond sans élément visible ; ce composant lui donne sa place sur la page.
+  - id: C-15-10
+    nom_accessible: "Temps d'utilisation"
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [invisible]
+    questions_ouvertes: []

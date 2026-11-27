@@ -1,0 +1,84 @@
+page: P-19
+nom: Modifier le profil
+acces: [R-02]
+entree:
+  parametres: []   # ouvert depuis « Modifier » de P-17 (C-17-02) ; son propre compte (TB-32.compte_id)
+  conditions: ["R-02", "SM-E-02 Session ouverte"]
+composants:
+  - id: C-19-01
+    nom_accessible: Annuler
+    type: lien
+    feature: F-005.b
+    lit: []
+    ecrit: []   # saisies abandonnées
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-19-02
+    nom_accessible: Pseudo
+    type: champ
+    feature: F-056
+    lit: [TB-01.pseudo]   # prérempli avec le charabia (D-098)
+    ecrit: []   # enregistré par C-19-04
+    flux: [DF-47, DF-49, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["prérempli avec le charabia (D-098)", "compteur 0/16", "frappe bloquée à 16"]
+    questions_ouvertes: []
+  - id: C-19-03
+    nom_accessible: Description
+    type: champ
+    feature: F-056
+    lit: [TB-01.description]   # préremplie avec le charabia (D-098)
+    ecrit: []   # enregistrée par C-19-04
+    flux: [DF-47, DF-49, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["préremplie avec le charabia (D-098)", "compteur 0/80", "frappe bloquée à 80"]
+    questions_ouvertes: []
+  - id: C-19-04
+    nom_accessible: Enregistrer
+    type: lien
+    feature: F-056
+    lit: []
+    ecrit: [TB-01.pseudo, TB-01.description]   # en charabia (D-098) ; pseudo vide : l'ancien est gardé, description vidable (D-099)
+    flux: [DF-46, DF-48, DF-83]
+    visible_si: []
+    actif_si: []
+    etats: [normal, "enregistrement (P-19.a)", "erreur (P-19.b)"]
+    questions_ouvertes: []
+  - id: C-19-05
+    nom_accessible: Réessayer
+    type: bouton
+    feature: F-056
+    lit: []
+    ecrit: [TB-01.pseudo, TB-01.description]   # relance C-19-04
+    flux: [DF-46, DF-48, DF-83]
+    visible_si: ["F-056 : enregistrement en échec (P-19.b)"]
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-19-06
+    nom_accessible: Grisage de l'appli
+    type: barre
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: []
+    actif_si: []
+    etats: ["de couleur à noir et blanc", "SM-E-14 Noir et blanc"]
+    questions_ouvertes: []
+  - id: C-19-07
+    nom_accessible:   # rien à l'écran : le temps passé appli ouverte est compté sans élément visible
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: []
+    questions_ouvertes: []

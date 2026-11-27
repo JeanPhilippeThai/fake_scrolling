@@ -1,0 +1,85 @@
+page: P-05
+nom: Panneau Commentaires
+acces: [R-02]
+entree:
+  parametres: [TB-06.id]   # le post ouvert, donné par P-03 ou P-16 (D-050)
+  conditions: ["SM-E-02 Session ouverte", "SM-E-03 Publié"]
+composants:
+  - id: C-05-01
+    nom_accessible: Fermer les commentaires
+    type: bouton
+    feature: F-027
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [croix ou tap sur le fond assombri]
+    questions_ouvertes: []
+  - id: C-05-02
+    nom_accessible: Liste des commentaires
+    type: liste
+    feature: F-017
+    lit: [TB-08.id, TB-08.post_id, TB-08.auteur_id, TB-08.texte, TB-08.publie_le, TB-01.pseudo, TB-07.profil_de, TB-07.graine, TB-07.algorithme]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [liste, "chargement (P-05.a)", "vide (P-05.b)", "erreur (P-05.d)"]
+    questions_ouvertes: []
+  - id: C-05-03
+    nom_accessible: Liker le commentaire
+    type: bouton
+    feature: F-016.b
+    lit: [TB-10.commentaire_id, TB-10.auteur_id]
+    ecrit: [TB-10.commentaire_id, TB-10.auteur_id, TB-10.like_le]
+    flux: [DF-14, DF-16, DF-83, DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [vide gris, "plein rouge (TB-10.auteur_id = compte connecté)", "échec : redevient gris, « Le like n’a pas été enregistré. » 2 s (D-043, non dessiné)"]
+    questions_ouvertes: []
+  - id: C-05-04
+    nom_accessible: Ajouter un commentaire…
+    type: champ
+    feature: F-030
+    lit: [TB-07.profil_de, TB-07.graine, TB-07.algorithme]   # sa propre photo à côté du champ ; le texte tapé reste en mémoire jusqu'à l'envoi
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [vide, rempli]
+    questions_ouvertes: []
+  - id: C-05-05
+    nom_accessible: Publier
+    type: bouton
+    feature: F-030
+    lit: []
+    ecrit: [TB-08.id, TB-08.post_id, TB-08.auteur_id, TB-08.texte, TB-08.publie_le]
+    flux: [DF-14, DF-16, DF-83]
+    visible_si: []
+    actif_si: ["champ C-05-04 non vide"]
+    etats: [gris si vide, texte visible moins d'1 s puis charabia, "échec : Non publié. (P-05.c)"]
+    questions_ouvertes: []
+  - id: C-05-06
+    nom_accessible: Grisage de l'appli
+    type: minuteur
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: [de couleur à noir et blanc après 10 cycles, aucun message]
+    questions_ouvertes: []
+  # Ajouté hors inventaire : F-073 est une tâche de fond sans élément visible.
+  - id: C-05-07
+    nom_accessible: Temps d'utilisation
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [invisible]
+    questions_ouvertes: []

@@ -1,0 +1,328 @@
+page: P-03
+nom: Accueil — fil
+acces: [R-02]
+entree:
+  parametres: []
+  conditions: ["SM-E-02 Session ouverte"]
+composants:
+  - id: C-03-01
+    nom_accessible: Fil des posts
+    type: liste
+    feature: F-009
+    lit: [TB-06.id, TB-06.auteur_id, TB-06.audience, TB-06.publie_le]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: ["SM-E-03 Publié"]
+    actif_si: []
+    etats: [en cours de glisser, retour en place, "chargement (P-03.a)", "erreur (P-03.b)"]
+    questions_ouvertes: []
+  - id: C-03-02
+    nom_accessible: Photo du post
+    type: image
+    feature: F-010
+    lit: [TB-07.graine, TB-07.algorithme, TB-07.rang, TB-07.post_id]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [en couleur, grisé selon les cycles]
+    questions_ouvertes: []
+  - id: C-03-03
+    nom_accessible: Vidéo du post
+    type: image
+    feature: F-011
+    lit: [TB-07.graine, TB-07.algorithme, TB-07.duree_video_ms, TB-07.post_id]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: ["TB-07.duree_video_ms renseignée (vidéo)"]
+    actif_si: []
+    etats: [lecture en boucle]
+    questions_ouvertes: []
+  - id: C-03-04
+    nom_accessible: Progression de la vidéo
+    type: barre
+    feature: F-011
+    lit: [TB-07.duree_video_ms]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: ["TB-07.duree_video_ms renseignée (vidéo)"]
+    actif_si: []
+    etats: [se remplit puis repart]
+    questions_ouvertes: []
+  - id: C-03-05
+    nom_accessible: Photos du carrousel
+    type: liste
+    feature: F-012
+    lit: [TB-07.rang, TB-07.post_id, TB-07.graine, TB-07.algorithme]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: ["plusieurs TB-07.rang pour un même TB-07.post_id (carrousel)"]
+    actif_si: []
+    etats: [une photo à la fois]
+    questions_ouvertes: []
+  - id: C-03-06
+    nom_accessible: Position dans le carrousel
+    type: texte
+    feature: F-012
+    lit: [TB-07.rang, TB-07.post_id]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: ["plusieurs TB-07.rang pour un même TB-07.post_id (carrousel)"]
+    actif_si: []
+    etats: [point plein = photo affichée, autres semi-transparents]
+    questions_ouvertes: []
+  - id: C-03-07
+    nom_accessible: Carrousel de pause
+    type: carte
+    feature: F-012.a
+    lit: [TB-29.carrousels_pause]   # phrases fixes, placées par le téléphone (D-136)
+    ecrit: []
+    flux: [DF-72, DF-78]
+    visible_si: ["TB-29.carrousels_pause activé (P-23)"]
+    actif_si: []
+    etats: [fond pastel différent par phrase]
+    questions_ouvertes: []
+  - id: C-03-08
+    nom_accessible: Inspire, Expire
+    type: carte
+    feature: F-014
+    lit: []   # post placé par le téléphone, sans donnée de compte (D-136)
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [animation continue, figée si l'appareil réduit les animations]
+    questions_ouvertes: []
+  - id: C-03-09
+    nom_accessible: Post Premium
+    type: carte
+    feature: F-015.a
+    lit: [TB-24.secondes, TB-25.achat_store, TB-29.theme_icone]
+    ecrit: []
+    flux: [DF-27, DF-29, DF-43, DF-45, DF-84, DF-72, DF-78]
+    visible_si: ["TB-24.secondes ≥ 3600 (1 h, D-093)", "SM-E-16 Non soutenu, au chargement du fil (D-094)"]
+    actif_si: []
+    etats: [offre, "Merci pour ton soutien. jusqu'au prochain chargement du fil (D-094)"]
+    questions_ouvertes: []
+  - id: C-03-10
+    nom_accessible: Soutenir le projet
+    type: bouton
+    feature: F-015.a
+    lit: [TB-25.store, TB-25.achat_store]
+    ecrit: [TB-25.store, TB-25.achat_store, TB-27.contenu]
+    flux: [DF-58, DF-59, DF-64, DF-65, DF-42, DF-44, DF-43, DF-45, DF-73, DF-79, DF-83, DF-84]
+    visible_si: ["SM-E-16 Non soutenu"]
+    actif_si: ["SM-E-16 Non soutenu"]
+    etats: [normal, "Paiement en cours (SM-E-16 Paiement en cours, store)", "Merci pour ton soutien. (SM-E-16 Soutenu)", "paiement échoué (P-03.c)", "paiement annulé (par analogie avec P-22, D-036)"]
+    questions_ouvertes: []
+  - id: C-03-11
+    nom_accessible: Liker par double tap
+    type: bouton
+    feature: F-016.a
+    lit: [TB-09.auteur_id]
+    ecrit: [TB-09.post_id, TB-09.auteur_id, TB-09.like_le]
+    flux: [DF-14, DF-16, DF-83, DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [grand cœur animé, ne retire jamais le like, "échec (P-03.e)"]
+    questions_ouvertes: []
+  - id: C-03-12
+    nom_accessible: Liker le post
+    type: bouton
+    feature: F-016
+    lit: [TB-09.post_id, TB-09.auteur_id]
+    ecrit: [TB-09.post_id, TB-09.auteur_id, TB-09.like_le]
+    flux: [DF-14, DF-16, DF-83, DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [vide, "plein (TB-09.auteur_id = compte connecté)", "échec (P-03.e)"]
+    questions_ouvertes: []
+  - id: C-03-13
+    nom_accessible: Commentaires
+    type: bouton
+    feature: F-017
+    lit: [TB-08.post_id]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-03-14
+    nom_accessible: Enregistrer le post
+    type: bouton
+    feature: F-018
+    lit: [TB-12.post_id, TB-12.compte_id]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [vide, "plein (TB-12.compte_id = compte connecté)", "échec (P-03.f)"]
+    questions_ouvertes: []
+  - id: C-03-15
+    nom_accessible: Partager le post
+    type: bouton
+    feature: F-019
+    lit: [TB-33.post_id]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-03-16
+    nom_accessible: Photo du publieur
+    type: image
+    feature: F-020
+    lit: [TB-07.profil_de, TB-07.graine, TB-07.algorithme]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [floue, non cliquable]
+    questions_ouvertes: []
+  - id: C-03-17
+    nom_accessible: Pseudo du publieur
+    type: texte
+    feature: F-020
+    lit: [TB-01.pseudo]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [charabia]
+    questions_ouvertes: []
+  - id: C-03-18
+    nom_accessible: Légende du post
+    type: texte
+    feature: F-020
+    lit: [TB-06.legende]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [charabia, tronquée au-delà d'environ 80 caractères]
+    questions_ouvertes: []
+  - id: C-03-19
+    nom_accessible: plus
+    type: lien
+    feature: F-021
+    lit: [TB-06.legende]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: ["TB-06.legende de plus d'environ 80 caractères"]
+    actif_si: []
+    etats: [repliée (« plus »), dépliée (« moins »)]
+    questions_ouvertes: []
+  - id: C-03-20
+    nom_accessible: Notifications
+    type: bouton
+    feature: F-022
+    lit: [TB-14.vue, TB-14.destinataire_id]
+    ecrit: []
+    flux: [DF-23, DF-25, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["pastille avec le nombre de TB-14 non vues (SM-E-08 Non vue)", "sans pastille (SM-E-08 Vue partout)"]
+    questions_ouvertes: []
+  - id: C-03-21
+    nom_accessible: Confirmation
+    type: texte
+    feature: F-019
+    lit: []   # le nom de la collection de « Enregistré dans … » est lu par C-06-02 (F-018)
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["Envoyé à …", "Lien copié.", "Partagé.", "Enregistré dans … ou Retiré de … (F-018)", visible 2 s]
+    questions_ouvertes: []
+  - id: C-03-22
+    nom_accessible: Grisage de l'appli
+    type: minuteur
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: [de couleur à noir et blanc après 10 cycles, aucun message]
+    questions_ouvertes: []
+  - id: C-03-23
+    nom_accessible: Accueil
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [active (verte)]
+    questions_ouvertes: []
+  - id: C-03-24
+    nom_accessible: Messages
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [inactive (grise)]
+    questions_ouvertes: []
+  - id: C-03-25
+    nom_accessible: Nouveau post
+    type: bouton
+    feature: F-026
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-03-26
+    nom_accessible: Recherche
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [inactive (grise)]
+    questions_ouvertes: []
+  - id: C-03-27
+    nom_accessible: Profil
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [inactive (grise)]
+    questions_ouvertes: []
+  # Ajouté hors inventaire : F-073 est une tâche de fond sans élément visible ; ce composant lui donne sa place sur la page.
+  - id: C-03-28
+    nom_accessible: Temps d'utilisation
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [invisible]
+    questions_ouvertes: []
+  # Toast de l'état P-03.d.
+  - id: C-03-29
+    nom_accessible: "Post publié."
+    type: texte
+    feature: F-051
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: ["SM-E-03 Publié, juste publié par le compte connecté"]
+    actif_si: []
+    etats: ["visible puis disparaît (P-03.d)"]
+    questions_ouvertes: []

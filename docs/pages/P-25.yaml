@@ -1,0 +1,64 @@
+page: P-25
+nom: Nouveau post — panneau Ajouter un lieu
+acces: [R-02]
+entree:
+  parametres: ["brouillon de P-13, en mémoire (D-135)"]
+  conditions: ["R-02", "SM-E-02 Session ouverte", "SM-E-03 Brouillon, sur le téléphone, ou SM-E-12 Brouillon, sur le téléphone"]
+composants:
+  - id: C-25-01
+    nom_accessible: OK
+    type: lien
+    feature: F-027
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]   # tap sur le fond assombri : même effet
+    questions_ouvertes: []
+  - id: C-25-02
+    nom_accessible: Lieu
+    type: champ
+    feature: F-049
+    lit: []
+    ecrit: []   # lieu tapé librement, 60 caractères au plus (D-157) ; brouillon en mémoire (D-135), enregistré par C-13-08 ou C-13-12 dans TB-06.lieu ou TB-19.lieu
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [vide, rempli, "60 caractères au plus (D-157)"]
+    questions_ouvertes: []
+  # Retiré : la liste des lieux ; plus de liste de lieux, le lieu est tapé librement (D-157)
+  - id: C-25-04
+    nom_accessible: Retirer le lieu
+    type: lien
+    feature: F-049
+    lit: []
+    ecrit: []   # efface le lieu du brouillon en mémoire (D-135)
+    flux: []
+    visible_si: ["F-049 : un lieu est tapé dans le brouillon (SM-E-03 Brouillon, sur le téléphone)"]
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  # Retiré : « Aucun lieu trouvé. » n'a plus lieu d'être sans liste (D-157)
+  - id: C-25-06
+    nom_accessible: Grisage de l'appli
+    type: barre
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: []
+    actif_si: []
+    etats: ["de couleur à noir et blanc", "SM-E-14 Noir et blanc"]
+    questions_ouvertes: []
+  - id: C-25-07
+    nom_accessible:   # rien à l'écran : le temps passé appli ouverte est compté sans élément visible
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: []
+    questions_ouvertes: []

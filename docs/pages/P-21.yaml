@@ -1,0 +1,97 @@
+page: P-21
+nom: Mon compte
+acces: [R-02]
+entree:
+  parametres: []
+  conditions: ["SM-E-02 Session ouverte"]
+composants:
+  - id: C-21-01
+    nom_accessible: Revenir aux options
+    type: bouton
+    feature: F-005
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-21-02
+    nom_accessible: Compte
+    type: texte
+    feature: F-057.a
+    lit: [TB-01.identifiant]
+    ecrit: []
+    flux: [DF-47, DF-49, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-21-03
+    nom_accessible: Se déconnecter
+    type: bouton
+    feature: F-071
+    lit: []
+    ecrit: [TB-05.jeton_hash, TB-32.jeton, TB-32.compte_id, TB-31.compte_id]
+    flux: [DF-10, DF-12, DF-83, DF-75, DF-81, DF-71, DF-77]
+    visible_si: []
+    actif_si: []
+    etats: ["sans confirmation : un tap ouvre P-01 (D-065)"]
+    questions_ouvertes: []
+  - id: C-21-04
+    nom_accessible: Supprimer mon compte
+    type: bouton
+    feature: F-063
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["ouvre la confirmation"]
+    questions_ouvertes: []
+  - id: C-21-05
+    nom_accessible: Supprimer définitivement
+    type: bouton
+    feature: F-063
+    lit: []
+    ecrit: [TB-01.id, TB-26.compte_id, TB-26.supprime_le, TB-32.jeton, TB-32.compte_id, TB-31.compte_id]
+    flux: [DF-46, DF-48, DF-83, DF-75, DF-81, DF-71, DF-77]
+    visible_si: ["C-21-04 touché : fenêtre « Supprimer ton compte ? » ouverte"]
+    actif_si: []
+    etats: [normal, "compte supprimé : « Compte supprimé » et « Merci d'être passé·e. » 2 s, puis P-01 (D-069)", "échec (P-21.a) : « Réessayer »"]
+    questions_ouvertes: []
+  - id: C-21-06
+    nom_accessible: Annuler
+    type: bouton
+    feature: F-063
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: ["C-21-04 touché : fenêtre « Supprimer ton compte ? » ouverte"]
+    actif_si: []
+    etats: ["ferme la fenêtre"]
+    questions_ouvertes: []
+  # retiré : « Recommencer la démo », propre à la maquette, hors registre (D-020)
+  - id: C-21-07
+    nom_accessible: ''   # filtre gris de toute la page : rien à lire ni à toucher
+    type: image
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: ["de couleur à noir et blanc, 10 % de gris par cycle"]
+    questions_ouvertes: []
+  # C-21-08 : aucun élément dessiné ; ajouté pour F-073, que le registre met sur cette page
+  - id: C-21-08
+    nom_accessible: ''   # compte en fond le temps au premier plan : rien à lire ni à toucher
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: []
+    questions_ouvertes: []

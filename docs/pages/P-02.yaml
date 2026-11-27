@@ -1,0 +1,85 @@
+page: P-02
+nom: Code reçu par e-mail
+acces: [R-01]
+entree:
+  parametres: [TB-03.adresse_email]   # saisie sur P-01 (C-01-05, F-003)
+  conditions: ["SM-E-02 Code envoyé"]
+composants:
+  - id: C-02-01
+    nom_accessible: Revenir à la connexion
+    type: bouton
+    feature: F-005
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-02-02
+    nom_accessible: Entre le code
+    type: texte
+    feature: F-006
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [toujours affichée]
+    questions_ouvertes: []
+  - id: C-02-03
+    nom_accessible: Code à 6 chiffres
+    type: champ
+    feature: F-007
+    lit: []
+    ecrit: []   # en mémoire jusqu'à « Se connecter » (C-02-04)
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [vide, "case en cours encadrée", partiel, complet]
+    questions_ouvertes: []
+  - id: C-02-04
+    nom_accessible: Se connecter
+    type: bouton
+    feature: F-007
+    lit: [TB-03.code_hash, TB-03.envoye_le, TB-03.essais_faux, TB-02.compte_id]
+    ecrit: [TB-03.essais_faux, TB-04.jeton_hash, TB-05.jeton_hash, TB-32.jeton, TB-32.compte_id]
+    flux: [DF-10, DF-11, DF-12, DF-13, DF-83, DF-84, DF-75, DF-81]
+    visible_si: ["SM-E-02 Code envoyé", "SM-E-02 Code renvoyable"]
+    actif_si: ["6 chiffres saisis dans C-02-03"]
+    etats: [désactivé, actif, "code faux (P-02.a)"]
+    questions_ouvertes: []
+  - id: C-02-05
+    nom_accessible: Renvoyer le code dans 30 s
+    type: minuteur
+    feature: F-008
+    lit: []   # décompte de 30 s tenu par l'appli depuis l'envoi
+    ecrit: []
+    flux: []
+    visible_si: ["SM-E-02 Code envoyé"]
+    actif_si: []
+    etats: ["décompte de 30 à 0"]
+    questions_ouvertes: []
+  - id: C-02-06
+    nom_accessible: Renvoyer le code
+    type: lien
+    feature: F-008
+    lit: []
+    ecrit: [TB-03.code_hash, TB-03.envoye_le, TB-03.essais_faux]
+    flux: [DF-10, DF-12, DF-83, DF-66]
+    visible_si: ["SM-E-02 Code renvoyable"]
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  # C-02-07 : tiré de l'état P-02.b de l'élément « Renvoyer le code » : un autre libellé, à la place de « Se connecter »
+  - id: C-02-07
+    nom_accessible: Renvoyer un code
+    type: bouton
+    feature: F-008
+    lit: []
+    ecrit: [TB-03.code_hash, TB-03.envoye_le, TB-03.essais_faux]
+    flux: [DF-10, DF-12, DF-83, DF-66]
+    visible_si: ["SM-E-02 Code expiré"]
+    actif_si: []
+    etats: ["code expiré (P-02.b)"]
+    questions_ouvertes: []

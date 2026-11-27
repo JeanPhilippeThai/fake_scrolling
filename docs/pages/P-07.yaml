@@ -1,0 +1,74 @@
+page: P-07
+nom: Panneau Partager
+acces: [R-02]
+entree:
+  parametres: [TB-06.id]   # le post, donné par P-03 ou P-16 (D-050)
+  conditions: ["SM-E-02 Session ouverte", "SM-E-03 Publié"]
+composants:
+  - id: C-07-01
+    nom_accessible: Fermer le panneau
+    type: bouton
+    feature: F-027
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [croix ou tap sur le fond assombri]
+    questions_ouvertes: []
+  - id: C-07-02
+    nom_accessible: Envoyer à un ami
+    type: liste
+    feature: F-019.a
+    lit: [TB-15.demandeur_id, TB-15.destinataire_id, TB-15.statut, TB-01.pseudo, TB-07.profil_de, TB-07.graine, TB-07.algorithme, TB-17.id]
+    ecrit: [TB-18.id, TB-18.conversation_id, TB-18.expediteur_id, TB-18.post_partage_id, TB-18.envoye_le, TB-33.id, TB-33.post_id, TB-33.compte_id]
+    flux: [DF-23, DF-25, DF-84, DF-34, DF-36, DF-14, DF-16, DF-83]
+    visible_si: ["SM-E-09 Amis"]
+    actif_si: []
+    etats: ["chargement : anneau centré (D-043, non dessiné)", "erreur : message sur place avec « Réessayer » (D-043, non dessiné)", "message « Envoyé à … » sur P-03 ou P-16", "échec : Non envoyé à … (P-07.a)"]
+    questions_ouvertes: []
+  - id: C-07-03
+    nom_accessible: Copier le lien
+    type: bouton
+    feature: F-019.b
+    lit: [TB-06.id]
+    ecrit: [TB-33.id, TB-33.post_id, TB-33.compte_id]
+    flux: [DF-14, DF-16, DF-83]
+    visible_si: []
+    actif_si: []
+    etats: ["message « Lien copié. » sur P-03 et P-16 (D-051)"]
+    questions_ouvertes: []
+  - id: C-07-04
+    nom_accessible: Partager ailleurs
+    type: bouton
+    feature: F-019.c
+    lit: [TB-06.id]
+    ecrit: [TB-33.id, TB-33.post_id, TB-33.compte_id]
+    flux: [DF-14, DF-16, DF-83]
+    visible_si: []
+    actif_si: []
+    etats: ["feuille de partage du téléphone (D-044)", "message « Partagé. » sur P-03 et P-16 (D-051)"]
+    questions_ouvertes: []
+  - id: C-07-05
+    nom_accessible: Grisage de l'appli
+    type: minuteur
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: [de couleur à noir et blanc après 10 cycles, aucun message]
+    questions_ouvertes: []
+  # Ajouté hors inventaire : F-073 est une tâche de fond sans élément visible.
+  - id: C-07-06
+    nom_accessible: Temps d'utilisation
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [invisible]
+    questions_ouvertes: []

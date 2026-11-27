@@ -1,0 +1,73 @@
+page: P-01
+nom: Connexion
+acces: [R-01]
+entree:
+  parametres: []
+  conditions: ["SM-E-02 Déconnecté"]
+composants:
+  - id: C-01-01
+    nom_accessible: Logo de l'appli
+    type: image
+    feature: F-002
+    lit: [TB-29.theme_icone]
+    ecrit: []
+    flux: [DF-72, DF-78]
+    visible_si: []
+    actif_si: []
+    etats: ["thème Noir", "thème Orange", "thème Rouge"]
+    questions_ouvertes: []
+  - id: C-01-02
+    nom_accessible: Continuer avec Google
+    type: bouton
+    feature: F-001
+    lit: [TB-02.fournisseur, TB-02.cle, TB-02.compte_id]
+    ecrit: [TB-04.jeton_hash, TB-05.jeton_hash, TB-32.jeton, TB-32.compte_id]
+    flux: [DF-54, DF-55, DF-60, DF-61, DF-10, DF-11, DF-12, DF-13, DF-83, DF-84, DF-75, DF-81]
+    visible_si: []
+    actif_si: []
+    etats: [normal, "chargement (P-01.a)", "erreur (P-01.b)"]
+    questions_ouvertes: []
+  - id: C-01-03
+    nom_accessible: Continuer avec Apple
+    type: bouton
+    feature: F-001.a
+    lit: [TB-02.fournisseur, TB-02.cle, TB-02.compte_id]
+    ecrit: [TB-04.jeton_hash, TB-05.jeton_hash, TB-32.jeton, TB-32.compte_id]
+    flux: [DF-56, DF-57, DF-62, DF-63, DF-10, DF-11, DF-12, DF-13, DF-83, DF-84, DF-75, DF-81]
+    visible_si: []
+    actif_si: []
+    etats: [normal, "chargement et erreur comme pour Google, non dessinés (D-036)"]
+    questions_ouvertes: []
+  - id: C-01-04
+    nom_accessible: Adresse e-mail
+    type: champ
+    feature: F-003
+    lit: []
+    ecrit: []   # en mémoire jusqu'à « Recevoir un code » (C-01-05)
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [vide, rempli, "adresse invalide (P-01.c)"]
+    questions_ouvertes: []
+  - id: C-01-05
+    nom_accessible: Recevoir un code
+    type: bouton
+    feature: F-003
+    lit: []
+    ecrit: [TB-03.adresse_email, TB-03.code_hash, TB-03.envoye_le, TB-03.essais_faux]
+    flux: [DF-10, DF-12, DF-83, DF-66]
+    visible_si: []
+    actif_si: ["adresse de C-01-04 valide pour TB-03.adresse_email"]
+    etats: [désactivé, actif, "envoi (P-01.d)", "erreur d'envoi (P-01.e) : « Réessayer »"]
+    questions_ouvertes: []
+  - id: C-01-06
+    nom_accessible: Pas de mot de passe, un code par e-mail
+    type: texte
+    feature: F-004
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [toujours affichée]
+    questions_ouvertes: []

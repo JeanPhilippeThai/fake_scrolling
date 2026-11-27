@@ -1,0 +1,97 @@
+page: P-10
+nom: "Messages — lecteur de story"
+acces: [R-02]
+entree:
+  parametres: [TB-19.id]
+  conditions: ["SM-E-02 Session ouverte", "SM-E-12 En cours", "SM-E-09 Amis avec l'auteur"]
+composants:
+  - id: C-10-01
+    nom_accessible: "Story"
+    type: image
+    feature: F-036
+    lit: [TB-19.texte, TB-07.story_id, TB-07.rang, TB-07.graine, TB-07.algorithme]
+    ecrit: []
+    flux: [DF-31, DF-33, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["chargement (P-10.a)", "erreur (P-10.b)"]
+    questions_ouvertes: []
+  - id: C-10-02
+    nom_accessible: "Progression de la story"
+    type: barre
+    feature: F-036
+    lit: [TB-07.rang]
+    ecrit: []
+    flux: [DF-31, DF-33, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["barre en cours qui se remplit, 5 s par image", "passées pleines", "à venir vides"]
+    questions_ouvertes: []
+  - id: C-10-03
+    nom_accessible: "Image suivante"
+    type: bouton
+    feature: F-036
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["ferme la story après la dernière"]
+    questions_ouvertes: []
+  - id: C-10-04
+    nom_accessible: "Image précédente"
+    type: bouton
+    feature: F-036
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["reste sur la première"]
+    questions_ouvertes: []
+  - id: C-10-05
+    nom_accessible: "Auteur de la story"
+    type: texte
+    feature: F-036
+    lit: [TB-19.auteur_id, TB-19.publiee_le, TB-01.pseudo, TB-07.profil_de, TB-07.graine]
+    ecrit: []
+    flux: [DF-31, DF-33, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  # La fin automatique ferme aussi la story ; « vue » part par la file des envois en attente (D-078).
+  - id: C-10-06
+    nom_accessible: "Fermer la story"
+    type: bouton
+    feature: F-036
+    lit: []
+    ecrit: [TB-20.story_id, TB-20.compte_id, TB-27.contenu]
+    flux: [DF-30, DF-32, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: ["vue enregistrée si au moins une image affichée (SM-E-12 Vue)", "cercle gris ensuite dans P-08 et P-09"]
+    questions_ouvertes: []
+  - id: C-10-07
+    nom_accessible: "Grisage de l'appli"
+    type: minuteur
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: ["de couleur à noir et blanc, 10 % par cycle"]
+    questions_ouvertes: []
+  # Ajouté hors inventaire : F-073 est une tâche de fond sans élément visible ; ce composant lui donne sa place sur la page.
+  - id: C-10-08
+    nom_accessible: "Temps d'utilisation"
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [invisible]
+    questions_ouvertes: []

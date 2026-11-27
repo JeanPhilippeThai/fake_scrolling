@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 480, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/A5qaJU9xAkPWfJ6JUNfWHV, tab "Tab 1", rev 521, exported 2026-11-27 -->
 # Registre canonique – Fake scrolling
 
 Nov 19, 2026 · @Jp
@@ -634,7 +634,7 @@ features:
         pages: [P-03, P-03.c]
         plateforme: mobile
         difference: 'Post du fil, 1 sur 20 après 1 h ; une fois le soutien donné, il montre « Merci pour ton soutien. » jusqu''au prochain chargement du fil, puis n''est plus proposé (D-094)'
-    entites: [E-16, E-15]
+    entites: [E-16, E-15, E-17]
     operations: [lecture, écriture]
     etats_ui:
       - offre et bouton visibles à partir de 1 h
@@ -679,7 +679,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-05, E-03]
+    entites: [E-05, E-03, E-01, E-04]
     operations: [lecture]
     etats_ui:
       - liste
@@ -704,6 +704,7 @@ features:
       - message « Enregistré dans … » ou « Retiré de … » en bas du fil pendant 2 s
       - 'échec : le signet redevient vide, « Le post n’a pas été enregistré. » en bas du fil pendant 2 s'
     questions_ouvertes: []
+    design_a_mettre_a_jour: true
 
   - id: F-019
     nom: Partager un post
@@ -724,7 +725,7 @@ features:
         pages: [P-07]
         plateforme: mobile
         difference: Ouvrir les autres apps de partage du téléphone
-    entites: [E-03, E-11, E-10]
+    entites: [E-03, E-11, E-10, E-01, E-04, E-09]
     operations: [lecture, écriture]
     etats_ui:
       - message « Envoyé à … », « Lien copié. » ou « Partagé. » en bas du fil ou du résultat pendant 2 s, sans mention du flou (D-051)
@@ -736,7 +737,7 @@ features:
       - Un lien de post ouvert sans connexion mène à la connexion (P-01)
       - 'Aspect du post reçu dans la conversation de l''ami (F-019.a, D-044) : non dessiné sur P-09'
       - 'Un post envoyé à un ami (F-019.a) passe-t-il la conversation en non lu chez lui, comme un message (F-041, D-085, SM-E-10) ?'
-      - 'Post partagé à un ami qui n''existe plus (compte de son auteur supprimé, D-101) ou qui sort de l''audience de l''ami : que montre son message dans la conversation (E-11) ?'
+    design_a_mettre_a_jour: true
 
   - id: F-020
     nom: Lire l'auteur et la légende d'un post
@@ -745,7 +746,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-03]
+    entites: [E-03, E-01, E-04]
     operations: [lecture]
     etats_ui:
       - pseudo et légende en charabia
@@ -770,7 +771,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-08, E-09, E-06, E-05]
+    entites: [E-08, E-09, E-06, E-05, E-01, E-04]
     operations: [lecture, écriture]
     etats_ui:
       - 'pastille avec le nombre de notifications non vues ; ouvrir P-04 les marque toutes vues et la pastille disparaît (D-106)'
@@ -873,7 +874,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-05, E-03, E-08]
+    entites: [E-05, E-03, E-08, E-04]
     operations: [écriture]
     etats_ui:
       - bouton gris si vide
@@ -905,7 +906,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-10]
+    entites: [E-10, E-01]
     operations: [lecture]
     etats_ui:
       - champ masqué
@@ -940,7 +941,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-12, E-09]
+    entites: [E-12, E-09, E-01, E-04]
     operations: [lecture, écriture]
     etats_ui:
       - 'cercle vert : une story en cours pas encore vue (D-078, D-081)'
@@ -965,7 +966,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-10]
+    entites: [E-10, E-01, E-04, E-11]
     operations: [lecture, écriture]
     etats_ui:
       - 'non lu : gras et point bleu'
@@ -982,7 +983,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-11, E-10]
+    entites: [E-11, E-10, E-01, E-04]
     operations: [lecture, écriture]
     etats_ui:
       - contact en train d'écrire (D-084)
@@ -990,8 +991,7 @@ features:
       - 'chargement : anneau centré'
       - 'vide : « Aucun message » · « Écris le premier message à Léa. »'
       - 'erreur : « Les messages n’ont pas pu être chargés. » avec « Réessayer »'
-    questions_ouvertes:
-      - 'Historique : jusqu''où remonte une conversation, et chargement des messages plus anciens'
+    questions_ouvertes: []
 
   - id: F-039
     nom: Appeler un contact
@@ -1058,7 +1058,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-09, E-01]
+    entites: [E-09, E-01, E-04]
     operations: [lecture]
     etats_ui:
       - rien tant que vide
@@ -1145,7 +1145,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-03, E-12, E-09]
+    entites: [E-03, E-12, E-09, E-01, E-04]
     operations: [lecture, écriture]
     etats_ui:
       - aucune personne
@@ -1160,7 +1160,7 @@ features:
 
   - id: F-049
     nom: Ajouter un lieu
-    description: 'Ligne de la légende qui ouvre un panneau : recherche et choix d''un seul lieu, pour un post ou une story (D-059).'
+    description: 'Ligne de la légende qui ouvre un panneau où l''on tape un seul lieu, 60 caractères au plus, pour un post ou une story (D-059, D-157).'
     pages: [P-13, P-25]
     plateformes: [mobile]
     acces: [R-02]
@@ -1174,8 +1174,8 @@ features:
       - « Aucun lieu trouvé. »
       - 'chargement : anneau centré dans la liste (D-043)'
       - 'échec de la recherche : message sur place avec « Réessayer » (D-043)'
-    questions_ouvertes:
-      - Vraie recherche de lieux (8 lieux de démo)
+    questions_ouvertes: []
+    design_a_mettre_a_jour: true
 
   - id: F-050
     nom: Choisir l'audience
@@ -1216,7 +1216,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-13, E-03, E-04, E-09]
+    entites: [E-13, E-03, E-04, E-09, E-06]
     operations: [lecture]
     etats_ui:
       - 'champ vide : suggestions'
@@ -1240,7 +1240,7 @@ features:
         pages: [P-14]
         plateforme: mobile
         difference: 'Tendance : rang, nombre de posts et 3 bandes de la palette d''arrivée'
-    entites: [E-13, E-03]
+    entites: [E-13, E-03, E-04]
     operations: [lecture]
     etats_ui:
       - 'chargement : anneau centré'
@@ -1303,12 +1303,11 @@ features:
         pages: [P-21]
         plateforme: mobile
         difference: Identifiant @ seul, sous le libellé « Compte »
-    entites: [E-01]
+    entites: [E-01, E-03, E-06, E-09]
     operations: [lecture]
     etats_ui:
       - pseudo sur une ligne, sans troncature
-    questions_ouvertes:
-      - Compteurs fixes dans la maquette
+    questions_ouvertes: []
 
   - id: F-058
     nom: Changer sa photo de profil
@@ -1372,12 +1371,12 @@ features:
 
   - id: F-062
     nom: Voir ses posts
-    description: Grille de 9 posts floutés.
+    description: Grille de tous ses posts floutés, du plus récent au plus ancien, chargés par lots au défilement (D-155).
     pages: [P-17, P-17.a, P-17.b, P-17.c]
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-03]
+    entites: [E-03, E-04]
     operations: [lecture]
     etats_ui:
       - non cliquables
@@ -1386,7 +1385,6 @@ features:
       - 'erreur : « Tes posts n’ont pas pu être chargés. » avec « Réessayer »'
     questions_ouvertes:
       - Ouvrir un de ses posts
-      - 'Combien de posts montre la grille, maintenant qu’ils n’expirent plus (D-097) : tous, avec défilement et chargement par lots ?'
 
   - id: F-063
     nom: Supprimer son compte
@@ -1459,12 +1457,12 @@ features:
 
   - id: F-070
     nom: Créer son compte
-    description: 'À la première connexion, choix du pseudo et de l''identifiant (@), puis ouverture de l''Accueil (D-052). Seulement ces deux champs : photo et description plus tard sur P-19 (D-063). Crée aussi le minuteur, le temps d''utilisation et le soutien du compte (D-114).'
+    description: 'À la première connexion, choix du pseudo et de l''identifiant (@), puis ouverture de l''Accueil (D-052). Seulement ces deux champs : photo et description plus tard sur P-19 (D-063). Crée aussi le minuteur, le temps d''utilisation et le soutien du compte (D-114), et sa collection « Favoris » (D-161).'
     pages: [P-27, P-27.a, P-27.b]
     plateformes: [mobile]
     acces: [R-01]
     variantes: []
-    entites: [E-02, E-01, E-14, E-15, E-16]
+    entites: [E-02, E-01, E-14, E-15, E-16, E-07]
     operations: [lecture, écriture]
     etats_ui:
       - « Créer mon compte » gris tant qu'un champ est vide
@@ -1472,7 +1470,7 @@ features:
       - 'erreur : « Ton compte n’a pas été créé. Vérifie ta connexion et réessaie. » avec « Réessayer », saisies gardées (D-064)'
     questions_ouvertes:
       - 'Règles de l''identifiant : longueur, caractères permis, message s''il est déjà pris (minuscules seulement, unique, D-145)'
-      - 'Inscription finie plus d''1 h après son début, quand le serveur l''a oubliée (D-149, FL-16) : quel message, et retour à P-01 ?'
+    design_a_mettre_a_jour: true
 
   - id: F-071
     nom: Se déconnecter
@@ -1481,7 +1479,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-02]
+    entites: [E-02, E-14]
     operations: [suppression]
     etats_ui:
       - 'sans confirmation : un tap ouvre P-01 (D-065)'
@@ -1494,7 +1492,7 @@ features:
     plateformes: [mobile]
     acces: [R-02]
     variantes: []
-    entites: [E-09]
+    entites: [E-09, E-01, E-04]
     operations: [lecture, écriture]
     etats_ui:
       - case vide
@@ -1546,7 +1544,7 @@ entites:
       - nombre de posts
       - nombre d'amis
       - nombre de likes reçus
-    utilisee_par: [F-001, F-007, F-043, F-056, F-057, F-058, F-063, F-070]
+    utilisee_par: [F-001, F-007, F-017, F-019, F-020, F-022, F-033, F-036, F-037, F-038, F-043, F-048, F-056, F-057, F-058, F-063, F-070, F-072]
 
   - id: E-02
     nom: Connexion
@@ -1574,7 +1572,7 @@ entites:
       - lien
       - personnes identifiées
       - lieu
-    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-053, F-054, F-062, F-063, F-068]
+    utilisee_par: [F-009, F-010, F-011, F-012, F-014, F-016, F-017, F-018, F-019, F-020, F-021, F-030, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-053, F-054, F-057, F-062, F-063, F-068]
 
   - id: E-04
     nom: Média
@@ -1584,7 +1582,7 @@ entites:
       - durée de la vidéo
       - rang dans le carrousel
       - heure d'arrivée de la graine sur le serveur, pour l'effacer après 24 h si rien ne la prend (D-123)
-    utilisee_par: [F-005, F-010, F-011, F-012, F-042, F-044, F-045, F-046, F-051, F-052, F-058, F-063]
+    utilisee_par: [F-005, F-010, F-011, F-012, F-017, F-019, F-020, F-022, F-030, F-036, F-037, F-038, F-042, F-043, F-044, F-045, F-046, F-048, F-051, F-052, F-053, F-058, F-062, F-063, F-072]
 
   - id: E-05
     nom: Commentaire
@@ -1601,14 +1599,15 @@ entites:
       - cible (post ou commentaire)
       - auteur
       - date
-    utilisee_par: [F-016, F-022, F-063]
+    utilisee_par: [F-016, F-022, F-052, F-057, F-063]
 
   - id: E-07
     nom: Collection
     champs:
       - nom
+      - couleur
       - posts enregistrés
-    utilisee_par: [F-018, F-031, F-063]
+    utilisee_par: [F-018, F-031, F-063, F-070]
 
   - id: E-08
     nom: Notification
@@ -1626,7 +1625,7 @@ entites:
       - compte (pseudo, identifiant, photo)
       - statut (en attente, demandé, ami)
       - ami proche (oui/non, D-060)
-    utilisee_par: [F-022, F-028, F-034, F-036, F-043, F-048, F-052, F-063, F-072]
+    utilisee_par: [F-019, F-022, F-028, F-034, F-036, F-043, F-048, F-052, F-057, F-063, F-072]
 
   - id: E-10
     nom: Conversation
@@ -1640,7 +1639,7 @@ entites:
   - id: E-11
     nom: Message
     champs: [expéditeur, texte en charabia (D-083), photo en graine (D-086), message cité, post partagé, date]
-    utilisee_par: [F-019, F-038, F-040, F-041, F-042, F-063]
+    utilisee_par: [F-019, F-037, F-038, F-040, F-041, F-042, F-063]
 
   - id: E-12
     nom: Story
@@ -1674,7 +1673,7 @@ entites:
       - cycles écoulés
       - pourcentage de gris
       - temps restant
-    utilisee_par: [F-024, F-059, F-060, F-061, F-063, F-070]
+    utilisee_par: [F-024, F-059, F-060, F-061, F-063, F-070, F-071]
 
   - id: E-15
     nom: Temps d'utilisation
@@ -1698,7 +1697,7 @@ entites:
       - téléphone, pas le compte (D-103)
       - thème d'icône (Noir, Orange, Rouge)
       - carrousels de pause (oui/non)
-    utilisee_par: [F-002, F-012, F-066, F-067]
+    utilisee_par: [F-002, F-012, F-015, F-066, F-067]
 ```
 
 ```yaml
@@ -2522,6 +2521,66 @@ decisions:
     choix: 'Le graphe des flux de données est dans la Conception système, section « Flux de données » : 14 nœuds (N-01 à N-14) et 84 flux (DF-01 à DF-84). Une appli par téléphone (iOS, Android), même si leur code est commun (D-132), parce que chacune parle à son store. Les deux rôles ne parlent qu''à l''appli. Un flux est sensible dès qu''il porte une donnée liée à un compte : compte, connexion, post, commentaire, like, collection, notification, amitié, conversation, message, story, temps passé dans l''appli ou soutien (E-01 à E-03, E-05 à E-12, E-14 à E-16) ; un lieu, une personne identifiée, un like ou une vue de story lient un compte à un endroit ou à un autre compte, même quand les textes sont en charabia (D-118). Seuls ne le sont pas les flux qui ne portent que des graines et leurs algorithmes (E-04, E-13). Le service de rapports de plantage est un nœud (N-14) : il ne reçoit aucune donnée d''entité (NFR-X-5), si bien qu''aucun flux DF ne le cite, mais le graphe montre ce chemin pour le threat model. Le design ne change pas.'
     raison: 'Suit la méthode (prompt 12). Choix du propriétaire pour les flux sensibles et le service de rapports de plantage : le threat model examine tout ce qui lie un compte à un lieu ou à un autre compte, et vérifie NFR-X-5.'
     impacte: []
+
+  - id: D-152
+    sujet: 'P-29 : le store ne s''ouvre pas'
+    choix: 'Si « Mettre à jour » (F-074) n''ouvre pas l''App Store ou Google Play (pas de réseau, store absent), P-29 reste telle quelle et le bouton reste actif : le store montre ses propres erreurs. P-29 n''a pas d''état d''erreur. Le design ne change pas.'
+    raison: 'Choix du propriétaire : rien de plus à dessiner, le store dit lui-même ce qui ne va pas.'
+    impacte: [F-074, P-29]
+
+  - id: D-153
+    sujet: 'Post partagé qui n''existe plus'
+    choix: 'Un post envoyé à un ami (F-019.a) dont l''auteur a supprimé son compte (D-101), ou que l''ami n''a plus le droit de voir (D-088, D-138), reste un message de la conversation (E-11) : à la place du post, une case grise « Ce post n’est plus disponible. ». La question ouverte de F-019 sur ce cas est close. P-09 est à redessiner : F-019 porte design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
+    raison: 'Choix du propriétaire : la conversation garde sa suite, sans rien montrer du post.'
+    impacte: [F-019, F-038, P-09, E-11]
+
+  - id: D-154
+    sujet: 'Inscription finie après 1 h'
+    choix: 'Quand quelqu''un touche « Créer mon compte » (F-070) plus d''1 h après le début de son inscription, que le serveur a donc oubliée (FL-16, D-149), P-27 montre « Ton inscription a expiré. Reconnecte-toi pour la finir. », puis P-01 s''ouvre. La question ouverte de F-070 sur ce cas est close. Cet état est à dessiner sur P-27 : F-070 porte design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
+    raison: 'Choix du propriétaire : dire pourquoi, puis repartir de la connexion.'
+    impacte: [F-070, P-27, P-01, FL-16]
+
+  - id: D-155
+    sujet: 'Grille des posts du profil'
+    choix: 'La grille « Tes posts » de P-17 (F-062) montre tous les posts du compte, du plus récent au plus ancien ; les suivants se chargent par lots quand on descend. La question ouverte de F-062 sur le nombre de posts est close. Le design ne change pas.'
+    raison: 'Choix du propriétaire : les posts n''expirent plus (D-097), on doit pouvoir tous les revoir.'
+    impacte: [F-062, P-17]
+
+  - id: D-156
+    sujet: 'Historique d''une conversation'
+    choix: 'Une conversation (F-038, P-09) remonte jusqu''à son premier message ; les plus anciens se chargent par lots quand on remonte. Rien ne s''efface avec le temps, seulement avec le compte (D-101). La question ouverte de F-038 est close. Le design ne change pas.'
+    raison: 'Choix du propriétaire : on garde toute la conversation.'
+    impacte: [F-038, P-09]
+
+  - id: D-157
+    sujet: 'Lieu tapé librement'
+    choix: 'Le lieu d''un post ou d''une story (F-049, D-059) est tapé librement, 60 caractères au plus, sans liste de lieux ni service de cartes. Il part lisible, comme l''identifiant (@) : c''est le seul texte écrit qui ne passe pas en charabia (une exception à la règle de D-118 et de NFR-X-1). Le panneau P-25 perd sa liste et « Aucun lieu trouvé. » ; il garde « OK », un champ « Lieu » et « Retirer le lieu ». La colonne lieu de TB-06 et de TB-19 est un varchar(60). La question ouverte de F-049 sur la recherche de lieux est close. P-25 est à redessiner : F-049 porte design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
+    raison: 'Choix du propriétaire : aucun service tiers ne voit ce qu''on cherche, et un lieu doit dire quelque chose de vrai.'
+    impacte: [F-049, P-25, D-118, TB-06, TB-19]
+
+  - id: D-158
+    sujet: 'Suggestions et tendances'
+    choix: 'Les 8 suggestions et les 6 tendances de P-14 (F-053, F-053.a) sont composées par le serveur à l''ouverture de la page, à partir des posts récents, comme le fil (D-136) : rien n''est gardé pour elles. La règle (quels mots, ce que compte le nombre de posts, les 3 bandes de couleur) reste ouverte dans F-053. Le design ne change pas.'
+    raison: 'Choix du propriétaire : rien de plus à stocker ni à tenir à jour à la main.'
+    impacte: [F-053, P-14]
+
+  - id: D-159
+    sujet: 'Compteur de likes du profil'
+    choix: 'Le nombre de likes de P-17 (F-057) compte les likes reçus sur les posts du compte (E-06), pas sur ses commentaires ; posts et amis comptent ses posts publiés et ses amitiés (E-03, E-09), à la demande (D-144). La question ouverte de F-057 est close. Le design ne change pas.'
+    raison: 'Choix du propriétaire.'
+    impacte: [F-057, P-17]
+
+  - id: D-160
+    sujet: 'Couleur d''une collection'
+    choix: 'Chaque collection (E-07) reçoit sa couleur à sa création, choisie par l''appli, et la garde, même quand d''autres collections sont supprimées : E-07 prend le champ « couleur », TB-11 la colonne couleur. Le design ne change pas.'
+    raison: 'Choix du propriétaire : une collection se reconnaît à sa couleur, qui ne doit pas changer.'
+    impacte: [F-018, F-031, E-07, TB-11]
+
+  - id: D-161
+    sujet: 'Collection « Favoris » à l''inscription'
+    choix: 'Un nouveau compte a une seule collection, « Favoris », créée par F-070 avec le compte ; les trois collections de la maquette (Pour plus tard, Formes calmes, Couleurs à garder) n''existent pas au départ. P-06 est à redessiner avec « Favoris » : F-018 porte design_a_mettre_a_jour: true jusqu''à ce que le prompt 9 constate que le design correspond.'
+    raison: 'Choix du propriétaire.'
+    impacte: [F-018, F-070, P-06, E-07]
 
 ids_retires:
   - {id: F-013, decision: D-002}
