@@ -164,33 +164,18 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid #2
       <span aria-hidden="true" style="align-self: center; width: 40px; height: 4px; border-radius: 999px; background: #DEDEDA"></span>
       <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
         <h2 id="place-title" style="margin: 0; font-size: 18px; font-weight: 600">Ajouter un lieu</h2>
-        <button type="button" onClick="{{closeSheet}}" style="min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: #1F6B4A; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">OK</button>
+        <button type="button" onClick="{{savePlace}}" style="min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: #1F6B4A; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">OK</button>
       </div>
-      <div style="position: relative">
-        <label for="place-search" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Rechercher un lieu</label>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E5E5B" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="position: absolute; left: 14px; top: 13px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
-        <input id="place-search" type="search" autocomplete="off" value="{{sheetQuery}}" onChange="{{onSheetQuery}}" placeholder="Rechercher" style="width: 100%; height: 44px; box-sizing: border-box; border: 0; border-radius: 12px; padding: 0 14px 0 40px; background: #F1F1EF; font: 400 16px 'IBM Plex Sans', sans-serif; color: #1C1C1C">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="place-input" style="font-size: 13px; font-weight: 600; color: #5E5E5B">Lieu</label>
+        <div style="position: relative">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E5E5B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; left: 14px; top: 13px"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"></path><circle cx="12" cy="10" r="2.2"></circle></svg>
+          <input id="place-input" type="text" autocomplete="off" maxlength="60" value="{{placeDraft}}" onChange="{{onPlaceDraft}}" style="width: 100%; height: 44px; box-sizing: border-box; border: 0; border-radius: 12px; padding: 0 14px 0 40px; background: #F1F1EF; font: 400 16px 'IBM Plex Sans', sans-serif; color: #1C1C1C">
+        </div>
       </div>
-      <div style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
-        <sc-if value="{{hasPlace}}" hint-placeholder-val="{{ false }}">
-          <button type="button" onClick="{{clearPlace}}" style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 2px; border: 0; border-bottom: 1px solid #ECECEA; background: transparent; color: #B42318; font: 600 15px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">Retirer le lieu</button>
-        </sc-if>
-        <sc-for list="{{places}}" as="pl" hint-placeholder-count="6">
-          <button type="button" role="radio" aria-checked="{{pl.on}}" onClick="{{pl.pick}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 2px; border: 0; background: transparent; color: #1C1C1C; text-align: left; cursor: pointer">
-            <span aria-hidden="true" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: #F1F1EF; color: #1C1C1C; display: flex; align-items: center; justify-content: center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"></path><circle cx="12" cy="10" r="2.2"></circle></svg>
-            </span>
-            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column">
-              <span style="font-weight: 600; font-size: 15px">{{pl.name}}</span>
-              <span style="font-size: 13px; color: #5E5E5B">{{pl.area}}</span>
-            </span>
-            <span aria-hidden="true" style="width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 2px solid {{pl.ring}}; background: {{pl.fill}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>
-          </button>
-        </sc-for>
-        <sc-if value="{{placesNone}}" hint-placeholder-val="{{ false }}">
-          <p style="margin: 0; padding: 20px 0; text-align: center; font-size: 15px; color: #5E5E5B">Aucun lieu trouvé.</p>
-        </sc-if>
-      </div>
+      <sc-if value="{{hasPlace}}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{clearPlace}}" style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 2px; border: 0; border-top: 1px solid #ECECEA; background: transparent; color: #B42318; font: 600 15px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">Retirer le lieu</button>
+      </sc-if>
     </div>
     </sc-if>
 
@@ -264,7 +249,7 @@ class Component extends DCLogic {
     this.from = from;
     var close = ['@lea.k', '@ines.m', '@jade.r'];
     try { var cf = JSON.parse(localStorage.getItem('fs-close-friends') || 'null'); if (Array.isArray(cf)) close = cf; } catch (e) {}
-    this.state = { grey: 0, sheet: null, sheetQuery: '', tagged: [], place: null, dest: startDest, step: 'select', selected: [0], current: 0, multi: false, caption: '', audience: 0, closeFriends: close };
+    this.state = { grey: 0, sheet: null, sheetQuery: '', tagged: [], place: null, placeDraft: '', dest: startDest, step: 'select', selected: [0], current: 0, multi: false, caption: '', audience: 0, closeFriends: close };
     this.gallery = this.makeGallery();
   }
   componentDidMount() { this.startClock(); }
@@ -380,11 +365,6 @@ class Component extends DCLogic {
       return { name: f[0], handle: f[1], avatar: f[2], on: on, ring: on ? '#1F6B4A' : '#C9C9C6', fill: on ? '#1F6B4A' : '#FFFFFF', toggle: () => this.toggleClose(f[1]) };
     });
     var nClose = s.closeFriends.length;
-    var PLACES = [['Canal Saint-Martin', 'Paris 10e'], ['Parc des Buttes-Chaumont', 'Paris 19e'], ['Jardin du Luxembourg', 'Paris 6e'], ['Vieux-Port', 'Marseille'], ['Parc de la Tête d’Or', 'Lyon'], ['Miroir d’eau', 'Bordeaux'], ['Place Stanislas', 'Nancy'], ['Plage du Prado', 'Marseille']];
-    var places = PLACES.filter((pl) => !q || (pl[0] + ' ' + pl[1]).toLowerCase().indexOf(q) !== -1).map((pl) => {
-      var on = s.place === pl[0];
-      return { name: pl[0], area: pl[1], on: on, ring: on ? '#1F6B4A' : '#C9C9C6', fill: on ? '#1F6B4A' : '#FFFFFF', pick: () => this.setState({ place: pl[0], sheet: null }) };
-    });
     var gallery = this.gallery.map((g, i) => {
       var pos = s.selected.indexOf(i);
       return Object.assign({}, g, {
@@ -434,12 +414,12 @@ class Component extends DCLogic {
       sheetClose: s.sheet === 'close',
       openClose: () => this.setState({ sheet: 'close', sheetQuery: '' }),
       backToAudience: () => this.setState({ sheet: 'audience', sheetQuery: '' }),
-      backdropTap: () => this.setState({ sheet: s.sheet === 'close' ? 'audience' : null, sheetQuery: '' }),
+      backdropTap: () => this.setState((st) => st.sheet === 'place' ? { place: st.placeDraft.trim() || null, sheet: null } : { sheet: st.sheet === 'close' ? 'audience' : null, sheetQuery: '' }),
       closeList: closeList,
       closeNone: closeList.length === 0,
       closeCount: nClose === 0 ? 'Aucun ami proche' : nClose === 1 ? '1 ami proche' : nClose + ' amis proches',
       openTag: () => this.setState({ sheet: 'tag', sheetQuery: '' }),
-      openPlace: () => this.setState({ sheet: 'place', sheetQuery: '' }),
+      openPlace: () => this.setState({ sheet: 'place', placeDraft: s.place || '' }),
       openAudience: () => this.setState({ sheet: 'audience' }),
       closeSheet: () => this.setState({ sheet: null }),
       sheetQuery: s.sheetQuery,
@@ -447,11 +427,12 @@ class Component extends DCLogic {
       people: people,
       peopleNone: people.length === 0,
       tagSummary: s.tagged.length === 0 ? '' : s.tagged.length === 1 ? s.tagged[0] : s.tagged.length + ' personnes',
-      places: places,
-      placesNone: places.length === 0,
+      placeDraft: s.placeDraft,
+      onPlaceDraft: (e) => this.setState({ placeDraft: e.target.value.slice(0, 60) }),
+      savePlace: () => this.setState((st) => ({ place: st.placeDraft.trim() || null, sheet: null })),
       hasPlace: !!s.place,
       placeName: s.place || '',
-      clearPlace: () => this.setState({ place: null, sheet: null }),
+      clearPlace: () => this.setState({ place: null, placeDraft: '', sheet: null }),
       audiences: AUD.map((label, k) => ({
         label: label, hint: AUD_HINT[k], on: s.audience === k,
         ring: s.audience === k ? '#1F6B4A' : '#C9C9C6', fill: s.audience === k ? '#1F6B4A' : '#FFFFFF',

@@ -202,6 +202,26 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #2F4F
                 </div>
               </div>
             </sc-if>
+            <sc-if value="{{m.isPost}}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{m.openPost}}" aria-label="Post de {{m.postAuthor}}" style="width: 200px; padding: 0; border-radius: 18px; overflow: hidden; border: 1px solid #ECECEA; background: #FFFFFF; color: #1C1C1C; font: inherit; text-align: left; cursor: pointer">
+                <div style="display: flex; align-items: center; gap: 8px; padding: 8px 10px">
+                  <span aria-hidden="true" style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%; background: {{m.postAvatar}}"></span>
+                  <span style="min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-size: 13px; font-weight: 600; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{m.postAuthor}}</span>
+                    <span style="font: 500 11px 'IBM Plex Mono', monospace; color: #5E5E5B">{{m.postHandle}}</span>
+                  </span>
+                </div>
+                <div role="img" aria-label="Photo du post" style="height: 220px; position: relative; overflow: hidden; background: {{m.photoBg}}">
+                  <div style="position: absolute; inset: 0; filter: blur(14px)">
+                    <div style="position: absolute; left: 24px; top: 26px; width: 100px; height: 100px; border-radius: 50%; background: {{m.c1}}"></div>
+                    <div style="position: absolute; left: 90px; top: 100px; width: 120px; height: 110px; border-radius: 30%; background: {{m.c2}}"></div>
+                  </div>
+                </div>
+              </button>
+            </sc-if>
+            <sc-if value="{{m.isGone}}" hint-placeholder-val="{{ false }}">
+              <p style="margin: 0; width: 200px; box-sizing: border-box; padding: 14px; border-radius: 18px; background: #F1F1EF; border: 1px solid #DEDEDA; color: #5E5E5B; font-size: 14px; line-height: 1.4">Ce post n’est plus disponible.</p>
+            </sc-if>
             <sc-if value="{{m.isText}}" hint-placeholder-val="{{ true }}">
               <p style="margin: 0; max-width: 75%; padding: 9px 14px; border-radius: 20px; background: {{m.bg}}; color: {{m.fg}}; font-size: 16px; line-height: 1.4">{{m.text}}</p>
             </sc-if>
@@ -248,6 +268,53 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #2F4F
     </div>
   </sc-if>
 
+  <sc-if value="{{postOn}}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-modal="true" aria-label="Post de {{post.author}}" style="position: absolute; inset: 0; overflow: hidden; background: {{post.bg}}">
+      <div role="img" aria-label="Photo du post" style="position: absolute; inset: 0; filter: blur(22px)">
+        <div style="position: absolute; left: 30px; top: 140px; width: 230px; height: 230px; border-radius: 50%; background: {{post.c1}}"></div>
+        <div style="position: absolute; left: 150px; top: 360px; width: 250px; height: 220px; border-radius: 30%; background: {{post.c2}}"></div>
+      </div>
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 14px">
+        <div style="align-self: flex-end; margin-right: 8px; display: flex; flex-direction: column; align-items: center; gap: 8px">
+          <div aria-hidden="true" style="width: 46px; height: 46px; border-radius: 50%; border: 2px solid #FFFFFF; overflow: hidden; background: {{post.avatar}}">
+            <div style="width: 100%; height: 100%; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7), transparent 60%); filter: blur(2px)"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+            <button type="button" onClick="{{post.toggleLike}}" aria-pressed="{{post.liked}}" aria-label="J’aime" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="{{post.heartFill}}" stroke="{{post.heartStroke}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>
+            </button>
+            <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{post.likes}}</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+            <button type="button" aria-label="Commentaires" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.5 7.2L4 20l1-4.2A8 8 0 1 1 20 12z"></path></svg>
+            </button>
+            <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{post.comments}}</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+            <button type="button" aria-label="Enregistrer dans une collection" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+              <svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v17l-6-4-6 4z"></path></svg>
+            </button>
+            <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{post.saves}}</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0">
+            <button type="button" aria-label="Partager" style="width: 46px; height: 40px; padding: 0; border: 0; background: transparent; color: #FFFFFF; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); display: flex; align-items: center; justify-content: center; cursor: pointer">
+              <svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5"></path><path d="M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg>
+            </button>
+            <span style="margin-top: -2px; font: 600 12px 'IBM Plex Mono', monospace; line-height: 1.2; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">{{post.shares}}</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px; padding: 0 76px 16px 16px; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75)">
+          <span style="font-weight: 600; font-size: 16px; line-height: 1.3">{{post.author}}</span>
+          <p style="margin: 0; font-size: 15px; line-height: 1.45">{{post.caption}}</p>
+        </div>
+      </div>
+      <button type="button" onClick="{{closePost}}" aria-label="Retour à la conversation" style="position: absolute; top: 12px; left: 4px; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6))">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+      </button>
+    </div>
+  </sc-if>
+
   <sc-if value="{{storyOn}}" hint-placeholder-val="{{ false }}">
     <div role="dialog" aria-modal="true" aria-label="Story de {{story.name}}" style="position: absolute; inset: 0; overflow: hidden; background: {{story.bg}}">
       <div style="position: absolute; inset: 0; filter: blur(16px)">
@@ -288,7 +355,7 @@ class Component extends DCLogic {
     super(...a);
     this.timers = [];
     this.listEl = null;
-    this.state = { grey: 0, convSearch: false, convQuery: '', story: null, storySeen: {}, storyFlip: false, addOpen: false, addQuery: '', requested: {}, swipe: null, replyTo: null, open: null, draft: '', typing: false, threads: {}, read: {} };
+    this.state = { grey: 0, convSearch: false, convQuery: '', story: null, storySeen: {}, storyFlip: false, addOpen: false, addQuery: '', requested: {}, swipe: null, replyTo: null, open: null, draft: '', typing: false, threads: {}, read: {}, postView: null, postLiked: {} };
   }
   componentDidUpdate() { if (this.listEl) this.listEl.scrollTop = this.listEl.scrollHeight; }
   componentDidMount() { this.startClock(); }
@@ -365,6 +432,7 @@ class Component extends DCLogic {
     for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
     return (h >>> 0) % 100000;
   }
+  label(m) { return m.photo ? 'Photo' : m.post ? 'Post' : this.textOf(m); }
   textOf(m) {
     if (!m.morphed) return m.original;
     var g = m.words ? this.gib(m.seed, m.words) : '';
@@ -391,6 +459,8 @@ class Component extends DCLogic {
     var msgs = []; var n = 6 + Math.floor(r() * 4);
     for (var i = 0; i < n; i++) {
       if (i === 2 && c.id % 2 === 0) { msgs.push({ id: 'p' + i, me: false, photo: true }); continue; }
+      if (i === 3) { msgs.push({ id: 's' + i, me: false, post: true, seed: c.seed + 333 }); continue; }
+      if (i === 5 && c.id % 2 === 0) { msgs.push({ id: 'g' + i, me: false, post: true, gone: true }); continue; }
       msgs.push({ id: 'm' + i, me: r() < 0.45, seed: c.seed + i * 17, words: 1 + Math.floor(r() * 7), emoji: EMO[Math.floor(r() * EMO.length)], morphed: true });
     }
     msgs.push({ id: 'last', me: false, seed: c.seed + 999, words: 3, emoji: c.emoji, morphed: true });
@@ -433,7 +503,7 @@ class Component extends DCLogic {
   }
   snippet(m) {
     if (!m) return '';
-    var s = m.photo ? 'Photo' : this.textOf(m);
+    var s = this.label(m);
     return s.length > 40 ? s.slice(0, 38) + '…' : s;
   }
   storyItems(c) {
@@ -475,7 +545,7 @@ class Component extends DCLogic {
       var last = t[t.length - 1];
       var unread = c.unread && !s.read[c.id];
       return Object.assign({}, c, {
-        preview: (last.me ? 'Toi : ' : '') + (last.photo ? 'Photo' : this.textOf(last)),
+        preview: (last.me ? 'Toi : ' : '') + this.label(last),
         unread: unread,
         weight: unread ? 600 : 400,
         previewColor: unread ? '#1C1C1C' : '#5E5E5B',
@@ -503,14 +573,19 @@ class Component extends DCLogic {
       var dx = s.swipe && s.swipe.id === id ? s.swipe.dx : 0;
       var q = m.replyTo ? byId[m.replyTo] : null;
       return {
-        isPhoto: !!m.photo, isText: !m.photo,
+        isPhoto: !!m.photo, isText: !m.photo && !m.post,
+        isPost: !!m.post && !m.gone, isGone: !!m.gone,
+        postAuthor: m.post && !m.gone ? this.gib(m.seed, 2) : '',
+        postHandle: m.post && !m.gone ? ['@hugo.p', '@lina.r', '@zoe.k', '@adam.s', '@emma.r'][m.seed % 5] : '',
+        postAvatar: m.post ? ['#FB5607', '#8338EC', '#2EC4B6', '#EF476F', '#118AB2'][(m.seed || 0) % 5] : '',
         align: m.me ? 'flex-end' : 'flex-start',
-        text: m.photo ? '' : this.textOf(m),
+        text: m.photo || m.post ? '' : this.textOf(m),
         bg: m.me ? '#1F6B4A' : '#F1F1EF',
         fg: m.me ? '#FFFFFF' : '#1C1C1C',
         photoBg: m.me ? '#E3ECFF' : '#FFE5D9',
         c1: m.me ? '#8338EC' : '#06D6A0',
         c2: m.me ? '#EF476F' : '#3A86FF',
+        openPost: () => this.setState({ postView: m }),
         hasReply: !!q,
         replyLabel: q ? (q.me ? 'Toi' : active.first) + ' : ' + this.snippet(q) : '',
         dx: dx,
@@ -536,6 +611,20 @@ class Component extends DCLogic {
         }
       };
     });
+    var postView = null;
+    if (s.postView) {
+      var pm = s.postView; var pr = this.rng(pm.seed + 41); var pl = !!s.postLiked[pm.id];
+      var base = 20 + Math.floor(pr() * 300);
+      postView = {
+        author: this.gib(pm.seed, 2),
+        avatar: ['#FB5607', '#8338EC', '#2EC4B6', '#EF476F', '#118AB2'][pm.seed % 5],
+        bg: '#FFE5D9', c1: '#06D6A0', c2: '#3A86FF',
+        caption: this.gib(pm.seed + 5, 6),
+        liked: pl, heartFill: pl ? '#FF5C7A' : 'none', heartStroke: pl ? '#FF5C7A' : '#FFFFFF',
+        likes: String(base + (pl ? 1 : 0)), comments: String(Math.floor(pr() * 40)), saves: String(Math.floor(pr() * 30)), shares: String(Math.floor(pr() * 12)),
+        toggleLike: () => this.setState((st) => { var lk = Object.assign({}, st.postLiked); lk[pm.id] = !lk[pm.id]; return { postLiked: lk }; })
+      };
+    }
     var rq = s.replyTo ? byId[s.replyTo] : null;
     var DIR = ['camille.d', 'cam_ille', 'hugo.p', 'hugo_m', 'lina.r', 'lina', 'theo.v', 'manon.b', 'manon.l', 'zoe.k', 'adam.s', 'chloe.t', 'louis.g', 'emma.r', 'emma_w', 'nathan', 'sarah.c', 'enzo.f', 'lucie.m', 'paul.n'];
     var PALA = ['#EF476F','#FFD166','#06D6A0','#118AB2','#8338EC','#3A86FF','#FB5607','#2EC4B6'];
@@ -573,6 +662,9 @@ class Component extends DCLogic {
       active: active,
       msgs: msgs,
       storyOn: !!storyView,
+      postOn: !!postView,
+      post: postView,
+      closePost: () => this.setState({ postView: null }),
       story: storyView || { name: '', avatar: '#DEDEDA', ago: '', bg: '#1C1C1C', shapes: [], segs: [], hasText: false, text: '' },
       storyNext: () => { if (s.story) this.showStory(s.story.cid, s.story.idx + 1); },
       storyPrev: () => { if (s.story) this.showStory(s.story.cid, Math.max(0, s.story.idx - 1)); },

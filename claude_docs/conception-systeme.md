@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 237, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 249, exported 2026-11-27 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -393,7 +393,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 
 ## FL-07 Discuter avec un ami
 
-Un utilisateur connecté (R-02) ouvre Messages, choisit la conversation d'un ami dans P-08 et échange avec lui dans P-09 : messages en charabia, photos en art généré, réponses citées. Les messages de l'ami arrivent en direct. Mobile seulement. Décisions : D-027, D-030, D-042, D-044, D-071, D-082, D-083, D-084, D-085, D-086.
+Un utilisateur connecté (R-02) ouvre Messages, choisit la conversation d'un ami dans P-08 et échange avec lui dans P-09 : messages en charabia, photos en art généré, réponses citées. Les messages de l'ami arrivent en direct. Mobile seulement. Décisions : D-027, D-030, D-042, D-044, D-071, D-082, D-083, D-084, D-085, D-086, D-153, D-162, D-163.
 
 ### Entrées
 
@@ -411,12 +411,13 @@ Hors de ce flow : ajouter un ami (FL-04, F-034) ; voir une story depuis P-08 ou 
 | 2. Chercher une discussion | P-08 | F-033 | E-10 (prénom, @) | — |
 | 3. Ouvrir une conversation | P-08 → P-09.a → P-09 | F-037, F-038 | E-10, E-11 | E-10 (lu, D-085) |
 | 4. Lire et recevoir | P-09 | F-038 | E-11 (messages en direct, saisie de l'ami, D-084) | E-10 (reste lu, D-085) |
-| 5. Citer un message | P-09 | F-040 | — | E-11 (message cité, écrit avec l'envoi) |
-| 6. Envoyer un message | P-09 | F-041 | — | E-11 (charabia, D-083), E-10 (dernier message, heure, non lu chez l'ami, D-085) |
-| 7. Envoyer une photo | P-09 | F-042 | — | E-11 (photo), E-04 (graine et algorithme, D-086), E-10 (« Photo », heure, non lu chez l'ami, D-085) |
-| 8. Revenir aux discussions | P-09 → P-08 | F-005 | — | — |
+| 5. Ouvrir un post reçu | P-09 → P-30 → P-09 | F-075, puis F-016, F-017, F-018, F-019 comme FL-02, et F-005 | E-11 (post partagé), E-03, E-04, E-01 (D-162, D-163) | Comme FL-02 |
+| 6. Citer un message | P-09 | F-040 | — | E-11 (message cité, écrit avec l'envoi) |
+| 7. Envoyer un message | P-09 | F-041 | — | E-11 (charabia, D-083), E-10 (dernier message, heure, non lu chez l'ami, D-085) |
+| 8. Envoyer une photo | P-09 | F-042 | — | E-11 (photo), E-04 (graine et algorithme, D-086), E-10 (« Photo », heure, non lu chez l'ami, D-085) |
+| 9. Revenir aux discussions | P-09 → P-08 | F-005 | — | — |
 
-Suite simple : P-03 → F-025 → P-08 → F-037 → P-09 → F-040 (au besoin) → F-041 ou F-042 → F-005 → P-08. Les entités suivent les `operations` des features : F-033 et F-039 lisent ; F-040, F-041 et F-042 écrivent ; F-037 et F-038 lisent et écrivent (lu, D-085).
+Suite simple : P-03 → F-025 → P-08 → F-037 → P-09 → F-040 (au besoin) → F-041 ou F-042 → F-005 → P-08. Un post reçu s'ouvre en P-30 (F-075), et sa flèche ramène à P-09. Les entités suivent les `operations` des features : F-033 et F-039 lisent ; F-040, F-041 et F-042 écrivent ; F-037 et F-038 lisent et écrivent (lu, D-085).
 
 ### Points de décision et erreurs
 
@@ -454,7 +455,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-038 : jusqu'où remonte une conversation, et chargement des anciens messages.
 - F-039 : appel à concevoir ou à retirer.
 - F-042 : choix de la photo ; briques de l'art généré au départ, et vidéos (D-086, D-119).
-- F-019 : aspect du post reçu dans la conversation, non dessiné sur P-09.
+- F-019 : un post envoyé à un ami passe-t-il la conversation en non lu chez lui ? (Son aspect est réglé par D-162.)
 - F-034 : retirer un ami ou bloquer un compte, et donc le sort de la conversation.
 
 ## FL-08 Rechercher
@@ -1952,9 +1953,9 @@ flux:
   - {id: DF-33, de: N-08, vers: N-07, donnees: [E-12, E-09, E-01, E-04], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Messages
   - {id: DF-34, de: N-06, vers: N-08, donnees: [E-11, E-10, E-04], features: [F-019, F-037, F-038, F-040, F-041, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-35, de: N-08, vers: N-06, donnees: [E-10, E-11, E-04, E-01], features: [F-033, F-037, F-038, F-039, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-35, de: N-08, vers: N-06, donnees: [E-10, E-11, E-04, E-01, E-03], features: [F-033, F-037, F-038, F-039, F-042, F-075], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-36, de: N-07, vers: N-08, donnees: [E-11, E-10, E-04], features: [F-019, F-037, F-038, F-040, F-041, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-37, de: N-08, vers: N-07, donnees: [E-10, E-11, E-04, E-01], features: [F-033, F-037, F-038, F-039, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-37, de: N-08, vers: N-07, donnees: [E-10, E-11, E-04, E-01, E-03], features: [F-033, F-037, F-038, F-039, F-042, F-075], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Recherche
   - {id: DF-38, de: N-06, vers: N-08, donnees: [E-13], features: [F-052, F-053], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
   - {id: DF-39, de: N-08, vers: N-06, donnees: [E-03, E-04, E-01, E-06], features: [F-052, F-053, F-054, F-020], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
@@ -2014,7 +2015,7 @@ flux:
   # écritures, tâches de fond
   - {id: DF-83, de: N-08, vers: N-01, donnees: [E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16], features: [F-001, F-003, F-005, F-007, F-008, F-009, F-010, F-011, F-012, F-015, F-016, F-017, F-018, F-019, F-020, F-022, F-024, F-028, F-030, F-031, F-033, F-034, F-036, F-037, F-038, F-039, F-040, F-041, F-042, F-043, F-044, F-046, F-048, F-051, F-052, F-053, F-054, F-056, F-057, F-058, F-059, F-060, F-061, F-062, F-063, F-065, F-070, F-071, F-072, F-073], flows: [FL-13, FL-14, FL-15, FL-16, FL-17], protocole: "PostgreSQL, TLS", sensible: true}
   # lectures, LISTEN/NOTIFY pour le direct
-  - {id: DF-84, de: N-01, vers: N-08, donnees: [E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16], features: [F-001, F-003, F-005, F-007, F-008, F-009, F-010, F-011, F-012, F-015, F-016, F-017, F-018, F-019, F-020, F-022, F-024, F-028, F-030, F-031, F-033, F-034, F-036, F-037, F-038, F-039, F-040, F-041, F-042, F-043, F-044, F-046, F-048, F-051, F-052, F-053, F-054, F-056, F-057, F-058, F-059, F-060, F-061, F-062, F-063, F-065, F-070, F-071, F-072, F-073], flows: [FL-13, FL-14, FL-15, FL-16, FL-17], protocole: "PostgreSQL, TLS", sensible: true}
+  - {id: DF-84, de: N-01, vers: N-08, donnees: [E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16], features: [F-001, F-003, F-005, F-007, F-008, F-009, F-010, F-011, F-012, F-015, F-016, F-017, F-018, F-019, F-020, F-022, F-024, F-028, F-030, F-031, F-033, F-034, F-036, F-037, F-038, F-039, F-040, F-041, F-042, F-043, F-044, F-046, F-048, F-051, F-052, F-053, F-054, F-056, F-057, F-058, F-059, F-060, F-061, F-062, F-063, F-065, F-070, F-071, F-072, F-073, F-075], flows: [FL-13, FL-14, FL-15, FL-16, FL-17], protocole: "PostgreSQL, TLS", sensible: true}
 ```
 
 ### Features et stockages sans flux
@@ -2039,7 +2040,7 @@ Aucune feature qui lit ou écrit des données ne manque, et chaque stockage est 
 
 ## Contrats de pages
 
-Un contrat par page, P-01 à P-29, dans le dépôt : `docs/pages/P-01.yaml` à `docs/pages/P-29.yaml`. Chacun liste les composants de sa page (C-xx) avec leur nom accessible (NFR-X-14), les colonnes qu'ils lisent et écrivent, les flux qui les portent, et les conditions pour apparaître ou être actifs. Un état de page (P-01.a…) est un état d'un composant de sa page. C'est la réponse au prompt 13 de la méthode, et aucun MANQUANT ne reste : ce qu'il a trouvé est réglé par D-152 à D-161, par les entités ajoutées aux flux DF-15, DF-17, DF-23, DF-25, DF-31, DF-33, DF-35, DF-37, DF-39, DF-41, DF-47 et DF-49, par F-019 ajoutée à DF-23 et DF-25, F-020 à DF-39 et DF-41, et F-063 et F-071 à DF-71 et DF-77.
+Un contrat par page, P-01 à P-30, dans le dépôt : `docs/pages/P-01.yaml` à `docs/pages/P-30.yaml`. Chacun liste les composants de sa page (C-xx) avec leur nom accessible (NFR-X-14), les colonnes qu'ils lisent et écrivent, les flux qui les portent, et les conditions pour apparaître ou être actifs. Un état de page (P-01.a…) est un état d'un composant de sa page. C'est la réponse au prompt 13 de la méthode, et aucun MANQUANT ne reste : ce qu'il a trouvé est réglé par D-152 à D-161, par les entités ajoutées aux flux DF-15, DF-17, DF-23, DF-25, DF-31, DF-33, DF-35, DF-37, DF-39, DF-41, DF-47 et DF-49, par F-019 ajoutée à DF-23 et DF-25, F-020 à DF-39 et DF-41, et F-063 et F-071 à DF-71 et DF-77.
 
 - Les contrats sont des fichiers YAML vérifiés à chaque pull request (checks L10 et B10) : ils sont écrits dans le dépôt, comme les modèles TLA+, et citent les flux et les décisions qu'ils suivent.
 - Le grisage (F-024) et le temps d'utilisation (F-073) ont un composant sur chaque page où ils jouent, même sans rien à toucher.

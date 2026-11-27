@@ -1,0 +1,129 @@
+page: P-30
+nom: "Messages — post ouvert"
+acces: [R-02]
+entree:
+  parametres: [TB-18.post_partage_id]   # le post reçu dont on a touché la carte (C-09-16, D-163)
+  conditions: ["SM-E-02 Session ouverte", "SM-E-03 Publié", "post visible (D-088, D-138)"]
+composants:
+  - id: C-30-01
+    nom_accessible: "Retour à la conversation"
+    type: bouton
+    feature: F-005
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["ouvre P-09 (D-163)"]
+    questions_ouvertes: []
+  - id: C-30-02
+    nom_accessible: "Post"
+    type: image
+    feature: F-075
+    lit: [TB-07.post_id, TB-07.rang, TB-07.graine, TB-07.algorithme, TB-07.duree_video_ms]
+    ecrit: []
+    flux: [DF-35, DF-37, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["en couleur", "grisé selon les cycles", "chargement : anneau centré (D-043), non dessiné", "erreur : message sur place avec « Réessayer » (D-043), non dessiné"]
+    questions_ouvertes: []
+  - id: C-30-03
+    nom_accessible: "Liker"
+    type: bouton
+    feature: F-016
+    lit: [TB-09.post_id, TB-09.auteur_id]
+    ecrit: [TB-09.post_id, TB-09.auteur_id, TB-09.like_le]
+    flux: [DF-15, DF-17, DF-84, DF-14, DF-16, DF-83]
+    visible_si: []
+    actif_si: []
+    etats: [vide, "plein (TB-09.auteur_id = compte connecté)"]
+    questions_ouvertes: []
+  - id: C-30-04
+    nom_accessible: "Commentaires"
+    type: bouton
+    feature: F-017
+    lit: [TB-08.post_id, TB-08.auteur_id]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["nombre de commentaires", "ouvre P-05 (D-163)"]
+    questions_ouvertes: []
+  - id: C-30-05
+    nom_accessible: "Enregistrer dans une collection"
+    type: bouton
+    feature: F-018
+    lit: [TB-12.post_id, TB-12.compte_id]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [vide, "plein (TB-12.compte_id = compte connecté)", "ouvre P-06 (D-163)"]
+    questions_ouvertes: []
+  - id: C-30-06
+    nom_accessible: "Partager"
+    type: bouton
+    feature: F-019
+    lit: [TB-33.post_id]
+    ecrit: []
+    flux: [DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["nombre de partages", "ouvre P-07 (D-163)"]
+    questions_ouvertes: []
+  - id: C-30-07
+    nom_accessible: "Photo du publieur"
+    type: image
+    feature: F-020
+    lit: [TB-06.auteur_id, TB-07.profil_de, TB-07.graine]
+    ecrit: []
+    flux: [DF-35, DF-37, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["non cliquable"]
+    questions_ouvertes: []
+  - id: C-30-08
+    nom_accessible: "Pseudo du publieur"
+    type: texte
+    feature: F-020
+    lit: [TB-01.pseudo]
+    ecrit: []
+    flux: [DF-35, DF-37, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-30-09
+    nom_accessible: "Légende"
+    type: texte
+    feature: F-020
+    lit: [TB-06.legende]
+    ecrit: []
+    flux: [DF-35, DF-37, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-30-10
+    nom_accessible: "Grisage de l'appli"
+    type: minuteur
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: ["de couleur à noir et blanc, 10 % par cycle"]
+    questions_ouvertes: []
+  # F-073 est une tâche de fond sans élément visible ; ce composant lui donne sa place sur la page.
+  - id: C-30-11
+    nom_accessible: "Temps d'utilisation"
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [invisible]
+    questions_ouvertes: []

@@ -182,7 +182,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #2F4F
 
         <sc-if value="{{sheetSave}}" hint-placeholder-val="{{ false }}">
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <sc-for list="{{collections}}" as="c" hint-placeholder-count="3">
+            <sc-for list="{{collections}}" as="c" hint-placeholder-count="1">
               <button type="button" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-radius: 14px; border: 1px solid {{c.ring}}; background: {{c.bg}}; color: #1C1C1C; font: 500 16px 'IBM Plex Sans', sans-serif; text-align: left; cursor: pointer">
                 <span aria-hidden="true" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: {{c.swatch}}; filter: blur(1px)"></span>
                 <span style="flex: 1">{{c.name}}</span>
@@ -258,7 +258,7 @@ class Component extends DCLogic {
       grey: 0, query: '', viewIdx: null,
       liked: {}, saved: {}, expanded: {}, burst: null, sheet: null, toast: '',
       commentLikes: {}, myComments: {}, commentDraft: '',
-      collections: ['Pour plus tard', 'Formes calmes', 'Couleurs à garder']
+      collections: ['Favoris']
     };
     this.lastTap = {};
     this.timers = [];
