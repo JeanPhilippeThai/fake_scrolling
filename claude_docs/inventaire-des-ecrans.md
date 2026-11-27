@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 155, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 156, exported 2026-11-27 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
@@ -594,7 +594,7 @@ Panneau qui monte du bas sur P-13 : qui peut voir le post.
 | Revenir à la connexion | Flèche en haut à gauche, ouvre P-01 sans créer de compte | Aucune | — |
 | Lire l'invitation | Titre « Crée ton compte » et phrase « Choisis comment les autres te verront. » | Aucune | — |
 | Saisir son pseudo | Champ « Pseudo » | Pseudo, 16 caractères au plus | Vide ; rempli |
-| Saisir son identifiant | Champ « Identifiant » précédé d'un @, avec « Minuscules, sans espace. Tes amis te trouvent avec. » | Identifiant (lettres minuscules, chiffres, point et tiret bas en démo ; longueur, unicité et message s'il est pris : à confirmer) | Vide ; rempli |
+| Saisir son identifiant | Champ « Identifiant » précédé d'un @, avec « Minuscules, sans espace. Tes amis te trouvent avec. » | Identifiant (lettres minuscules, chiffres, point et tiret bas en démo ; longueur et message s'il est pris : à confirmer ; minuscules seulement, unique (D-145)) | Vide ; rempli |
 | Créer son compte | Bouton vert « Créer mon compte », ouvre P-03 | Compte : pseudo et identifiant | Gris tant qu'un champ est vide ; envoi (P-27.a) ; erreur (P-27.b) |
 | Lire la suite | « Photo et description : plus tard, depuis ton profil. » (D-063) | Aucune | — |
 

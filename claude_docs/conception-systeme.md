@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 173, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 210, exported 2026-11-27 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -215,7 +215,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-049 : vraie recherche de lieux, et donc la source des lieux.
 - F-050 : règle de l'audience (qui voit le post et agit dessus).
 - F-051 : réglé depuis, un post n’a plus de palette (D-139).
-- F-072 : liste vide ; effet d'un changement sur les posts déjà publiés.
+- F-072 : liste vide ; l'effet d'un changement sur les posts déjà publiés est réglé : la liste du moment vaut pour tout (D-146).
 
 ## FL-04 Ajouter un ami
 
@@ -679,7 +679,7 @@ Suite simple : changement non enregistré → 1 → 2 → 3 → 4, ou 5 puis de 
 | Où | Cas | Suite |
 | --- | --- | --- |
 | Serveur | Réseau ou serveur injoignable | L'envoi reste sur le téléphone et repart au prochain départ (D-112) ; aucun message |
-| Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones corrigée par celle du serveur (D-140), est gardé (D-111) ; leurs secondes sans réseau se fusionnent, une seconde commune ne comptant qu'une fois, et seules celles d'après la dernière réinitialisation comptent pour le minuteur (D-105, D-117) |
+| Serveur | Deux téléphones ont changé le minuteur hors connexion | Le changement fait le plus tard, selon l'heure des téléphones corrigée par celle du serveur (D-140), est gardé (D-111) ; leurs secondes sans réseau se fusionnent, une seconde commune ne comptant qu'une fois, sauf pour une période arrivée plus de 7 jours après sa fin (D-147), et seules celles d'après la dernière réinitialisation comptent pour le minuteur (D-105, D-117) |
 | Serveur | Refus pour de bon : données invalides, story déjà effacée (FL-13), graine déjà effacée (FL-14) | Envoi abandonné sans message ; au chargement suivant, le téléphone montre ce que le serveur a (D-113) |
 | Serveur | Soutien refusé | Jamais abandonné : renvoyé jusqu'à ce qu'il soit enregistré (D-095, D-113), sauf si le compte est supprimé (D-116) |
 | Téléphone | Le brouillon d'une graine en attente disparaît (« Fermer », photo retirée, appli fermée de force, téléphone éteint) | La graine est abandonnée, jamais envoyée (D-121, D-122) |
@@ -705,7 +705,7 @@ Aucune feature ni page ne manque : la tâche n'a rien à l'écran.
 
 ## FL-13 Finir une story
 
-Tâche de fond du serveur, sans geste de l'utilisateur : 24 h après sa publication, une story passe à Finie et le serveur l'efface. Mobile seulement. Décisions : D-079, D-101, D-110, D-113.
+Tâche de fond du serveur, sans geste de l'utilisateur : 24 h après sa publication, une story passe à Finie et le serveur l'efface. Mobile seulement. Décisions : D-079, D-101, D-110, D-113, D-148.
 
 ### Entrées
 
@@ -718,7 +718,7 @@ Hors de ce flow : regarder une story, dans FL-06 ; l'effacement de toutes les st
 | Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
 | --- | --- | --- | --- | --- | --- |
 | 1. Finir | La fin (E-12) est atteinte | — | — | E-12 (fin) | E-12 (Finie) |
-| 2. Effacer | Tout de suite après | — | — | — | E-12 effacée du serveur, avec ses images et sa liste « vue par » (D-110) |
+| 2. Effacer | Tout de suite après | — | — | — | E-12 effacée du serveur, avec ses images et sa liste « vue par » (D-110) ; E-08 : ses notifications effacées (D-148) |
 | 3. Disparaître des téléphones | Chargement suivant de P-08 ou de P-09 | P-08, P-09 | F-036 | E-12 | — (plus de rond ni de cercle, D-079) |
 
 Suite simple : fin atteinte → 1 → 2 → 3. F-036 lit E-12 ; la tâche du serveur n'est portée par aucune feature.
@@ -814,7 +814,75 @@ Fin du flow : 7 jours après sa suppression, rien du compte ne reste sur le serv
 
 Réglé le 26 novembre 2026 : D-128 n'était dans aucun flow ; FL-15 le décrit, et FL-11, NFR-X-4, D-101 et D-102 disent ce qui reste 7 jours.
 
-Aucune feature ni page ne manque : la tâche n'a rien à l'écran. La liste des comptes supprimés n'est pas une entité du registre : elle ne garde qu'un numéro, sans rien du compte ; le modèle de données lui donnera sa table.
+Aucune feature ni page ne manque : la tâche n'a rien à l'écran. La liste des comptes supprimés n'est pas une entité du registre : elle ne garde qu'un numéro, sans rien du compte ; sa table est TB-26 (« Modèle de données »).
+
+## FL-16 Oublier les connexions inachevées
+
+Tâche de fond du serveur, sans geste de l'utilisateur : 1 h au plus après l'envoi d'un code ou le début d'une inscription, le serveur oublie l'adresse e-mail, ou le compte Google ou Apple, qui n'a pas mené à un compte. Mobile seulement. Décisions : D-127, D-131, D-149.
+
+### Entrées
+
+- FL-01 : un code envoyé à une adresse (F-003, F-008) ; une inscription commencée (P-27), après le bon code (F-007) ou un compte Google ou Apple sans compte de l'appli (F-001).
+
+Hors de ce flow : la vérification du code et ses 10 min, dans FL-01 (D-127) ; la création du compte (F-070), qui efface l'inscription.
+
+### Séquence
+
+| Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- | --- |
+| 1. Effacer les vieux codes | 1 h après l'envoi d'un code qui n'a pas servi | — | — | E-02 (heure d'envoi) | E-02 : le code et son adresse effacés (D-149) |
+| 2. Effacer les vieilles inscriptions | 1 h après le début d'une inscription que F-070 n'a pas finie | — | — | E-02 (début de l'inscription) | E-02 : l'inscription et son adresse ou son compte tiers effacés (D-149) |
+
+Suite simple : code envoyé → 1 ; inscription commencée → 2. Ni l'une ni l'autre n'est portée par une feature.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| F-007 | Bon code donné avant l'effacement | Le code est effacé tout de suite par FL-01 ; rien à faire ici |
+| F-008 | Nouveau code demandé | Il remplace l'ancien, et l'heure d'envoi repart (D-131) |
+| F-070 | Compte créé plus d'1 h après le début de l'inscription | L'inscription n'existe plus : question ouverte de F-070 |
+
+Fin du flow : 1 h après, le serveur ne garde rien d'une personne qui n'a pas créé de compte.
+
+### Manques du registre
+
+Réglé le 27 novembre 2026 : D-149 fixe le délai, et TB-03 et TB-04 sont les tables effacées (« Modèle de données »).
+
+Reste ouvert, dans les `questions_ouvertes` de F-070 : ce que voit quelqu'un qui finit son inscription plus d'1 h après l'avoir commencée.
+
+## FL-17 Oublier les vieilles périodes au premier plan
+
+Tâche de fond du serveur, sans geste de l'utilisateur : 7 jours après sa fin, une période où l'appli d'un compte était au premier plan est effacée ; le minuteur et le temps d'utilisation l'ont déjà comptée. Mobile seulement. Décisions : D-105, D-117, D-147.
+
+### Entrées
+
+- FL-05 et FL-12 : les périodes au premier plan des téléphones du compte (F-024, F-073, D-117), que le serveur fusionne pour compter chaque seconde une fois (D-105).
+
+Hors de ce flow : la fusion elle-même et le compte des secondes, dans FL-05 et FL-12 ; l'effacement de tout le compte (F-063, D-101), dans FL-11.
+
+### Séquence
+
+| Étape | Déclencheur | Page | Feature | Entités lues | Entités écrites |
+| --- | --- | --- | --- | --- | --- |
+| 1. Effacer | 7 jours après la fin d'une période | — | — | E-15 (fin de chaque période) | E-15 : la période effacée ; la durée cumulée ne change pas (D-147) |
+
+Suite simple : période fusionnée → 1. La tâche n'est portée par aucune feature.
+
+### Points de décision et erreurs
+
+| Où | Cas | Suite |
+| --- | --- | --- |
+| Serveur | Période arrivée plus de 7 jours après sa fin (FL-12) | Elle compte en entier, sans être comparée aux autres téléphones, puis est effacée (D-147) |
+| F-063 | Compte supprimé | Ses périodes sont effacées avec lui (D-101) |
+
+Fin du flow : le serveur ne garde jamais plus de 7 jours de l'usage de l'appli.
+
+### Manques du registre
+
+Réglé le 27 novembre 2026 : D-147 fixe le délai, et TB-23 est la table effacée (« Modèle de données »).
+
+Aucune feature ni page ne manque : la tâche n'a rien à l'écran.
 
 ## États des entités
 
@@ -851,6 +919,8 @@ stateDiagram-v2
     deconnecte --> inscription : F-001, aucun compte
     inscription --> session : F-070
     inscription --> deconnecte : F-005
+    inscription --> deconnecte : 1 h, FL-16
+    code_expire --> deconnecte : 1 h, FL-16
     session --> deconnecte : F-071, F-063, suppression ailleurs
 ```
 
@@ -860,13 +930,13 @@ stateDiagram-v2
 | Code envoyé → Code renvoyable | 30 s écoulées | F-008 devient possible |
 | Code renvoyable → Code envoyé | F-008 | Nouveau code, nouveau décompte de 30 s ; l'ancien code ne marche plus, 10 min et 5 essais neufs (D-131) |
 | Code envoyé ou renvoyable → Code expiré | 10 min écoulées depuis l'envoi ; ou F-007, 5e code faux | P-02.b ; le code ne marche plus, même juste (D-127) |
-| Code expiré → Code envoyé | F-008 | Nouveau code, 10 min et 5 essais neufs (D-131) |
+| Code expiré → Code envoyé | F-008 | Nouveau code, 10 min et 5 essais neufs (D-131). Sans nouveau code, le serveur oublie le code et l'adresse 1 h après l'envoi (FL-16, D-149) |
 | Code envoyé ou renvoyable → Code envoyé ou renvoyable | F-007, code faux | P-02.a ; un essai faux de plus, Code expiré au 5e (D-127) |
 | Code envoyé ou renvoyable → Déconnecté | F-005 | Mauvaise adresse, retour à P-01 |
 | Code envoyé ou renvoyable, ou Déconnecté → Session ouverte | F-007 bon code, ou F-001 / F-001.a, compte trouvé | P-03 |
 | Code envoyé ou renvoyable, ou Déconnecté → Inscription | Même déclencheur, aucun compte | P-27 (D-052) |
 | Inscription → Session ouverte | F-070 | Compte créé, avec son minuteur, son temps d'utilisation et son soutien (D-052, D-064, D-114) |
-| Inscription → Déconnecté | F-005 | Abandon, aucun compte créé |
+| Inscription → Déconnecté | F-005 | Abandon, aucun compte créé. Sans F-070, le serveur oublie l'inscription 1 h après son début (FL-16, D-149) ; ce que voit alors le téléphone est ouvert dans F-070 |
 | Session ouverte → Déconnecté | F-071 ; F-063 ; compte supprimé sur un autre téléphone, au prochain échange avec le serveur | P-01 (D-053, D-065, D-069, D-101) ; les envois en attente restent rattachés au compte après F-071 (D-104) |
 
 ### SM-E-03 Post
@@ -941,15 +1011,15 @@ stateDiagram-v2
     state "Vue" as vue
     [*] --> non_vue : F-016, F-030, F-034, F-051
     non_vue --> vue : P-04 ouvert, F-022
-    non_vue --> [*] : like retiré, invitation répondue, F-063
-    vue --> [*] : like retiré, invitation répondue, F-063
+    non_vue --> [*] : like retiré, invitation répondue, post ou story effacé, F-063
+    vue --> [*] : like retiré, invitation répondue, post ou story effacé, F-063
 ```
 
 | Passage | Déclencheur | Effet et décisions |
 | --- | --- | --- |
 | → Non vue | Like d'un post (F-016, D-055), commentaire (F-030, D-056), demande d'ami (F-034, D-070), identification (F-051, D-061) | Compte dans la pastille de la cloche (F-022, D-106) |
 | Non vue → Vue | Ouverture du panneau P-04 (F-022) | Toutes les notifications du compte passent en vue ; la pastille disparaît (D-106) |
-| Non vue ou Vue → (supprimée) | Like retiré (F-016) ; invitation acceptée ou refusée (F-028, F-028.a, D-070) ou demande croisée (F-034, D-073) ; F-063 de l'auteur ou du destinataire (D-101) | La ligne disparaît de P-04 |
+| Non vue ou Vue → (supprimée) | Like retiré (F-016) ; invitation acceptée ou refusée (F-028, F-028.a, D-070) ou demande croisée (F-034, D-073) ; F-063 de l'auteur ou du destinataire (D-101) ; post ou story effacé, story finie comprise (FL-13, D-148) | La ligne disparaît de P-04 |
 
 ### SM-E-09 Relation d'amitié
 
@@ -1063,7 +1133,7 @@ stateDiagram-v2
 | --- | --- | --- |
 | Arrêté → En marche | Un téléphone connecté a l'appli ouverte et au premier plan (F-024) | Reprend où il en était, au même gris, sur tout téléphone (D-074) |
 | En marche → Arrêté | Plus aucun téléphone au premier plan : appli fermée, en arrière-plan ou déconnectée (F-071) | Temps passé gardé sur le serveur (D-074, D-075) |
-| En marche → En marche | Chaque seconde où au moins un téléphone est au premier plan | Temps passé + 1 s, une seule fois même avec deux téléphones (D-075, D-105) ; sans réseau aussi, renvoyé par FL-12 (D-117) |
+| En marche → En marche | Chaque seconde où au moins un téléphone est au premier plan | Temps passé + 1 s, une seule fois même avec deux téléphones (D-075, D-105), sauf une période arrivée plus de 7 jours après sa fin (D-147) ; sans réseau aussi, renvoyé par FL-12 (D-117) |
 | En marche → En marche, cycle fini | Le temps passé atteint la durée, moins de 9 cycles écoulés | Cycles + 1, 10 % de gris en plus, temps remis à 0 (F-024) |
 | En marche → Noir et blanc | Le 10e cycle finit | Le minuteur s'arrête ; F-059 dit « Noir et blanc. Réinitialise pour retrouver les couleurs. » |
 | Tout état → En marche, cycle 1 | F-061 « Réinitialiser » (sur P-17, donc appli ouverte) | 0 cycle écoulé, 0 % de gris ; appliqué sur le téléphone, renvoyé sans message (D-077) |
@@ -1109,7 +1179,7 @@ Choisis par D-107 et D-124, écrits dans le dépôt sous `docs/system-design/` (
 | SM-E-04 | `SM_E_04.tla` | `D120_D123_PublishedHasArt` : un post ou une story publié a toujours ses graines, même si FL-14 les avait effacées avant (D-120, D-123) ; `D121_AbandonedNeverAttached`, `D121_AbandonedEndsErased`, `D121_ErasedStaysErased` : une photo retirée ou d'un brouillon perdu n'est jamais rattachée, finit effacée et ne revient pas (D-121, D-122, D-123) ; `D122_DroppedNeverSent`, `D122_EraseNeverHitsPublished` (D-121, D-122) ; `D123_NoOrphanForever` : aucune graine ne reste sur le serveur sans rien qui la prenne (D-123) ; `D125_OneProfilePhoto`, `D100_D125_ProfileIsCurrent`, `D100_ProfileQueueEnds` : le serveur garde une seule graine de photo de profil, celle du téléphone une fois tout envoyé (D-100, D-125) ; `D101_NothingAfterDeletion` (D-101) |
 | SM-E-09 | `SM_E_09.tla` | `D073_NoCrossedRequests`, `D073_NoRequestBetweenFriends` : jamais deux demandes en attente dans les deux sens, ni entre amis (D-073) ; `D070_InvitationWhileRequest` : l'invitation existe tant que la demande attend (D-070) ; `D071_D082_ConversationIffFriends` : une conversation existe si et seulement si les deux comptes sont amis (D-071, D-082) ; `D060_CloseFriendIsFriend` : un ami proche est toujours un ami (D-060) ; `D101_NothingLeftOfDeleted` (D-101) |
 | SM-E-12 | `SM_E_12.tla` | `D079_FinishedNeverReopens` : une story finie ne se rouvre jamais, même si « vue » arrive après (D-078, D-079) ; `D080_OpensOnlyForAudience` : seuls les amis, et les amis proches pour « Amis proches », l'ouvrent (D-080) ; `D078_SeenOnlyAfterAnImage` (D-078) ; `D110_ErasedKeepsNothing`, `D110_FinishedIsErased` (D-110) ; `D101_DeletedViewerLeavesNothing` (D-101, D-109) ; `D113_WaitingVueEnds` : une « vue » en attente finit enregistrée ou abandonnée (D-108, D-113) |
-| SM-E-14 | `SM_E_14.tla` | `D024_GreyTenPercentPerCycle` : 10 % de gris par cycle écoulé, 10 cycles au plus (F-024) ; `D105_SecondCountedOnce`, `D105_D117_UsageIsForegroundTime` : deux téléphones ne font jamais compter une seconde deux fois, et le temps d'utilisation (E-15) finit égal aux secondes où au moins un téléphone était au premier plan, sans réseau compris (D-105, D-117) ; `D111_LatestChangeWins` : le réglage fait le plus tard gagne, quel que soit l'ordre d'arrivée (D-111, D-117) ; `D077_D117_EverythingEndsRecorded` : réglages et secondes renvoyés finissent enregistrés (D-077, D-117) |
+| SM-E-14 | `SM_E_14.tla` | `D024_GreyTenPercentPerCycle` : 10 % de gris par cycle écoulé, 10 cycles au plus (F-024) ; `D105_SecondCountedOnce`, `D105_D117_UsageIsForegroundTime` : deux téléphones ne font jamais compter une seconde deux fois (hors du modèle : une période arrivée plus de 7 jours après sa fin compte en entier, D-147), et le temps d'utilisation (E-15) finit égal aux secondes où au moins un téléphone était au premier plan, sans réseau compris (D-105, D-117) ; `D111_LatestChangeWins` : le réglage fait le plus tard gagne, quel que soit l'ordre d'arrivée (D-111, D-117) ; `D077_D117_EverythingEndsRecorded` : réglages et secondes renvoyés finissent enregistrés (D-077, D-117) |
 | SM-E-16 | `SM_E_16.tla` | `D095_NoErrorAfterDebit` : aucune erreur après un débit (D-095) ; `D115_RecordedOnce` : le serveur n'enregistre qu'un soutien par compte (D-092, D-115) ; `D092_SupportedOnlyIfPaid` ; `D095_D116_PaidEndsRecorded` : un achat confirmé finit enregistré, pour son compte seulement, sauf si le compte est supprimé (D-095, D-104, D-116) |
 | Synchronisation | `sync.tla` | `D104_NeverForAnotherAccount` (D-104) ; `D101_NothingKeptForDeleted`, `D101_NothingAfterDeletion` (D-101) ; `D116_SupportDroppedOnlyWithAccount` (D-113, D-116) ; `D122_RecordedOrDropped` : un envoi finit enregistré ou abandonné, jamais les deux ; une graine dont le brouillon a disparu est abandonnée sans partir (D-113, D-121, D-122) ; `D108_SentWhileConnected` : un envoi en attente part dès que son compte est connecté sur le téléphone (D-104, D-108, D-112) ; `D101_DeletedAccountChangesEnd` : ceux d'un compte supprimé finissent abandonnés, même sur un téléphone où il n'est plus connecté (D-101, D-116). Le temps entre téléphones est vérifié par SM-E-14 |
 
@@ -1123,7 +1193,7 @@ Les exigences de toute l'appli (étape 7 de la méthode), chacune avec un nombre
 
 | ID | Exigence | Nombre ou test | Source |
 | --- | --- | --- | --- |
-| NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa graine (D-139). Seuls l'identifiant (@) et l'adresse e-mail de connexion partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
+| NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa graine (D-139). Seuls l'identifiant (@), l'adresse e-mail de connexion et le lieu choisi dans une liste (F-049, D-151) partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
 | NFR-X-2 | Aucune photo ni vidéo ne quitte le téléphone : seule sa graine part. | Même capture : aucune requête n'a un corps image ou vidéo, ni les octets de la photo choisie. | D-086, D-091, D-119 |
 | NFR-X-3 | Les préférences d'interface (E-17) et l'état de la recherche (E-13, sans historique, D-089) ne quittent jamais le téléphone. | Même capture, pendant un changement de thème sur P-23 et une recherche sur P-14 : aucune requête ne les porte. | D-087, D-089, D-103 |
 | NFR-X-4 | Un compte supprimé n'est plus dans aucun stockage du serveur dès la réponse de F-063, sauf son numéro interne, gardé seul 7 jours (D-128, FL-15), et plus nulle part, sauvegardes comprises, 7 jours après. | Test d'intégration : un compte avec une ligne dans chaque entité est supprimé, puis son numéro interne est cherché dans chaque table : 0 ligne, hors de la liste des comptes supprimés ; 7 jours après, 0 ligne là aussi. Configuration : sauvegardes gardées 7 jours au plus ; une sauvegarde restaurée efface les comptes supprimés depuis. | D-101, D-102, D-128 |
@@ -1180,7 +1250,7 @@ Le serveur décide de tout ce que plusieurs comptes ou plusieurs téléphones pa
 | Minuteur et temps d'utilisation | Compte les secondes et grise, même sans réseau ; corrige son heure par celle du serveur | Fusionne les secondes et les réglages des téléphones du compte | D-105, D-111, D-117, D-140 |
 | Soutien | Lance l'achat du store et envoie sa preuve | Vérifie l'achat auprès du store, l'enregistre une seule fois | D-092, D-095, D-115 |
 | Brouillon et envois en attente | Brouillon en mémoire ; envois en attente dans SQLite (FL-12) | Enregistre, ou refuse pour de bon | D-068, D-113, D-135 |
-| Tâches de fond | Aucune | Finir les stories (FL-13), effacer les graines orphelines (FL-14), oublier les comptes supprimés (FL-15) | D-110, D-123, D-128 |
+| Tâches de fond | Aucune | Finir les stories (FL-13), effacer les graines orphelines (FL-14), oublier les comptes supprimés (FL-15), les connexions inachevées (FL-16) et les vieilles périodes au premier plan (FL-17) | D-110, D-123, D-128, D-147, D-149 |
 | Version de l'appli | Montre P-29 si elle est trop vieille (F-074) | Dit quelles versions il accepte encore | D-141 |
 
 ### Groupes de l'API
@@ -1213,3 +1283,755 @@ Les lieux (F-049) n'ont pas encore de groupe : leur source est une question ouve
 - Direct : la connexion WebSocket, ouverte tant que l'appli est au premier plan, ne porte que le message reçu et « en train d'écrire » ; envoyer un message passe par l'API (D-084, D-133).
 
 Restent ouverts, dans les `questions_ouvertes` des features : F-009, quels posts montre le fil et dans quel ordre ; F-052, la règle de la recherche par graine ; F-053, ce que comptent les tendances ; F-049, la source des lieux.
+
+## Modèle de données
+
+33 tables, TB-01 à TB-33, dans trois stockages : la base PostgreSQL du serveur (N-01, D-134), la base SQLite du téléphone (N-02, D-135, D-150) et son stockage sécurisé (N-03). Les stockages sont des nœuds de la section « Flux de données ». Les règles du modèle sont dans D-144 : l'id de ce que crée un geste est fait par le téléphone, tout ce qui vient d'un compte s'efface avec lui, et les compteurs sont comptés à la demande. C'est la réponse au prompt 11 de la méthode.
+
+### Tables
+
+```yaml
+tables:
+  - id: TB-01
+    nom: comptes
+    type: table
+    stockage: N-01
+    entite: E-01
+    raison: Un compte par ligne ; son id est le numéro interne du compte (D-102).
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: identifiant, type: text, cle: unique, reference: '', obligatoire: true}
+      - {nom: pseudo, type: text, cle: '', reference: '', obligatoire: true}
+      - {nom: description, type: text, cle: '', reference: '', obligatoire: false}
+    index: []
+
+  - id: TB-02
+    nom: identites
+    type: table
+    stockage: N-01
+    entite: E-02
+    raison: Comment on se connecte à un compte, par Google, Apple ou e-mail (F-001, F-003).
+    colonnes:
+      - {nom: fournisseur, type: "enum fournisseur ('google', 'apple', 'email')", cle: primaire, reference: '', obligatoire: true}
+      - {nom: cle, type: text, cle: primaire, reference: '', obligatoire: true}
+      - {nom: compte_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+    index: [compte_id]
+
+  - id: TB-03
+    nom: codes_connexion
+    type: table
+    stockage: N-01
+    entite: E-02
+    raison: Le dernier code envoyé à une adresse, seul valable (D-131) ; effacé quand il est bon, sinon par FL-16 1 h après l'envoi (D-149).
+    colonnes:
+      - {nom: adresse_email, type: citext, cle: primaire, reference: '', obligatoire: true}
+      - {nom: code_hash, type: bytea, cle: '', reference: '', obligatoire: true}
+      - {nom: envoye_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+      - {nom: essais_faux, type: smallint, cle: '', reference: '', obligatoire: true}
+    index: [envoye_le]
+
+  - id: TB-04
+    nom: inscriptions
+    type: table
+    stockage: N-01
+    entite: E-02
+    raison: L'état « Inscription » de SM-E-02, entre le bon code ou le compte Google ou Apple et F-070 ; effacée par F-070, sinon par FL-16 1 h après (D-149).
+    colonnes:
+      - {nom: jeton_hash, type: bytea, cle: primaire, reference: '', obligatoire: true}
+      - {nom: fournisseur, type: enum fournisseur, cle: '', reference: '', obligatoire: true}
+      - {nom: cle, type: text, cle: '', reference: '', obligatoire: true}
+      - {nom: cree_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: [cree_le]
+
+  - id: TB-05
+    nom: sessions
+    type: table
+    stockage: N-01
+    entite: E-02
+    raison: Une session ouverte par téléphone (D-053) ; le jeton n'est gardé que haché (NFR-X-9).
+    colonnes:
+      - {nom: jeton_hash, type: bytea, cle: primaire, reference: '', obligatoire: true}
+      - {nom: compte_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+    index: [compte_id]
+
+  - id: TB-06
+    nom: posts
+    type: table
+    stockage: N-01
+    entite: E-03
+    raison: Un post du fil publié (SM-E-03, Publié) ; brouillon, publication en cours et échec restent sur le téléphone, en mémoire (D-135).
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: auteur_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: legende, type: text, cle: '', reference: '', obligatoire: false}
+      - {nom: audience, type: "enum audience ('tout_le_monde', 'amis', 'amis_proches')", cle: '', reference: '', obligatoire: true}
+      - {nom: lieu, type: text, cle: '', reference: '', obligatoire: false}
+      - {nom: publie_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: ['(auteur_id, publie_le)', publie_le]
+
+  - id: TB-07
+    nom: medias
+    type: table
+    stockage: N-01
+    entite: E-04
+    raison: Une graine et son algorithme par photo ou vidéo (D-086, D-119), rattachée à au plus une chose ; sans rattachement, c'est la graine d'un brouillon de SM-E-04.
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: compte_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: graine, type: bytea, cle: '', reference: '', obligatoire: true}
+      - {nom: algorithme, type: jsonb, cle: '', reference: '', obligatoire: true}
+      - {nom: duree_video_ms, type: integer, cle: '', reference: '', obligatoire: false}
+      - {nom: rang, type: smallint, cle: '', reference: '', obligatoire: false}
+      - {nom: arrivee_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+      - {nom: post_id, type: uuid, cle: '', reference: TB-06.id, obligatoire: false}
+      - {nom: story_id, type: uuid, cle: '', reference: TB-19.id, obligatoire: false}
+      - {nom: message_id, type: uuid, cle: '', reference: TB-18.id, obligatoire: false}
+      - {nom: profil_de, type: uuid, cle: unique, reference: TB-01.id, obligatoire: false}
+    index: [compte_id, '(post_id, rang)', '(story_id, rang)', message_id, 'arrivee_le, sans rattachement']
+
+  - id: TB-08
+    nom: commentaires
+    type: table
+    stockage: N-01
+    entite: E-05
+    raison: Un commentaire d'un post (F-030).
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: post_id, type: uuid, cle: '', reference: TB-06.id, obligatoire: true}
+      - {nom: auteur_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: texte, type: text, cle: '', reference: '', obligatoire: true}
+      - {nom: publie_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: ['(post_id, publie_le)', auteur_id]
+
+  - id: TB-09
+    nom: likes_posts
+    type: table
+    stockage: N-01
+    entite: E-06
+    raison: Un like d'un post (F-016) ; un seul par compte et par post.
+    colonnes:
+      - {nom: post_id, type: uuid, cle: primaire, reference: TB-06.id, obligatoire: true}
+      - {nom: auteur_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: like_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: [auteur_id]
+
+  - id: TB-10
+    nom: likes_commentaires
+    type: table
+    stockage: N-01
+    entite: E-06
+    raison: Un like d'un commentaire (F-016) ; un seul par compte et par commentaire.
+    colonnes:
+      - {nom: commentaire_id, type: uuid, cle: primaire, reference: TB-08.id, obligatoire: true}
+      - {nom: auteur_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: like_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: [auteur_id]
+
+  - id: TB-11
+    nom: collections
+    type: table
+    stockage: N-01
+    entite: E-07
+    raison: Une collection d'un compte (F-031).
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: compte_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: nom, type: text, cle: '', reference: '', obligatoire: true}
+    index: [compte_id]
+
+  - id: TB-12
+    nom: enregistrements
+    type: table
+    stockage: N-01
+    entite: E-07
+    raison: Les posts enregistrés d'une collection ; la clé (compte_id, post_id) met un post dans une collection au plus (D-057).
+    colonnes:
+      - {nom: compte_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: post_id, type: uuid, cle: primaire, reference: TB-06.id, obligatoire: true}
+      - {nom: collection_id, type: uuid, cle: '', reference: TB-11.id, obligatoire: true}
+    index: [post_id, collection_id]
+
+  - id: TB-13
+    nom: identifications_posts
+    type: table
+    stockage: N-01
+    entite: E-03
+    raison: Les personnes identifiées dans un post (F-048).
+    colonnes:
+      - {nom: post_id, type: uuid, cle: primaire, reference: TB-06.id, obligatoire: true}
+      - {nom: compte_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+    index: [compte_id]
+
+  - id: TB-14
+    nom: notifications
+    type: table
+    stockage: N-01
+    entite: E-08
+    raison: Une notification reçue (SM-E-08) ; effacée avec son post ou sa story (D-148), quand le like est retiré ou l'invitation répondue (D-070).
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: destinataire_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: auteur_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: type, type: "enum type_notification ('like', 'commentaire', 'invitation', 'identification')", cle: '', reference: '', obligatoire: true}
+      - {nom: post_id, type: uuid, cle: '', reference: TB-06.id, obligatoire: false}
+      - {nom: story_id, type: uuid, cle: '', reference: TB-19.id, obligatoire: false}
+      - {nom: vue, type: boolean, cle: '', reference: '', obligatoire: true}
+      - {nom: cree_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: ['(destinataire_id, cree_le)', auteur_id, post_id, story_id]
+
+  - id: TB-15
+    nom: amities
+    type: table
+    stockage: N-01
+    entite: E-09
+    raison: Une demande ou une amitié entre deux comptes (SM-E-09) ; « Aucune » est l'absence de ligne ; une seule ligne par paire, dans un sens ou dans l'autre (D-073).
+    colonnes:
+      - {nom: demandeur_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: destinataire_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: statut, type: "enum statut_amitie ('demandee', 'amis')", cle: '', reference: '', obligatoire: true}
+    index: [destinataire_id, 'unique (least, greatest) des deux comptes']
+
+  - id: TB-16
+    nom: amis_proches
+    type: table
+    stockage: N-01
+    entite: E-09
+    raison: La liste d'amis proches de chaque compte (D-060), toujours celle du moment (D-146).
+    colonnes:
+      - {nom: compte_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: ami_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+    index: [ami_id]
+
+  - id: TB-17
+    nom: conversations
+    type: table
+    stockage: N-01
+    entite: E-10
+    raison: Une conversation par paire d'amis (D-071, D-082), avec « lu » pour chacun des deux (D-085) ; compte_a est le plus petit des deux id.
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: compte_a, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: compte_b, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: lu_par_a, type: boolean, cle: '', reference: '', obligatoire: true}
+      - {nom: lu_par_b, type: boolean, cle: '', reference: '', obligatoire: true}
+    index: ['unique (compte_a, compte_b)', compte_b]
+
+  - id: TB-18
+    nom: messages
+    type: table
+    stockage: N-01
+    entite: E-11
+    raison: Un message d'une conversation (F-041, F-042, F-019.a).
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: conversation_id, type: uuid, cle: '', reference: TB-17.id, obligatoire: true}
+      - {nom: expediteur_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: texte, type: text, cle: '', reference: '', obligatoire: false}
+      - {nom: message_cite_id, type: uuid, cle: '', reference: TB-18.id, obligatoire: false}
+      - {nom: post_partage_id, type: uuid, cle: '', reference: TB-06.id, obligatoire: false}
+      - {nom: envoye_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: ['(conversation_id, envoye_le)', post_partage_id]
+
+  - id: TB-19
+    nom: stories
+    type: table
+    stockage: N-01
+    entite: E-12
+    raison: Une story en cours (SM-E-12) ; FL-13 l'efface dès sa fin (D-110).
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: auteur_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+      - {nom: texte, type: text, cle: '', reference: '', obligatoire: false}
+      - {nom: audience, type: enum audience, cle: '', reference: '', obligatoire: true}
+      - {nom: lieu, type: text, cle: '', reference: '', obligatoire: false}
+      - {nom: publiee_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: [auteur_id, publiee_le]
+
+  - id: TB-20
+    nom: vues_stories
+    type: table
+    stockage: N-01
+    entite: E-12
+    raison: La liste « vue par » d'une story (D-078) ; pas de ligne = non vue pour cet ami.
+    colonnes:
+      - {nom: story_id, type: uuid, cle: primaire, reference: TB-19.id, obligatoire: true}
+      - {nom: compte_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+    index: [compte_id]
+
+  - id: TB-21
+    nom: identifications_stories
+    type: table
+    stockage: N-01
+    entite: E-12
+    raison: Les personnes identifiées dans une story (F-048, D-059).
+    colonnes:
+      - {nom: story_id, type: uuid, cle: primaire, reference: TB-19.id, obligatoire: true}
+      - {nom: compte_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+    index: [compte_id]
+
+  - id: TB-22
+    nom: minuteurs
+    type: table
+    stockage: N-01
+    entite: E-14
+    raison: Le minuteur de couleur du compte (D-074), fusionné entre ses téléphones (D-105, D-111, D-117).
+    colonnes:
+      - {nom: compte_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: duree_cycle_s, type: integer, cle: '', reference: '', obligatoire: true}
+      - {nom: temps_cycle_s, type: integer, cle: '', reference: '', obligatoire: true}
+      - {nom: cycles_ecoules, type: smallint, cle: '', reference: '', obligatoire: true}
+      - {nom: duree_changee_le, type: timestamptz, cle: '', reference: '', obligatoire: false}
+      - {nom: reinitialise_le, type: timestamptz, cle: '', reference: '', obligatoire: false}
+    index: []
+
+  - id: TB-23
+    nom: periodes_premier_plan
+    type: table
+    stockage: N-01
+    entite: E-15
+    raison: Les périodes où au moins un téléphone du compte avait l'appli au premier plan, fusionnées sans chevauchement, pour compter chaque seconde une fois (D-105, D-117) ; gardées 7 jours, puis effacées par FL-17 (D-147). Servent aussi au minuteur (E-14).
+    colonnes:
+      - {nom: compte_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: debut, type: timestamptz, cle: primaire, reference: '', obligatoire: true}
+      - {nom: fin, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: [fin]
+
+  - id: TB-24
+    nom: temps_utilisation
+    type: table
+    stockage: N-01
+    entite: E-15
+    raison: Le temps d'utilisation cumulé du compte (D-093), qui reste après l'effacement des vieilles périodes.
+    colonnes:
+      - {nom: compte_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: secondes, type: bigint, cle: '', reference: '', obligatoire: true}
+    index: []
+
+  - id: TB-25
+    nom: soutiens
+    type: table
+    stockage: N-01
+    entite: E-16
+    raison: Le soutien du compte, créé non soutenu avec le compte (D-114) ; un seul achat enregistré par compte (D-115).
+    colonnes:
+      - {nom: compte_id, type: uuid, cle: primaire, reference: TB-01.id, obligatoire: true}
+      - {nom: store, type: "enum store ('app_store', 'google_play')", cle: '', reference: '', obligatoire: false}
+      - {nom: achat_store, type: text, cle: unique, reference: '', obligatoire: false}
+    index: []
+
+  - id: TB-26
+    nom: comptes_supprimes
+    type: table
+    stockage: N-01
+    entite: aucune
+    raison: Liste des comptes supprimés de FL-15 (D-128) ; ne garde que le numéro interne et l'heure de la suppression, 7 jours ; pas d'entité, elle ne porte rien du compte (D-102).
+    colonnes:
+      - {nom: compte_id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: supprime_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
+    index: [supprime_le]
+
+  - id: TB-27
+    nom: envois_en_attente
+    type: table
+    stockage: N-02
+    entite: aucune
+    raison: La file des envois en attente de FL-12 (D-108, D-135), du plus ancien au plus récent ; chaque envoi porte un changement d'une entité (E-01, E-04, E-12, E-14, E-15, E-16), si bien que la file n'en est pas une.
+    colonnes:
+      - {nom: ordre, type: INTEGER, cle: primaire, reference: '', obligatoire: true}
+      - {nom: compte_id, type: TEXT, cle: '', reference: '', obligatoire: true}
+      - {nom: sorte, type: TEXT, cle: '', reference: '', obligatoire: true}
+      - {nom: contenu, type: TEXT, cle: '', reference: '', obligatoire: true}
+      - {nom: fait_le, type: TEXT, cle: '', reference: '', obligatoire: true}
+    index: [compte_id]
+
+  - id: TB-28
+    nom: recherche
+    type: table
+    stockage: N-02
+    entite: E-13
+    raison: L'état de la recherche, une seule ligne, sans historique (D-089, D-135, D-139).
+    colonnes:
+      - {nom: id, type: INTEGER, cle: primaire, reference: '', obligatoire: true}
+      - {nom: texte, type: TEXT, cle: '', reference: '', obligatoire: false}
+      - {nom: graine, type: BLOB, cle: '', reference: '', obligatoire: false}
+    index: []
+
+  - id: TB-29
+    nom: preferences
+    type: table
+    stockage: N-02
+    entite: E-17
+    raison: Les préférences d'interface du téléphone, une seule ligne (D-103, D-135).
+    colonnes:
+      - {nom: id, type: INTEGER, cle: primaire, reference: '', obligatoire: true}
+      - {nom: theme_icone, type: TEXT, cle: '', reference: '', obligatoire: true}
+      - {nom: carrousels_pause, type: INTEGER, cle: '', reference: '', obligatoire: true}
+    index: []
+
+  - id: TB-30
+    nom: horloge
+    type: table
+    stockage: N-02
+    entite: aucune
+    raison: Le dernier écart connu entre l'heure du téléphone et celle du serveur, gardé sans réseau (D-140) ; une seule ligne ; un réglage technique, pas une entité.
+    colonnes:
+      - {nom: id, type: INTEGER, cle: primaire, reference: '', obligatoire: true}
+      - {nom: ecart_ms, type: INTEGER, cle: '', reference: '', obligatoire: true}
+    index: []
+
+  - id: TB-31
+    nom: minuteur_connu
+    type: table
+    stockage: N-02
+    entite: E-14
+    raison: Le dernier état du minuteur reçu du serveur, pour griser sans réseau après une fermeture de l'appli (D-150) ; effacé à la déconnexion (F-071) et à la suppression du compte (F-063).
+    colonnes:
+      - {nom: compte_id, type: TEXT, cle: primaire, reference: '', obligatoire: true}
+      - {nom: duree_cycle_s, type: INTEGER, cle: '', reference: '', obligatoire: true}
+      - {nom: temps_cycle_s, type: INTEGER, cle: '', reference: '', obligatoire: true}
+      - {nom: cycles_ecoules, type: INTEGER, cle: '', reference: '', obligatoire: true}
+      - {nom: connu_le, type: TEXT, cle: '', reference: '', obligatoire: true}
+    index: []
+
+  - id: TB-32
+    nom: session_telephone
+    type: collection
+    stockage: N-03
+    entite: E-02
+    raison: La session du compte connecté sur ce téléphone (D-053, NFR-X-9) ; une seule entrée.
+    colonnes:
+      - {nom: jeton, type: string, cle: primaire, reference: '', obligatoire: true}
+      - {nom: compte_id, type: string, cle: '', reference: '', obligatoire: true}
+    index: []
+
+  - id: TB-33
+    nom: partages
+    type: table
+    stockage: N-01
+    entite: E-03
+    raison: Les partages d'un post, une ligne par partage, quelle que soit la façon (D-058) ; comptés pour le nombre de partages, et effacés avec le compte qui a partagé (D-101).
+    colonnes:
+      - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
+      - {nom: post_id, type: uuid, cle: '', reference: TB-06.id, obligatoire: true}
+      - {nom: compte_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
+    index: [post_id, compte_id]
+```
+
+### Champs d'entité sans colonne
+
+| Entité | Champ | Où il est, ou comment il est calculé |
+| --- | --- | --- |
+| E-01 | photo de profil | Le média dont TB-07.profil\_de vaut l'id du compte (D-125) |
+| E-01 | nombre de posts, d'amis, de likes reçus | Comptés à la demande dans TB-06, TB-15 (statut amis) et TB-09 sur ses posts (D-144) |
+| E-02 | fournisseur, adresse e-mail | TB-02 (fournisseur, cle) ; TB-03.adresse\_email le temps d'un code |
+| E-02 | code à 6 chiffres | TB-03.code\_hash : seul son hachage est gardé |
+| E-02 | délai avant renvoi | Calculé : TB-03.envoye\_le + 30 s |
+| E-02 | session ouverte sur l'appareil | TB-05 sur le serveur, TB-32 sur le téléphone |
+| E-03 | auteur (pseudo, photo) | TB-06.auteur\_id, puis TB-01 et TB-07 |
+| E-03 | type | Photo, vidéo ou carrousel : calculé d'après ses médias (un sans durée, un avec durée, plusieurs). Pause, inspire-expire et premium ne sont jamais stockés : le téléphone les place lui-même (D-136) |
+| E-03 | nombres de likes, de commentaires, d'enregistrements, de partages | Comptés dans TB-09, TB-08, TB-12 et TB-33 (D-058) |
+| E-03 | lien | Calculé à partir de TB-06.id |
+| E-03 | personnes identifiées | TB-13 |
+| E-05 | ancienneté ; nombre de likes | Calculée d'après TB-08.publie\_le ; compté dans TB-10 |
+| E-06 | cible ; date | TB-09 pour un post, TB-10 pour un commentaire ; like\_le |
+| E-07 | posts enregistrés | TB-12 |
+| E-08 | ancienneté ; post concerné | Calculée d'après TB-14.cree\_le ; TB-14.post\_id ou story\_id |
+| E-09 | compte ; statut | L'autre compte de la ligne TB-15 ; « demandé » et « en attente » sont la même ligne « demandee », vue de chaque côté |
+| E-09 | ami proche | TB-16 (D-060, D-146) |
+| E-10 | contact ; dernier message et heure | L'autre compte de TB-17 ; le dernier message de la conversation dans TB-18 |
+| E-11 | photo en graine ; date | TB-07.message\_id ; TB-18.envoye\_le |
+| E-12 | images ; ancienneté | TB-07.story\_id ; calculée d'après TB-19.publiee\_le |
+| E-12 | fin | Calculée : publiee\_le + 24 h (D-079) |
+| E-12 | vue par ; personnes identifiées | TB-20 ; TB-21 |
+| E-13 | suggestions | Tirées au hasard sur le téléphone, jamais gardées (D-089) |
+| E-13 | tendances | Calculées par le serveur à chaque demande ; leur règle est ouverte dans F-053, et aura sa table si elle en demande une |
+| E-14 | compte ; deux téléphones | TB-22.compte\_id ; les périodes fusionnées de TB-23 (D-105) |
+| E-14 | pourcentage de gris ; temps restant | Calculés : 10 % par cycle écoulé ; duree\_cycle\_s − temps\_cycle\_s |
+| E-15 | compte, durée cumulée | TB-24 |
+| E-16 | prix | Fixé dans le store, pas stocké (D-092) |
+| E-16 | statut ; achat du store | Soutenu si TB-25.achat\_store est rempli ; TB-25.store et achat\_store |
+| E-17 | téléphone, pas le compte | TB-29 est sur le téléphone : aucune colonne de compte |
+
+### Colonnes sans champ d'entité
+
+| Colonnes | Pourquoi |
+| --- | --- |
+| id de TB-06, TB-07, TB-08, TB-11, TB-14, TB-17, TB-18, TB-19, TB-33 | uuid fait par le téléphone : un « Réessayer » ou un renvoi retombe sur la même ligne (D-144, D-137) |
+| TB-01.id | Le numéro interne du compte (D-102), seul gardé 7 jours dans TB-26 |
+| TB-03, TB-04 | Le code en cours et l'état « Inscription » de SM-E-02, effacés par FL-16 (D-149) |
+| TB-06.publie\_le | L'ordre des posts du profil et du fil (F-062, F-009) |
+| TB-07.compte\_id ; TB-11.compte\_id ; TB-12.compte\_id ; TB-33.compte\_id | Le propriétaire, pour les droits (NFR-X-7) et l'effacement avec le compte (D-101) ; dans TB-12, un post par collection au plus (D-057) |
+| TB-07.post\_id, story\_id, message\_id, profil\_de | Ce à quoi la graine est rattachée (SM-E-04) |
+| TB-14.destinataire\_id | Le compte qui reçoit la notification |
+| TB-17.compte\_a, compte\_b | Les deux amis de la conversation (D-082) |
+| TB-22.duree\_changee\_le, reinitialise\_le | Le réglage fait le plus tard gagne (D-111, D-140) ; seules les secondes après la réinitialisation comptent (D-117) |
+| TB-23 | Les périodes au premier plan, gardées 7 jours (D-105, D-117, D-147) |
+| TB-25.store | Le store auprès duquel vérifier l'achat (D-092) |
+| TB-26, TB-27, TB-30 | Tables sans entité : comptes supprimés (FL-15), envois en attente (FL-12), écart d'heure (D-140) |
+| TB-28.id, TB-29.id, TB-30.id | Une seule ligne par téléphone |
+| TB-31.connu\_le | L'heure du dernier état reçu du serveur (D-150) |
+
+### États dans les tables
+
+| Diagramme | Où se lit chaque état |
+| --- | --- |
+| SM-E-02 | Déconnecté : aucune ligne. Code envoyé, renvoyable, expiré : une ligne de TB-03, selon envoye\_le (30 s, 10 min) et essais\_faux (5). Inscription : TB-04. Session ouverte : TB-05 et TB-32 |
+| SM-E-03 | Publié : une ligne de TB-06. Brouillon, En publication, Échec : en mémoire sur le téléphone (D-135) |
+| SM-E-04 | En attente : une ligne de TB-27. Graine d'un brouillon : TB-07 sans rattachement. Rattachée : post\_id, story\_id, message\_id ou profil\_de rempli |
+| SM-E-08 | Non vue, Vue : TB-14.vue |
+| SM-E-09 | Aucune : pas de ligne. Demandée, Amis : TB-15.statut, « demandee » ou « amis » |
+| SM-E-10 | Lu, Non lu, pour chacun : TB-17.lu\_par\_a, lu\_par\_b |
+| SM-E-12 | En cours : une ligne de TB-19 ; Finie : effacée aussitôt (FL-13). Non vue, Vue pour un ami : pas de ligne ou une ligne de TB-20 |
+| SM-E-14 | Arrêté, En marche : pas stockés ; chaque téléphone compte ses secondes (D-117) et le serveur fusionne leurs périodes (TB-23). Noir et blanc : cycles\_ecoules = 10 |
+| SM-E-16 | Non soutenu, Soutenu : TB-25.achat\_store vide ou rempli. Paiement en cours : chez le store. Soutenu, pas encore enregistré : une ligne de TB-27 |
+
+Restent ouverts, dans les `questions_ouvertes` des features : F-053, ce que comptent les tendances ; F-049, la source des lieux, gardés en texte d'ici là ; F-019, ce que montre un post partagé qui n'existe plus ; F-070, une inscription finie plus d'1 h après son début.
+
+## Flux de données
+
+14 nœuds et 84 flux, DF-01 à DF-84, choisis par D-151 : les deux rôles, une appli par téléphone (iOS, Android), le serveur, les trois stockages et six services tiers, dont les rapports de plantage (N-14), qu'aucun flux DF n'atteint. Chaque flux va dans un seul sens et cite les entités qu'il porte et les features qui le déclenchent. C'est la réponse au prompt 12 de la méthode.
+
+### Le graphe
+
+Tiré du YAML ci-dessous : un trait par paire de nœuds, avec ses flux. Les 11 flux entre chaque appli et le serveur sont les 10 groupes de l'API et le direct par WebSocket (D-137). Les pointillés vers N-14 ne sont pas des flux DF : un rapport de plantage ne porte aucune donnée d'entité (NFR-X-5).
+
+```mermaid
+flowchart LR
+    N01[("N-01 Base PostgreSQL du serveur")]
+    N02[("N-02 Base SQLite du téléphone")]
+    N03[("N-03 Stockage sécurisé du téléphone, Trousseau ou Keystore")]
+    N04(["N-04 Personne non connectée"])
+    N05(["N-05 Utilisateur connecté"])
+    N06["N-06 Appli iOS"]
+    N07["N-07 Appli Android"]
+    N08["N-08 Serveur"]
+    N09{{"N-09 Connexion Google"}}
+    N10{{"N-10 Connexion Apple"}}
+    N11{{"N-11 Service d'envoi des e-mails"}}
+    N12{{"N-12 App Store"}}
+    N13{{"N-13 Google Play"}}
+    N14{{"N-14 Rapports de plantage"}}
+    N04 -->|DF-01| N06
+    N06 -->|DF-02| N04
+    N04 -->|DF-03| N07
+    N07 -->|DF-04| N04
+    N11 -->|DF-05| N04
+    N05 -->|DF-06| N06
+    N06 -->|DF-07| N05
+    N05 -->|DF-08| N07
+    N07 -->|DF-09| N05
+    N06 -->|API, 11 flux| N08
+    N08 -->|API, 11 flux| N06
+    N07 -->|API, 11 flux| N08
+    N08 -->|API, 11 flux| N07
+    N06 -->|DF-54| N09
+    N09 -->|DF-55| N06
+    N06 -->|DF-56| N10
+    N10 -->|DF-57| N06
+    N06 -->|DF-58| N12
+    N12 -->|DF-59| N06
+    N07 -->|DF-60| N09
+    N09 -->|DF-61| N07
+    N07 -->|DF-62| N10
+    N10 -->|DF-63| N07
+    N07 -->|DF-64| N13
+    N13 -->|DF-65| N07
+    N08 -->|DF-66| N11
+    N08 -->|DF-67| N12
+    N12 -->|DF-68| N08
+    N08 -->|DF-69| N13
+    N13 -->|DF-70| N08
+    N06 -->|DF-71, DF-73| N02
+    N02 -->|DF-72, DF-74| N06
+    N06 -->|DF-75| N03
+    N03 -->|DF-76| N06
+    N07 -->|DF-77, DF-79| N02
+    N02 -->|DF-78, DF-80| N07
+    N07 -->|DF-81| N03
+    N03 -->|DF-82| N07
+    N08 -->|DF-83| N01
+    N01 -->|DF-84| N08
+    N06 -.->|plantage, sans donnée d'entité| N14
+    N07 -.->|plantage, sans donnée d'entité| N14
+```
+
+### Nœuds et flux
+
+Les flux sont rangés comme le graphe : acteurs, groupes de l'API, direct, services tiers, stockages du téléphone, puis du serveur.
+
+```yaml
+noeuds:
+  - id: N-01
+    type: stockage
+    nom: "Base PostgreSQL du serveur (D-134)"
+    modele: SQL
+  - id: N-02
+    type: stockage
+    nom: "Base SQLite du téléphone (D-135)"
+    modele: SQL
+  - id: N-03
+    type: stockage
+    nom: "Stockage sécurisé du téléphone, Trousseau ou Keystore (D-135)"
+    modele: NoSQL
+  - id: N-04
+    type: acteur
+    nom: "Personne non connectée"
+    role: R-01
+  - id: N-05
+    type: acteur
+    nom: "Utilisateur connecté"
+    role: R-02
+  - id: N-06
+    type: infra
+    nom: "Appli iOS (D-132)"
+  - id: N-07
+    type: infra
+    nom: "Appli Android (D-132)"
+  - id: N-08
+    type: infra
+    nom: "Serveur (D-133)"
+  - id: N-09
+    type: tiers
+    nom: "Connexion Google (F-001)"
+  - id: N-10
+    type: tiers
+    nom: "Connexion Apple (F-001)"
+  - id: N-11
+    type: tiers
+    nom: "Service d'envoi des e-mails (F-003)"
+  - id: N-12
+    type: tiers
+    nom: "App Store (D-092)"
+  - id: N-13
+    type: tiers
+    nom: "Google Play (D-092)"
+  - id: N-14
+    type: tiers
+    nom: "Service de rapports de plantage (D-129, NFR-X-5)"
+
+flux:
+  - {id: DF-01, de: N-04, vers: N-06, donnees: [E-02, E-01], features: [F-001, F-003, F-005, F-007, F-008, F-070], flows: [], protocole: "écran tactile", sensible: true}
+  - {id: DF-02, de: N-06, vers: N-04, donnees: [E-02, E-17], features: [F-001, F-002, F-004, F-006, F-007, F-008, F-070, F-074], flows: [], protocole: "écran", sensible: true}
+  - {id: DF-03, de: N-04, vers: N-07, donnees: [E-02, E-01], features: [F-001, F-003, F-005, F-007, F-008, F-070], flows: [], protocole: "écran tactile", sensible: true}
+  - {id: DF-04, de: N-07, vers: N-04, donnees: [E-02, E-17], features: [F-001, F-002, F-004, F-006, F-007, F-008, F-070, F-074], flows: [], protocole: "écran", sensible: true}
+  - {id: DF-05, de: N-11, vers: N-04, donnees: [E-02], features: [F-003, F-008], flows: [], protocole: "e-mail", sensible: true}
+  - {id: DF-06, de: N-05, vers: N-06, donnees: [E-01, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-13, E-14, E-16, E-17], features: [F-005, F-015, F-016, F-018, F-019, F-022, F-024, F-028, F-030, F-031, F-034, F-036, F-037, F-038, F-040, F-041, F-042, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-053, F-056, F-058, F-060, F-061, F-063, F-066, F-067, F-068, F-071, F-072, F-073], flows: [], protocole: "écran tactile", sensible: true}
+  - {id: DF-07, de: N-06, vers: N-05, donnees: [E-01, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-13, E-14, E-15, E-16, E-17], features: [F-002, F-009, F-010, F-011, F-012, F-014, F-015, F-016, F-017, F-018, F-019, F-020, F-021, F-022, F-024, F-025, F-026, F-027, F-033, F-036, F-037, F-038, F-039, F-043, F-044, F-045, F-048, F-049, F-052, F-053, F-054, F-055, F-056, F-057, F-059, F-062, F-065, F-072, F-073, F-074], flows: [], protocole: "écran", sensible: true}
+  - {id: DF-08, de: N-05, vers: N-07, donnees: [E-01, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-13, E-14, E-16, E-17], features: [F-005, F-015, F-016, F-018, F-019, F-022, F-024, F-028, F-030, F-031, F-034, F-036, F-037, F-038, F-040, F-041, F-042, F-044, F-046, F-047, F-048, F-049, F-050, F-051, F-052, F-053, F-056, F-058, F-060, F-061, F-063, F-066, F-067, F-068, F-071, F-072, F-073], flows: [], protocole: "écran tactile", sensible: true}
+  - {id: DF-09, de: N-07, vers: N-05, donnees: [E-01, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-13, E-14, E-15, E-16, E-17], features: [F-002, F-009, F-010, F-011, F-012, F-014, F-015, F-016, F-017, F-018, F-019, F-020, F-021, F-022, F-024, F-025, F-026, F-027, F-033, F-036, F-037, F-038, F-039, F-043, F-044, F-045, F-048, F-049, F-052, F-053, F-054, F-055, F-056, F-057, F-059, F-062, F-065, F-072, F-073, F-074], flows: [], protocole: "écran", sensible: true}
+  # Connexion
+  - {id: DF-10, de: N-06, vers: N-08, donnees: [E-02, E-01], features: [F-001, F-003, F-007, F-008, F-070, F-071], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-11, de: N-08, vers: N-06, donnees: [E-02, E-01], features: [F-001, F-007, F-008, F-070], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-12, de: N-07, vers: N-08, donnees: [E-02, E-01], features: [F-001, F-003, F-007, F-008, F-070, F-071], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-13, de: N-08, vers: N-07, donnees: [E-02, E-01], features: [F-001, F-007, F-008, F-070], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  # Fil et posts
+  - {id: DF-14, de: N-06, vers: N-08, donnees: [E-03, E-12, E-05, E-06, E-07], features: [F-009, F-016, F-018, F-019, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-15, de: N-08, vers: N-06, donnees: [E-03, E-04, E-05, E-06, E-07], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-16, de: N-07, vers: N-08, donnees: [E-03, E-12, E-05, E-06, E-07], features: [F-009, F-016, F-018, F-019, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-17, de: N-08, vers: N-07, donnees: [E-03, E-04, E-05, E-06, E-07], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  # Médias
+  - {id: DF-18, de: N-06, vers: N-08, donnees: [E-04], features: [F-005, F-044, F-046], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-19, de: N-08, vers: N-06, donnees: [E-04], features: [F-044, F-046], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-20, de: N-07, vers: N-08, donnees: [E-04], features: [F-005, F-044, F-046], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-21, de: N-08, vers: N-07, donnees: [E-04], features: [F-044, F-046], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  # Amis et notifications
+  - {id: DF-22, de: N-06, vers: N-08, donnees: [E-09, E-08, E-01], features: [F-022, F-028, F-034, F-043, F-072], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-23, de: N-08, vers: N-06, donnees: [E-09, E-08, E-01], features: [F-022, F-028, F-034, F-043, F-048, F-072], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-24, de: N-07, vers: N-08, donnees: [E-09, E-08, E-01], features: [F-022, F-028, F-034, F-043, F-072], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-25, de: N-08, vers: N-07, donnees: [E-09, E-08, E-01], features: [F-022, F-028, F-034, F-043, F-048, F-072], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  # Minuteur et temps
+  - {id: DF-26, de: N-06, vers: N-08, donnees: [E-14, E-15], features: [F-024, F-060, F-061, F-073], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-27, de: N-08, vers: N-06, donnees: [E-14, E-15], features: [F-015, F-024, F-059, F-065, F-073], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-28, de: N-07, vers: N-08, donnees: [E-14, E-15], features: [F-024, F-060, F-061, F-073], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-29, de: N-08, vers: N-07, donnees: [E-14, E-15], features: [F-015, F-024, F-059, F-065, F-073], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  # Stories
+  - {id: DF-30, de: N-06, vers: N-08, donnees: [E-12], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-31, de: N-08, vers: N-06, donnees: [E-12, E-09], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-32, de: N-07, vers: N-08, donnees: [E-12], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-33, de: N-08, vers: N-07, donnees: [E-12, E-09], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  # Messages
+  - {id: DF-34, de: N-06, vers: N-08, donnees: [E-11, E-10, E-04], features: [F-019, F-037, F-038, F-040, F-041, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-35, de: N-08, vers: N-06, donnees: [E-10, E-11, E-04], features: [F-033, F-037, F-038, F-039, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-36, de: N-07, vers: N-08, donnees: [E-11, E-10, E-04], features: [F-019, F-037, F-038, F-040, F-041, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-37, de: N-08, vers: N-07, donnees: [E-10, E-11, E-04], features: [F-033, F-037, F-038, F-039, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  # Recherche
+  - {id: DF-38, de: N-06, vers: N-08, donnees: [E-13], features: [F-052, F-053], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-39, de: N-08, vers: N-06, donnees: [E-03, E-04], features: [F-052, F-053, F-054], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-40, de: N-07, vers: N-08, donnees: [E-13], features: [F-052, F-053], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
+  - {id: DF-41, de: N-08, vers: N-07, donnees: [E-03, E-04], features: [F-052, F-053, F-054], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  # Soutien
+  - {id: DF-42, de: N-06, vers: N-08, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-43, de: N-08, vers: N-06, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-44, de: N-07, vers: N-08, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-45, de: N-08, vers: N-07, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  # Profil et compte
+  - {id: DF-46, de: N-06, vers: N-08, donnees: [E-01, E-04], features: [F-056, F-058, F-063], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-47, de: N-08, vers: N-06, donnees: [E-01, E-03, E-04], features: [F-056, F-057, F-058, F-062], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-48, de: N-07, vers: N-08, donnees: [E-01, E-04], features: [F-056, F-058, F-063], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-49, de: N-08, vers: N-07, donnees: [E-01, E-03, E-04], features: [F-056, F-057, F-058, F-062], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  # direct par WebSocket : « en train d'écrire », message reçu
+  - {id: DF-50, de: N-06, vers: N-08, donnees: [E-10], features: [F-041], flows: [], protocole: "WebSocket (D-133)", sensible: true}
+  - {id: DF-51, de: N-08, vers: N-06, donnees: [E-11, E-10], features: [F-038, F-041], flows: [], protocole: "WebSocket (D-133)", sensible: true}
+  - {id: DF-52, de: N-07, vers: N-08, donnees: [E-10], features: [F-041], flows: [], protocole: "WebSocket (D-133)", sensible: true}
+  - {id: DF-53, de: N-08, vers: N-07, donnees: [E-11, E-10], features: [F-038, F-041], flows: [], protocole: "WebSocket (D-133)", sensible: true}
+  # services tiers
+  - {id: DF-54, de: N-06, vers: N-09, donnees: [E-02], features: [F-001], flows: [], protocole: "HTTPS, SDK du fournisseur", sensible: true}
+  - {id: DF-55, de: N-09, vers: N-06, donnees: [E-02], features: [F-001], flows: [], protocole: "HTTPS, SDK du fournisseur", sensible: true}
+  - {id: DF-56, de: N-06, vers: N-10, donnees: [E-02], features: [F-001], flows: [], protocole: "HTTPS, SDK du fournisseur", sensible: true}
+  - {id: DF-57, de: N-10, vers: N-06, donnees: [E-02], features: [F-001], flows: [], protocole: "HTTPS, SDK du fournisseur", sensible: true}
+  - {id: DF-58, de: N-06, vers: N-12, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, achat intégré du store", sensible: true}
+  - {id: DF-59, de: N-12, vers: N-06, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, achat intégré du store", sensible: true}
+  - {id: DF-60, de: N-07, vers: N-09, donnees: [E-02], features: [F-001], flows: [], protocole: "HTTPS, SDK du fournisseur", sensible: true}
+  - {id: DF-61, de: N-09, vers: N-07, donnees: [E-02], features: [F-001], flows: [], protocole: "HTTPS, SDK du fournisseur", sensible: true}
+  - {id: DF-62, de: N-07, vers: N-10, donnees: [E-02], features: [F-001], flows: [], protocole: "HTTPS, SDK du fournisseur", sensible: true}
+  - {id: DF-63, de: N-10, vers: N-07, donnees: [E-02], features: [F-001], flows: [], protocole: "HTTPS, SDK du fournisseur", sensible: true}
+  - {id: DF-64, de: N-07, vers: N-13, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, achat intégré du store", sensible: true}
+  - {id: DF-65, de: N-13, vers: N-07, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, achat intégré du store", sensible: true}
+  - {id: DF-66, de: N-08, vers: N-11, donnees: [E-02], features: [F-003, F-008], flows: [], protocole: "HTTPS, API du service", sensible: true}
+  - {id: DF-67, de: N-08, vers: N-12, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API de vérification du store", sensible: true}
+  - {id: DF-68, de: N-12, vers: N-08, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API de vérification du store", sensible: true}
+  - {id: DF-69, de: N-08, vers: N-13, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API de vérification du store", sensible: true}
+  - {id: DF-70, de: N-13, vers: N-08, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API de vérification du store", sensible: true}
+  # recherche, préférences, minuteur connu
+  - {id: DF-71, de: N-06, vers: N-02, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
+  - {id: DF-72, de: N-02, vers: N-06, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
+  # envois en attente
+  - {id: DF-73, de: N-06, vers: N-02, donnees: [E-04, E-12, E-14, E-15, E-16, E-01], features: [F-005, F-015, F-024, F-036, F-044, F-046, F-058, F-060, F-061, F-073], flows: [FL-12], protocole: "expo-sqlite, appel local", sensible: true}
+  - {id: DF-74, de: N-02, vers: N-06, donnees: [E-04, E-12, E-14, E-15, E-16, E-01], features: [F-005, F-015, F-024, F-036, F-044, F-046, F-058, F-060, F-061, F-073], flows: [FL-12], protocole: "expo-sqlite, appel local", sensible: true}
+  # session
+  - {id: DF-75, de: N-06, vers: N-03, donnees: [E-02], features: [F-001, F-007, F-070, F-071, F-063], flows: [], protocole: "expo-secure-store, appel local", sensible: true}
+  - {id: DF-76, de: N-03, vers: N-06, donnees: [E-02], features: [F-001, F-007, F-070, F-071, F-063], flows: [], protocole: "expo-secure-store, appel local", sensible: true}
+  # recherche, préférences, minuteur connu
+  - {id: DF-77, de: N-07, vers: N-02, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
+  - {id: DF-78, de: N-02, vers: N-07, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
+  # envois en attente
+  - {id: DF-79, de: N-07, vers: N-02, donnees: [E-04, E-12, E-14, E-15, E-16, E-01], features: [F-005, F-015, F-024, F-036, F-044, F-046, F-058, F-060, F-061, F-073], flows: [FL-12], protocole: "expo-sqlite, appel local", sensible: true}
+  - {id: DF-80, de: N-02, vers: N-07, donnees: [E-04, E-12, E-14, E-15, E-16, E-01], features: [F-005, F-015, F-024, F-036, F-044, F-046, F-058, F-060, F-061, F-073], flows: [FL-12], protocole: "expo-sqlite, appel local", sensible: true}
+  # session
+  - {id: DF-81, de: N-07, vers: N-03, donnees: [E-02], features: [F-001, F-007, F-070, F-071, F-063], flows: [], protocole: "expo-secure-store, appel local", sensible: true}
+  - {id: DF-82, de: N-03, vers: N-07, donnees: [E-02], features: [F-001, F-007, F-070, F-071, F-063], flows: [], protocole: "expo-secure-store, appel local", sensible: true}
+  # écritures, tâches de fond
+  - {id: DF-83, de: N-08, vers: N-01, donnees: [E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16], features: [F-001, F-003, F-005, F-007, F-008, F-009, F-010, F-011, F-012, F-015, F-016, F-017, F-018, F-019, F-020, F-022, F-024, F-028, F-030, F-031, F-033, F-034, F-036, F-037, F-038, F-039, F-040, F-041, F-042, F-043, F-044, F-046, F-048, F-051, F-052, F-053, F-054, F-056, F-057, F-058, F-059, F-060, F-061, F-062, F-063, F-065, F-070, F-071, F-072, F-073], flows: [FL-13, FL-14, FL-15, FL-16, FL-17], protocole: "PostgreSQL, TLS", sensible: true}
+  # lectures, LISTEN/NOTIFY pour le direct
+  - {id: DF-84, de: N-01, vers: N-08, donnees: [E-01, E-02, E-03, E-04, E-05, E-06, E-07, E-08, E-09, E-10, E-11, E-12, E-14, E-15, E-16], features: [F-001, F-003, F-005, F-007, F-008, F-009, F-010, F-011, F-012, F-015, F-016, F-017, F-018, F-019, F-020, F-022, F-024, F-028, F-030, F-031, F-033, F-034, F-036, F-037, F-038, F-039, F-040, F-041, F-042, F-043, F-044, F-046, F-048, F-051, F-052, F-053, F-054, F-056, F-057, F-058, F-059, F-060, F-061, F-062, F-063, F-065, F-070, F-071, F-072, F-073], flows: [FL-13, FL-14, FL-15, FL-16, FL-17], protocole: "PostgreSQL, TLS", sensible: true}
+```
+
+### Features et stockages sans flux
+
+Aucune feature qui lit ou écrit des données ne manque, et chaque stockage est atteint. F-074 ne porte aucune donnée : il ouvre l'App Store ou Google Play sans rien leur envoyer. Le service de rapports de plantage (N-14, D-129, NFR-X-5) n'est atteint par aucun flux DF : il ne reçoit aucune donnée d'entité, seulement des données techniques.
+
+### Flux sensibles
+
+78 flux portent des données liées à un compte, des identifiants ou un paiement (D-151) : un lieu, une personne identifiée, un like ou une vue de story lient un compte à un endroit ou à un autre compte. Seuls DF-18 à DF-21 (graines des médias), DF-38 et DF-40 (graine d'une recherche) n'y comptent pas. Le chemin vers les rapports de plantage (N-14) est à examiner aussi, pour NFR-X-5. À reprendre dans le threat model.
+
+| Ce qu'ils portent | Entre | Flux |
+| --- | --- | --- |
+| Identifiants de connexion (E-02) | Personne non connectée et appli ; appli et serveur ; appli et Google ou Apple ; serveur et service d'e-mails, puis la personne ; appli et stockage sécurisé | DF-01 à DF-05, DF-10 à DF-13, DF-54 à DF-57, DF-60 à DF-63, DF-66, DF-75, DF-76, DF-81, DF-82 |
+| Paiement du soutien (E-16) | Appli et serveur ; appli et store ; serveur et store | DF-42 à DF-45, DF-58, DF-59, DF-64, DF-65, DF-67 à DF-70 |
+| Messages et conversations (E-10, E-11) | Appli et serveur, par l'API et en direct | DF-34 à DF-37, DF-50 à DF-53 |
+| Amitiés et comptes (E-01, E-09) | Appli et serveur | DF-22 à DF-25, DF-46 à DF-49 |
+| Posts, commentaires, likes, collections et stories : lieu, personnes identifiées, qui a liké, qui a vu (E-03, E-05 à E-07, E-12) | Appli et serveur | DF-14 à DF-17, DF-30 à DF-33, DF-39, DF-41 |
+| Temps passé dans l'appli (E-14, E-15) | Appli et serveur | DF-26 à DF-29 |
+| Envois en attente et minuteur connu (E-01, E-14 à E-16) | Appli et SQLite | DF-71 à DF-74, DF-77 à DF-80 |
+| Tout ce que voit et fait l'utilisateur | Personne connectée et appli | DF-06 à DF-09 |
+| Tout ce que garde le serveur | Serveur et PostgreSQL | DF-83, DF-84 |
