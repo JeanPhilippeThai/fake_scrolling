@@ -1,4 +1,5 @@
--- The checks of workflow_docs/design_and_docs_check.md that a query can answer.
+-- The checks of workflow_docs/design_and_docs_check.md that a query can answer, then, under CODE-xx, the checks
+-- of the code against the docs (.claude/skills/test-code-conformity): the names in the code that carry an ID.
 -- Each block starts with its header; each row it returns is a finding (how: Query)
 -- or a lead to read before it becomes one (how: Query, then read).
 -- needs: the docs content the check reads; without it the check is "not reached".
@@ -655,3 +656,184 @@ WHERE p.number IS NOT NULL
   AND p.number NOT IN (SELECT idnum(alias) FROM main.aliases WHERE alias IS NOT NULL)
 GROUP BY p.number
 ORDER BY p.id COLLATE idnum;
+
+-- check: CODE-01
+-- title: Every folder of src/ui/features/ and src/server/features/ is named after a feature of the registry (F-012-apply-coupon), one folder per feature on each side; a variant has no folder of its own
+-- how: Query
+-- severity: Major
+-- needs: code, registry
+SELECT k.written AS folder, k.path,
+  CASE WHEN k.id IS NULL THEN 'its name does not start with a feature ID (F-012-apply-coupon)'
+       ELSE 'names ' || k.id || ', which is not a feature of the registry' END AS problem
+FROM code k
+WHERE k.kind = 'feature_folder'
+  AND (k.id IS NULL OR NOT EXISTS (SELECT 1 FROM features f WHERE f.scope = 'canonical' AND idnum(f.id) = idnum(k.id)))
+UNION ALL
+SELECT GROUP_CONCAT(written, ', '), GROUP_CONCAT(path, ', '), 'several folders for ' || MIN(id) || ' on the same side'
+FROM code
+WHERE kind = 'feature_folder' AND id IS NOT NULL
+GROUP BY idnum(id), substr(path, 1, instr(path, '/features/'))
+HAVING COUNT(*) > 1
+ORDER BY 2;
+
+-- check: CODE-02
+-- title: Every feature of the registry has its folder in src/ui/features/
+-- how: Query, then read
+-- severity: Minor
+-- needs: code, registry
+-- Each row is a feature not built yet: a finding only when the backlog says it is done. Runs once a first feature folder exists.
+SELECT f.id AS feature, f.name, 'no folder in src/ui/features/' AS problem
+FROM features f
+WHERE f.scope = 'canonical'
+  AND EXISTS (SELECT 1 FROM code WHERE kind = 'feature_folder' AND id IS NOT NULL)
+  AND NOT EXISTS (SELECT 1 FROM code k WHERE k.kind = 'feature_folder' AND k.path LIKE '%/ui/features/%'
+                  AND idnum(k.id) = idnum(f.id))
+ORDER BY f.id COLLATE idnum;
+
+-- check: CODE-03
+-- title: Every page that holds a built feature (one with a folder in src/ui/features/) has a route named after it in the navigation shell (P-03-cart), and every route names a page of the registry; a page state has no route
+-- how: Query
+-- severity: Major
+-- needs: code, registry
+WITH built AS (SELECT DISTINCT idnum(id) AS f FROM code
+               WHERE kind = 'feature_folder' AND id IS NOT NULL AND path LIKE '%/ui/features/%'),
+on_page AS (SELECT r.target AS page, idnum(r.source) AS f FROM refs r
+            WHERE r.scope = 'canonical' AND r.rel = 'feature_page'
+            UNION
+            SELECT r.target, idnum(v.feature) FROM refs r
+            JOIN variants v ON v.scope = 'canonical' AND v.id = r.source
+            WHERE r.scope = 'canonical' AND r.rel = 'variant_page')
+SELECT p.id AS page, 'holds a built feature, and no route is named after it' AS problem, NULL AS path, NULL AS line
+FROM pages p
+WHERE p.scope = 'canonical' AND instr(p.id, '.') = 0
+  AND EXISTS (SELECT 1 FROM on_page o JOIN built b ON b.f = o.f WHERE o.page = p.id)
+  AND NOT EXISTS (SELECT 1 FROM code k WHERE k.kind = 'route' AND idnum(k.id) = idnum(p.id))
+UNION ALL
+SELECT k.id, 'the route ' || k.written || ' names no page of the registry', k.path, k.line
+FROM code k
+WHERE k.kind = 'route'
+  AND NOT EXISTS (SELECT 1 FROM pages p WHERE p.scope = 'canonical' AND idnum(p.id) = idnum(k.id))
+ORDER BY 1, 3;
+
+-- check: CODE-04
+-- title: Every component of a built feature carries its ID as a test identifier in that feature's UI folder (data-testid="C-D04-03"), and every test identifier names a component, in the folder of its feature; a variant's component sits in its feature's folder
+-- how: Query
+-- severity: Major
+-- needs: code, page_contract
+WITH built AS (SELECT DISTINCT idnum(id) AS f FROM code
+               WHERE kind = 'feature_folder' AND id IS NOT NULL AND path LIKE '%/ui/features/%'),
+comp AS (SELECT id, feature, path,
+           idnum(CASE WHEN instr(feature, '.') > 0 THEN substr(feature, 1, instr(feature, '.') - 1) ELSE feature END) AS f
+         FROM components)
+SELECT c.id AS component, c.feature, 'no test identifier in the UI folder of its feature' AS problem, c.path, NULL AS line
+FROM comp c
+WHERE c.f IN (SELECT f FROM built)
+  AND NOT EXISTS (SELECT 1 FROM code k WHERE k.kind = 'test_identifier' AND idnum(k.id) = idnum(c.id)
+                  AND idnum(k.feature) = c.f)
+UNION ALL
+SELECT k.id, k.feature, 'names no component of a page contract', k.path, k.line
+FROM code k
+WHERE k.kind = 'test_identifier'
+  AND NOT EXISTS (SELECT 1 FROM comp c WHERE idnum(c.id) = idnum(k.id))
+UNION ALL
+SELECT k.id, c.feature, 'outside the UI folder of its feature', k.path, k.line
+FROM code k JOIN comp c ON idnum(c.id) = idnum(k.id)
+WHERE k.kind = 'test_identifier' AND idnum(k.feature) IS NOT c.f
+ORDER BY 1, 4;
+
+-- check: CODE-05
+-- title: Every data flow between an app and the server that a built feature or a built job triggers has a file named after it in src/shared/ (DF-07-coupon-request.ts), and every such file names a data flow between an app and the server
+-- how: Query
+-- severity: Major
+-- needs: code, data_flows
+-- An app and the server are both `infra` nodes: a flow between two of them. A feature is built once it has a folder on either side.
+WITH built AS (SELECT DISTINCT idnum(id) AS f FROM code WHERE kind = 'feature_folder' AND id IS NOT NULL),
+app_server AS (SELECT d.id, d.path FROM data_flows d
+               JOIN nodes a ON a.id = d.source AND a.type = 'infra'
+               JOIN nodes b ON b.id = d.target AND b.type = 'infra')
+SELECT s.id AS data_flow, 'triggered by a built feature or job, and no file of src/shared/ is named after it' AS problem, s.path
+FROM app_server s
+WHERE (EXISTS (SELECT 1 FROM refs r WHERE r.scope = 'canonical' AND r.rel = 'data_flow_feature' AND r.source = s.id
+               AND idnum(CASE WHEN instr(r.target, '.') > 0 THEN substr(r.target, 1, instr(r.target, '.') - 1) ELSE r.target END)
+                   IN (SELECT f FROM built))
+    OR EXISTS (SELECT 1 FROM refs r JOIN code j ON j.kind = 'job_folder' AND idnum(j.id) = idnum(r.target)
+               WHERE r.scope = 'canonical' AND r.rel = 'data_flow_flow' AND r.source = s.id))
+  AND NOT EXISTS (SELECT 1 FROM code k WHERE k.kind = 'contract_file' AND idnum(k.id) = idnum(s.id))
+UNION ALL
+SELECT k.id,
+  CASE WHEN d.id IS NULL THEN 'the file names no data flow of the docs'
+       ELSE 'the file names a data flow that is not between an app and the server' END, k.path
+FROM code k LEFT JOIN data_flows d ON idnum(d.id) = idnum(k.id)
+WHERE k.kind = 'contract_file'
+  AND NOT EXISTS (SELECT 1 FROM app_server s WHERE idnum(s.id) = idnum(k.id))
+ORDER BY 1, 3;
+
+-- check: CODE-06
+-- title: Every folder of src/server/jobs/ is named after a flow of the docs (FL-09-expire-coupons), like every FL folder of src/platform/, one folder per flow
+-- how: Query
+-- severity: Major
+-- needs: code, flows
+SELECT k.written AS folder, k.path,
+  CASE WHEN k.id IS NULL THEN 'its name does not start with a flow ID (FL-09-expire-coupons)'
+       ELSE 'names ' || k.id || ', which is not a flow of the docs' END AS problem
+FROM code k
+WHERE k.kind = 'job_folder'
+  AND (k.id IS NULL OR NOT EXISTS (SELECT 1 FROM flows f WHERE f.scope = 'canonical' AND idnum(f.id) = idnum(k.id)))
+UNION ALL
+SELECT GROUP_CONCAT(written, ', '), GROUP_CONCAT(path, ', '), 'several folders for ' || MIN(id)
+FROM code
+WHERE kind = 'job_folder' AND id IS NOT NULL
+GROUP BY idnum(id)
+HAVING COUNT(*) > 1
+ORDER BY 2;
+
+-- check: CODE-07
+-- title: Every background job (a flow FL that a data flow cites in its `flows`) has its job folder
+-- how: Query, then read
+-- severity: Minor
+-- needs: code, data_flows
+-- Each row is a job not built yet: a finding only when the backlog says it is done.
+SELECT r.target AS flow, GROUP_CONCAT(DISTINCT r.source) AS cited_by, 'no job folder is named after it' AS problem
+FROM refs r
+WHERE r.scope = 'canonical' AND r.rel = 'data_flow_flow'
+  AND NOT EXISTS (SELECT 1 FROM code k WHERE k.kind = 'job_folder' AND idnum(k.id) = idnum(r.target))
+GROUP BY r.target
+ORDER BY r.target COLLATE idnum;
+
+-- check: CODE-08
+-- title: Every rule (BR), criterion (AC) and requirement (NFR) of a built feature has a test named after it (it("BR-012-3: …")), and every test named after one names an ID of the specs, in the folder of its feature
+-- how: Query
+-- severity: Major
+-- needs: code, specs
+-- A feature is built once it has a folder on either side. Hidden tests live in another repo and are not read.
+WITH built AS (SELECT DISTINCT idnum(id) AS f FROM code WHERE kind = 'feature_folder' AND id IS NOT NULL),
+spec AS (SELECT id, path, line,
+           CASE WHEN id LIKE '%-X-%' THEN NULL
+                ELSE idnum('F-' || substr(id, instr(id, '-') + 1, instr(substr(id, instr(id, '-') + 1), '-') - 1)) END AS f
+         FROM defs WHERE scope = 'canonical' AND expected_kind IN ('rule', 'criterion', 'nfr'))
+SELECT s.id, 'its feature is built, and no test is named after it' AS problem, s.path, s.line
+FROM spec s
+WHERE s.f IN (SELECT f FROM built)
+  AND NOT EXISTS (SELECT 1 FROM code k WHERE k.kind = 'test_name' AND idnum(k.id) = idnum(s.id))
+UNION ALL
+SELECT k.id, 'the test names no rule, criterion or requirement of the specs', k.path, k.line
+FROM code k
+WHERE k.kind = 'test_name'
+  AND NOT EXISTS (SELECT 1 FROM spec s WHERE idnum(s.id) = idnum(k.id))
+UNION ALL
+SELECT k.id, 'the test sits in the folder of ' || k.feature || ', not of its feature', k.path, k.line
+FROM code k JOIN spec s ON idnum(s.id) = idnum(k.id)
+WHERE k.kind = 'test_name' AND k.feature IS NOT NULL AND s.f IS NOT NULL AND idnum(k.feature) != s.f
+ORDER BY 1, 3;
+
+-- check: CODE-09
+-- title: Every app-wide criterion and requirement (AC-X, NFR-X) has a test, a benchmark or a load scenario named after it
+-- how: Query, then read
+-- severity: Minor
+-- needs: code, specs
+-- Each row is a lead: one checked outside the code (an audit, a penetration test) or not built yet is not a finding.
+SELECT d.id, d.name, 'no test is named after it' AS problem, d.path, d.line
+FROM defs d
+WHERE d.scope = 'canonical' AND d.expected_kind IN ('rule', 'criterion', 'nfr') AND d.id LIKE '%-X-%'
+  AND NOT EXISTS (SELECT 1 FROM code k WHERE k.kind = 'test_name' AND idnum(k.id) = idnum(d.id))
+ORDER BY d.id COLLATE idnum;
