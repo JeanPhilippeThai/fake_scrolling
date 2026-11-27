@@ -1,6 +1,6 @@
 # Reference
 
-Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 29, taken on 2026-11-26.
+Part of [the method](../method.md). Snapshot of the "Reference" tab of the Claude Doc ["Building apps with Claude: the method"](https://claude.ai/artifact/CNNN4eUxaLSfQh2ohtNAP4), revision 31, taken on 2026-11-27.
 
 Where each fact lives, how it is named, and how any line of code traces back to it. Every other part relies on these rules: read this one once, then come back to look things up.
 
@@ -128,13 +128,13 @@ Every ID above is a primary key and every link is a foreign key. From step 3, as
 | `docs/features/*.md` | Rules (`BR`), criteria (`AC`) and requirements (`NFR`), read from the IDs that start their lines, with their proof blocks |
 | `docs/system-design/*.tla` | State models (`SM`) and the rules they check (`BR_007_2`) |
 | `docs/backlog.md`, `docs/questions.md`, `docs/workarounds.md` | Tasks (`T`) with their `Serves` column, questions (`Q`), workarounds (`W`) |
-| The code | Feature folders, route names, test identifiers, contract files, job folders, test names, proof screenshots and event names, scanned for the IDs they carry; the code itself is not stored |
+| The code | Feature folders, route names, test identifiers, contract files, job folders and test names, scanned for the IDs they carry (proof screenshots and event names are not scanned yet); the code itself is not stored |
 
 Rules:
 
 - Generated, never edited: a change made in the database is lost at the next build. Change the file instead.
 - Rebuilt whenever a doc changes: before every query, locally, and in CI on every push. A file that does not parse, or an ID that breaks its format, fails the build.
-- It lives in `.registry/registry.db`, outside git: each app repo builds its own from its own docs. The script is the shared skill `registry-db`, copied into every app with the method at `.claude/skills/registry-db/` and never edited there. It reads the YAML in `docs/` and in the Claude Docs as imported to `claude_docs/`, and its `checks.sql` holds one query per check of the design and docs check, under that check's ID.
+- It lives in `.registry/registry.db`, outside git: each app repo builds its own from its own docs. The script is the shared skill `registry-db`, copied into every app with the method at `.claude/skills/registry-db/` and never edited there. It reads the YAML in `docs/` and in the Claude Docs as imported to `claude_docs/`, and its `checks.sql` holds one query per check of the design and docs check, under that check's ID, then the checks of the code against the docs, CODE-01 to CODE-09, which the shared skill test-code-conformity reports.
 - It holds IDs, links and file paths. The prose (reasons, rule wording), the TLA+ models and the code stay in their files.
 - Claude queries the database to find what is linked to what, then reads the files for what they say.
 - Every link also lands in one view, `links(source, target)`: a change to `source` can affect `target`. Impact is a walk through that view.

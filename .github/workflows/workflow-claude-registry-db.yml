@@ -5,7 +5,8 @@ name: Registry database checks
 #    runs its checks: a doc that does not parse, or a "Query" check that finds a row in the
 #    canonical docs, fails the run. The rows are in the run's summary. G-03 compares the docs with
 #    the base of the pull request, or the commit before the push: an ID that disappeared must be in
-#    the registry's ids_retires with its decision.
+#    the registry's ids_retires with its decision. Once src/ exists, the CODE checks also compare the
+#    names in the code with the docs.
 # 2. Checks that CLAUDE.md includes the shared rules (.claude/workflow-claude-rules.md).
 on:
   pull_request:

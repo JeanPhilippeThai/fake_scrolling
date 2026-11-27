@@ -5,7 +5,7 @@ The docs are the source of truth. The database is an index built from them, neve
 the file, and the next command rebuilds it.
 
     registry_db.py build             rebuild .registry/registry.db from the docs
-    registry_db.py check [CHECK...]  run the shipped checks (all, or those named, e.g. L3-02)
+    registry_db.py check [CHECK...]  run the shipped checks (all, or those named: L3-02, or CODE for every CODE check)
         --since REV                  also compare with the docs at git revision REV (G-03)
     registry_db.py impact ID...      everything a change to these IDs can reach, nearest first
     registry_db.py where ID...       where each ID is defined and every line that cites it
@@ -18,7 +18,8 @@ Every command except build and diff first rebuilds the database when a doc chang
 Docs are read from docs/ and claude_docs/ at the repo root: *.yaml files, and the ```yaml blocks of
 *.md files, joined in order so that a YAML split over several blocks parses as one. A flow (prompt 5)
 is prose, not YAML: it is defined by a Markdown heading that starts with its ID ("## FL-01 Connexion"),
-and its section cites the pages, features and entities it links to.
+and its section cites the pages, features and entities it links to. A rule, a criterion or a requirement
+(BR, AC, NFR) is defined by the first line that starts with its ID, in a feature spec or the cross-cutting page.
 The code is read from src/ for its names only, never for what it does: the folders, files, routes, test
 identifiers and test names that carry an ID land in the `code` table.
 """
@@ -52,9 +53,9 @@ CANONICAL = "canonical"
 # Kind of each ID, most specific prefix first, so that SM-E-03 is never read as E-03.
 KINDS = [
     ("state_model", r"SM-E-\d{2,}"),
-    ("nfr", r"NFR-(?:\d{3}|X)-\d+"),
-    ("rule", r"BR-(?:\d{3}|X)-\d+"),
-    ("criterion", r"AC-(?:\d{3}|X)-\d+"),
+    ("nfr", r"NFR-(?:\d{3,}|X)-\d+"),
+    ("rule", r"BR-(?:\d{3,}|X)-\d+"),
+    ("criterion", r"AC-(?:\d{3,}|X)-\d+"),
     ("table", r"TB-\d{2,}"),
     ("data_flow", r"DF-\d{2,}"),
     ("flow", r"FL-\d{2,}"),
@@ -95,6 +96,10 @@ HEADING_RE = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 # A flow's heading starts with its ID, after an optional "Flow": "## FL-01 Connexion", "### Flow FL-02 : Purge".
 FLOW_HEADING_RE = re.compile(r"^(?:\*\*)?(?:flow\s+)?(FL-\d{2,})(?![\w-])(?:\*\*)?[\s:·.–—-]*(.*)$", re.I)
 NAME_TRIM = " \t\"'«»“”*:·–—-"
+# A rule, criterion or requirement is defined by the line that starts with its ID: "BR-012-3: refuses an expired coupon",
+# as a list item, a heading or a table row too.
+SPEC_ID_RE = re.compile(r"^\s*(?:[-*+]\s+|#{1,6}\s+|\|\s*)?(?:\*\*|`)?((BR|AC|NFR)-(?:\d{3,}|X)-\d+)(?![\w-])(.*)$")
+SPEC_KINDS = {"BR": "rule", "AC": "criterion", "NFR": "nfr"}
 # The names in the code that carry an ID (the method's Reference part, "Where the IDs go").
 FEATURE_FOLDER_RE = re.compile(r"(F-\d{3,})(?:-|$)")
 JOB_FOLDER_RE = re.compile(r"(FL-\d{2,})(?:-|$)")
@@ -365,6 +370,7 @@ class Builder:
         self.root, self.docs, self.db_path, self.fp, self.code = root, docs, db_path, fp, code
         self.file_scope = {}
         self.id_lines = {}
+        self.spec_ids = set()
 
     def rel(self, p):
         return str(p.relative_to(self.root))
@@ -480,6 +486,8 @@ class Builder:
                 self.problem(path, "the YAML is not a mapping of sections (roles, pages, features, …)")
             if p.suffix.lower() == ".md":
                 self.load_flows(path, scope, lines, skip)
+                if scope == CANONICAL and (p.parent.name == "features" or p.name.startswith("cross-cutting")):
+                    self.load_specs(path, lines, skip)
             # A doc named or titled "archive" is frozen history: kept, never held to the current IDs.
             self.row("docs", path, scope, int(self.is_archive(path, lines)))
             # Every ID cited. After the merge, a live doc cites canonical IDs only, inventories included.
@@ -688,6 +696,21 @@ class Builder:
         if found:
             self.row("sources", path, "markdown", "flows", scope, None)
 
+    def load_specs(self, path, lines, skip):
+        """A feature spec (docs/features/*.md) or the cross-cutting page: the first line that starts with a
+        BR, AC or NFR ID defines it, and the rest of the line is its wording."""
+        found = False
+        for n, line in enumerate(lines, 1):
+            m = None if n in skip else SPEC_ID_RE.match(line)
+            if not m or id_number(m.group(1)) in self.spec_ids:
+                continue
+            self.spec_ids.add(id_number(m.group(1)))
+            wording = m.group(3).strip(NAME_TRIM + "|`") or None
+            self.define(CANONICAL, m.group(1), SPEC_KINDS[m.group(2)], path, wording, {"texte": wording}, n)
+            found = True
+        if found:
+            self.row("sources", path, "markdown", "specs", CANONICAL, None)
+
     def load_contract(self, doc, path, lines):
         s = CANONICAL
         page = text(doc.get("page"))
@@ -895,7 +918,8 @@ def run_checks(con, wanted=None):
         have.add("flows_done")
     results = []
     for c in load_checks():
-        if wanted and c["id"] not in wanted:
+        # A name is a check (L3-02) or every check of a group (L3, CODE).
+        if wanted and c["id"] not in wanted and c["id"].split("-")[0] not in wanted:
             continue
         needs = [n.strip() for n in c.get("needs", "").split(",") if n.strip()]
         reason = None
@@ -908,6 +932,10 @@ def run_checks(con, wanted=None):
             elif n == "flows_done" and n not in have:
                 reason = ("no flows in the docs yet" if "flows" not in have else
                           "step 5 is in progress: the flows are complete once the data model or the data flows exist")
+            elif n == "code" and n not in have:
+                reason = "no code yet: no src/ folder"
+            elif n == "specs" and n not in have:
+                reason = "no feature spec or cross-cutting page in the docs yet"
             elif n not in special and n not in have:
                 reason = f"no {n.replace('_', ' ')} in the docs yet"
         if reason:
@@ -964,7 +992,8 @@ def cmd_check(args):
         if c.get("how") != "Query":
             print("Each row is a lead to read, not yet a finding.\n")
         print(md_table(rows, limit=None if args.all else args.limit))
-    unshipped = [x for x in (args.checks or []) if x not in {c["id"] for c, *_ in results}]
+    ran = {c["id"] for c, *_ in results} | {c["id"].split("-")[0] for c, *_ in results}
+    unshipped = [x for x in (args.checks or []) if x not in ran]
     if unshipped:
         print(f"\nNo query is shipped for {', '.join(unshipped)}: check it by reading.")
     if args.no_fail:

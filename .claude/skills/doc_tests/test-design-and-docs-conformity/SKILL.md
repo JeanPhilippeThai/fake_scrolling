@@ -18,6 +18,8 @@ Read `workflow_docs/design_and_docs_check.md` in full, then follow it exactly, i
 2. Every layer, top to bottom. A check with a query is not done again by reading.
 3. The bottom-up pass, then the checks across layers.
 
+Leave the CODE checks out: they compare the code with the docs, and belong to `test-code-conformity`.
+
 An L3 row from an archived per-platform registry (its `scope` is web, desktop or mobile) means that registry did not pass L3 before the merge. Report it under L4-01: one finding per check, not one per row.
 
 The inputs are at the paths the check's input table gives. The design and the Claude Docs are `./claude_design/` and `./claude_docs/`, the current version the app is built from. Ignore `./newest_claude_design/` and `./newest_claude_docs/`: they are an import nobody has adopted yet.
