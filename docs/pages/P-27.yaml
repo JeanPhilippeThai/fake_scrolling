@@ -58,7 +58,18 @@ composants:
     flux: [DF-10, DF-11, DF-12, DF-13, DF-83, DF-84, DF-75, DF-81]
     visible_si: []
     actif_si: ["C-27-03 et C-27-04 remplis"]
-    etats: [désactivé, actif, "envoi (P-27.a)", "erreur (P-27.b) : « Réessayer », saisies gardées", "inscription oubliée par le serveur après 1 h (FL-16) : « Ton inscription a expiré. Reconnecte-toi pour la finir. », puis P-01 (D-154)"]
+    etats: [désactivé, actif, "envoi (P-27.a)", "erreur (P-27.b) : « Réessayer », saisies gardées", "inscription oubliée par le serveur après 1 h (FL-16) : P-27.c, « Ton inscription a expiré. Reconnecte-toi pour la finir. » et C-27-07 (D-154)"]
+    questions_ouvertes: []
+  - id: C-27-07
+    nom_accessible: Me reconnecter
+    type: bouton
+    feature: F-070
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: ["P-27.c : inscription oubliée par le serveur après 1 h (FL-16, D-154)"]
+    actif_si: []
+    etats: ["ouvre P-01 (D-164)"]
     questions_ouvertes: []
   - id: C-27-06
     nom_accessible: Photo et description plus tard
