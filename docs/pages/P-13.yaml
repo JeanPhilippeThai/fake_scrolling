@@ -1,0 +1,139 @@
+page: P-13
+nom: Nouveau post — légende
+acces: [R-02]
+entree:
+  parametres: ["brouillon de P-12 : photos choisies et destination, en mémoire (D-135)"]
+  conditions: ["R-02", "SM-E-02 Session ouverte", "SM-E-03 Brouillon, sur le téléphone, ou SM-E-12 Brouillon, sur le téléphone"]
+composants:
+  - id: C-13-01
+    nom_accessible: Revenir aux photos
+    type: bouton
+    feature: F-005
+    lit: []   # photos choisies gardées en mémoire (D-135)
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-13-02
+    nom_accessible: Miniature du post
+    type: image
+    feature: F-047
+    lit: []   # première photo choisie, vraie photo sur ce téléphone seulement (D-120)
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal, "pastille du nombre de photos si carrousel"]
+    questions_ouvertes: []
+  - id: C-13-03
+    nom_accessible: Écris une légende…
+    type: champ
+    feature: F-047
+    lit: []
+    ecrit: []   # brouillon en mémoire (D-135) ; enregistré par C-13-08 ou C-13-12
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [vide, rempli]
+    questions_ouvertes: []
+  - id: C-13-04
+    nom_accessible: Publier dans
+    type: menu
+    feature: F-068
+    lit: []
+    ecrit: []   # destination du brouillon, en mémoire (D-135)
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["Fil d'actualité par défaut", "Story présélectionnée depuis « Ta story » (F-026.a)"]
+    questions_ouvertes: []
+  - id: C-13-05
+    nom_accessible: Identifier des personnes
+    type: bouton
+    feature: F-048
+    lit: []   # personnes identifiées du brouillon, en mémoire (D-135)
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [vide, "@ de la personne", "N personnes"]
+    questions_ouvertes: []
+  - id: C-13-06
+    nom_accessible: Ajouter un lieu
+    type: bouton
+    feature: F-049
+    lit: []   # lieu du brouillon, en mémoire (D-135)
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [vide, "nom du lieu choisi"]
+    questions_ouvertes: []
+  - id: C-13-07
+    nom_accessible: Audience
+    type: bouton
+    feature: F-050
+    lit: []   # audience du brouillon, en mémoire (D-135)
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["valeur choisie affichée"]
+    questions_ouvertes: []
+  - id: C-13-08
+    nom_accessible: Partager dans le fil
+    type: bouton
+    feature: F-051
+    lit: [TB-07.algorithme]
+    ecrit: [TB-06.id, TB-06.auteur_id, TB-06.legende, TB-06.audience, TB-06.lieu, TB-06.publie_le, TB-07.post_id, TB-07.rang, TB-13.post_id, TB-13.compte_id, TB-14.destinataire_id, TB-14.auteur_id, TB-14.type, TB-14.post_id, TB-14.cree_le]   # légende en charabia (D-118) ; une notification par personne identifiée (D-061)
+    flux: [DF-14, DF-16, DF-15, DF-17, DF-83, DF-84]
+    visible_si: ["F-068 : destination Fil d'actualité"]
+    actif_si: []
+    etats: [normal, "publication en cours (P-13.a)", "transformation (P-13.c)", "erreur (P-13.b)", "succès : toast « Post publié. » (P-03.d)"]
+    questions_ouvertes: []
+  - id: C-13-09
+    nom_accessible: Réessayer
+    type: bouton
+    feature: F-051
+    lit: [TB-07.algorithme]
+    ecrit: [TB-06.id, TB-06.auteur_id, TB-06.legende, TB-06.audience, TB-06.lieu, TB-06.publie_le, TB-07.post_id, TB-07.story_id, TB-07.rang, TB-13.post_id, TB-13.compte_id, TB-19.id, TB-19.auteur_id, TB-19.texte, TB-19.audience, TB-19.lieu, TB-19.publiee_le, TB-21.story_id, TB-21.compte_id, TB-14.destinataire_id, TB-14.auteur_id, TB-14.type, TB-14.post_id, TB-14.story_id, TB-14.cree_le]   # relance C-13-08 (D-027)
+    flux: [DF-14, DF-16, DF-15, DF-17, DF-83, DF-84]
+    visible_si: ["SM-E-03 Échec (P-13.b), ou SM-E-12 Échec (P-13.b)"]
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-13-10
+    nom_accessible: Grisage de l'appli
+    type: barre
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: []
+    actif_si: []
+    etats: ["de couleur à noir et blanc", "SM-E-14 Noir et blanc"]
+    questions_ouvertes: []
+  - id: C-13-11
+    nom_accessible:   # rien à l'écran : le temps passé appli ouverte est compté sans élément visible
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: []
+    questions_ouvertes: []
+  - id: C-13-12
+    nom_accessible: Partager en story
+    type: bouton
+    feature: F-051
+    lit: [TB-07.algorithme]
+    ecrit: [TB-07.story_id, TB-07.rang, TB-19.id, TB-19.auteur_id, TB-19.texte, TB-19.audience, TB-19.lieu, TB-19.publiee_le, TB-21.story_id, TB-21.compte_id, TB-14.destinataire_id, TB-14.auteur_id, TB-14.type, TB-14.story_id, TB-14.cree_le]   # légende en charabia (D-118) ; une notification par personne identifiée (D-061)
+    flux: [DF-14, DF-16, DF-15, DF-17, DF-83, DF-84]
+    visible_si: ["F-068 : destination Story"]
+    actif_si: []
+    etats: [normal, "publication en cours (P-13.a)", "transformation (P-13.c)", "erreur (P-13.b)", "succès : toast « Story publiée. » (P-08.b)"]
+    questions_ouvertes: []

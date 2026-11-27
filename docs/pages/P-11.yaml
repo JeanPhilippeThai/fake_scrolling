@@ -1,0 +1,97 @@
+page: P-11
+nom: "Messages — Ajouter un ami"
+acces: [R-02]
+entree:
+  parametres: []
+  conditions: ["SM-E-02 Session ouverte"]
+composants:
+  - id: C-11-01
+    nom_accessible: "Revenir à la liste"
+    type: bouton
+    feature: F-005
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  # La saisie n'est pas gardée : elle part au serveur comme recherche.
+  - id: C-11-02
+    nom_accessible: "Identifiant"
+    type: champ
+    feature: F-043
+    lit: []
+    ecrit: []
+    flux: [DF-22, DF-24]
+    visible_si: []
+    actif_si: []
+    etats: [vide, rempli]
+    questions_ouvertes: []
+  - id: C-11-03
+    nom_accessible: "Comptes trouvés"
+    type: liste
+    feature: F-043
+    lit: [TB-01.id, TB-01.identifiant, TB-01.pseudo, TB-15.demandeur_id, TB-15.destinataire_id, TB-15.statut, TB-07.profil_de, TB-07.graine]
+    ecrit: []
+    flux: [DF-23, DF-25, DF-84]
+    visible_si: ["C-11-02 rempli"]
+    actif_si: []
+    etats: ["rien tant que le champ est vide", "jusqu'à 8 comptes", "chargement (P-11.a)", "erreur (P-11.b)"]
+    questions_ouvertes: []
+  - id: C-11-04
+    nom_accessible: "Ajouter"
+    type: bouton
+    feature: F-034
+    lit: [TB-15.statut]
+    ecrit: [TB-15.demandeur_id, TB-15.destinataire_id, TB-15.statut]
+    flux: [DF-23, DF-25, DF-84, DF-22, DF-24, DF-83]
+    visible_si: ["SM-E-09 Aucune", "SM-E-09 Demandée"]
+    actif_si: ["SM-E-09 Aucune", "SM-E-09 Demandée par l'autre compte (D-073)"]
+    etats: [Ajouter, "Demandé, gris et désactivé (SM-E-09 Demandée par le compte connecté)", "envoi (P-11.c)", "erreur (P-11.d)", "invitation reçue : « Ajouter » l'accepte et devient « Ami » (D-073)"]
+    questions_ouvertes: []
+  - id: C-11-05
+    nom_accessible: "Ami"
+    type: bouton
+    feature: F-043
+    lit: [TB-15.statut]
+    ecrit: []
+    flux: [DF-23, DF-25, DF-84]
+    visible_si: ["SM-E-09 Amis"]
+    actif_si: []
+    etats: ["gris et désactivé"]
+    questions_ouvertes: []
+  - id: C-11-06
+    nom_accessible: "Aucun compte trouvé."
+    type: texte
+    feature: F-043
+    lit: [TB-01.identifiant]
+    ecrit: []
+    flux: [DF-23, DF-25, DF-84]
+    visible_si: ["C-11-02 rempli et aucun TB-01.identifiant qui commence par la saisie"]
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-11-07
+    nom_accessible: "Grisage de l'appli"
+    type: minuteur
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: ["de couleur à noir et blanc, 10 % par cycle"]
+    questions_ouvertes: []
+  # Ajouté hors inventaire : F-073 est une tâche de fond sans élément visible ; ce composant lui donne sa place sur la page.
+  - id: C-11-08
+    nom_accessible: "Temps d'utilisation"
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [invisible]
+    questions_ouvertes: []

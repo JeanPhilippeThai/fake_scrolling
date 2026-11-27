@@ -1,0 +1,73 @@
+page: P-27
+nom: Inscription
+acces: [R-01]
+entree:
+  parametres: [TB-04.jeton_hash]   # jeton d'inscription renvoyé par le serveur après F-007 (P-02) ou F-001 (P-01), aucun compte trouvé
+  conditions: ["SM-E-02 Inscription"]
+composants:
+  - id: C-27-01
+    nom_accessible: Revenir à la connexion
+    type: bouton
+    feature: F-005
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-27-02
+    nom_accessible: Crée ton compte
+    type: texte
+    feature: F-070
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-27-03
+    nom_accessible: Pseudo
+    type: champ
+    feature: F-070
+    lit: []
+    ecrit: [TB-01.pseudo]
+    flux: [DF-10, DF-12, DF-83]
+    visible_si: []
+    actif_si: []
+    etats: [vide, rempli, "grisé pendant l'envoi (P-27.a)"]
+    questions_ouvertes: []
+  - id: C-27-04
+    nom_accessible: Identifiant
+    type: champ
+    feature: F-070
+    lit: []
+    ecrit: [TB-01.identifiant]
+    flux: [DF-10, DF-12, DF-83]
+    visible_si: []
+    actif_si: []
+    etats: [vide, rempli, "grisé pendant l'envoi (P-27.a)"]
+    questions_ouvertes: []
+  - id: C-27-05
+    nom_accessible: Créer mon compte
+    type: bouton
+    feature: F-070
+    lit: [TB-04.jeton_hash, TB-04.fournisseur, TB-04.cle]
+    ecrit: [TB-01.id, TB-01.pseudo, TB-01.identifiant, TB-02.fournisseur, TB-02.cle, TB-02.compte_id, TB-05.jeton_hash, TB-22.compte_id, TB-24.compte_id, TB-25.compte_id, TB-11.id, TB-11.compte_id, TB-11.nom, TB-11.couleur, TB-32.jeton, TB-32.compte_id]
+    flux: [DF-10, DF-11, DF-12, DF-13, DF-83, DF-84, DF-75, DF-81]
+    visible_si: []
+    actif_si: ["C-27-03 et C-27-04 remplis"]
+    etats: [désactivé, actif, "envoi (P-27.a)", "erreur (P-27.b) : « Réessayer », saisies gardées", "inscription oubliée par le serveur après 1 h (FL-16) : « Ton inscription a expiré. Reconnecte-toi pour la finir. », puis P-01 (D-154)"]
+    questions_ouvertes: []
+  - id: C-27-06
+    nom_accessible: Photo et description plus tard
+    type: texte
+    feature: F-070
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []

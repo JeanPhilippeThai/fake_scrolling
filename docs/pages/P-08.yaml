@@ -1,0 +1,209 @@
+page: P-08
+nom: "Messages — liste des discussions"
+acces: [R-02]
+entree:
+  parametres: []
+  conditions: ["SM-E-02 Session ouverte"]
+composants:
+  # L'élément « Rechercher une discussion » est en deux composants : la loupe, puis le champ qu'elle ouvre.
+  - id: C-08-01
+    nom_accessible: "Rechercher une discussion"
+    type: bouton
+    feature: F-033
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["champ masqué", "champ affiché"]
+    questions_ouvertes: []
+  - id: C-08-02
+    nom_accessible: "Rechercher"
+    type: champ
+    feature: F-033
+    lit: [TB-01.pseudo, TB-01.identifiant]
+    ecrit: []
+    flux: [DF-35, DF-37, DF-84]
+    visible_si: ["C-08-01 touché"]
+    actif_si: []
+    etats: [vide, rempli, "liste filtrée", "liste vide sans message"]
+    questions_ouvertes: []
+  - id: C-08-03
+    nom_accessible: "Ajouter un ami"
+    type: bouton
+    feature: F-034
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-08-04
+    nom_accessible: "Ta story"
+    type: bouton
+    feature: F-026.a
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-08-05
+    nom_accessible: "Story de <pseudo>"
+    type: bouton
+    feature: F-036
+    lit: [TB-19.id, TB-19.auteur_id, TB-19.publiee_le, TB-20.story_id, TB-20.compte_id, TB-01.pseudo, TB-07.profil_de, TB-07.graine]
+    ecrit: []
+    flux: [DF-31, DF-33, DF-84]
+    visible_si: ["SM-E-12 En cours", "SM-E-09 Amis avec l'auteur"]
+    actif_si: []
+    etats: ["cercle vert (SM-E-12 Non vue)", "cercle gris (SM-E-12 Vue)"]
+    questions_ouvertes: []
+  - id: C-08-06
+    nom_accessible: "Rangée des stories"
+    type: liste
+    feature: F-036
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: ["SM-E-12 En cours"]
+    actif_si: []
+    etats: ["défilement horizontal"]
+    questions_ouvertes: []
+  - id: C-08-07
+    nom_accessible: "Photo de <pseudo>, voir sa story"
+    type: bouton
+    feature: F-036
+    lit: [TB-19.id, TB-20.compte_id, TB-07.profil_de, TB-07.graine]
+    ecrit: []
+    flux: [DF-31, DF-33, DF-84]
+    visible_si: []
+    actif_si: ["SM-E-12 En cours"]
+    etats: ["cercle vert (SM-E-12 Non vue)", "cercle gris (SM-E-12 Vue)", "photo sans cercle si aucune story en cours"]
+    questions_ouvertes: []
+  - id: C-08-08
+    nom_accessible: "Discussion avec <pseudo>"
+    type: bouton
+    feature: F-037
+    lit: []
+    ecrit: [TB-17.lu_par_a, TB-17.lu_par_b]
+    flux: [DF-34, DF-36, DF-83]
+    visible_si: []
+    actif_si: []
+    etats: ["passe en lu (SM-E-10 Lu)"]
+    questions_ouvertes: []
+  - id: C-08-09
+    nom_accessible: "Discussions"
+    type: liste
+    feature: F-037
+    lit: [TB-17.id, TB-17.compte_a, TB-17.compte_b, TB-17.lu_par_a, TB-17.lu_par_b, TB-18.texte, TB-18.expediteur_id, TB-18.envoye_le, TB-07.message_id, TB-01.pseudo]
+    ecrit: []
+    flux: [DF-35, DF-37, DF-84]
+    visible_si: []
+    actif_si: []
+    etats: ["non lu : gras et point bleu (SM-E-10 Non lu)", "lu (SM-E-10 Lu)", "vide (P-08.a)", "chargement (P-08.c)", "erreur (P-08.d)"]
+    questions_ouvertes: []
+  - id: C-08-10
+    nom_accessible: "Grisage de l'appli"
+    type: minuteur
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: ["de couleur à noir et blanc, 10 % par cycle"]
+    questions_ouvertes: []
+  - id: C-08-11
+    nom_accessible: "Accueil"
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["inactive (grise)"]
+    questions_ouvertes: []
+  - id: C-08-12
+    nom_accessible: "Messages"
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["active (verte)"]
+    questions_ouvertes: []
+  - id: C-08-13
+    nom_accessible: "Nouveau post"
+    type: bouton
+    feature: F-026
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-08-14
+    nom_accessible: "Recherche"
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["inactive (grise)"]
+    questions_ouvertes: []
+  - id: C-08-15
+    nom_accessible: "Profil"
+    type: onglet
+    feature: F-025
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: ["inactive (grise)"]
+    questions_ouvertes: []
+  # Bouton de l'état P-08.a, qui n'apparaît que sur la liste vide.
+  - id: C-08-16
+    nom_accessible: "Ajouter un ami pour discuter"
+    type: bouton
+    feature: F-034
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: ["aucune ligne TB-17.id pour le compte connecté (P-08.a)"]
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  # Toast de l'état P-08.b.
+  - id: C-08-17
+    nom_accessible: "Story publiée."
+    type: texte
+    feature: F-051
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: ["SM-E-12 En cours, juste publiée par le compte connecté"]
+    actif_si: []
+    etats: ["visible puis disparaît (P-08.b)"]
+    questions_ouvertes: []
+  # Ajouté hors inventaire : F-073 est une tâche de fond sans élément visible ; ce composant lui donne sa place sur la page.
+  - id: C-08-18
+    nom_accessible: "Temps d'utilisation"
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [invisible]
+    questions_ouvertes: []

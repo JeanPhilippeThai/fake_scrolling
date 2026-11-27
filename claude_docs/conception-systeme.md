@@ -1,4 +1,4 @@
-<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 210, exported 2026-11-27 -->
+<!-- Source: https://claude.ai/artifact/V35ZLk13bPhs4byZvSoaXg, tab "Tab 1", rev 237, exported 2026-11-27 -->
 # Conception système – Fake scrolling
 
 Nov 24, 2026 · @Jp
@@ -212,7 +212,7 @@ Restent ouverts, dans les `questions_ouvertes` des features :
 - F-046 : écran de prise de vue, autorisation de l'appareil photo.
 - F-047 : limite de longueur de la légende.
 - F-048 : liste de démo ; seuls des amis peuvent être identifiés.
-- F-049 : vraie recherche de lieux, et donc la source des lieux.
+- F-049 : réglé par D-157, le lieu est tapé librement, 60 caractères au plus.
 - F-050 : règle de l'audience (qui voit le post et agit dessus).
 - F-051 : réglé depuis, un post n’a plus de palette (D-139).
 - F-072 : liste vide ; l'effet d'un changement sur les posts déjà publiés est réglé : la liste du moment vaut pour tout (D-146).
@@ -841,7 +841,7 @@ Suite simple : code envoyé → 1 ; inscription commencée → 2. Ni l'une ni l'
 | --- | --- | --- |
 | F-007 | Bon code donné avant l'effacement | Le code est effacé tout de suite par FL-01 ; rien à faire ici |
 | F-008 | Nouveau code demandé | Il remplace l'ancien, et l'heure d'envoi repart (D-131) |
-| F-070 | Compte créé plus d'1 h après le début de l'inscription | L'inscription n'existe plus : question ouverte de F-070 |
+| F-070 | Compte créé plus d'1 h après le début de l'inscription | L'inscription n'existe plus : P-27 le dit, puis P-01 s'ouvre (D-154) |
 
 Fin du flow : 1 h après, le serveur ne garde rien d'une personne qui n'a pas créé de compte.
 
@@ -849,7 +849,7 @@ Fin du flow : 1 h après, le serveur ne garde rien d'une personne qui n'a pas cr
 
 Réglé le 27 novembre 2026 : D-149 fixe le délai, et TB-03 et TB-04 sont les tables effacées (« Modèle de données »).
 
-Reste ouvert, dans les `questions_ouvertes` de F-070 : ce que voit quelqu'un qui finit son inscription plus d'1 h après l'avoir commencée.
+Ce que voit quelqu'un qui finit son inscription plus d'1 h après l'avoir commencée est fixé par D-154.
 
 ## FL-17 Oublier les vieilles périodes au premier plan
 
@@ -936,7 +936,7 @@ stateDiagram-v2
 | Code envoyé ou renvoyable, ou Déconnecté → Session ouverte | F-007 bon code, ou F-001 / F-001.a, compte trouvé | P-03 |
 | Code envoyé ou renvoyable, ou Déconnecté → Inscription | Même déclencheur, aucun compte | P-27 (D-052) |
 | Inscription → Session ouverte | F-070 | Compte créé, avec son minuteur, son temps d'utilisation et son soutien (D-052, D-064, D-114) |
-| Inscription → Déconnecté | F-005 | Abandon, aucun compte créé. Sans F-070, le serveur oublie l'inscription 1 h après son début (FL-16, D-149) ; ce que voit alors le téléphone est ouvert dans F-070 |
+| Inscription → Déconnecté | F-005 | Abandon, aucun compte créé. Sans F-070, le serveur oublie l'inscription 1 h après son début (FL-16, D-149) ; ce que voit alors la personne est fixé par D-154 |
 | Session ouverte → Déconnecté | F-071 ; F-063 ; compte supprimé sur un autre téléphone, au prochain échange avec le serveur | P-01 (D-053, D-065, D-069, D-101) ; les envois en attente restent rattachés au compte après F-071 (D-104) |
 
 ### SM-E-03 Post
@@ -1193,7 +1193,7 @@ Les exigences de toute l'appli (étape 7 de la méthode), chacune avec un nombre
 
 | ID | Exigence | Nombre ou test | Source |
 | --- | --- | --- | --- |
-| NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa graine (D-139). Seuls l'identifiant (@), l'adresse e-mail de connexion et le lieu choisi dans une liste (F-049, D-151) partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
+| NFR-X-1 | Aucun texte écrit par un utilisateur ne quitte le téléphone : légende, commentaire, message, pseudo et description partent en charabia ; une recherche n'envoie que sa graine (D-139). Seuls l'identifiant (@), l'adresse e-mail de connexion et le lieu tapé (F-049, D-157) partent lisibles. | Test de bout en bout : un texte repère tapé dans chaque champ n'apparaît dans aucune requête captée, aucun journal ni aucun rapport de plantage. | D-083, D-087, D-098, D-118 |
 | NFR-X-2 | Aucune photo ni vidéo ne quitte le téléphone : seule sa graine part. | Même capture : aucune requête n'a un corps image ou vidéo, ni les octets de la photo choisie. | D-086, D-091, D-119 |
 | NFR-X-3 | Les préférences d'interface (E-17) et l'état de la recherche (E-13, sans historique, D-089) ne quittent jamais le téléphone. | Même capture, pendant un changement de thème sur P-23 et une recherche sur P-14 : aucune requête ne les porte. | D-087, D-089, D-103 |
 | NFR-X-4 | Un compte supprimé n'est plus dans aucun stockage du serveur dès la réponse de F-063, sauf son numéro interne, gardé seul 7 jours (D-128, FL-15), et plus nulle part, sauvegardes comprises, 7 jours après. | Test d'intégration : un compte avec une ligne dans chaque entité est supprimé, puis son numéro interne est cherché dans chaque table : 0 ligne, hors de la liste des comptes supprimés ; 7 jours après, 0 ligne là aussi. Configuration : sauvegardes gardées 7 jours au plus ; une sauvegarde restaurée efface les comptes supprimés depuis. | D-101, D-102, D-128 |
@@ -1270,7 +1270,7 @@ Chaque point d'entrée appartient à une seule feature ; ses types sont dans le 
 | Soutien | Preuve d'achat du store, état « soutenu » | FL-09 | F-015 | E-16 |
 | Profil et compte | Profil, ses posts, pseudo et description, photo, suppression du compte | FL-11, FL-15 | F-056, F-057, F-058, F-062, F-063 | E-01, E-03, E-04 |
 
-Les lieux (F-049) n'ont pas encore de groupe : leur source est une question ouverte de F-049.
+Les lieux (F-049) n'ont pas de groupe à eux : tapés librement (D-157), ils partent avec le post ou la story.
 
 ### Règles communes
 
@@ -1282,7 +1282,7 @@ Les lieux (F-049) n'ont pas encore de groupe : leur source est une question ouve
 - Versions : chaque requête porte la version de l'API ; le serveur garde une version tant qu'une appli acceptée s'en sert, et une appli trop vieille ouvre P-29 (D-141).
 - Direct : la connexion WebSocket, ouverte tant que l'appli est au premier plan, ne porte que le message reçu et « en train d'écrire » ; envoyer un message passe par l'API (D-084, D-133).
 
-Restent ouverts, dans les `questions_ouvertes` des features : F-009, quels posts montre le fil et dans quel ordre ; F-052, la règle de la recherche par graine ; F-053, ce que comptent les tendances ; F-049, la source des lieux.
+Restent ouverts, dans les `questions_ouvertes` des features : F-009, quels posts montre le fil et dans quel ordre ; F-052, la règle de la recherche par graine ; F-053, ce que comptent les tendances.
 
 ## Modèle de données
 
@@ -1365,7 +1365,7 @@ tables:
       - {nom: auteur_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
       - {nom: legende, type: text, cle: '', reference: '', obligatoire: false}
       - {nom: audience, type: "enum audience ('tout_le_monde', 'amis', 'amis_proches')", cle: '', reference: '', obligatoire: true}
-      - {nom: lieu, type: text, cle: '', reference: '', obligatoire: false}
+      - {nom: lieu, type: varchar(60), cle: '', reference: '', obligatoire: false}
       - {nom: publie_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
     index: ['(auteur_id, publie_le)', publie_le]
 
@@ -1437,6 +1437,7 @@ tables:
       - {nom: id, type: uuid, cle: primaire, reference: '', obligatoire: true}
       - {nom: compte_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
       - {nom: nom, type: text, cle: '', reference: '', obligatoire: true}
+      - {nom: couleur, type: text, cle: '', reference: '', obligatoire: true}
     index: [compte_id]
 
   - id: TB-12
@@ -1543,7 +1544,7 @@ tables:
       - {nom: auteur_id, type: uuid, cle: '', reference: TB-01.id, obligatoire: true}
       - {nom: texte, type: text, cle: '', reference: '', obligatoire: false}
       - {nom: audience, type: enum audience, cle: '', reference: '', obligatoire: true}
-      - {nom: lieu, type: text, cle: '', reference: '', obligatoire: false}
+      - {nom: lieu, type: varchar(60), cle: '', reference: '', obligatoire: false}
       - {nom: publiee_le, type: timestamptz, cle: '', reference: '', obligatoire: true}
     index: [auteur_id, publiee_le]
 
@@ -1785,7 +1786,7 @@ tables:
 | SM-E-14 | Arrêté, En marche : pas stockés ; chaque téléphone compte ses secondes (D-117) et le serveur fusionne leurs périodes (TB-23). Noir et blanc : cycles\_ecoules = 10 |
 | SM-E-16 | Non soutenu, Soutenu : TB-25.achat\_store vide ou rempli. Paiement en cours : chez le store. Soutenu, pas encore enregistré : une ligne de TB-27 |
 
-Restent ouverts, dans les `questions_ouvertes` des features : F-053, ce que comptent les tendances ; F-049, la source des lieux, gardés en texte d'ici là ; F-019, ce que montre un post partagé qui n'existe plus ; F-070, une inscription finie plus d'1 h après son début.
+Reste ouvert, dans les `questions_ouvertes` de F-053 : ce que comptent les tendances, composées à partir des posts (D-158).
 
 ## Flux de données
 
@@ -1926,9 +1927,9 @@ flux:
   - {id: DF-13, de: N-08, vers: N-07, donnees: [E-02, E-01], features: [F-001, F-007, F-008, F-070], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Fil et posts
   - {id: DF-14, de: N-06, vers: N-08, donnees: [E-03, E-12, E-05, E-06, E-07], features: [F-009, F-016, F-018, F-019, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-15, de: N-08, vers: N-06, donnees: [E-03, E-04, E-05, E-06, E-07], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-15, de: N-08, vers: N-06, donnees: [E-03, E-04, E-05, E-06, E-07, E-01], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-16, de: N-07, vers: N-08, donnees: [E-03, E-12, E-05, E-06, E-07], features: [F-009, F-016, F-018, F-019, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-17, de: N-08, vers: N-07, donnees: [E-03, E-04, E-05, E-06, E-07], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-17, de: N-08, vers: N-07, donnees: [E-03, E-04, E-05, E-06, E-07, E-01], features: [F-009, F-010, F-011, F-012, F-016, F-017, F-018, F-020, F-030, F-031, F-051], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Médias
   - {id: DF-18, de: N-06, vers: N-08, donnees: [E-04], features: [F-005, F-044, F-046], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
   - {id: DF-19, de: N-08, vers: N-06, donnees: [E-04], features: [F-044, F-046], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
@@ -1936,9 +1937,9 @@ flux:
   - {id: DF-21, de: N-08, vers: N-07, donnees: [E-04], features: [F-044, F-046], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
   # Amis et notifications
   - {id: DF-22, de: N-06, vers: N-08, donnees: [E-09, E-08, E-01], features: [F-022, F-028, F-034, F-043, F-072], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-23, de: N-08, vers: N-06, donnees: [E-09, E-08, E-01], features: [F-022, F-028, F-034, F-043, F-048, F-072], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-23, de: N-08, vers: N-06, donnees: [E-09, E-08, E-01, E-04, E-05], features: [F-022, F-028, F-034, F-043, F-048, F-072, F-019], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-24, de: N-07, vers: N-08, donnees: [E-09, E-08, E-01], features: [F-022, F-028, F-034, F-043, F-072], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-25, de: N-08, vers: N-07, donnees: [E-09, E-08, E-01], features: [F-022, F-028, F-034, F-043, F-048, F-072], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-25, de: N-08, vers: N-07, donnees: [E-09, E-08, E-01, E-04, E-05], features: [F-022, F-028, F-034, F-043, F-048, F-072, F-019], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Minuteur et temps
   - {id: DF-26, de: N-06, vers: N-08, donnees: [E-14, E-15], features: [F-024, F-060, F-061, F-073], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-27, de: N-08, vers: N-06, donnees: [E-14, E-15], features: [F-015, F-024, F-059, F-065, F-073], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
@@ -1946,19 +1947,19 @@ flux:
   - {id: DF-29, de: N-08, vers: N-07, donnees: [E-14, E-15], features: [F-015, F-024, F-059, F-065, F-073], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Stories
   - {id: DF-30, de: N-06, vers: N-08, donnees: [E-12], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-31, de: N-08, vers: N-06, donnees: [E-12, E-09], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-31, de: N-08, vers: N-06, donnees: [E-12, E-09, E-01, E-04], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-32, de: N-07, vers: N-08, donnees: [E-12], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-33, de: N-08, vers: N-07, donnees: [E-12, E-09], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-33, de: N-08, vers: N-07, donnees: [E-12, E-09, E-01, E-04], features: [F-036], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Messages
   - {id: DF-34, de: N-06, vers: N-08, donnees: [E-11, E-10, E-04], features: [F-019, F-037, F-038, F-040, F-041, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-35, de: N-08, vers: N-06, donnees: [E-10, E-11, E-04], features: [F-033, F-037, F-038, F-039, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-35, de: N-08, vers: N-06, donnees: [E-10, E-11, E-04, E-01], features: [F-033, F-037, F-038, F-039, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-36, de: N-07, vers: N-08, donnees: [E-11, E-10, E-04], features: [F-019, F-037, F-038, F-040, F-041, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-37, de: N-08, vers: N-07, donnees: [E-10, E-11, E-04], features: [F-033, F-037, F-038, F-039, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-37, de: N-08, vers: N-07, donnees: [E-10, E-11, E-04, E-01], features: [F-033, F-037, F-038, F-039, F-042], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Recherche
   - {id: DF-38, de: N-06, vers: N-08, donnees: [E-13], features: [F-052, F-053], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
-  - {id: DF-39, de: N-08, vers: N-06, donnees: [E-03, E-04], features: [F-052, F-053, F-054], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-39, de: N-08, vers: N-06, donnees: [E-03, E-04, E-01, E-06], features: [F-052, F-053, F-054, F-020], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-40, de: N-07, vers: N-08, donnees: [E-13], features: [F-052, F-053], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: false}
-  - {id: DF-41, de: N-08, vers: N-07, donnees: [E-03, E-04], features: [F-052, F-053, F-054], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-41, de: N-08, vers: N-07, donnees: [E-03, E-04, E-01, E-06], features: [F-052, F-053, F-054, F-020], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Soutien
   - {id: DF-42, de: N-06, vers: N-08, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-43, de: N-08, vers: N-06, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
@@ -1966,9 +1967,9 @@ flux:
   - {id: DF-45, de: N-08, vers: N-07, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # Profil et compte
   - {id: DF-46, de: N-06, vers: N-08, donnees: [E-01, E-04], features: [F-056, F-058, F-063], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-47, de: N-08, vers: N-06, donnees: [E-01, E-03, E-04], features: [F-056, F-057, F-058, F-062], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-47, de: N-08, vers: N-06, donnees: [E-01, E-03, E-04, E-06, E-09], features: [F-056, F-057, F-058, F-062], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   - {id: DF-48, de: N-07, vers: N-08, donnees: [E-01, E-04], features: [F-056, F-058, F-063], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
-  - {id: DF-49, de: N-08, vers: N-07, donnees: [E-01, E-03, E-04], features: [F-056, F-057, F-058, F-062], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
+  - {id: DF-49, de: N-08, vers: N-07, donnees: [E-01, E-03, E-04, E-06, E-09], features: [F-056, F-057, F-058, F-062], flows: [], protocole: "HTTPS, API JSON (D-137)", sensible: true}
   # direct par WebSocket : « en train d'écrire », message reçu
   - {id: DF-50, de: N-06, vers: N-08, donnees: [E-10], features: [F-041], flows: [], protocole: "WebSocket (D-133)", sensible: true}
   - {id: DF-51, de: N-08, vers: N-06, donnees: [E-11, E-10], features: [F-038, F-041], flows: [], protocole: "WebSocket (D-133)", sensible: true}
@@ -1993,7 +1994,7 @@ flux:
   - {id: DF-69, de: N-08, vers: N-13, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API de vérification du store", sensible: true}
   - {id: DF-70, de: N-13, vers: N-08, donnees: [E-16], features: [F-015], flows: [], protocole: "HTTPS, API de vérification du store", sensible: true}
   # recherche, préférences, minuteur connu
-  - {id: DF-71, de: N-06, vers: N-02, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
+  - {id: DF-71, de: N-06, vers: N-02, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067, F-063, F-071], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
   - {id: DF-72, de: N-02, vers: N-06, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
   # envois en attente
   - {id: DF-73, de: N-06, vers: N-02, donnees: [E-04, E-12, E-14, E-15, E-16, E-01], features: [F-005, F-015, F-024, F-036, F-044, F-046, F-058, F-060, F-061, F-073], flows: [FL-12], protocole: "expo-sqlite, appel local", sensible: true}
@@ -2002,7 +2003,7 @@ flux:
   - {id: DF-75, de: N-06, vers: N-03, donnees: [E-02], features: [F-001, F-007, F-070, F-071, F-063], flows: [], protocole: "expo-secure-store, appel local", sensible: true}
   - {id: DF-76, de: N-03, vers: N-06, donnees: [E-02], features: [F-001, F-007, F-070, F-071, F-063], flows: [], protocole: "expo-secure-store, appel local", sensible: true}
   # recherche, préférences, minuteur connu
-  - {id: DF-77, de: N-07, vers: N-02, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
+  - {id: DF-77, de: N-07, vers: N-02, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067, F-063, F-071], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
   - {id: DF-78, de: N-02, vers: N-07, donnees: [E-13, E-17, E-14], features: [F-002, F-012, F-024, F-052, F-053, F-066, F-067], flows: [], protocole: "expo-sqlite, appel local", sensible: true}
   # envois en attente
   - {id: DF-79, de: N-07, vers: N-02, donnees: [E-04, E-12, E-14, E-15, E-16, E-01], features: [F-005, F-015, F-024, F-036, F-044, F-046, F-058, F-060, F-061, F-073], flows: [FL-12], protocole: "expo-sqlite, appel local", sensible: true}
@@ -2035,3 +2036,13 @@ Aucune feature qui lit ou écrit des données ne manque, et chaque stockage est 
 | Envois en attente et minuteur connu (E-01, E-14 à E-16) | Appli et SQLite | DF-71 à DF-74, DF-77 à DF-80 |
 | Tout ce que voit et fait l'utilisateur | Personne connectée et appli | DF-06 à DF-09 |
 | Tout ce que garde le serveur | Serveur et PostgreSQL | DF-83, DF-84 |
+
+## Contrats de pages
+
+Un contrat par page, P-01 à P-29, dans le dépôt : `docs/pages/P-01.yaml` à `docs/pages/P-29.yaml`. Chacun liste les composants de sa page (C-xx) avec leur nom accessible (NFR-X-14), les colonnes qu'ils lisent et écrivent, les flux qui les portent, et les conditions pour apparaître ou être actifs. Un état de page (P-01.a…) est un état d'un composant de sa page. C'est la réponse au prompt 13 de la méthode, et aucun MANQUANT ne reste : ce qu'il a trouvé est réglé par D-152 à D-161, par les entités ajoutées aux flux DF-15, DF-17, DF-23, DF-25, DF-31, DF-33, DF-35, DF-37, DF-39, DF-41, DF-47 et DF-49, par F-019 ajoutée à DF-23 et DF-25, F-020 à DF-39 et DF-41, et F-063 et F-071 à DF-71 et DF-77.
+
+- Les contrats sont des fichiers YAML vérifiés à chaque pull request (checks L10 et B10) : ils sont écrits dans le dépôt, comme les modèles TLA+, et citent les flux et les décisions qu'ils suivent.
+- Le grisage (F-024) et le temps d'utilisation (F-073) ont un composant sur chaque page où ils jouent, même sans rien à toucher.
+- Un texte tapé et pas encore envoyé, et le brouillon d'un post ou d'une story (D-135), ne sont dans aucune colonne : `lit` et `ecrit` restent vides.
+- Chaque flux est cité pour les deux applis (iOS et Android), avec DF-83 ou DF-84 quand la donnée est dans la base du serveur.
+- Les questions ouvertes restent dans les features ; un composant n'en porte que s'il en a une à lui.

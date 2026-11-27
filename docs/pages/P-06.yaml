@@ -1,0 +1,74 @@
+page: P-06
+nom: Panneau Enregistrer dans une collection
+acces: [R-02]
+entree:
+  parametres: [TB-06.id]   # le post, donné par P-03 ou P-16 (D-050)
+  conditions: ["SM-E-02 Session ouverte", "SM-E-03 Publié"]
+composants:
+  - id: C-06-01
+    nom_accessible: Fermer le panneau
+    type: bouton
+    feature: F-027
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [croix ou tap sur le fond assombri]
+    questions_ouvertes: []
+  - id: C-06-02
+    nom_accessible: Collections
+    type: liste
+    feature: F-018
+    lit: [TB-11.id, TB-11.nom, TB-11.couleur, TB-12.collection_id, TB-12.post_id]   # couleur donnée à la création, gardée (D-160) ; « Favoris » existe dès l'inscription (D-161)
+    ecrit: [TB-12.compte_id, TB-12.post_id, TB-12.collection_id]
+    flux: [DF-15, DF-17, DF-84, DF-14, DF-16, DF-83]
+    visible_si: ["TB-11.compte_id = compte connecté"]
+    actif_si: []
+    etats: ["collection choisie encadrée en vert « enregistré » (TB-12.collection_id)", le panneau se ferme, "échec (P-03.f)"]
+    questions_ouvertes: []
+  - id: C-06-03
+    nom_accessible: Retirer de la collection
+    type: bouton
+    feature: F-018
+    lit: [TB-12.collection_id]
+    ecrit: [TB-12.compte_id, TB-12.post_id, TB-12.collection_id]   # suppression de la ligne
+    flux: [DF-14, DF-16, DF-83]
+    visible_si: ["TB-12.collection_id = cette collection (déjà choisie)"]
+    actif_si: []
+    etats: ["message « Retiré de … »"]
+    questions_ouvertes: []
+  - id: C-06-04
+    nom_accessible: Nouvelle collection
+    type: bouton
+    feature: F-031
+    lit: [TB-11.nom]
+    ecrit: [TB-11.id, TB-11.compte_id, TB-11.nom, TB-12.compte_id, TB-12.post_id, TB-12.collection_id]
+    flux: [DF-14, DF-16, DF-83, DF-15, DF-17, DF-84]
+    visible_si: []
+    actif_si: ["aucune création en cours (P-06.a)"]
+    etats: [nom automatique « Collection N », "création en cours (P-06.a)", "erreur (P-06.b)"]
+    questions_ouvertes: []
+  - id: C-06-05
+    nom_accessible: Grisage de l'appli
+    type: minuteur
+    feature: F-024
+    lit: [TB-22.duree_cycle_s, TB-22.temps_cycle_s, TB-22.cycles_ecoules, TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules]
+    ecrit: [TB-31.duree_cycle_s, TB-31.temps_cycle_s, TB-31.cycles_ecoules, TB-31.connu_le]
+    flux: [DF-27, DF-29, DF-84, DF-71, DF-72, DF-77, DF-78]
+    visible_si: ["SM-E-14 En marche", "SM-E-14 Noir et blanc"]
+    actif_si: []
+    etats: [de couleur à noir et blanc après 10 cycles, aucun message]
+    questions_ouvertes: []
+  # Ajouté hors inventaire : F-073 est une tâche de fond sans élément visible.
+  - id: C-06-06
+    nom_accessible: Temps d'utilisation
+    type: minuteur
+    feature: F-073
+    lit: [TB-30.ecart_ms]
+    ecrit: [TB-23.compte_id, TB-23.debut, TB-23.fin, TB-27.sorte, TB-27.contenu]
+    flux: [DF-72, DF-78, DF-26, DF-28, DF-83, DF-73, DF-79]
+    visible_si: []
+    actif_si: []
+    etats: [invisible]
+    questions_ouvertes: []

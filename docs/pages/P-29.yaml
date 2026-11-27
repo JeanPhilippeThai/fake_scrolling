@@ -1,0 +1,40 @@
+page: P-29
+nom: Mise à jour requise
+acces: [R-01, R-02]
+entree:
+  parametres: []
+  conditions: ["le serveur refuse la version de l'appli dans sa réponse à un appel de l'API (D-141, F-074)"]
+composants:
+  - id: C-29-01
+    nom_accessible: Logo de l'appli
+    type: image
+    feature: F-002
+    lit: [TB-29.theme_icone]
+    ecrit: []
+    flux: [DF-72, DF-78]
+    visible_si: []
+    actif_si: []
+    etats: ["thème Noir", "thème Orange", "thème Rouge"]
+    questions_ouvertes: []
+  - id: C-29-02
+    nom_accessible: Mise à jour requise
+    type: texte
+    feature: F-074
+    lit: []
+    ecrit: []
+    flux: []
+    visible_si: []
+    actif_si: []
+    etats: [normal]
+    questions_ouvertes: []
+  - id: C-29-03
+    nom_accessible: Mettre à jour
+    type: bouton
+    feature: F-074
+    lit: []
+    ecrit: []
+    flux: []   # ouvre la fiche de l'appli dans l'App Store ou Google Play, sans donnée
+    visible_si: []
+    actif_si: []
+    etats: ["toujours actif (D-142)", "si le store ne s'ouvre pas, la page reste telle quelle (D-152)"]
+    questions_ouvertes: []
