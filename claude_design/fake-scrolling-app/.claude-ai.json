@@ -1,7 +1,7 @@
 {
  "url": "https://claude.ai/artifact/9fxJvdH8dPEDrrLKNWerJT",
  "format": 2,
- "synced": "2026-11-26T13:49:44+00:00",
+ "synced": "2026-11-27T08:26:17+00:00",
  "files": {
   "project/Chat.dc.html": "ae709f0b59aa3c99621e73f1884a31a8ea671b2bff9118ac7448bfeb7a2e3267",
   "project/Code.dc.html": "9f1091e023fa3fb8c422281ee39421bafb5547210bbb29c640514489cd1ec0a5",
@@ -70,8 +70,13 @@
   "project/Inscription.dc.html": "6ff7f0fcb4d00a784398ed9cc136c986b05fdee63b0e45538fa066a02a6830d6",
   "project/Login.dc.html": "bfa757905395a1ead79f89104cfad50a1a3f9bdcc96abc80d16dd4bd122292a3",
   "project/Main.dc.html": "8601de9493787bdeca839c8296fc90aa3b36cc415a7ad02786dd13b225971183",
+  "project/MiseAJour.dc.html": "c055b80d8d195bf88a5158cce87ca973cb3a49c74e817748ac79c1f216c46724",
   "project/Profile.dc.html": "a74d96b18e7913c65716c5110dcb5f49c3f3fbf59d52fb864e8023c523b53fe5",
   "project/Search.dc.html": "4f1ce31d0658b6b30a4df1806c7cb3d39f45d730cfb7751d613287f7fc693c2a",
-  "project/canvas.json": "8a0850bcc350381a4e01decd32dfa96695b77372c698289ccd2fa91f8f547667"
+  "project/canvas.json": "49c89a20aeb2e77fa25d018cbffeeafa96bd7ae2fa79a22f405f0274a1dd651f"
+ },
+ "round": {
+  "project/MiseAJour.dc.html": "added",
+  "project/canvas.json": "changed"
  }
 }

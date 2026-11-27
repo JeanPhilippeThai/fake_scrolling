@@ -1,9 +1,9 @@
-<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 152, exported 2026-11-25 -->
+<!-- Source: https://claude.ai/artifact/JrVRgnJKXnwGC28FuPVUwz, tab "Tab 1", rev 155, exported 2026-11-27 -->
 # Fake scrolling — inventaire des écrans
 
 Nov 15, 2026 · @Jp
 
-Le design compte 28 écrans, de P-01 à P-28, plus 60 états de page dessinés à part (D-040, D-041). Ils suivent l'ordre du parcours : connexion, Accueil, Messages, Nouveau post, Recherche, Profil. Les panneaux de la création d'un post, ajoutés ensuite, sont à la fin (P-24 à P-26), suivis de l'inscription (P-27) et du panneau Amis proches (P-28).
+Le design compte 29 écrans, de P-01 à P-29, plus 60 états de page dessinés à part (D-040, D-041). Ils suivent l'ordre du parcours : connexion, Accueil, Messages, Nouveau post, Recherche, Profil. Les panneaux de la création d'un post, ajoutés ensuite, sont à la fin (P-24 à P-26), suivis de l'inscription (P-27), du panneau Amis proches (P-28) et de la page « Mise à jour requise » (P-29).
 
 - **Écran** : toute vue distincte, y compris un panneau qui se superpose à une autre page (notifications, commentaires, options…).
 - **Pas de regroupement** : un même élément présent sur plusieurs pages (menu du bas, grisage) est relisté sur chacune.
@@ -617,3 +617,13 @@ Panneau qui monte du bas sur P-13, ouvert par « Modifier la liste » de P-26 : 
 | Choisir un ami proche | Ligne avec photo floue, pseudo, @ et case ronde à cocher | Amis proches (8 amis en démo, 3 cochés au départ, gardés d'une visite à l'autre) | Case vide ; cochée en vert ; second tap décoche ; chargement : anneau centré ; erreur : message sur place avec « Réessayer » (F-072, D-067, non dessinés) |
 | Lire l'absence de résultat | Texte « Aucun ami trouvé. » | Aucune | Affiché si rien ne correspond |
 | Voir l'app se griser | Toute la page perd 10 % de couleur par cycle | Cycles écoulés | De couleur à noir et blanc |
+
+## P-29 Mise à jour requise
+
+Page affichée à la place de toute autre quand la version de l'appli est trop vieille pour le serveur (D-141, D-142). Jamais grisée, comme P-01 (D-009). Dans la maquette, P-29 est un artboard à part, `MiseAJour.dc.html` : aucune page n'y mène.
+
+| Élément | Description | Données | États visibles |
+| --- | --- | --- | --- |
+| Voir le logo | Carré arrondi avec un « F » blanc, de la couleur du thème choisi, comme sur P-01 | Thème de l'icône | Noir, orange ou rouge |
+| Lire le message | Titre « Mise à jour requise » et phrase « Cette version de l’appli est trop ancienne. Mets-la à jour pour continuer : ton compte et tes envois en attente sont gardés. » (D-142) | Aucune | — |
+| Mettre à jour l'appli | Bouton vert « Mettre à jour » en bas de page, ouvre l'appli dans l'App Store ou Google Play (F-074 ; sans effet dans la maquette) | Aucune | Toujours actif (D-142) |
